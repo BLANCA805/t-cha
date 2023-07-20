@@ -5,8 +5,8 @@ import lombok.Getter;
 public enum ExceptionCode {
     MEMBER_NOT_FOUND(404, "Member not found"),
     MEMBER_EXISTS(409, "Member exists"),
-    MEMBER_REDIRECTION_LOGIN_SUCCESS(303,"Member redirection login success"),
-    MEMBER_REDIRECTION_FIND_PASSWORD(303,"Member redirection find password"),
+    MEMBER_REDIRECTION_LOGIN_SUCCESS(303, "Member redirection login success"),
+    MEMBER_REDIRECTION_FIND_PASSWORD(303, "Member redirection find password"),
     MEMBER_NAME_EXISTS(409, "Member name exist"),
     MEMBER_UNAUTHORIZED(401, "Member unauthorized"),
     ANSWER_NOT_FOUND(404, "Answer not found"),

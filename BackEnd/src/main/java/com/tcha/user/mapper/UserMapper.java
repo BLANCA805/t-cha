@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
+    User postToUser (UserDto.Post postRequest);
+
     UserDto.Response userToResponse(User user);
 
 }

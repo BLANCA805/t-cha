@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,9 +28,10 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping
-    public ResponseEntity postUser() {
+    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
 
-        User userForResponse = userService.createUser(); //id 생성, 기본 상태 및 권한 설정
+        User userToService = userMapper.postToUser(postRequest);
+        User userForResponse = userService.createUser(userToService); //id 생성, 기본 상태 및 권한 설정
         UserDto.Response response = userMapper.userToResponse(userForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

@@ -1,6 +1,5 @@
 package com.tcha.user.dto;
 
-import com.tcha.user.entity.User;
 import com.tcha.user.entity.User.UserStatus;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,17 +10,24 @@ public class UserDto {
 
     @AllArgsConstructor
     @Getter
+    public static class Post{
+
+    }
+
+    @AllArgsConstructor
+    @Getter
     public static class Response {
 
         private String id;
 
         private String email;
 
-        private User.UserStatus userStatus;
+        private UserStatus status;
 
         private List<String> roles;
 
         private LocalDateTime createAt;
+
         private LocalDateTime modifiedAt;
 
     }

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 public class GuideService {
     private GuideRepository guideRepository;
-    private GuideMapper guideMapper;
+//    private GuideMapper guideMapper;
 
     //새로운 사용 가이드 생성
     public Guide createGuide(Guide guide){
@@ -26,7 +26,7 @@ public class GuideService {
     }
 
     //사용 가이드 1개 조회
-    public Optional<Guide> fingGuide(Long id){
+    public Optional<Guide> findGuide(Long id){
         return guideRepository.findById(id);
     }
 

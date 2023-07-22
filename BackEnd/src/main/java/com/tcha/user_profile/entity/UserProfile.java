@@ -22,7 +22,7 @@ import lombok.Setter;
 public class UserProfile extends Auditable{
 
     @Id
-    private String userProfileId;
+    private String id;
 
     // 일대일 단방향 관계 설정
     @OneToOne

@@ -21,13 +21,13 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
 
     public UserProfile createUserProfile(String userId, UserProfile userProfile) {
+        User foundUser = userService.findVerifiedUser(userId);
 
         UserProfile userProfileForSave = new UserProfile();
 
         String userProfileId = UUID.randomUUID().toString();
-        User foundUser = userService.findVerifiedUser(userId);
 
-        userProfileForSave.setUserProfileId(userProfileId);
+        userProfileForSave.setId(userProfileId);
         userProfileForSave.setUser(foundUser);
 
         Optional.ofNullable(userProfile.getName())
@@ -49,7 +49,7 @@ public class UserProfileService {
         Optional.ofNullable(userProfile.getProfileImage())
                 .ifPresent(profileImage -> userProfileForSave.setProfileImage(profileImage));
 
-        return  userProfileRepository.save(userProfileForSave);
+        return userProfileRepository.save(userProfileForSave);
 
     }
 

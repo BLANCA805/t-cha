@@ -9,8 +9,6 @@ public class UserProfileDto {
     @AllArgsConstructor
     public static class Post {
 
-        private Long userId;
-
         private String name;
 
         private String profileImage;

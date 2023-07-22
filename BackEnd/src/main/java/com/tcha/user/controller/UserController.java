@@ -48,10 +48,9 @@ public class UserController {
     //TODO 회원 상태 변경 로직
     @DeleteMapping("/{user-id}")
     public ResponseEntity deleteOneUser(@PathVariable("user-id") String userId) {
-        User userForResponse = userService.deleteOneUser(userId);
-        UserDto.Response response = userMapper.userToResponse(userForResponse);
+        userService.deleteOneUser(userId);
 
-        return new ResponseEntity(response, HttpStatus.NO_CONTENT);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }
@@ -69,6 +68,7 @@ TODO
     - 개인 마인페이지 기능
 - delete
     - 상태 변경(-> 탈퇴)
+    - delete method 사용 =>
 
  - mapper 에러 표시줄 원인 찾기
  */

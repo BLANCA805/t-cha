@@ -36,8 +36,8 @@ public class SecurityConfiguration {
                 .httpBasic().disable()
                 .authorizeHttpRequests(authorize -> authorize
 //                        .requestMatchers( HttpMethod.GET, "/h2/**").permitAll() // 적용이 안 됨
-                        .anyRequest().authenticated()
-//                                .anyRequest().permitAll()
+//                        .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
 //                .oauth2Login(withDefaults())
                 .oauth2Login(oauth2 -> oauth2.successHandler(

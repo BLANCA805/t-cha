@@ -21,16 +21,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User createUser() {
-        User userForSave = new User();
+    public User createUser(User user) {
 
         String userId = UUID.randomUUID().toString();
         String userRole = "ROLE_USER";
 
-        userForSave.setId(userId);
-        userForSave.getRoles().add(userRole);
+        user.setId(userId);
+        user.getRoles().add(userRole);
 
-        User savedUser = userRepository.save(userForSave);
+        User savedUser = userRepository.save(user);
         return savedUser;
     }
 

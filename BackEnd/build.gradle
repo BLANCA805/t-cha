@@ -39,16 +39,18 @@ dependencies {
 	//Spring Boot 기본값 (Spring Web)
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//Lombok 사용
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	//Lombok
+	implementation 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	//Lombok - MapStruct Binding
+	implementation group: 'org.projectlombok', name: 'lombok-mapstruct-binding', version: '0.2.0'
+	//MapStruct
+	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	//Spring Data JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	//Validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	//MapStruct
-	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
 	//Spring Rest Docs
 	//.yml 부가 설정 필요(많이)
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' //`spring-restdocs-core`와 `spring-restdocs-mockmvc` 라이브러리 추가

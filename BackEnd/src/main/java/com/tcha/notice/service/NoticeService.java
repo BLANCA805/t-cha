@@ -24,6 +24,7 @@ public class NoticeService {
     public Page<Notice> findNoticePages(int page, int size) {
 
         return noticeRepository.findAll(
+
                 PageRequest.of(page-1, size, Sort.by("id").descending()));
     }
 
@@ -37,7 +38,6 @@ public class NoticeService {
     @Transactional
     public Notice createNotice(Notice notice) {
 //  TODO    memberService.findMember(Notice.getMember().getMemberId());   // 존재하는 유저인지 확인 (관리자인지 확인도 필요)
-
 
         return noticeRepository.save(notice);
     }

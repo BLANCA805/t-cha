@@ -1,5 +1,6 @@
 package com.tcha.notice.controller;
 
+<<<<<<< BackEnd/src/main/java/com/tcha/notice/controller/NoticeController.java
 import com.tcha.notice.dto.NoticeDto;
 import com.tcha.notice.entity.Notice;
 import com.tcha.notice.mapper.NoticeMapper;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
+
 
 @RestController
 @RequestMapping("/notices")
@@ -67,6 +69,5 @@ public class NoticeController {
         noticeService.deleteNotice(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
 
 }

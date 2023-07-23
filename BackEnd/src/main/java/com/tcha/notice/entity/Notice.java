@@ -1,9 +1,11 @@
 package com.tcha.notice.entity;
 
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+
 
 @Entity
 @Getter
@@ -21,6 +23,7 @@ public class Notice {
     @Enumerated(value = EnumType.STRING)
     @Column(length = 8, nullable = false)
     private NoticeEmerStatus status;
+
 
     @Column(length = 200, nullable = false)
     private String title;
@@ -63,6 +66,22 @@ public class Notice {
         }
 
      */
+=======
+//        @ManyToOne(fetch = FetchType.LAZY)
+//        @JoinColumn(name = "user_id")
+//        @OnDelete(action = OnDeleteAction.CASCADE)
+//        private User user;
+
+    // -------------------- 회원 일치 확인-------------------
+//        public QnaQuestion changeQnaQuestion(QnaQuestion sourceQnaQuestion, CustomBeanUtils<QnaQuestion> beanUtils) {
+//                // 질문을 수정하려는 회원이 질문을 등록한 회원과 일치하는가?
+//                this.member.checkIsMyself(sourceQnaQuestion.getMember().getMemberId());
+//
+//                // 답변 완료된 질문인가?
+//                isQuestionAnswered();
+//
+//                return beanUtils.copyNonNullProperties(sourceQnaQuestion, this);
+//        }
 }
 
 

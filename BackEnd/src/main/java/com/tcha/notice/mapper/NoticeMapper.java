@@ -5,7 +5,6 @@ import com.tcha.notice.entity.Notice;
 import java.util.List;
 import org.mapstruct.Mapper;
 
-
 @Mapper(componentModel = "spring")
 public interface NoticeMapper {
 
@@ -16,4 +15,5 @@ public interface NoticeMapper {
     NoticeDto.Response noticeToResponse(Notice notice);
 
     List<NoticeDto.Response> noticesToResponses(List<Notice> notices);
+
 }

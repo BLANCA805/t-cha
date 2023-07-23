@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/userProfiles")
+@RequestMapping("/userProfiles/{user-id}")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public class UserProfileController {
     private final UserProfileMapper userProfileMapper;
 
 
-    @PostMapping("/{user-id}")
+    @PostMapping
     public ResponseEntity postUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Post postRequest) {
 
         UserProfile userProfileForService = userProfileMapper.postToUserProfile(postRequest);
@@ -42,7 +42,7 @@ public class UserProfileController {
 
     }
 
-    @PatchMapping("/{user-id}")
+    @PatchMapping
     public ResponseEntity patchUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Patch patchRequest) {
 
         UserProfile userProfileForService = userProfileMapper.patchToUserProfile(patchRequest);
@@ -53,7 +53,7 @@ public class UserProfileController {
 
     }
 
-    @GetMapping("/{user-id}")
+    @GetMapping
     public ResponseEntity getOneUserProfile(@PathVariable("user-id") String userId) {
         UserProfile userProfileForResponse = userProfileService.findOneUserProfile(userId);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
@@ -62,7 +62,7 @@ public class UserProfileController {
     }
 
     //TODO 회원 상태 변경 로직
-    @DeleteMapping("/{user-id}")
+    @DeleteMapping
     public ResponseEntity deleteOneUser(@PathVariable("user-id") String userId) {
         UserProfile userProfileForResponse = userProfileService.deleteOneUserProfile(userId);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);

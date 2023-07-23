@@ -1,5 +1,6 @@
 package com.tcha.user_profile.dto;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -29,9 +30,15 @@ public class UserProfileDto {
     @AllArgsConstructor
     public static class Response {
 
+        private String id;
+
         private String name;
 
         private String profileImage;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime modifiedAt;
 
     }
 

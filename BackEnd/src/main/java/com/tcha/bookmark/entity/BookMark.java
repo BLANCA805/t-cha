@@ -16,18 +16,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 public class BookMark {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "TRAINER_ID")
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private Trainer trainer;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -52,5 +53,4 @@ public class BookMark {
         this.trainer.setTrainerId(trainerId);
         this.user.setId(userId);
     }
-
 }

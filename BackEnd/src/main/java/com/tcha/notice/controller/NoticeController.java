@@ -1,68 +1,73 @@
 package com.tcha.notice.controller;
 
+<<<<<<< BackEnd/src/main/java/com/tcha/notice/controller/NoticeController.java
+import com.tcha.notice.dto.NoticeDto;
+import com.tcha.notice.entity.Notice;
+import com.tcha.notice.mapper.NoticeMapper;
+import com.tcha.notice.service.NoticeService;
+import com.tcha.utils.pagination.MultiResponseDto;
+import com.tcha.utils.pagination.PageInfo;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
-
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/notices")
 @Validated
 @Slf4j
+@RequiredArgsConstructor
 public class NoticeController {
 
     private final NoticeService noticeService;
+    private final NoticeMapper noticeMapper;
 
-    public String getNoticePage(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            Model model) {
+    @PostMapping
+    public ResponseEntity postNotice(@RequestBody NoticeDto.Post postRequest) {
+        Notice noticeToService = noticeMapper.postToNotice(postRequest);
+        Notice noticeForResponse = noticeService.createNotice(noticeToService);
+        NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
 
-        Page<Notice> noticePage = noticeService.getNoticePage(page - 1);
-        model.addAttribute("noticePage", noticePage);
-
-        Map<String, Integer> pageNav = PageNavigationUtil.getNavMap(noticePage, PageSize.NOTICE);
-        model.addAttribute("pageNav", pageNav);
-
-        return "notices";
+        return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/notices/{id}")
-    public String getNotice(@PathVariable(value = "id") Long id, Model model) {
-        Notice notice = noticeService.getNotice(id);
-        model.addAttribute("notice", notice);
-        return "content";
+    @GetMapping("/page")
+    public ResponseEntity getNoticePage(@RequestParam(value = "page") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+
+        Page<Notice> noticePage = noticeService.findNoticePages(page ,size);
+        PageInfo pageInfo = new PageInfo(page, size, (int)noticePage.getTotalElements(),noticePage.getTotalPages());
+        List<Notice> notices = noticePage.getContent();
+        List<NoticeDto.Response> responses = noticeMapper.noticesToResponses(notices);
+
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, (Page)pageInfo),HttpStatus.OK);
     }
 
-    @PostMapping("/notices")
-    public String addNotice(@Valid @ModelAttribute NoticeForm noticeForm) {
-        noticeService.addNotice(noticeForm);
-        return "redirect:/notices";
+    @GetMapping("/{id}")
+    public ResponseEntity getOneNotice(@PathVariable(value = "id") Long id) {
+        Notice noticeForResponse = noticeService.findNotice(id);
+        NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
+        return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/notices/{id}")
-    public String deleteNotice(@PathVariable(value = "id") Long id) {
+    @PutMapping("/{id}")
+    public ResponseEntity patchNotice(@PathVariable("id") Long id, @RequestBody NoticeDto.Patch patchRequest) {
+        Notice noticeToService = noticeMapper.patchToNotice(patchRequest);
+        Notice noticeForResponse = noticeService.updateNotice(noticeToService);
+        NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOneNotice(@PathVariable(value = "id") Long id) {
         noticeService.deleteNotice(id);
-        return "redirect:/notices";
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/notices")
-    public String modifyNotice(@Valid @ModelAttribute NoticeForm noticeForm) {
-        noticeService.modifyNotice(noticeForm);
-        return "redirect:/notices";
-    }
-
-    @GetMapping("/edit")
-    public String getEditForm() {
-        return "edit";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String getEditForm(@PathVariable(value = "id") Long id, Model model) {
-        Notice notice = noticeService.getNotice(id);
-        model.addAttribute("notice", notice);
-        return "edit";
-    }
 }

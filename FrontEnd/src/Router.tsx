@@ -4,26 +4,26 @@ import App from "./App";
 
 import Home from "./Home";
 
-import Auth from "./screens/auth/Auth";
+import Auth from "./screen/auth/Auth";
 
-import ChatList from "./screens/chat/chatlist/ChatList";
-import Chatting from "./screens/chat/chatting/Chatting";
+import ChatList from "./screen/chat/chatlist/ChatList";
+import Chatting from "./screen/chat/chatting/Chatting";
 
-import CustomerCenter from "./screens/customercenter/CustomerCenter";
-import Notice from "./screens/customercenter/notice/Notice";
-import QnA from "./screens/customercenter/qna/QnA";
+import CustomerCenter from "./screen/customercenter/CustomerCenter";
+import Notice from "./screen/customercenter/notice/Notice";
+import QnA from "./screen/customercenter/qna/QnA";
 
-import MyPage from "./screens/mypage/MyPage";
-import BookMark from "./screens/mypage/pages/bookmark/BookMark";
-import Calendar from "./screens/mypage/pages/calendar/Calendar";
-import InfoEdit from "./screens/mypage/pages/infoedit/InfoEdit";
-import Payment from "./screens/mypage/pages/payment/Payment";
-import MyReview from "./screens/mypage/pages/review/MyReview";
+import MyPage from "./screen/mypage/MyPage";
+import BookMark from "./screen/mypage/page/bookmark/BookMark";
+import Calendar from "./screen/mypage/page/calendar/Calendar";
+import InfoEdit from "./screen/mypage/page/infoedit/InfoEdit";
+import Payment from "./screen/mypage/page/payment/Payment";
+import MyReview from "./screen/mypage/page/review/MyReview";
 
-import PtList from "./screens/personaltrainer/PtList";
-import PtDetail from "./screens/personaltrainer/ptdetail/PtDetail";
-import PtInfo from "./screens/personaltrainer/ptdetail/info/PtInfo";
-import PtReview from "./screens/personaltrainer/ptdetail/review/PtReview";
+import PtList from "./screen/personaltrainer/PtList";
+import PtDetail from "./screen/personaltrainer/ptdetail/PtDetail";
+import PtInfo from "./screen/personaltrainer/ptdetail/info/PtInfo";
+import PtReview from "./screen/personaltrainer/ptdetail/review/PtReview";
 
 const router = createBrowserRouter([
   {
@@ -33,10 +33,6 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
-      },
-      {
-        path: "auth",
-        element: <Auth />,
       },
       {
         path: "chat",

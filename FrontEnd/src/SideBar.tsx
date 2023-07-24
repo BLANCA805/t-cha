@@ -3,9 +3,11 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
+  margin: 0.5%;
   padding: 3rem;
-  background-color: gray;
+  background-color: white;
   width: 20%;
+  border-radius: 10px;
 `;
 
 function SideBar() {

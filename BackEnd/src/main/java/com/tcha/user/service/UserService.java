@@ -24,10 +24,8 @@ public class UserService {
     public User createUser(User user) {
 
         String userId = UUID.randomUUID().toString();
-        String userRole = "ROLE_USER";
 
         user.setId(userId);
-        user.getRoles().add(userRole);
 
         User savedUser = userRepository.save(user);
         return savedUser;
@@ -57,6 +55,15 @@ public class UserService {
         return findUser;
     }
 
+    // DB에서 email(unique)을 통해 User를 찾는 로직
+    public User findByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findById(email);
+
+        User findUser = optionalUser.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
+
+        return findUser;
+    }
 }
 
 /*

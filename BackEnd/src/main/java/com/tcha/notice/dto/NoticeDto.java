@@ -1,10 +1,9 @@
 package com.tcha.notice.dto;
 
-import com.tcha.notice.enums.NoticeEmerStatus;
+import com.tcha.notice.entity.Notice.NoticeEmerStatus;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.util.Assert;
 
 
@@ -39,7 +38,7 @@ public class NoticeDto {
 
         private LocalDateTime created_at;
 
-        public Patch addNoticeId(Long id) {
+        public NoticeDto.Patch addNoticeId(Long id) {
             Assert.notNull(id, "id must not be null");
             this.id = id;
             return this;

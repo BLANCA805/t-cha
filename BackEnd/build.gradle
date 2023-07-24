@@ -63,6 +63,11 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	//Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	//Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	//Oauth2 client
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
 tasks.named('test') { //tasks.named('A') : `:A라는 task 가 실행된 후~`라는 의미

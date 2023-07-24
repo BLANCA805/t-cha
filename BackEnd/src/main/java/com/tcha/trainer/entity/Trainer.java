@@ -1,6 +1,6 @@
 package com.tcha.trainer.entity;
 
-import com.tcha.user.entity.User;
+import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,8 +29,8 @@ public class Trainer extends Auditable {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
 
     private String introduction;
 

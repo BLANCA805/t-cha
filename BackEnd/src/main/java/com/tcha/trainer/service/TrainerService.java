@@ -7,6 +7,8 @@ import com.tcha.trainer.dto.TrainerDto.ResponseList;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,21 +26,27 @@ public class TrainerService {
 
     public ResponseInfo updateTrainer(UUID trainerId, RequestPatch trainer) {
 
-        Trainer origin = trainerRepository.getById(trainerId);
+        Trainer target = trainerRepository.findById(trainerId).get();
 
-        origin.setIntroduction(trainer.getIntroduction());
-        origin.setTitle(trainer.getTitle());
-        origin.setContent(trainer.getContent());
-        origin.setTags(trainer.getTags());
-        // user 변경되지 않도록 설정하기
+        target.setIntroduction(trainer.getIntroduction());
+        target.setTitle(trainer.getTitle());
+        target.setContent(trainer.getContent());
+        target.setTags(trainer.getTags());
+        // user 변경되지 않도록(set XX) 설정하기
 
+        return trainerMapper.trainerToTrainerInfoDto(target);
     }
 
     public ResponseInfo findOneTrainer(UUID trainerId) {
 
+        return trainerMapper.trainerToTrainerInfoDto(trainerRepository.findById(trainerId).get());
     }
 
     public ResponseList findAllTrainers() {
+
+        List<Trainer> trainerList = trainerRepository.findAll();
+        
+
     }
 
     public void deleteTrainer(UUID trainerId) {

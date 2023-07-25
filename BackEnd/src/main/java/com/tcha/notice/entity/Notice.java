@@ -66,7 +66,6 @@ public class Notice {
         }
 
      */
-=======
 //        @ManyToOne(fetch = FetchType.LAZY)
 //        @JoinColumn(name = "user_id")
 //        @OnDelete(action = OnDeleteAction.CASCADE)

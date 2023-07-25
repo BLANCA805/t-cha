@@ -1,6 +1,5 @@
 package com.tcha.notice.controller;
 
-<<<<<<< BackEnd/src/main/java/com/tcha/notice/controller/NoticeController.java
 import com.tcha.notice.dto.NoticeDto;
 import com.tcha.notice.entity.Notice;
 import com.tcha.notice.mapper.NoticeMapper;
@@ -36,16 +35,15 @@ public class NoticeController {
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/page")
-    public ResponseEntity getNoticePage(@RequestParam(value = "page") Integer page,
+    @GetMapping
+    public ResponseEntity getNoticePage(@RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         Page<Notice> noticePage = noticeService.findNoticePages(page ,size);
-        PageInfo pageInfo = new PageInfo(page, size, (int)noticePage.getTotalElements(),noticePage.getTotalPages());
         List<Notice> notices = noticePage.getContent();
         List<NoticeDto.Response> responses = noticeMapper.noticesToResponses(notices);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(responses, (Page)pageInfo),HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, noticePage),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -55,7 +53,7 @@ public class NoticeController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity patchNotice(@PathVariable("id") Long id, @RequestBody NoticeDto.Patch patchRequest) {
         Notice noticeToService = noticeMapper.patchToNotice(patchRequest);
         Notice noticeForResponse = noticeService.updateNotice(noticeToService);

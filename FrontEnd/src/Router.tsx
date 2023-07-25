@@ -4,7 +4,6 @@ import App from "./App";
 
 import Home from "./Home";
 
-import Auth from "./screen/auth/Auth";
 
 import ChatList from "./screen/chat/chatlist/ChatList";
 import Chatting from "./screen/chat/chatting/Chatting";

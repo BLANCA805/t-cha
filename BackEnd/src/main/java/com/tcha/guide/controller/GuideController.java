@@ -4,58 +4,57 @@ import com.tcha.guide.dto.GuideDto;
 import com.tcha.guide.entity.Guide;
 import com.tcha.guide.mapper.GuideMapper;
 import com.tcha.guide.service.GuideService;
-import com.tcha.user.dto.UserDto;
-import com.tcha.user.entity.User;
-import java.util.Optional;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/guide")
+@RequestMapping("/guides")
 @Slf4j
-@RequiredArgsConstructor //생성자 주입
+@RequiredArgsConstructor //생성자 주입, final 변수 주입
+@RestControllerAdvice
 public class GuideController {
 
     private final GuideService guideService;
     private final GuideMapper guideMapper;
 
-/*
-    postGuide
-            patchGuide
-    getGuide
-            deleteGuide
-    patchDeregistGuide
-    */
-//    private final GuideServie guideServie;
 
-
-    //아직 기능 코드에 대한 조건이 없으므로 유효성 검사 필요 없으나 추후에 추가해야 될 수도 있음
+    //아직 기능 코드에 대한 조건 없음, 추후 유효성 검사 로직 추가 예정
     @PostMapping
-    public ResponseEntity postGuide(@RequestBody GuideDto.post postRequest){
+    public ResponseEntity postGuide(@RequestBody GuideDto.post postRequest) {
         Guide postGuide = guideMapper.guidePostDtoToGuide(postRequest);
         Guide guideForResponse = guideService.createGuide(postGuide);
         GuideDto.Response response = guideMapper.guideToGuideResponse(guideForResponse);
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
-    //1개의 사용 가이드 확인
-//    @GetMapping("/code/{id}")
-//    public ResponseEntity getOndGuide(@PathVariable("code") String code, @PathVariable("id") Long id){
-//
-//        Guide getGuide = guideService.findGuide(id);
-//        GuideDto.Response response = guideMapper.guideToGuideResponse(getGuide);
-//        return new ResponseEntity(response, HttpStatus.CREATED);
-//
-//    }
+    //기능 코드별 사용 가이드 보기
+    @GetMapping("/{code}")
+    public ResponseEntity getGuide(@PathVariable("code") String code) throws Exception {
+        List<GuideDto.Response> response = guideService.findAllCodeGuide(code);
+        return new ResponseEntity(response, HttpStatus.CREATED);
 
-    //여러개의 사용 가이드 확인
+    }
+
+    //1개의 사용 가이드 확인
+    @GetMapping("/code/{id}")
+    public ResponseEntity getOneGuide(@PathVariable("id") Long id) throws Exception {
+        GuideDto.Response response = guideService.findOneGuide(id);
+
+        return new ResponseEntity(response, HttpStatus.CREATED);
+    }
+
+    //서비스 가이드 수정
+    @PatchMapping
+    public ResponseEntity patchGuide(@RequestBody GuideDto.patch patchRequest) {
+        Guide patchGuide = guideMapper.guidePatchDtoToGuide(patchRequest);
+        int response = guideService.patchGuide(patchGuide);
+        return new ResponseEntity(response, HttpStatus.CREATED);
+    }
+
 
 }

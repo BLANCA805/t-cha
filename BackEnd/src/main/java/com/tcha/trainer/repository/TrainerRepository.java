@@ -12,7 +12,7 @@ public interface TrainerRepository extends JpaRepository<Trainer, UUID> {
 
     List<Trainer> findByTagsLikeIgnoreCase(String keyword);
 
-    @Query("SELECT t FROM Trainer t WHERE t.id = UNHEX(:trainer_id)")
+    @Query(value = "SELECT * FROM trainer WHERE id = unhex(trainerId)")
     Trainer findById(@Param("trainer_id") String trainerId);
 
     @Query("DELETE FROM Trainer t WHERE t.id = UNHEX(:trainer_id)")

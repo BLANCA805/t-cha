@@ -57,7 +57,7 @@ public class UserService {
 
     // DB에서 email(unique)을 통해 User를 찾는 로직
     public User findByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findById(email);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
 
         User findUser = optionalUser.orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));

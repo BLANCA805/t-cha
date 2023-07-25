@@ -42,9 +42,9 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         List<String> authorities = null; // 어플리케이션에서 사용할 인증서에 역할을 생성
         //TODO.
         try { //email, 혹은 기타 검증을 통해 첫 로그인(회원가입)인지 아닌지를 판단
-            userService.findByEmail(email);
+            User isNew = userService.findByEmail(email);
 
-            authorities = userService.findByEmail(email).getRoles(); // 기존에 db에 저장된 권한 호출
+            authorities = isNew.getRoles(); // 기존에 db에 저장된 권한 호출
         }
         catch (BusinessLogicException e){//판단 이후 회원가입 로직을 진행시킬지 로그인 진행을 시킬지 선택
             User firstUser = new User();
@@ -54,7 +54,6 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             firstUser.setRoles(authorities);
             userService.createUser(firstUser);
         }
-
         redirect(request, response, email, authorities); //
     }
 
@@ -100,10 +99,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 .newInstance()
                 .scheme("http")
                 .host("localhost")
-                .port(3000)
-//                .path("/")
-//                .path("/receive-token.html")
-                .path("/tokeninfo")
+                .path("/receive-token.html")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

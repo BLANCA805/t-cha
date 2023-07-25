@@ -1,0 +1,36 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create # 스키마 자동 생성
+    show-sql: true # SQL 쿼리 출력
+    properties:
+      hibernate:
+        format_sql: true # sql 쿼리 가독성 옵션
+  h2:
+    console:
+      enabled: true # h2.console.enabled: true => h2 console 사용 설정 (=웹 브라우저에서 h2 콘솔 사용 가능)
+      path: /h2 # h2.console.enabled.path: /h2 => h2 console 사용 경로 url 설정(고정)
+  datasource:
+    url: jdbc:h2:mem:test  # h2 datasource.url: jdbc:h2:mem:test => jdbc url 을 설정(고정)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 83102113547-26o4djjefordf9sccjbe1cqi73nv7ndh.apps.googleusercontent.com
+            clientSecret: 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
+            scope: # Google OAuth 2.0 인증을 사용할 때 요청할 권한 범위(scopes)를 설정, consent screen 과 연관
+              - email
+              - profile
+  server: # http response 에 UTF-8 인코딩을 강제하는 옵션, 인코딩에 관련된 문제에서 안정적인 응답을 보장하기 위해
+    servlet:
+      encoding:
+        force-response: true
+
+  # default redis settings
+  ## spring.redis.host=localhost # configuration에 사용할 정보
+  ## spring.redis.port=6397 # configuration에 사용할 정보
+  ## spring.redis.password=빈 문자열 혹은 redis 서버에 설정한 패스워드 # configuration에 사용할 정보
+  ## spring.redis.lettuce.pool.max-active: # pool에 할당될 수 있는 커넥션 최대수(음수로 설정하면 무제한)
+  ## spring.redis.lettuce.pool.max-idle: # pool의 "idle" 커넥션 최대수(음수로 설정하면 무제한)
+  ## spring.redis.lettuce.pool.min-idle: # pool의 "idle" 커넥션 최소 수 대상

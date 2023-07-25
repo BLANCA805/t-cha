@@ -1,12 +1,15 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import  styled  from "styled-components";
+import styled from "styled-components";
 
 import SideBar from "./SideBar";
 
 const Wrapper = styled.div`
   display: flex;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vh;
   background-color: #e2f2ef;
 `;
 
@@ -19,7 +22,6 @@ function App() {
     <Wrapper>
       <SideBar />
       <Container>
-        <h1>App 전체에 다 보여야합니다.</h1>
         <Outlet />
       </Container>
     </Wrapper>

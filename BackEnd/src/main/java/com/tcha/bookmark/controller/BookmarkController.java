@@ -38,7 +38,7 @@ public class BookmarkController {
     }
 
     //즐겨찾기 삭제
-    @PatchMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity patchBookMark(@PathVariable("id") Long bookmarkId) {
         int response = bookmarkService.deleteBookmark(bookmarkId);
         return new ResponseEntity(response, HttpStatus.CREATED);

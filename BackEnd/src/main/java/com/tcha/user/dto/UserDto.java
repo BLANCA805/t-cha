@@ -8,11 +8,11 @@ import lombok.Getter;
 
 public class UserDto {
 
-//    @AllArgsConstructor
-//    @Getter
-//    public static class Post{
-//
-//    }
+    @AllArgsConstructor
+    @Getter
+    public static class Post{
+
+    }
 
     @AllArgsConstructor
     @Getter

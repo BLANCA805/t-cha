@@ -49,8 +49,8 @@ public class BookMark {
         }
     }
 
-    BookMark(String userId, Long trainerId) {
-        this.trainer.setTrainerId(trainerId);
-        this.user.setId(userId);
-    }
+//    BookMark(String userId, Long trainerId) {
+//        this.trainer.setTrainerId(trainerId);
+//        this.user.setId(userId);
+//    }
 }

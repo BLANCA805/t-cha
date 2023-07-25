@@ -27,15 +27,15 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-//    @PostMapping
-//    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
-//
-//        User userToService = userMapper.postToUser(postRequest);
-//        User userForResponse = userService.createUser(userToService); //id 생성, 기본 상태 및 권한 설정
-//        UserDto.Response response = userMapper.userToResponse(userForResponse);
-//
-//        return new ResponseEntity(response, HttpStatus.CREATED);
-//    }
+    @PostMapping
+    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
+
+        User userToService = userMapper.postToUser(postRequest);
+        User userForResponse = userService.createUser(userToService); //id 생성, 기본 상태 및 권한 설정
+        UserDto.Response response = userMapper.userToResponse(userForResponse);
+
+        return new ResponseEntity(response, HttpStatus.CREATED);
+    }
 
     @GetMapping("/{user-id}")
     public ResponseEntity getOneUser(@PathVariable("user-id") String userId) {

@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenizer {
 
     @Getter
-    private String secretKey = "tempSecret";
+    private String secretKey = "tempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecrettempSecret";
     @Getter
     private int accessTokenExpirationMinutes = 10;
     @Getter

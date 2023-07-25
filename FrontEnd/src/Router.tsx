@@ -4,7 +4,6 @@ import App from "./App";
 
 import Home from "./Home";
 
-
 import ChatList from "./screen/chat/chatlist/ChatList";
 import Chatting from "./screen/chat/chatting/Chatting";
 
@@ -86,7 +85,7 @@ const router = createBrowserRouter([
         element: <PtList />,
       },
       {
-        path: "pt/trainerid",
+        path: "pt/:trainerid",
         element: <PtDetail />,
         children: [
           {

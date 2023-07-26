@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -60,6 +61,21 @@ const Text = styled.div`
 `;
 
 const Auth = ({ open, onClose }: AuthProps) => {
+  const [userData, setUserData] = useState({});
+
+  const onClick = () => {
+    const api = "http://localhost:8080/users";
+    axios
+      .post(api, { headers: {} })
+      .then((response) => {
+        setUserData(response.data);
+        onClose();
+        console.log(response.data.id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <ModalWrapper
       open={open}
@@ -73,7 +89,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
         </ImageWrapper>
         <ContentsWrapper>
           <Text>SNS 계정으로 간편 로그인/회원가입</Text>
-          <Button>Google로 로그인하기</Button>
+          <Button onClick={onClick}>Google로 로그인하기</Button>
           <Button onClick={onClose}>Close modal</Button>
         </ContentsWrapper>
       </Container>

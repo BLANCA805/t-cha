@@ -1,6 +1,8 @@
-import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
+
+import TrainerButtons from "@user-trainer/trainer-buttons";
 
 const Wrapper = styled.div`
   display: flex;
@@ -26,12 +28,13 @@ const Profile = styled(ContainerSet)`
   width: 100%;
 `;
 
-const TrainerContainer = styled(ContainerSet)`
-  display: flex;
-  flex-direction: column;
-  height: 20rem;
-  /* display:none; */
-`;
+// Button {
+//   width: 80%;
+//   background-color: #125b51;
+//   color: white;
+//   text-align: center;
+//   margin-bottom: 5px;
+// }
 
 const UserContainer = styled(ContainerSet)`
   display: flex;
@@ -50,13 +53,19 @@ const ProfilePhoto = styled.div`
 `;
 
 const Profileinfo = styled.div`
-  flex: 8;
+  flex: 6;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   padding: 5%;
   height: 100%;
   width: 100%;
+`;
+
+const ProfileModify = styled.div`
+  flex: 2;
+  display: flex;
+  align-items: center;
 `;
 
 const ProfilePhotoimg = styled.img`
@@ -89,18 +98,6 @@ const TrainerIntroduct = styled.div`
   /* background-color: lightcyan; */
 `;
 
-const TrRow = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 4;
-  width: 100%;
-  background-color: white;
-  border-radius: 10px;
-  margin-top: 0.5%;
-  margin-bottom: 0.5%;
-`;
-
 const Usrow = styled.div`
   display: flex;
   flex-direction: row;
@@ -131,18 +128,13 @@ function User() {
           <TrainerHashtag>#Tag1 #Tag2 #Tag3</TrainerHashtag>
           <TrainerIntroduct>Introduction who am I</TrainerIntroduct>
         </Profileinfo>
+        <ProfileModify>
+          <Button> 수정하기 </Button>
+        </ProfileModify>
       </Profile>
-      <TrainerContainer>
-        <TrRow>
-          <Link to="">트레이너 정보 수정 (트레이너 상세 페이지)</Link>
-        </TrRow>
-        <TrRow>
-          <Link to="">트레이너 스케줄 관리, 일정</Link>
-        </TrRow>
-        <TrRow>
-          <Link to="">내 회원 리스트</Link>
-        </TrRow>
-      </TrainerContainer>
+
+      <TrainerButtons />
+
       <UserContainer>
         <Usrow>
           <Uscol>

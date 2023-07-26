@@ -25,6 +25,8 @@ function SideBar() {
   const handleAuthClose = () => {
     setAuthOpen(false);
   };
+
+  const id = "1";
   return (
     <Wrapper>
       <h3>사이드바도 어디에서든 보여야합니다.</h3>
@@ -38,7 +40,7 @@ function SideBar() {
           <Link to="">홈으로</Link>
         </li>
         <li>
-          <Link to=":user-id">마이페이지</Link>
+          <Link to={id}>마이페이지</Link>
         </li>
         <li>
           <Link to=":user-id/schedule">내 캘린더</Link>

@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element: <Main />,
       },
       {
-        path: "customer-center",
+        path: "customer_center",
         element: <CustomerCenter />,
         children: [
           {
@@ -47,31 +47,31 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: ":user-id",
+        path: ":user_id",
         element: <User />,
       },
       {
-        path: ":user-id/bookmarked-trainers",
+        path: ":user_id/bookmarked_trainers",
         element: <BookMarkedTrainerList />,
       },
       {
-        path: ":user-id/schedule",
+        path: ":user_id/schedule",
         element: <UserSchedule />,
       },
       {
-        path: ":user-id/info-modify",
+        path: ":user_id/info_modify",
         element: <UserInfoModify />,
       },
       {
-        path: ":user-id/payment-detail",
+        path: ":user_id/payment_detail",
         element: <PaymentDetail />,
       },
       {
-        path: ":user-id/review",
+        path: ":user_id/review",
         element: <ReviewWrittenByUser />,
       },
       {
-        path: ":user-id/chat",
+        path: ":user_id/chat",
         element: <ChatList />,
         children: [
           {
@@ -85,7 +85,7 @@ const router = createBrowserRouter([
         element: <TrainerList />,
       },
       {
-        path: "trainer/:trainer-id",
+        path: "trainer/:trainer_id",
         element: <TrainerDetail />,
         children: [
           {

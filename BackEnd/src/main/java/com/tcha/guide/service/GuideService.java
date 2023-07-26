@@ -1,72 +1,94 @@
 package com.tcha.guide.service;
 
-import com.tcha.guide.dto.GuideDto;
 import com.tcha.guide.entity.Guide;
+import com.tcha.guide.mapper.GuideMapper;
 import com.tcha.guide.repository.GuideRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import com.tcha.guide.dto.GuideDto.Post;
+import com.tcha.guide.dto.GuideDto.Patch;
+import com.tcha.guide.dto.GuideDto.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class GuideService {
     private final GuideRepository guideRepository;
+    private final GuideMapper guideMapper;
 
     //새로운 사용 가이드 생성
-    public Guide createGuide(Guide guide){
-        return guideRepository.save(guide);
+    public Response createGuide(Post postRequest) {
+        Guide guide = guideRepository.save(
+                Guide.builder()
+                        .title(postRequest.getTitle())
+                        .code(postRequest.getCode())
+                        .content(postRequest.getContent())
+                        .status(Guide.Status.STATUS_ACTIVE)
+                    .build());
+
+//        log.debug("[guide] save한 가이드 id 확인 : ", guide.getId());
+        System.out.println("[guide] save한 가이드 id 확인 : " + guide.getId());
+
+        return guideMapper.guideToResponseDto(guide);
     }
 
     //사용 가이드 코드별 사용가이드 전체 조회
-    public List<GuideDto.Response> findAllCodeGuide(String code){
+    public List<Response> findAllCodeGuide(String code) {
         List<Guide> responseGuide = guideRepository.findByGuideCode(code);
-        List<GuideDto.Response> response = new ArrayList<>();
-        //dto로 변경해서 보내기!!!!
+        List<Response> responseList = new ArrayList<>();
 
-        for (Guide now: responseGuide) {
-            GuideDto.Response ansGuide = GuideDto.Response.builder()
-                            .id(now.getId())
-                            .title(now.getTitle())
-                            .code(now.getCode())
-                            .content(now.getContent())
-                            .status(String.valueOf(now.getStatus())).build();
-            response.add(ansGuide);
+        for (Guide guide: responseGuide) {
+            Response response = Response.builder()
+                            .id(guide.getId())
+                            .title(guide.getTitle())
+                            .code(guide.getCode())
+                            .content(guide.getContent())
+                            .status(guide.getStatus())
+                    .build();
+            responseList.add(response);
         }
 
-        return response;
+        return responseList;
     }
 
     //사용 가이드 1개 조회
-    //
-    public GuideDto.Response findOneGuide(Long id) throws Exception{
-        Optional<Guide> FindGuide = guideRepository.findById(id);
-        if(FindGuide.isPresent()) {
-            Guide now = FindGuide.get();
-            GuideDto.Response response = GuideDto.Response.builder()
-                    .id(now.getId())
-                    .title(now.getTitle())
-                    .code(now.getCode())
-                    .content(now.getContent())
-                    .status(String.valueOf(now.getStatus())).build();
-            return response;
-        }else{
-            //에러 처리가 필요함
-            throw new NullPointerException("객체가 존재하지 않습니다.");
-        }
-    }
+    public Response findOneGuide(Long id) {
+        Guide guide = guideRepository.findById(id).get();
 
-    //사용 가이드 삭제
-//    public int deleteGuide(Long id){
-//        return guideRepository.deleteById(id);
-//    }
+        Response response = Response.builder()
+                .id(guide.getId())
+                .title(guide.getTitle())
+                .code(guide.getCode())
+                .content(guide.getContent())
+                .status(guide.getStatus())
+                .build();
+        return response;
+    }
 
     //서비스 가이드 내용 수정
-    public int patchGuide(Guide patchGuide){
-        return guideRepository.updateByGuide(patchGuide.getId(), patchGuide.getCode(), patchGuide.getTitle(), patchGuide.getContent(), patchGuide.getStatus());
+    public Response patchGuide(Long id, Patch patchGuide) {
+
+        Guide guide = guideRepository.findById(id).get();
+
+        guide.setCode(patchGuide.getCode());
+        guide.setTitle(patchGuide.getTitle());
+        guide.setContent(patchGuide.getContent());
+
+
+        return guideMapper.guideToResponseDto(guide);
     }
+
+
+    //사용 가이드 삭제
+    public void deleteGuide(Long id){
+        guideRepository.deleteById(id);
+    }
+
+
 }

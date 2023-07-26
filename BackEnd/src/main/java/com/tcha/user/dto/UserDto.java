@@ -10,7 +10,7 @@ public class UserDto {
 
     @AllArgsConstructor
     @Getter
-    public static class Post {
+    public static class Post{
 
     }
 

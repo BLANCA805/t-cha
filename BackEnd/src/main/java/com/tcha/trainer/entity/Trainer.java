@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +17,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -36,12 +34,10 @@ public class Trainer extends Auditable {
 
     private String introduction;
 
-    @Column(columnDefinition = "TEXT")
     private String tags;
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
     private String content;
 
 }

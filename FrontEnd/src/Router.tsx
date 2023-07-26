@@ -2,26 +2,26 @@ import { createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
-import Home from "./Home";
+import Main from "@/main";
 
-import ChatList from "./screen/chat/chatlist/ChatList";
-import Chatting from "./screen/chat/chatting/Chatting";
+import ChatList from "@/chat-list";
+import ChatRoom from "@/chat-room";
 
-import CustomerCenter from "./screen/customercenter/CustomerCenter";
-import Notice from "./screen/customercenter/notice/Notice";
-import QnA from "./screen/customercenter/qna/QnA";
+import CustomerCenter from "@/customer-center";
+import Inquiry from "@customer-center/inquiry";
+import Notice from "@customer-center/notice";
 
-import MyPage from "./screen/mypage/MyPage";
-import BookMark from "./screen/mypage/page/bookmark/BookMark";
-import Calendar from "./screen/mypage/page/calendar/Calendar";
-import InfoEdit from "./screen/mypage/page/infoedit/InfoEdit";
-import Payment from "./screen/mypage/page/payment/Payment";
-import MyReview from "./screen/mypage/page/review/MyReview";
+import User from "@/user";
+import BookMarkedTrainerList from "@/bookmarked-trainer-list";
+import UserSchedule from "@/user-schedule";
+import UserInfoModify from "@/user-info-modify";
+import PaymentDetail from "@/payment-detail";
+import ReviewWrittenByUser from "@/review-written-by-user";
 
-import PtList from "./screen/personaltrainer/PtList";
-import PtDetail from "./screen/personaltrainer/ptdetail/PtDetail";
-import PtInfo from "./screen/personaltrainer/ptdetail/info/PtInfo";
-import PtReview from "./screen/personaltrainer/ptdetail/review/PtReview";
+import TrainerList from "@/trainer-list";
+import TrainerDetail from "@/trainer-detail";
+import TrainerInfo from "@trainer-detail/trainer-info";
+import TrainerReview from "@trainer-detail/trainer-review";
 
 const router = createBrowserRouter([
   {
@@ -30,17 +30,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Home />,
-      },
-      {
-        path: "chat",
-        element: <ChatList />,
-        children: [
-          {
-            path: "chatid",
-            element: <Chatting />,
-          },
-        ],
+        element: <Main />,
       },
       {
         path: "customer-center",
@@ -51,50 +41,60 @@ const router = createBrowserRouter([
             element: <Notice />,
           },
           {
-            path: "qna",
-            element: <QnA />,
+            path: "inquiry",
+            element: <Inquiry />,
           },
         ],
       },
       {
-        path: "userid",
-        element: <MyPage />,
+        path: ":user-id",
+        element: <User />,
       },
       {
-        path: "userid/bookmark",
-        element: <BookMark />,
+        path: ":user-id/bookmarked-trainers",
+        element: <BookMarkedTrainerList />,
       },
       {
-        path: "userid/calendar",
-        element: <Calendar />,
+        path: ":user-id/schedule",
+        element: <UserSchedule />,
       },
       {
-        path: "userid/info-edit",
-        element: <InfoEdit />,
+        path: ":user-id/info-modify",
+        element: <UserInfoModify />,
       },
       {
-        path: "userid/payment",
-        element: <Payment />,
+        path: ":user-id/payment-detail",
+        element: <PaymentDetail />,
       },
       {
-        path: "userid/my-review",
-        element: <MyReview />,
+        path: ":user-id/review",
+        element: <ReviewWrittenByUser />,
       },
       {
-        path: "pt",
-        element: <PtList />,
-      },
-      {
-        path: "pt/:trainerid",
-        element: <PtDetail />,
+        path: ":user-id/chat",
+        element: <ChatList />,
         children: [
           {
-            path: "trainer-info",
-            element: <PtInfo />,
+            path: "chatid",
+            element: <ChatRoom />,
+          },
+        ],
+      },
+      {
+        path: "trainer",
+        element: <TrainerList />,
+      },
+      {
+        path: "trainer/:trainer-id",
+        element: <TrainerDetail />,
+        children: [
+          {
+            path: "info",
+            element: <TrainerInfo />,
           },
           {
-            path: "trainer-review",
-            element: <PtReview />,
+            path: "review",
+            element: <TrainerReview />,
           },
         ],
       },

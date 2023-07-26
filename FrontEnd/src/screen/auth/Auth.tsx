@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+
 import styled from "styled-components";
 
 interface AuthProps {
@@ -11,24 +11,55 @@ interface AuthProps {
 }
 
 const ModalWrapper = styled(Modal)`
-  display: flex;
+  display:flex;
   align-items: center;
   justify-content: center;
 `;
 
-const ContentBox = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const Container = styled(Box)`
+  display:flex;
+  flex-direction: column;
+  align-items: center;
   width: 300px;
   height:400px;
   background-color: white; 
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16); 
   padding: 16px; 
+
+  Button {
+    width:80%;
+    background-color: #125B51;
+    color:white;
+    text-align:center;
+    margin-bottom:5px;
+  }
 `;
 
-const Auth: React.FC<AuthProps> = ({ open, onClose }) => {
+const ContentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex:3; 
+
+`;
+
+const ImageWrapper = styled.div`
+  display: flex;
+  flex:6; 
+  align-items: center;
+  justify-content: center;
+`;
+
+const Image = styled.img`
+  /* max-width: 100%;
+  max-height: 100%; */
+`;
+
+const Text = styled.div`
+  text-align: center;
+  margin-bottom:15px;
+`;
+
+const Auth = ({ open, onClose }: AuthProps) => {
   return (
     <ModalWrapper
       open={open}
@@ -36,18 +67,18 @@ const Auth: React.FC<AuthProps> = ({ open, onClose }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <ContentBox>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          LOGO
-        </Typography>
-        <div>
-        <Button onClick={onClose}>Google로 로그인하기</Button> 
-        </div>
-        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography> */}
-        <Button onClick={onClose}>Close modal</Button>
-      </ContentBox>
+      <Container>
+        <ImageWrapper>
+        <Image src="/logo192.png" />
+        </ImageWrapper>
+        <ContentsWrapper>
+          <Text>
+            SNS 계정으로 간편 로그인/회원가입
+          </Text>
+          <Button>Google로 로그인하기</Button> 
+          <Button onClick={onClose}>Close modal</Button>
+        </ContentsWrapper>
+      </Container>
     </ModalWrapper>
   );
 };

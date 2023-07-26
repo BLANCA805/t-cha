@@ -34,6 +34,9 @@ function SideBar() {
           <Link to="">홈으로</Link>
         </li>
         <li>
+          <Link to="userid">마이페이지</Link>
+        </li>
+        <li>
           <Link to="userid/calendar">내 캘린더</Link>
         </li>
         <li>

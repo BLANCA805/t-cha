@@ -1,8 +1,7 @@
-import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-import SideBar from "./SideBar";
+import SideBar from "./components/common/side-bar";
 
 const Wrapper = styled.div`
   display: flex;

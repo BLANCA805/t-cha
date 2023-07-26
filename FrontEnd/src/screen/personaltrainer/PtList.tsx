@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 import styled from "styled-components";
 
 import { TextField } from "@mui/material";
@@ -11,9 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import Button from "@mui/material/Button";
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { StaticDateTimePicker } from "@mui/x-date-pickers/StaticDateTimePicker";
+import DatePicker from "../../component/DatePicker";
 
 import PtListItem from "./PtListItem";
 
@@ -31,6 +27,38 @@ const ButtonContainer = styled.div`
 `;
 
 function PtList() {
+  const trainerListData = [
+    {
+      id: 1,
+      name: "임병국1",
+      keywordTags: ["야생", "강인함", "상남자"],
+      registrationDate: "2023-07-25",
+      studentCount: 777,
+      reservationCount: 1000,
+      reviewCount: 850,
+      reReservationRate: 98,
+    },
+    {
+      id: 2,
+      name: "임병국2",
+      keywordTags: ["야생", "강인함", "상남자"],
+      registrationDate: "2023-07-25",
+      studentCount: 777,
+      reservationCount: 1000,
+      reviewCount: 850,
+      reReservationRate: 98,
+    },
+    {
+      id: 3,
+      name: "임병국3",
+      keywordTags: ["야생", "강인함", "상남자"],
+      registrationDate: "2023-07-25",
+      studentCount: 777,
+      reservationCount: 1000,
+      reviewCount: 850,
+      reReservationRate: 98,
+    },
+  ];
   return (
     <div>
       <Wrapper>
@@ -42,19 +70,19 @@ function PtList() {
         />
         <ButtonContainer>
           <Button size="large" variant="outlined">
-            Outlined
+            정렬 조건 1
           </Button>
           <Button size="large" variant="outlined">
-            Outlined
+            정렬 조건 2
           </Button>
           <Button size="large" variant="outlined">
-            Outlined
+            정렬 조건 3
           </Button>
           <Button size="large" variant="outlined">
-            Outlined
+            정렬 조건 4
           </Button>
           <Button size="large" variant="outlined">
-            Outlined
+            정렬 조건 5
           </Button>
         </ButtonContainer>
         <Accordion>
@@ -63,16 +91,18 @@ function PtList() {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>Accordion 1</Typography>
+            <Typography>날짜 및 시간 선택</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StaticDateTimePicker orientation="landscape" />
-            </LocalizationProvider>
+            <DatePicker />
           </AccordionDetails>
         </Accordion>
       </Wrapper>
-      <PtListItem />
+      <div>
+        {trainerListData.map((trainerData, index) => (
+          <PtListItem data={trainerData} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 public class TrainerDto {
 
@@ -23,6 +24,7 @@ public class TrainerDto {
         private String title;
         private String content;
         private String tags;
+        private List<MultipartFile> images;
         private String userProfileId; // 현재 로그인한 유저의 프로필 아이디
     }
 
@@ -38,7 +40,8 @@ public class TrainerDto {
         private String introduction;
         private String title;
         private String content;
-        private String tags; // *고민* 태그 수정을 전체 정보 수정과 분리?
+        private String tags;
+        private List<MultipartFile> images;
     }
 
     /*
@@ -68,7 +71,7 @@ public class TrainerDto {
         private String tags;
         private String title;
         private String content;
-        private List<String> images; // 포트폴리오 사진
+        private List<String> images; // 포트폴리오 사진 리스트
         private String profileImg; // 유저 프로필 사진
         private String profileName; // 유저 이름
     }

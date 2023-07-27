@@ -4,13 +4,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/pages/*"],
-      "@common/*": ["src/components/common/*"],
-      "@customer-center/*": ["src/components/customer-center/*"],
-      "@main/*": ["src/components/main/*"],
-      "@trainer-detail/*": ["src/components/trainer-detail/*"],
-      "@trainer-list/*": ["src/components/trainer-list/*"],
-      "@user/*": ["src/components/user/*"],
-      "@user-trainer/*": ["src/components/user-trainer/*"]
+      "@shared/*": ["src/shared/*"],
+      "@customer-center/*": ["src/containers/customer-center/*"],
+      "@main/*": ["src/containers/main/*"],
+      "@trainer-detail/*": ["src/containers/trainer-detail/*"],
+      "@trainer-list/*": ["src/containers/trainer-list/*"],
+      "@user/*": ["src/containers/user/*"],
+      "@user-trainer/*": ["src/containers/user-trainer/*"]
     },
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext", "ES6"],

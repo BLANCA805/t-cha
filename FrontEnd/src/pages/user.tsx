@@ -138,7 +138,7 @@ function User() {
       <UserContainer>
         <Usrow>
           <Uscol>
-            <Link to="bookmarked-trainers">즐찾트레이너</Link>
+            <Link to="bookmarked_trainers">즐찾트레이너</Link>
           </Uscol>
           <Uscol>
             <Link to="schedule">캘린더</Link>
@@ -149,13 +149,13 @@ function User() {
         </Usrow>
         <Usrow>
           <Uscol>
-            <Link to="payment-detail">결제정보</Link>
+            <Link to="payment_detail">결제정보</Link>
           </Uscol>
           <Uscol>
-            <Link to="/chat">채팅목록</Link>
+            <Link to="chat">채팅목록</Link>
           </Uscol>
           <Uscol>
-            <Link to="/customer-center">고객센터</Link>
+            <Link to="customer_center">고객센터</Link>
           </Uscol>
         </Usrow>
       </UserContainer>

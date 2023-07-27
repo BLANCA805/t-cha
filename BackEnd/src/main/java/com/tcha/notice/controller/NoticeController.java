@@ -2,6 +2,7 @@ package com.tcha.notice.controller;
 
 import com.tcha.notice.dto.NoticeDto;
 import com.tcha.notice.entity.Notice;
+import com.tcha.notice.entity.Notice.NoticeEmerStatus;
 import com.tcha.notice.mapper.NoticeMapper;
 import com.tcha.notice.service.NoticeService;
 import com.tcha.utils.pagination.MultiResponseDto;
@@ -36,25 +37,27 @@ public class NoticeController {
     }
 
     @GetMapping
-    public ResponseEntity getNoticePage(@RequestParam(value = "page", defaultValue = "1") Integer page,
+    public ResponseEntity getNoticePage(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-        Page<Notice> noticePage = noticeService.findNoticePages(page ,size);
+        Page<Notice> noticePage = noticeService.findNoticePages(page, size);
         List<Notice> notices = noticePage.getContent();
         List<NoticeDto.Response> responses = noticeMapper.noticesToResponses(notices);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(responses, noticePage),HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, noticePage), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity getOneNotice(@PathVariable(value = "id") Long id) {
+    @GetMapping("/{notice-id}")
+    public ResponseEntity getOneNotice(@PathVariable(value = "notice-id") Long id) {
         Notice noticeForResponse = noticeService.findNotice(id);
         NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity patchNotice(@PathVariable("id") Long id, @RequestBody NoticeDto.Patch patchRequest) {
+    @PatchMapping("/{notice-id}")
+    public ResponseEntity patchNotice(@PathVariable("notice-id") Long id,
+            @RequestBody NoticeDto.Patch patchRequest) {
         Notice noticeToService = noticeMapper.patchToNotice(patchRequest);
         Notice noticeForResponse = noticeService.updateNotice(noticeToService);
         NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
@@ -62,8 +65,8 @@ public class NoticeController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteOneNotice(@PathVariable(value = "id") Long id) {
+    @DeleteMapping("/{notice-id}")
+    public ResponseEntity deleteOneNotice(@PathVariable(value = "notice-id") Long id) {
         noticeService.deleteNotice(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

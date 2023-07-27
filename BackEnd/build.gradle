@@ -74,7 +74,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     // AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
+    // SpringBoot devtools
+    // 서버 재시작없이 수정사항 적용하기 위한 라이브러리
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
 
 tasks.named('test') { //tasks.named('A') : `:A라는 task 가 실행된 후~`라는 의미

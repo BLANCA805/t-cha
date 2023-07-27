@@ -1,16 +1,14 @@
 package com.tcha.guide.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Guide {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +41,6 @@ public class Guide {
         this.code = code;
         this.content = content;
         this.title = title;
-
     }
 
 }

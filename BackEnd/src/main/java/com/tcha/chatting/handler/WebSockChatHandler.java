@@ -1,5 +1,10 @@
 package com.tcha.chatting.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tcha.chatting.entity.Chat;
+import com.tcha.chatting.entity.Message;
+import com.tcha.chatting.service.ChatService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -8,14 +13,22 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class WebSockChatHandler extends TextWebSocketHandler {
+    private final ObjectMapper objectMapper;
+    private final ChatService service;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message)
             throws Exception {
         String payload = message.getPayload();
         log.info("payload {}", payload);
-        TextMessage textMessage = new TextMessage("testing");
-        session.sendMessage(textMessage);
+//        TextMessage textMessage = new TextMessage("testing");
+//        session.sendMessage(textMessage);
+
+        Message chatMessage = objectMapper.readValue(payload, Message.class);
+        Chat room = service.findRoomById(chatMessage.getId());
+        room.handleActions(session, chatMessage, service);
+
     }
 }

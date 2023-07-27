@@ -2,6 +2,7 @@ package com.tcha.trainer.service;
 
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
+import com.tcha.tag.service.TagService;
 import com.tcha.trainer.dto.TrainerDto.Patch;
 import com.tcha.trainer.dto.TrainerDto.Post;
 import com.tcha.trainer.dto.TrainerDto.Get;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +40,7 @@ public class TrainerService {
 
         // userProfile 객체 가져오기
         UserProfile userProfile =
-                userProfileRepository.findById(postRequest.getUserProfileId()).get();
+                userProfileRepository.findById(postRequest.getUserProfileId()).orElseThrow();
 
         // 트레이너 생성
         Trainer createdTrainer = trainerRepository.save(
@@ -50,12 +52,19 @@ public class TrainerService {
                         .userProfile(userProfile)
                         .build());
 
-        // 태그
-//        String[] tagList = postRequest.getTags().split(",");
-//        for (String t : tagList) {
-//            Tag tag = tagRepository.findByName(t)
-//                    .orElse(new Tag());
-//        }
+        // 태그 테이블 설정
+        String trainerStr = createdTrainer.getId() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
+        String[] tagList = postRequest.getTags().split(",");
+        for (String t : tagList) {
+            // 존재하지 않는 태그일 경우, 이름만 가지고 있는 새로운 태그 엔티티 생성
+            Tag tag = tagRepository.findByName(t).orElseGet(() -> Tag.builder().name(t).build());
+            tag.setTrainers(tag.getTrainers() + trainerStr);
+            Tag createdTag = tagRepository.save(tag);
+            log.debug("[TrainerService] createTrainer :: 트레이너 생성 시 생성/수정되는 태그 정보 = {} ", createdTag);
+        }
+
+        // 트레이너 이미지 테이블 설정
+
 
         return trainerMapper.trainerToResponseDto(createdTrainer);
     }
@@ -106,12 +115,14 @@ public class TrainerService {
 
         List<ResponseList> trainerList = new ArrayList<ResponseList>();
         for (Trainer t : trainerRepository.findAll()) {
-            trainerList.add(ResponseList
-                            .builder()
+            trainerList.add(ResponseList.builder()
                             .id(t.getId().toString())
                             .introduction(t.getIntroduction())
                             .tags(t.getTags())
                             .createdAt(t.getCreatedAt())
+                    .profileName()
+                    .profileImg()
+                    .
         }
 
         return trainerList;

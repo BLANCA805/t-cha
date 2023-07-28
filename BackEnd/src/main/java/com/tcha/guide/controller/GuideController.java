@@ -9,6 +9,7 @@ import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/guides")
 @Slf4j
 @RequiredArgsConstructor //생성자 주입, final 변수 주입
-//@RestControllerAdvice
+@RestControllerAdvice
 public class GuideController {
 
     private final GuideService guideService;
@@ -25,7 +26,7 @@ public class GuideController {
     @PostMapping
     public ResponseEntity postGuide(@RequestBody Post postRequest) {
         Response response = guideService.createGuide(postRequest);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //기능 코드별 사용 가이드 보기
@@ -37,24 +38,25 @@ public class GuideController {
     }
 
     //1개의 사용 가이드 확인
-    @GetMapping("/code/{id}")
-    public ResponseEntity getOneGuide(@PathVariable("id") Long id) {
-        Response response = guideService.findOneGuide(id);
+    @GetMapping("/code/{guide-id}")
+    public ResponseEntity getOneGuide(@PathVariable("guide-id") Long guideId) {
+        Response response = guideService.findOneGuide(guideId);
 
         return ResponseEntity.ok().body(response);
     }
 
     //서비스 가이드 수정
-    @PatchMapping("{id}")
-    public ResponseEntity patchGuide(@PathVariable("id") Long id, @RequestBody Patch patchRequest) {
-        Response response = guideService.patchGuide(id, patchRequest);
+    @PatchMapping
+    public ResponseEntity patchGuide(@RequestBody Patch patchRequest) {
+//        System.out.println(guideId + " 테스트중");
+        Response response = guideService.patchGuide(patchRequest);
         return ResponseEntity.ok().body(response);
     }
 
     //서비스 가이드 삭제
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteGuide(@PathVariable("id") Long id) throws Exception {
-        guideService.deleteGuide(id);
+    @DeleteMapping("{guide-id}")
+    public ResponseEntity deleteGuide(@PathVariable("guide-id") Long guideId) {
+        guideService.deleteGuide(guideId);
         return ResponseEntity.noContent().build();
     }
 

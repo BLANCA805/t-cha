@@ -1,18 +1,13 @@
 package com.tcha.guide.mapper;
 
-import com.tcha.guide.dto.GuideDto.Post;
-import com.tcha.guide.dto.GuideDto.Patch;
 import com.tcha.guide.dto.GuideDto.Response;
 import com.tcha.guide.entity.Guide;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface GuideMapper {
-    Guide guidePostDtoToGuide(Post requestBody);
-    Guide guidePatchDtoToGuide(Patch requestBody);
 
-
-    default Response guideToResponseDto(Guide guide){
+    default Response guideToResponseDto(Guide guide) {
         return Response.builder()
                 .id(guide.getId())
                 .code(guide.getCode())
@@ -20,6 +15,5 @@ public interface GuideMapper {
                 .content(guide.getContent())
                 .status(guide.getStatus())
                 .build();
-    };
-
+    }
 }

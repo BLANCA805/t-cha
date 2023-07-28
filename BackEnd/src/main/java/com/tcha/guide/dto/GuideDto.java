@@ -13,7 +13,7 @@ public class GuideDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class Post{
+    public static class Post {
 
         @NotBlank
         private String code;
@@ -27,7 +27,7 @@ public class GuideDto {
     @Builder
     @NotBlank
     @AllArgsConstructor
-    public static class Patch{
+    public static class Patch {
         @NotBlank
         private Long id;
         @NotBlank
@@ -43,7 +43,7 @@ public class GuideDto {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Response{
+    public static class Response {
         private Long id;
         private String title;
         private String code;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.tcha.guide.dto.GuideDto.Post;
 import com.tcha.guide.dto.GuideDto.Patch;
 import com.tcha.guide.dto.GuideDto.Response;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +31,7 @@ public class GuideService {
                         .code(postRequest.getCode())
                         .content(postRequest.getContent())
                         .status(Guide.Status.STATUS_ACTIVE)
-                    .build());
-
-//        log.debug("[guide] save한 가이드 id 확인 : ", guide.getId());
-        System.out.println("[guide] save한 가이드 id 확인 : " + guide.getId());
-
+                        .build());
         return guideMapper.guideToResponseDto(guide);
     }
 
@@ -43,13 +40,13 @@ public class GuideService {
         List<Guide> responseGuide = guideRepository.findByGuideCode(code);
         List<Response> responseList = new ArrayList<>();
 
-        for (Guide guide: responseGuide) {
+        for (Guide guide : responseGuide) {
             Response response = Response.builder()
-                            .id(guide.getId())
-                            .title(guide.getTitle())
-                            .code(guide.getCode())
-                            .content(guide.getContent())
-                            .status(guide.getStatus())
+                    .id(guide.getId())
+                    .title(guide.getTitle())
+                    .code(guide.getCode())
+                    .content(guide.getContent())
+                    .status(guide.getStatus())
                     .build();
             responseList.add(response);
         }
@@ -72,9 +69,9 @@ public class GuideService {
     }
 
     //서비스 가이드 내용 수정
-    public Response patchGuide(Long id, Patch patchGuide) {
+    public Response patchGuide(Patch patchGuide) {
 
-        Guide guide = guideRepository.findById(id).get();
+        Guide guide = guideRepository.findById(patchGuide.getId()).get();
 
         guide.setCode(patchGuide.getCode());
         guide.setTitle(patchGuide.getTitle());
@@ -86,7 +83,7 @@ public class GuideService {
 
 
     //사용 가이드 삭제
-    public void deleteGuide(Long id){
+    public void deleteGuide(Long id) {
         guideRepository.deleteById(id);
     }
 

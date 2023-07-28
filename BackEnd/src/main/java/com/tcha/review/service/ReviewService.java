@@ -2,6 +2,8 @@ package com.tcha.review.service;
 
 import com.tcha.review.entity.Review;
 import com.tcha.review.repository.ReviewRepository;
+import com.tcha.user_profile.entity.UserProfile;
+import com.tcha.user_profile.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-// TODO   private final UserService userService;
+    private final UserProfileRepository userProfileRepository;
 
 
     //Pagenation으로 트레이너 리뷰을 불러옴
@@ -25,7 +27,13 @@ public class ReviewService {
 
         return reviewRepository.findAll(
 
-                PageRequest.of(page-1, size, Sort.by("id").descending()));
+                PageRequest.of(page - 1, size, Sort.by("id").descending()));
+    }
+
+    //이름 찾기
+    @Transactional(readOnly = true)
+    public String findNameById(String id) {
+        return userProfileRepository.findById(id).get().getName();
     }
 
     //트레이너 리뷰 1개 찾기

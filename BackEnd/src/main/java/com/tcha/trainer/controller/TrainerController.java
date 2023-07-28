@@ -4,6 +4,7 @@ import com.tcha.trainer.dto.TrainerDto.Patch;
 import com.tcha.trainer.dto.TrainerDto.Post;
 import com.tcha.trainer.dto.TrainerDto.Get;
 import com.tcha.trainer.dto.TrainerDto.Response;
+import com.tcha.trainer.dto.TrainerDto.ResponseList;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.service.TrainerService;
 import java.util.List;
@@ -66,11 +67,12 @@ public class TrainerController {
 
     /*
     등록된 전체 트레이너의 정보를 조회한다.
+    트레이너 목록 페이지 요청 API
      */
     @GetMapping
-    public ResponseEntity<List<Trainer>> getAllTrainers() {
+    public ResponseEntity<List<ResponseList>> getAllTrainers() {
 
-        List<Trainer> trainerList = trainerService.findAllTrainers();
+        List<ResponseList> trainerList = trainerService.findAllTrainers();
 
         return ResponseEntity.ok().body(trainerList);
     }

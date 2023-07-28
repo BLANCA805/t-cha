@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
-import SideBar from "./components/common/side-bar";
+import SideBar from "@shared/side-bar";
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,7 +9,8 @@ const Wrapper = styled.div`
   height: 100%;
   min-height: 100vh;
   min-width: 100vh;
-  background-color: #e2f2ef;
+  background-color: ${({ theme }) => theme.color.secondary};
+  color: ${({ theme }) => theme.color.primary};
 `;
 
 const Container = styled.div`

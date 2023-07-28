@@ -1,4 +1,4 @@
-import Slide from "@common/slide";
+import Slide from "@shared/slide";
 import RecommendTrainer from "@main/recommend-trainer";
 import TrainerCategory from "@main/trainer-category";
 import BestReview from "@main/best-review";

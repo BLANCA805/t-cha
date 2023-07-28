@@ -1,6 +1,8 @@
 package com.tcha.notice.service;
 
 import com.tcha.notice.entity.Notice;
+import com.tcha.notice.entity.Notice.NoticeEmerStatus;
+import com.tcha.notice.mapper.NoticeMapper;
 import com.tcha.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +27,13 @@ public class NoticeService {
 
         return noticeRepository.findAll(
 
-                PageRequest.of(page-1, size, Sort.by("id").descending()));
+                PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
     //공지사항 1개 찾기
     @Transactional(readOnly = true)
     public Notice findNotice(Long id) {
-        return noticeRepository.findNoticeById(id);
+        return noticeRepository.findById(id).get();
     }
 
     //공지사항 저장

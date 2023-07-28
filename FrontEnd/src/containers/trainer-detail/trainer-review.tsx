@@ -1,5 +1,12 @@
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  margin: 1%;
+  padding: 3%;
+`;
+
 function TrainerReview() {
-  return <div>트레이너 리뷰 페이지 입니다.</div>;
+  return <Wrapper>트레이너 리뷰 페이지 입니다.</Wrapper>;
 }
 
 export default TrainerReview;

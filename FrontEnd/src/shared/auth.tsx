@@ -64,7 +64,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
   const [userData, setUserData] = useState({});
 
   const onClick = () => {
-    const api = "http://localhost:8080/users";
+    const api = "http://70.12.245.39:8080/users";
     axios
       .post(api, { headers: {} })
       .then((response) => {

@@ -70,8 +70,13 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     //Oauth2 client
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    //websocket
+    
+    //websocket관련 dependency 추후 변경 가능
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+//    implementation 'org.webjars:sockjs-client:1.1.2'
+//    implementation 'org.webjars:stomp-websocket:2.3.3-1'
+
     // AWS S3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // SpringBoot devtools

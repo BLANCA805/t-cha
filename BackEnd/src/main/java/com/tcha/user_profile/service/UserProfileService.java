@@ -21,9 +21,9 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
 
     public UserProfile createUserProfile(UserProfile userProfile) {
-        String userProfileId = UUID.randomUUID().toString();
-
-        userProfile.setId(userProfileId);
+//        String userProfileId = UUID.randomUUID().toString();
+//
+//        userProfile.setId(userProfileId);
 
         return userProfileRepository.save(userProfile);
 
@@ -34,9 +34,9 @@ public class UserProfileService {
 
         UserProfile userProfileForSave = new UserProfile();
 
-        String userProfileId = UUID.randomUUID().toString();
-
-        userProfileForSave.setId(userProfileId);
+//        String userProfileId = UUID.randomUUID().toString();
+//
+//        userProfileForSave.setId(userProfileId);
         userProfileForSave.setUser(foundUser);
 
         Optional.ofNullable(userProfile.getName())

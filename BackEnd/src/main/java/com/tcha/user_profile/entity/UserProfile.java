@@ -22,7 +22,8 @@ import lombok.Setter;
 public class UserProfile extends Auditable{
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     // 일대일 단방향 관계 설정
     @OneToOne

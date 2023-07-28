@@ -31,6 +31,17 @@ public class UserService {
         return savedUser;
     }
 
+    public User testUser(User user) {
+
+        String userId = UUID.randomUUID().toString();
+
+        user.setId(userId);
+        user.getRoles().add("USER");
+
+        User savedUser = userRepository.save(user);
+        return savedUser;
+    }
+
     public User findOneUser(String userId) {
 
         return findVerifiedUser(userId);

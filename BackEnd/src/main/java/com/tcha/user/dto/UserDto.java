@@ -12,6 +12,10 @@ public class UserDto {
     @Getter
     public static class Post{
 
+        private String id;
+
+        private String email;
+
     }
 
     @AllArgsConstructor

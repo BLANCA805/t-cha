@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
 
         User userToService = userMapper.postToUser(postRequest);
-        User userForResponse = userService.createUser(userToService); //id 생성, 기본 상태 및 권한 설정
+        User userForResponse = userService.testUser(userToService); //id 생성, 기본 상태 및 권한 설정
         UserDto.Response response = userMapper.userToResponse(userForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

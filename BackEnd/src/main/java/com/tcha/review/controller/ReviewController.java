@@ -52,15 +52,15 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage),HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity getOneReview(@PathVariable(value = "id") Long id) {
+    @GetMapping("/{review-id}")
+    public ResponseEntity getOneReview(@PathVariable(value = "review-id") Long id) {
         Review reviewForResponse = reviewService.findReview(id);
         ReviewDto.Response response = reviewMapper.reviewToResponse(reviewForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteOneReview(@PathVariable(value = "id") Long id) {
+    @DeleteMapping("/{review-id}")
+    public ResponseEntity deleteOneReview(@PathVariable(value = "review-id") Long id) {
         reviewService.deleteReview(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }

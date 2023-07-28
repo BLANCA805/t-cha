@@ -2,6 +2,8 @@ package com.tcha.review.service;
 
 import com.tcha.review.entity.Review;
 import com.tcha.review.repository.ReviewRepository;
+import com.tcha.trainer.entity.Trainer;
+import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UserProfileRepository userProfileRepository;
+    private final TrainerRepository trainerRepository;
 
 
     //Pagenation으로 트레이너 리뷰을 불러옴
@@ -28,6 +31,14 @@ public class ReviewService {
         return reviewRepository.findAll(
 
                 PageRequest.of(page - 1, size, Sort.by("id").descending()));
+    }
+    //Pagenation으로 트레이너 리뷰을 불러옴
+    @Transactional(readOnly = true)
+    public Page<Review> findReviewPagesByTrainerId(Trainer trainer ,int page, int size) {
+
+        return reviewRepository.findAllByTrainerId(
+
+                trainer.getId() ,PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
     //이름 찾기
@@ -45,7 +56,7 @@ public class ReviewService {
     //트레이너 리뷰 저장
     @Transactional
     public Review createReview(Review review) {
-//  TODO    memberService.findMember(Review.getMember().getMemberId());   // 존재하는 유저인지 확인 (관리자인지 확인도 필요)
+//        userProfileRepository.findById();
 
         return reviewRepository.save(review);
     }

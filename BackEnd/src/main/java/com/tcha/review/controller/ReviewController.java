@@ -1,6 +1,7 @@
 package com.tcha.review.controller;
 
-import com.tcha.review.dto.ReviewDto;
+import com.tcha.review.dto.ReviewDto.Post;
+import com.tcha.review.dto.ReviewDto.Response;
 import com.tcha.review.entity.Review;
 import com.tcha.review.mapper.ReviewMapper;
 import com.tcha.review.service.ReviewService;
@@ -32,30 +33,30 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
-    @PostMapping
-    public ResponseEntity postReview(@RequestBody ReviewDto.Post postRequest) {
+    @PostMapping("/{user-profile-id}/trainers/{trainer-id}")
+    public ResponseEntity<Response> postReview(@RequestBody Post postRequest) {
         Review reviewToService = reviewMapper.postToReview(postRequest);
         Review reviewForResponse = reviewService.createReview(reviewToService);
-        ReviewDto.Response response = reviewMapper.reviewToResponse(reviewForResponse);
+        Response response = reviewMapper.reviewToResponse(reviewForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity getReviewPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
+    public ResponseEntity<MultiResponseDto> getReviewPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         Page<Review> reviewPage = reviewService.findReviewPages(page ,size);
         List<Review> reviews = reviewPage.getContent();
-        List<ReviewDto.Response> responses = reviewMapper.reviewsToResponses(reviews);
+        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
 
         return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage),HttpStatus.OK);
     }
 
     @GetMapping("/{review-id}")
-    public ResponseEntity getOneReview(@PathVariable(value = "review-id") Long id) {
+    public ResponseEntity<Response> getOneReview(@PathVariable(value = "review-id") Long id) {
         Review reviewForResponse = reviewService.findReview(id);
-        ReviewDto.Response response = reviewMapper.reviewToResponse(reviewForResponse);
+        Response response = reviewMapper.reviewToResponse(reviewForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 public interface ReviewMapper {
 
     Review postToReview(ReviewDto.Post postRequest);
+    Review getToReview(ReviewDto.Get getRequest);
 
     default ReviewDto.Response reviewToResponse(Review review) {
         return ReviewDto.Response.builder()

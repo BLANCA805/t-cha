@@ -16,6 +16,19 @@ public class ReviewDto {
 
         private float star;
 
+        private String userProfileId; // 현재 로그인한 유저의 프로필 아이디
+
+        private String trainerId; // 리뷰 대상 트레이너 아이디
+
+    }
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Get {
+
+        private Long trainerId;
+        private Long userProfileId;
+
     }
     @AllArgsConstructor
     @Getter

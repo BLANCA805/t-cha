@@ -15,10 +15,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Getter
 @Setter
@@ -28,6 +30,11 @@ import lombok.Setter;
 @Table(name = "USERS")
 public class User extends Auditable {
 
+//    @Id
+//    @GeneratedValue(generator = "uuid2")
+//    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+//    @Column(columnDefinition = "CHAR(32)")
+//    private UUID id;
     @Id
     private String id;
 

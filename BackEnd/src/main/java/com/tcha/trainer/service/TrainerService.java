@@ -60,11 +60,11 @@ public class TrainerService {
             Tag tag = tagRepository.findByName(t).orElseGet(() -> Tag.builder().name(t).build());
             tag.setTrainers(tag.getTrainers() + trainerStr);
             Tag createdTag = tagRepository.save(tag);
-            log.debug("[TrainerService] createTrainer :: 트레이너 생성 시 생성/수정되는 태그 정보 = {} ", createdTag);
+            log.debug("[TrainerService] createTrainer :: 트레이너 생성 시 생성/수정되는 태그 정보 = {} ",
+                    createdTag);
         }
 
         // 트레이너 이미지 테이블 설정
-
 
         return trainerMapper.trainerToResponseDto(createdTrainer);
     }
@@ -114,16 +114,16 @@ public class TrainerService {
 //                userProfileRepository.findById(postRequest.getUserProfileId()).get();
 
         List<ResponseList> trainerList = new ArrayList<ResponseList>();
-        for (Trainer t : trainerRepository.findAll()) {
-            trainerList.add(ResponseList.builder()
-                            .id(t.getId().toString())
-                            .introduction(t.getIntroduction())
-                            .tags(t.getTags())
-                            .createdAt(t.getCreatedAt())
-                    .profileName()
-                    .profileImg()
-                    .
-        }
+//        for (Trainer t : trainerRepository.findAll()) {
+//            trainerList.add(ResponseList.builder()
+//                            .id(t.getId().toString())
+//                            .introduction(t.getIntroduction())
+//                            .tags(t.getTags())
+//                            .createdAt(t.getCreatedAt())
+//                    .profileName()
+//                    .profileImg()
+//                    .
+//        }
 
         return trainerList;
     }

@@ -4,6 +4,8 @@ import com.tcha.auth.jwt.JwtTokenizer;
 import com.tcha.auth.utils.CustomAuthorityUtils;
 import com.tcha.user.entity.User;
 import com.tcha.user.service.UserService;
+import com.tcha.user_profile.entity.UserProfile;
+import com.tcha.user_profile.service.UserProfileService;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final UserService userService;
+    private final UserProfileService userProfileService;
 
     //onAuthenticationSuccess : 인증 성공 후, 로그를 기록하거나 사용자 정보를 response로 전송하는 등의 추가 작업을 할 수 있다.
     @Override
@@ -39,6 +42,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         var oAuth2User = (OAuth2User)authentication.getPrincipal(); // OAuth2 인증을 통해 사용자 정보 추출
         String email = String.valueOf(oAuth2User.getAttributes().get("email")); // 사용자 정보 중 email 추출(username)
+        String name = String.valueOf(oAuth2User.getAttributes().get("name")); // 사용자 정보 중 name 추출
         List<String> authorities = null; // 어플리케이션에서 사용할 인증서에 역할을 생성
         //TODO.
         try { //email, 혹은 기타 검증을 통해 첫 로그인(회원가입)인지 아닌지를 판단
@@ -52,7 +56,14 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
             firstUser.setEmail(email);
             firstUser.setRoles(authorities);
-            userService.createUser(firstUser);
+            User savedUser = userService.createUser(firstUser);
+
+            UserProfile firstProfile = new UserProfile();
+
+            firstProfile.setName(name);
+            firstProfile.setUser(savedUser);
+
+            userProfileService.createUserProfile(firstProfile);
         }
         redirect(request, response, email, authorities); //
     }

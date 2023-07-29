@@ -1,7 +1,7 @@
 package com.tcha.bookmark.entity;
 
 import com.tcha.trainer.entity.Trainer;
-import com.tcha.user.entity.User;
+import com.tcha.user_profile.entity.UserProfile;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -25,8 +25,8 @@ public class Bookmark {
     private Trainer trainer;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "USER_PROFILE_ID")
+    private UserProfile userProfile;
 
     @CreatedDate
     private LocalDateTime createAt;

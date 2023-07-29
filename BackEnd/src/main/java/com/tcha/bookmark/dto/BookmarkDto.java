@@ -18,6 +18,7 @@ public class BookmarkDto {
     @Builder
     @AllArgsConstructor
     public static class Post {
+
         @NotBlank
         private Trainer trainer;
         @NotBlank
@@ -27,8 +28,9 @@ public class BookmarkDto {
     @Builder
     @AllArgsConstructor
     public static class Response {
+
         @NotBlank
-        private User user;
+        private UserProfile userProfile;
         @NotBlank
         private Trainer trainer;
         private Long id;

@@ -1,6 +1,7 @@
 //package com.tcha.bookmark.service;
 //
 //
+//import com.tcha.bookmark.dto.BookmarkDto;
 //import com.tcha.bookmark.entity.Bookmark;
 //import com.tcha.bookmark.mapper.BookmarkMapper;
 //import com.tcha.bookmark.repository.BookmarkRepository;
@@ -10,6 +11,8 @@
 //import com.tcha.user_profile.repository.UserProfileRepository;
 //import jakarta.transaction.Transactional;
 //
+//import java.util.ArrayList;
+//import java.util.List;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.stereotype.Service;
@@ -26,39 +29,49 @@
 //    private final BookmarkRepository bookMarkRepository;
 //
 //    //최초 즐겨찾기 등록
-//    public Bookmark createBookmark(Long userProfileId, String trainerId) {
-//        //유저 객체 가져오기
-////        UserProfile userProfile = userProfileRepository.findById(userProfileId);
+//    public BookmarkDto.Response createBookmark(Long userProfileId, String trainerId) {
+//        //유저프로필 객체 가져오기
+//        UserProfile userProfile = userProfileRepository.findById(userProfileId);
 //
 //        //트레이너 객체 가져오기
 //        Trainer trainer = trainerRepository.findById(trainerId);
 //
-//        //새로운 즐겨찾기 객체 만들기
-//        Bookmark bookmark = bookMarkRepository.save(bookmarkMapper.makeBookmark(userProfile, trainer));
+//        //새로운 bookMarkDtoPost 객체 만들기
+//        BookmarkDto.Post bookmarkPost = BookmarkDto.Post.builder().userProfile(userProfile)
+//                .trainer(trainer).build();
 //
-//        return bookMarkRepository.save(bookmark);
+//        //새로운 즐겨찾기 entity객체 만들어서 저장하기
+//        Bookmark bookmark = bookMarkRepository.save(
+//                bookmarkMapper.bookMarkPostToBookmark(bookmarkPost));
+//
+//        //새로운 즐겨찾기 저장하기
+//        return bookmarkMapper.bookMarkToBookMarkDto(bookmark);
 //    }
-
-
+//
+//
 //    //즐겨찾기에서 삭제
-//    public int deleteBookmark(Long id) {
-//        return bookMarkRepository.updateBookMarkStatus(id);
+//    public void deleteBookmark(Long id) {
+//        bookMarkRepository.deleteById(id);
 //    }
 //
 //
 //    //유저별 즐겨찾기 목록 확인
-//    public List<BookmarkDto.Response> findAllUserIdBookMark(UUID userId) {
-//        List<Bookmark> responseBookMark = bookMarkRepository.findByUserId(userId);
-//        List<BookmarkDto.Response> response = new ArrayList<>();
+//    public List<BookmarkDto.Response> findAllUserIdBookMark(Long userProfileId) {
 //
-//        for (Bookmark now : responseBookMark) {
-//            BookmarkDto.Response ansGuide = BookmarkDto.Response.builder()
-//                    .id(now.getId())
-//                    .trainer(now.getTrainer())
-//                    .user(now.getUser()).build();
-//            response.add(ansGuide);
+//        //유저프로필 객체 가져오기
+//        UserProfile userProfile = userProfileRepository.findById(userProfileId);
+//
+//        //해당 유저프로필 객체의 즐겨찾기 목록 가져오기
+//        List<Bookmark> responseBookMarks = bookMarkRepository.findByUserProfile(userProfile);
+//        List<BookmarkDto.Response> responses = new ArrayList<>();
+//
+//        //entity객체를 dto로 타입 변경
+//        for (Bookmark responseBookmark : responseBookMarks) {
+//            BookmarkDto.Response response = bookmarkMapper.bookMarkToBookMarkDto(
+//                    responseBookmark);
+//            responses.add(response);
 //        }
-//        return response;
+//        return responses;
 //    }
-
+//
 //}

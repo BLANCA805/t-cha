@@ -46,9 +46,3 @@ public class Review extends Auditable {
      */
 }
 
-//    @OneToOne
-//    @JoinTable(name = "TRAINER_PROFILE", //조인테이블명
-//            joinColumns = @JoinColumn(name="TRAINER_ID"),  //외래키
-//            inverseJoinColumns = @JoinColumn(name="USER_PROFILE_ID") //반대 엔티티의 외래키
-//    )
-//    private UserProfile trainerProfile;

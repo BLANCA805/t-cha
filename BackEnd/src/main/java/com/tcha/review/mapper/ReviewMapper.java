@@ -9,7 +9,13 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    Review postToReview(ReviewDto.Post postRequest);
+    default Review postToReview(ReviewDto.Post postRequest) {
+        return Review.builder()
+                .content(postRequest.getContent())
+                .star(postRequest.getStar())
+                .build();
+    }
+
     Review getToReview(ReviewDto.Get getRequest);
 
     default ReviewDto.Response reviewToResponse(Review review) {

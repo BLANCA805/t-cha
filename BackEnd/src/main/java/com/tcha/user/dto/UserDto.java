@@ -3,6 +3,7 @@ package com.tcha.user.dto;
 import com.tcha.user.entity.User.UserStatus;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,19 +11,9 @@ public class UserDto {
 
     @AllArgsConstructor
     @Getter
-    public static class Post{
-
-        private String id;
-
-        private String email;
-
-    }
-
-    @AllArgsConstructor
-    @Getter
     public static class Response {
 
-        private String id;
+        private UUID id;
 
         private String email;
 

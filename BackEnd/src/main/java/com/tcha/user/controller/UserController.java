@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -28,10 +29,12 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping
-    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
+//    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
+    public ResponseEntity postUser(@RequestParam String email) {
 
-        User userToService = userMapper.postToUser(postRequest);
-        User userForResponse = userService.createUser(userToService); //id 생성, 기본 상태 및 권한 설정
+//        User userToService = userMapper.postToUser(postRequest);
+//        User userForResponse = userService.testUser(userToService); //id 생성, 기본 상태 및 권한 설정
+        User userForResponse = userService.testUser(email); //id 생성, 기본 상태 및 권한 설정
         UserDto.Response response = userMapper.userToResponse(userForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

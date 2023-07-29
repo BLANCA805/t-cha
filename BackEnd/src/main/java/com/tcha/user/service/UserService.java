@@ -23,11 +23,20 @@ public class UserService {
 
     public User createUser(User user) {
 
-        String userId = UUID.randomUUID().toString();
+        User savedUser = userRepository.save(user);
+        return savedUser;
+    }
 
-        user.setId(userId);
+    public User testUser(String email) {
+
+        User user = new User();
+
+        user.setId(UUID.randomUUID());
+        user.setEmail(email);
+        user.getRoles().add("USER");
 
         User savedUser = userRepository.save(user);
+
         return savedUser;
     }
 

@@ -20,8 +20,6 @@ public class UserProfileDto {
     @AllArgsConstructor
     public static class Patch {
 
-        private String name;
-
         private String profileImage;
 
     }

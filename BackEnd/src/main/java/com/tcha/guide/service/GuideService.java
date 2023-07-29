@@ -20,18 +20,13 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class GuideService {
+
     private final GuideRepository guideRepository;
     private final GuideMapper guideMapper;
 
     //새로운 사용 가이드 생성
     public Response createGuide(Post postRequest) {
-        Guide guide = guideRepository.save(
-                Guide.builder()
-                        .title(postRequest.getTitle())
-                        .code(postRequest.getCode())
-                        .content(postRequest.getContent())
-                        .status(Guide.Status.STATUS_ACTIVE)
-                        .build());
+        Guide guide = guideRepository.save(guideMapper.guideDtoPostToGuide(postRequest));
         return guideMapper.guideToResponseDto(guide);
     }
 
@@ -41,13 +36,7 @@ public class GuideService {
         List<Response> responseList = new ArrayList<>();
 
         for (Guide guide : responseGuide) {
-            Response response = Response.builder()
-                    .id(guide.getId())
-                    .title(guide.getTitle())
-                    .code(guide.getCode())
-                    .content(guide.getContent())
-                    .status(guide.getStatus())
-                    .build();
+            Response response = guideMapper.guideToResponseDto(guide);
             responseList.add(response);
         }
 
@@ -58,13 +47,7 @@ public class GuideService {
     public Response findOneGuide(Long id) {
         Guide guide = guideRepository.findById(id).get();
 
-        Response response = Response.builder()
-                .id(guide.getId())
-                .title(guide.getTitle())
-                .code(guide.getCode())
-                .content(guide.getContent())
-                .status(guide.getStatus())
-                .build();
+        Response response = guideMapper.guideToResponseDto(guide);
         return response;
     }
 
@@ -76,7 +59,6 @@ public class GuideService {
         guide.setCode(patchGuide.getCode());
         guide.setTitle(patchGuide.getTitle());
         guide.setContent(patchGuide.getContent());
-
 
         return guideMapper.guideToResponseDto(guide);
     }

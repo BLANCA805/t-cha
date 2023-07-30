@@ -1,9 +1,10 @@
 package com.tcha.chatting.controller;
 
-import com.tcha.chatting.dto.Message;
+import com.tcha.chatting.dto.ChannelMessage;
+import com.tcha.chatting.repository.ChattingRepository;
+import com.tcha.chatting.service.RedisPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -11,11 +12,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/chat")
 public class ChattingController {
 
-    private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-    @MessageMapping("/hello") //클라이언트에서, /pub/hello로 메세지 발행
-    public void message(Message message) {
-        simpMessageSendingOperations.convertAndSend("/sub/channel/" + message.getChannelId(),
+    private final RedisPublisher redisPublisher;
+    private final ChattingRepository chattingRepository;
+
+    @MessageMapping("/chat/message")
+    public void message(ChannelMessage message) {
+        if (ChannelMessage.MessageType.ENTER.equals(message.getType())) {
+            chattingRepository.enterChatRoom(String.valueOf(message.getChannelId()));
+            message.setMessage(message.getSender() + "님이 입장하셨습니다.");
+        }
+        // Websocket에 발행된 메시지를 redis로 발행한다(publish)
+        redisPublisher.publish(chattingRepository.getTopic(String.valueOf(message.getChannelId())),
                 message);
     }
 }

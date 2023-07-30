@@ -1,6 +1,5 @@
 package com.tcha.chatting.dto;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +12,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Message {
+public class ChannelMessage {
 
-    @Id
-    private String channelId;
+    private Long channelId;
     private MessageType type;
     private String sender; // 보낸 사람
-    private Object data; // 메세지 내용
+    private String message; // 메세지 내용
 
 
     public enum MessageType {
-        CONNECT, TALK, DISCONNECT;
+        ENTER, TALK;
+//        CONNECT, TALK, DISCONNECT;
     }
 }

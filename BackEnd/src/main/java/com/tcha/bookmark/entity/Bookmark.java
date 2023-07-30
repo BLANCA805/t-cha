@@ -30,4 +30,9 @@ public class Bookmark {
 
     @CreatedDate
     private LocalDateTime createAt;
+
+    public Bookmark(UserProfile userProfile, Trainer trainer) {
+        this.userProfile = userProfile;
+        this.trainer = trainer;
+    }
 }

@@ -7,9 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TrainerMapper {
-
-    Trainer trainerPatchDtoToTrainer(TrainerDto.Patch patchRequest);
-
+    
     default TrainerDto.Response trainerToResponseDto(Trainer trainer) {
         return TrainerDto.Response.builder()
                 .id(trainer.getId().toString())

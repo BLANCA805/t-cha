@@ -30,7 +30,7 @@ public class UserProfile extends Auditable{
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String name;
 
     @Column(nullable = true)

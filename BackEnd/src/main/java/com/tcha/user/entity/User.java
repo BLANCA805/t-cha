@@ -35,8 +35,8 @@ public class User extends Auditable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-//    @Column(columnDefinition = "CHAR(32)") // 에러 발생
-    private UUID id;
+    @Column(columnDefinition = "CHAR(36)") // 에러 발생
+    private String id;
 
     // 일대일 양방향 설정 추가
     @OneToOne(mappedBy = "user")

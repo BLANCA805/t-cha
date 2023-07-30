@@ -25,7 +25,6 @@ public class TrainerDto {
         private String content;
         private String tags;
         private List<MultipartFile> images;
-        private String userProfileId; // 현재 로그인한 유저의 프로필 아이디
     }
 
     /*

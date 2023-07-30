@@ -2,6 +2,7 @@ package com.tcha.bookmark.dto;
 
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.user.entity.User;
+import com.tcha.user_profile.entity.UserProfile;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,18 +15,22 @@ import java.util.UUID;
 public class BookmarkDto {
 
 
-    public static class post {
+    @Builder
+    @AllArgsConstructor
+    public static class Post {
+
         @NotBlank
-        private UUID trainerId;
+        private Trainer trainer;
         @NotBlank
-        private UUID userId;
+        private UserProfile userProfile;
     }
 
     @Builder
     @AllArgsConstructor
     public static class Response {
+
         @NotBlank
-        private User user;
+        private UserProfile userProfile;
         @NotBlank
         private Trainer trainer;
         private Long id;

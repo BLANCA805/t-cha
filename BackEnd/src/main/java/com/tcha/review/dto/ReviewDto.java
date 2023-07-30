@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 public class ReviewDto {
+
     @Getter
     @AllArgsConstructor
     @Builder
@@ -17,6 +18,15 @@ public class ReviewDto {
         private float star;
 
     }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Get {
+
+
+    }
+
     @AllArgsConstructor
     @Getter
     @Builder
@@ -32,8 +42,8 @@ public class ReviewDto {
 
         private String profileName; // 유저 이름
 
-         private String trainerProfileImg; // 트레이너 프로필 사진
+        private String trainerProfileImg; // 트레이너 프로필 사진
 
         private String trainerProfileName; // 트레이너 이름
-   }
+    }
 }

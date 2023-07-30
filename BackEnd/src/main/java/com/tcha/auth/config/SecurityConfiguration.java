@@ -65,9 +65,9 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer()) // 커스텀 필터 추가
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers( HttpMethod.POST, "/users").permitAll()
-                                .requestMatchers( "/users/**").hasAnyRole("USER")
-                                .requestMatchers( "/userProfiles/**").hasAnyRole("USER")
+//                                .requestMatchers( HttpMethod.POST, "/users").permitAll()
+//                                .requestMatchers( "/users/**").hasAnyRole("USER")
+//                                .requestMatchers( "/userProfiles/**").hasAnyRole("USER")
                                 .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2.successHandler(

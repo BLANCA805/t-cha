@@ -31,7 +31,6 @@ public class UserService {
 
         User user = new User();
 
-        user.setId(UUID.randomUUID());
         user.setEmail(email);
         user.getRoles().add("USER");
 

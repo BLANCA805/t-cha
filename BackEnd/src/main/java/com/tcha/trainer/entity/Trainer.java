@@ -27,11 +27,11 @@ public class Trainer extends Auditable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "CHAR(32)")
+    @Column(name = "TRAINER_ID", columnDefinition = "CHAR(36)")
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "user_profile_id")
+    @JoinColumn(name = "USER_PROFILE_ID")
     private UserProfile userProfile;
 
     private String introduction;

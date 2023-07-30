@@ -15,9 +15,6 @@ public class TrainerDto {
     트레이너 등록 요청
      */
     @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class Post {
 
         private String introduction;
@@ -32,9 +29,6 @@ public class TrainerDto {
     트레이너 정보 수정 요청
     */
     @Getter
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class Patch {
 
         private String introduction;
@@ -49,8 +43,6 @@ public class TrainerDto {
     */
     @Getter
     @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class Get {
 
         private String keyword;

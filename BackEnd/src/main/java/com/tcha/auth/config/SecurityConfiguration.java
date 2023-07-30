@@ -10,6 +10,7 @@ import com.tcha.auth.filter.JwtVerificationFilter;
 import com.tcha.auth.jwt.JwtTokenizer;
 import com.tcha.auth.utils.CustomAuthorityUtils;
 import com.tcha.user.service.UserService;
+import com.tcha.user_profile.service.UserProfileService;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final UserService userService;
+    private final UserProfileService userProfileService;
 
 
     @Bean
@@ -69,7 +71,7 @@ public class SecurityConfiguration {
                                 .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2.successHandler(
-                        new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, userService)))
+                        new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, userService, userProfileService)))
                 .headers().frameOptions().disable();// H2 콘솔 사용을 위해 X-Frame-Options 비활성화
         return http.build();
     }

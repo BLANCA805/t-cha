@@ -35,7 +35,7 @@ public class UserProfileController {
     public ResponseEntity postUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Post postRequest) {
 
         UserProfile userProfileForService = userProfileMapper.postToUserProfile(postRequest);
-        UserProfile userProfileForResponse = userProfileService.createUserProfile(userId, userProfileForService);
+        UserProfile userProfileForResponse = userProfileService.testUserProfile(userId, userProfileForService);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

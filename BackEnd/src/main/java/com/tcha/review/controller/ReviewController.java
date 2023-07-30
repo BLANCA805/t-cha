@@ -36,7 +36,7 @@ public class ReviewController {
 
     @PostMapping("/{user-profile-id}/trainers/{trainer-id}")
     public ResponseEntity<Response> postReview(
-            @PathVariable(value = "user-profile-id") String userProfileId,
+            @PathVariable(value = "user-profile-id") Long userProfileId,
             @PathVariable(value = "trainer-id") String trainerId,
             @RequestBody Post postRequest) {
         Review reviewToService = reviewMapper.postToReview(postRequest);

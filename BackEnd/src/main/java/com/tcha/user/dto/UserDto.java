@@ -13,7 +13,7 @@ public class UserDto {
     @Getter
     public static class Response {
 
-        private UUID id;
+        private String id;
 
         private String email;
 

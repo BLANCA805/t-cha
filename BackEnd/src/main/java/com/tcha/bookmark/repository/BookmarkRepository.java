@@ -1,6 +1,7 @@
 package com.tcha.bookmark.repository;
 
 
+import com.tcha.user_profile.entity.UserProfile;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +16,6 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     int updateBookMarkStatus(Long id);
 
 
-    @Query(value = "FROM Bookmark b WHERE b.user.id = :userId")
-    List<Bookmark> findByUserId(UUID userId);
+    @Query(value = "FROM Bookmark b WHERE b.userProfile = :userProFile")
+    List<Bookmark> findByUserProfile(UserProfile userProFile);
 }

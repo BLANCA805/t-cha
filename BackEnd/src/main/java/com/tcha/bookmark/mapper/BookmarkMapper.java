@@ -7,7 +7,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface BookmarkMapper {
 
-    Bookmark bookMarkPostDtoToBookMark(BookmarkDto.post requestBody);
-    
-    BookmarkDto.Response bookMarkToBookMarkResponse(Bookmark bookMark);
+    //post등록을 위한 dto객체를 entity객체로 변환
+    Bookmark bookMarkPostToBookmark(BookmarkDto.Post bookMarkPost);
+
+    //bookMark Entity를 bookMarkDto로 변환
+    BookmarkDto.Response bookMarkToBookMarkDto(Bookmark bookMark);
 }

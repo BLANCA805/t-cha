@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import Button from "@mui/material/Button";
-
+// import Button from "@mui/material/Button";
+import {DefaultButton} from "@shared/button";
+// import ReverseButton from "@shared/reversebutton";
 import TrainerButtons from "@user-trainer/trainer-buttons";
 
 const Wrapper = styled.div`
@@ -28,14 +29,6 @@ const Profile = styled(ContainerSet)`
   width: 100%;
 `;
 
-// Button {
-//   width: 80%;
-//   background-color: #125b51;
-//   color: white;
-//   text-align: center;
-//   margin-bottom: 5px;
-// }
-
 const UserContainer = styled(ContainerSet)`
   display: flex;
   flex-direction: column;
@@ -43,7 +36,7 @@ const UserContainer = styled(ContainerSet)`
 `;
 
 const ProfilePhoto = styled.div`
-  flex: 4;
+  flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -53,7 +46,7 @@ const ProfilePhoto = styled.div`
 `;
 
 const Profileinfo = styled.div`
-  flex: 6;
+  flex: 5;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -63,9 +56,10 @@ const Profileinfo = styled.div`
 `;
 
 const ProfileModify = styled.div`
-  flex: 2;
+  flex: 4;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  justify-content: center;
 `;
 
 const ProfilePhotoimg = styled.img`
@@ -129,7 +123,9 @@ function User() {
           <TrainerIntroduct>Introduction who am I</TrainerIntroduct>
         </Profileinfo>
         <ProfileModify>
-          <Button> 수정하기 </Button>
+          <Link to="info_modify">
+            <DefaultButton> 수정하기 </DefaultButton>
+          </Link>
         </ProfileModify>
       </Profile>
 

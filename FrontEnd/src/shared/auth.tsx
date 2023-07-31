@@ -1,20 +1,17 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
-
-import { actionCreators } from "src/store";
-import store from "src/store";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { logIn } from "src/redux/slicers";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
+import { AppDispatch } from "src/redux/store";
 
 interface AuthProps {
   open: boolean;
   onClose: () => void;
-  userLogIn: any;
 }
 
 const ModalWrapper = styled(Modal)`
@@ -65,24 +62,20 @@ const Text = styled.div`
   margin-bottom: 15px;
 `;
 
-const Auth = ({ open, onClose, userLogIn }: AuthProps) => {
-  // const [userData, setUserData] = useState({});
+const Auth = ({ open, onClose }: AuthProps) => {
+  const dispatch = useDispatch<AppDispatch>();
 
   const onClick = () => {
-    // const api = "http://70.12.245.39:8080/users";
-    // axios
-    //   .post(api, { headers: {} })
-    //   .then((response) => {
-    //     setUserData(response.data);
-    //     onClose();
-    //     console.log(response.data.id);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    userLogIn();
-    console.log(store.getState());
+    dispatch(
+      logIn({
+        token: "token",
+        userName: "사용자 이름",
+        profileImage: "이미지 URL",
+      })
+    );
+    onClose();
   };
+
   return (
     <ModalWrapper
       open={open}
@@ -104,15 +97,4 @@ const Auth = ({ open, onClose, userLogIn }: AuthProps) => {
   );
 };
 
-function mapStateToProps(state: any) {
-  console.log(state);
-  return { state };
-}
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    userLogIn: () => dispatch(actionCreators.userLogIn()),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

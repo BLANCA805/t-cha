@@ -1,11 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
 import Router from "./Router";
+import { RouterProvider } from "react-router-dom";
+import store from "./redux/store";
 import { Provider } from "react-redux";
 
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+
 import { ThemeProvider } from "styled-components";
-import store from "./store";
 
 const color = {
   primary: "#285943",
@@ -34,15 +37,19 @@ const theme = {
   fontSize,
 };
 
+export let persistor = persistStore(store);
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <ThemeProvider theme={theme}>
     <Provider store={store}>
-      <React.StrictMode>
-        <RouterProvider router={Router} />
-      </React.StrictMode>
+      <PersistGate loading={null} persistor={persistor}>
+        <React.StrictMode>
+          <RouterProvider router={Router} />
+        </React.StrictMode>
+      </PersistGate>
     </Provider>
   </ThemeProvider>
 );

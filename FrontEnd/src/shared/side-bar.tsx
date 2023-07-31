@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import store from "src/store";
+import { useDispatch, useSelector } from "react-redux";
+
+import { AppDispatch, type RootState } from "src/redux/store";
+import { logOut } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-
-import { Modal } from "@mui/material";
 
 import styled from "styled-components";
 
@@ -27,47 +28,73 @@ function SideBar() {
     setAuthOpen(false);
   };
 
-  const testClick = () => {
-    console.log(store.getState());
+  const user = useSelector((state: RootState) => state.auth);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const LogOut = () => {
+    dispatch(logOut());
   };
 
-  const id = "1";
-  return (
-    <Wrapper>
-      <h3>사이드바도 어디에서든 보여야합니다.</h3>
-      <ul>
-        <li>
-          <Link to="#" onClick={handleAuthOpen}>
-            로그인
-          </Link>
-        </li>
-        <li>
-          <Link to="">홈으로</Link>
-        </li>
-        <li>
-          <Link to={id}>마이페이지</Link>
-        </li>
-        <li>
-          <Link to=":user-id/schedule">내 캘린더</Link>
-        </li>
-        <li>
-          <Link to=":user-id/chat">채팅 목록 보기</Link>
-        </li>
-        <li>
-          <Link to="trainer">트레이너들 보러가기</Link>
-        </li>
-        <li>
-          <Link to="customer-center">고객센터</Link>
-        </li>
-        <li>
-          <button onClick={testClick}>test</button>
-        </li>
-      </ul>
-      <Modal open={authOpen} onClose={handleAuthClose}>
+  if (user.isLogined) {
+    return (
+      <Wrapper>
+        <ul>
+          <li>{user.isLogined && <Link to="profile">마이페이지</Link>}</li>
+          <br />
+          <li>
+            <Link to="">홈</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="profile/schedule">내 캘린더</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="profile/chat">채팅 목록</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="trainer">트레이너</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="customer-center">고객센터</Link>
+          </li>
+          <br />
+          <li>
+            <button onClick={LogOut}>로그아웃</button>
+          </li>
+        </ul>
         <Auth open={authOpen} onClose={handleAuthClose} />
-      </Modal>
-    </Wrapper>
-  );
+      </Wrapper>
+    );
+  } else {
+    return (
+      <Wrapper>
+        <ul>
+          <li>
+            <Link to="#" onClick={handleAuthOpen}>
+              로그인
+            </Link>
+          </li>
+          <br />
+          <li>
+            <Link to="">홈</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="trainer">트레이너</Link>
+          </li>
+          <br />
+          <li>
+            <Link to="customer-center">고객센터</Link>
+          </li>
+        </ul>
+        <Auth open={authOpen} onClose={handleAuthClose} />
+      </Wrapper>
+    );
+  }
 }
 
 export default SideBar;

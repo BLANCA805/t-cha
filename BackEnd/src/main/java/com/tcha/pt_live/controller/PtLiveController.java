@@ -2,7 +2,6 @@ package com.tcha.pt_live.controller;
 
 import com.tcha.pt_live.dto.PtLiveDto;
 import com.tcha.pt_live.service.PtLiveService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +69,7 @@ public class PtLiveController {
 
         return ResponseEntity.ok().body(ptLive);
     }
-    
+
     /*
     pt live id를 통해 등록된 pt 라이브 삭제
      */

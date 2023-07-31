@@ -62,7 +62,7 @@ public class PtLiveService {
 
         return ptLiveMapper.ptLiveToResponseDto(ptLive);
     }
-    
+
     public void deletePtLive(long ptLiveId) {
 
         ptLiveRepository.deleteById(ptLiveId);

@@ -1,0 +1,11 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 83102113547-26o4djjefordf9sccjbe1cqi73nv7ndh.apps.googleusercontent.com
+            clientSecret: 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
+            scope: # Google OAuth 2.0 인증을 사용할 때 요청할 권한 범위(scopes)를 설정, consent screen 과 연관
+              - email
+              - profile

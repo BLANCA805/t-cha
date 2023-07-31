@@ -27,10 +27,10 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
 
-    public TrainerDto.Response createTrainer(String userId, TrainerDto.Post postRequest) {
+    public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
 
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
-        UserProfile postUser = userProfileRepository.findById(userId).orElseThrow();
+        UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();
 
         // 트레이너 생성
         Trainer createdTrainer = trainerRepository.save(

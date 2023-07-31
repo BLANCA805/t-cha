@@ -13,18 +13,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 public class BookmarkDto {
-
-
-    @Builder
-    @AllArgsConstructor
-    public static class Post {
-
-        @NotBlank
-        private Trainer trainer;
-        @NotBlank
-        private UserProfile userProfile;
-    }
-
+    
     @Builder
     @AllArgsConstructor
     public static class Response {

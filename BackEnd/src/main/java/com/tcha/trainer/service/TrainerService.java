@@ -2,24 +2,15 @@ package com.tcha.trainer.service;
 
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
-import com.tcha.tag.service.TagService;
-import com.tcha.trainer.dto.TrainerDto.Patch;
-import com.tcha.trainer.dto.TrainerDto.Post;
-import com.tcha.trainer.dto.TrainerDto.Get;
-import com.tcha.trainer.dto.TrainerDto.Response;
-import com.tcha.trainer.dto.TrainerDto.ResponseList;
+import com.tcha.trainer.dto.TrainerDto;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,24 +27,18 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
 
-    public Response createTrainer(Post postRequest) {
+    public TrainerDto.Response createTrainer(String userId, TrainerDto.Post postRequest) {
 
-        // userProfile 객체 가져오기
-        UserProfile userProfile =
-                userProfileRepository.findById(postRequest.getUserProfileId()).orElseThrow();
+        // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
+        UserProfile postUser = userProfileRepository.findById(userId).orElseThrow();
 
         // 트레이너 생성
         Trainer createdTrainer = trainerRepository.save(
-                Trainer.builder()
-                        .title(postRequest.getTitle())
-                        .content(postRequest.getContent())
-                        .tags(postRequest.getTags())
-                        .introduction(postRequest.getIntroduction())
-                        .userProfile(userProfile)
-                        .build());
+                trainerMapper.trainerPostDtoToTrainer(postRequest, postUser));
 
         // 태그 테이블 설정
-        String trainerStr = createdTrainer.getId() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
+        String trainerStr =
+                createdTrainer.getId().toString() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
         String[] tagList = postRequest.getTags().split(",");
         for (String t : tagList) {
             // 존재하지 않는 태그일 경우, 이름만 가지고 있는 새로운 태그 엔티티 생성
@@ -70,25 +55,27 @@ public class TrainerService {
     }
 
 
-    public Response updateTrainer(String trainerId, Patch patchRequest) {
+    public TrainerDto.Response updateTrainer(String trainerId, TrainerDto.Patch patchRequest) {
 
-        Trainer target = trainerRepository.findById(trainerId);
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
-        target.setIntroduction(patchRequest.getIntroduction());
-        target.setTitle(patchRequest.getTitle());
-        target.setContent(patchRequest.getContent());
-        target.setTags(patchRequest.getTags());
+        trainer.setIntroduction(patchRequest.getIntroduction());
+        trainer.setTitle(patchRequest.getTitle());
+        trainer.setContent(patchRequest.getContent());
+        trainer.setTags(patchRequest.getTags());
         // user 변경되지 않도록(set XX) 설정하기
 
-        return trainerMapper.trainerToResponseDto(target);
+        return trainerMapper.trainerToResponseDto(trainer);
     }
 
-    public Response findOneTrainer(String trainerId) {
+    public TrainerDto.Response findOneTrainer(String trainerId) {
 
-        return trainerMapper.trainerToResponseDto(trainerRepository.findById(trainerId));
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+
+        return trainerMapper.trainerToResponseDto(trainer);
     }
 
-    public List<ResponseList> findAllTrainers() {
+    public List<TrainerDto.ResponseList> findAllTrainers() {
 
         // trainer 테이블
 //        private String id; // 트레이너 id
@@ -113,7 +100,7 @@ public class TrainerService {
 //        UserProfile userProfile =
 //                userProfileRepository.findById(postRequest.getUserProfileId()).get();
 
-        List<ResponseList> trainerList = new ArrayList<ResponseList>();
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<TrainerDto.ResponseList>();
 //        for (Trainer t : trainerRepository.findAll()) {
 //            trainerList.add(ResponseList.builder()
 //                            .id(t.getId().toString())
@@ -130,11 +117,10 @@ public class TrainerService {
 
     public void deleteTrainer(String trainerId) {
 
-        trainerRepository.deleteById(trainerId);
-
+        trainerRepository.deleteById(UUID.fromString(trainerId));
     }
 
-    public List<Trainer> findTrainers(Get search) {
+    public List<Trainer> findTrainers(TrainerDto.Get search) {
 
         String keyword = "%" + search.getKeyword() + "%";
 

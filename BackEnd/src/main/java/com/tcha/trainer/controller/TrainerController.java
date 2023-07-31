@@ -1,14 +1,9 @@
 package com.tcha.trainer.controller;
 
-import com.tcha.trainer.dto.TrainerDto.Patch;
-import com.tcha.trainer.dto.TrainerDto.Post;
-import com.tcha.trainer.dto.TrainerDto.Get;
-import com.tcha.trainer.dto.TrainerDto.Response;
-import com.tcha.trainer.dto.TrainerDto.ResponseList;
+import com.tcha.trainer.dto.TrainerDto;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.service.TrainerService;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +26,16 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    @PostMapping
-    public ResponseEntity<Response> postTrainer(@RequestBody Post postRequest) {
+    @PostMapping("/{user-profile-id}")
+    public ResponseEntity<TrainerDto.Response> postTrainer(
+            @PathVariable("user-profile-id") String userProfileId,
+            @RequestBody TrainerDto.Post postRequest) {
 
-        log.debug("[Controller] postUser 접근 확인");
+        log.debug("[TrainerController] postTrainer 접근 확인 ::: "
+                + "userProfileId 값 = {}, postRequest 값 = {}", userProfileId, postRequest);
 
-        Response createdTrainer = trainerService.createTrainer(postRequest);
+        TrainerDto.Response createdTrainer = trainerService.createTrainer(userProfileId,
+                postRequest);
 
         return ResponseEntity.ok().body(createdTrainer);
     }
@@ -45,11 +44,11 @@ public class TrainerController {
     트레이너 아이디를 통해 트레이너 정보를 수정한다.
      */
     @PatchMapping("/{trainer-id}")
-    public ResponseEntity<Response> patchTrainer(
+    public ResponseEntity<TrainerDto.Response> patchTrainer(
             @PathVariable("trainer-id") String trainerId,
-            @RequestBody Patch patchRequest) {
+            @RequestBody TrainerDto.Patch patchRequest) {
 
-        Response updatedTrainer = trainerService.updateTrainer(trainerId, patchRequest);
+        TrainerDto.Response updatedTrainer = trainerService.updateTrainer(trainerId, patchRequest);
 
         return ResponseEntity.ok().body(updatedTrainer);
     }
@@ -58,9 +57,10 @@ public class TrainerController {
     트레이너 아이디를 통해 트레이너 한 명의 정보를 조회한다.
      */
     @GetMapping("/{trainer-id}")
-    public ResponseEntity<Response> getOneTrainer(@PathVariable("trainer-id") String trainerId) {
+    public ResponseEntity<TrainerDto.Response> getOneTrainer(
+            @PathVariable("trainer-id") String trainerId) {
 
-        Response trainer = trainerService.findOneTrainer(trainerId);
+        TrainerDto.Response trainer = trainerService.findOneTrainer(trainerId);
 
         return ResponseEntity.ok().body(trainer);
     }
@@ -70,9 +70,9 @@ public class TrainerController {
     트레이너 목록 페이지 요청 API
      */
     @GetMapping
-    public ResponseEntity<List<ResponseList>> getAllTrainers() {
+    public ResponseEntity<List<TrainerDto.ResponseList>> getAllTrainers() {
 
-        List<ResponseList> trainerList = trainerService.findAllTrainers();
+        List<TrainerDto.ResponseList> trainerList = trainerService.findAllTrainers();
 
         return ResponseEntity.ok().body(trainerList);
     }
@@ -93,7 +93,7 @@ public class TrainerController {
     유저가 선택한 날짜와 시간에 수업 가능한 트레이너를 검색한다.
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Trainer>> searchTrainer(@RequestBody Get getRequest) {
+    public ResponseEntity<List<Trainer>> searchTrainer(@RequestBody TrainerDto.Get getRequest) {
 
         List<Trainer> searchResult = trainerService.findTrainers(getRequest);
 

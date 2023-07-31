@@ -14,13 +14,13 @@ public interface ExerciseLogMapper {
 
     ExerciseLog patchToExerciseLog(ExerciseLogDto.Patch patchRequest);
 
-    default ExerciseLogDto.Response exerciseLogToResponse(ExerciseLog exerciseLog,
-            List<String> imgPaths) {
+    default ExerciseLogDto.Response exerciseLogToResponse(ExerciseLog exerciseLog, List<String> imgPaths, List<String> videoPaths) {
         return ExerciseLogDto.Response.builder()
                 .id(exerciseLog.getId())
                 .title(exerciseLog.getTitle())
                 .content(exerciseLog.getContent())
                 .images(imgPaths)
+                .videos(videoPaths)
                 .build();
     }
 

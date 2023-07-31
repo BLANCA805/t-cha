@@ -38,9 +38,8 @@ public class ExerciseLogController {
     private final ExerciseLogMapper exerciseLogMapper;
     private final S3Uploader s3Uploader;
 
-    @PostMapping("/{pt-live-id}")
+    @PostMapping()
     public ResponseEntity postExerciseLog(
-            @PathVariable(value = "pt-live-id") Long ptLiveId,
             @RequestPart(value = "dto") ExerciseLogDto.Post postRequest,
             @RequestPart(value = "images", required = false) MultipartFile[] images,
             @RequestPart(value = "videos", required = false) MultipartFile[] videos
@@ -59,11 +58,36 @@ public class ExerciseLogController {
 
         ExerciseLog exerciseLogForResponse = exerciseLogService.createExerciseLog(
                 exerciseLogToService, imgPaths, videoPaths);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
+        ExerciseLogDto.Response response = exerciseLogService.getExerciseLog(exerciseLogForResponse.getId());
 
         return new ResponseEntity(response, HttpStatus.CREATED);
-    }
+        }
+
+//        @PostMapping("/{pt-live-id}")
+//    public ResponseEntity postExerciseLog(
+//            @PathVariable(value = "pt-live-id") Long ptLiveId,
+//            @RequestPart(value = "dto") ExerciseLogDto.Post postRequest,
+//            @RequestPart(value = "images", required = false) MultipartFile[] images,
+//            @RequestPart(value = "videos", required = false) MultipartFile[] videos
+//    ) throws IOException {
+//        String[] imgPaths = null;
+//        String[] videoPaths = null;
+//
+//        if (images != null) {
+//            imgPaths = s3Uploader.upload(images, "exercise_log_image");
+//        }
+//        if (videos != null) {
+//            videoPaths = s3Uploader.upload(videos, "exercise_log_video");
+//        }
+//
+//        ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
+//
+//        ExerciseLog exerciseLogForResponse = exerciseLogService.createExerciseLog(
+//                exerciseLogToService, imgPaths, videoPaths);
+//        ExerciseLogDto.Response response = exerciseLogService.getExerciseLog(exerciseLogForResponse.getId());
+//
+//        return new ResponseEntity(response, HttpStatus.CREATED);
+//    }
 
     @GetMapping
     public ResponseEntity getExerciseLogPage(
@@ -79,19 +103,11 @@ public class ExerciseLogController {
                 HttpStatus.OK);
     }
 
-    //        @GetMapping("/{exercise-log-id}")
-//    public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
-//        ExerciseLog exerciseLogForResponse = exerciseLogService.findExerciseLog(id);
-//        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-//                exerciseLogForResponse);
-//        return new ResponseEntity(response, HttpStatus.OK);
-//    }
     @GetMapping("/{exercise-log-id}")
     public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
-        ExerciseLogDto.Response response = exerciseLogService.findExerciseLog(id);
+        ExerciseLogDto.Response response = exerciseLogService.getExerciseLog(id);
         return new ResponseEntity(response, HttpStatus.OK);
     }
-
     @PatchMapping("/{exercise-log-id}")
     public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id,
             @RequestPart(value = "dto") ExerciseLogDto.Patch patchRequest,
@@ -110,8 +126,7 @@ public class ExerciseLogController {
         ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(patchRequest);
         ExerciseLog exerciseLogForResponse = exerciseLogService.updateExerciseLog(
                 exerciseLogToService, imgPaths, videoPaths);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
+        ExerciseLogDto.Response response = exerciseLogService.getExerciseLog(exerciseLogForResponse.getId());
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

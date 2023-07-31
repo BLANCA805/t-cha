@@ -1,7 +1,10 @@
 package com.tcha.exercise_log.service;
 
+import com.tcha.exercise_log.dto.ExerciseLogDto;
+import com.tcha.exercise_log.dto.ExerciseLogDto.Response;
 import com.tcha.exercise_log.entity.ExerciseLogImage;
 import com.tcha.exercise_log.entity.ExerciseLogVideo;
+import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.repository.ExerciseLogImageRepository;
 import com.tcha.exercise_log.repository.ExerciseLogRepository;
 import com.tcha.exercise_log.entity.ExerciseLog;
@@ -28,6 +31,43 @@ public class ExerciseLogService {
     private final ExerciseLogVideoRepository exerciseLogVideoRepository;
     private final S3Uploader s3Uploader;
 
+    private final ExerciseLogMapper exerciseLogMapper;
+
+
+    //운동일지 저장
+    @Transactional
+    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, String[] imgPaths,
+            String[] videoPaths) {
+
+        List<ExerciseLogImage> imgList = new ArrayList<>();
+        List<ExerciseLogVideo> videoList = new ArrayList<>();
+
+        if (imgPaths != null) {
+            for (String img : imgPaths) {
+                ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
+                        .imgURL(img)
+                        .exerciseLog(exerciseLog)
+                        .build();
+                imgList.add(exerciseLogImage);
+            }
+        }
+
+        if (videoPaths != null) {
+            for (String video : videoPaths) {
+                ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
+                        .video(video)
+                        .exerciseLog(exerciseLog)
+                        .build();
+                videoList.add(exerciseLogVideo);
+            }
+        }
+
+        exerciseLog.setExerciseImageList(exerciseLogImageRepository.saveAll(imgList));
+        exerciseLog.setExerciseVideoList(exerciseLogVideoRepository.saveAll(videoList));
+        return exerciseLogRepository.save(exerciseLog);
+    }
+
+
 
     //Pagenation으로 운동 일지를 불러옴
     @Transactional(readOnly = true)
@@ -38,20 +78,24 @@ public class ExerciseLogService {
                 PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
-//    //Pagenation으로 해당 라이브 운동 일지를 불러옴
-//    @Transactional(readOnly = true)
-//    public Page<Review> findReviewPagesByTrainerId(UUID trainerId, int page, int size) {
-//
-//        return exerciseLogRepository.findAllByTrainerId(
-//
-//                trainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
-//    }
-//
-
-
     //운동일지 1개 찾기
     @Transactional(readOnly = true)
     public ExerciseLog findExerciseLog(Long id) {
+        ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
+
+        return exerciseLog;
+    }
+
+//    @Transactional(readOnly = true)
+//    public ExerciseLog findExerciseLogByLiveId(Long liveId) {
+//        Optional<ExerciseLog> exerciseLog = exerciseLogRepository.findByLiveId(liveId);
+//
+//        return exerciseLog.get();
+//    }
+
+
+    @Transactional(readOnly = true)
+    public ExerciseLogDto.Response getExerciseLog(Long id) {
         ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
 
         //image 넣기
@@ -75,45 +119,10 @@ public class ExerciseLogService {
         }
 
         //response 만들기(List<String> images에 넣는 것 때문에 Mapper에 넣기 애매)
-        return;
-    }
-
-    @Transactional(readOnly = true)
-    public ExerciseLog findExerciseLogByLiveId(Long liveId) {
-        Optional<ExerciseLog> exerciseLog = exerciseLogRepository.findByLiveId(liveId);
-
-        return exerciseLog.get();
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,imgPaths,videoPaths);
     }
 
 
-    //운동일지 저장
-    @Transactional
-    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, String[] imgPaths,
-            String[] videoPaths) {
-
-        List<ExerciseLogImage> imgList = new ArrayList<>();
-        List<ExerciseLogVideo> videoList = new ArrayList<>();
-
-        for (String img : imgPaths) {
-            ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
-                    .imgURL(img)
-                    .exerciseLog(exerciseLog)
-                    .build();
-            imgList.add(exerciseLogImage);
-        }
-
-        for (String video : videoPaths) {
-            ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
-                    .video(video)
-                    .exerciseLog(exerciseLog)
-                    .build();
-            videoList.add(exerciseLogVideo);
-        }
-
-        exerciseLog.setExerciseImageList(exerciseLogImageRepository.saveAll(imgList));
-        exerciseLog.setExerciseVideoList(exerciseLogVideoRepository.saveAll(videoList));
-        return exerciseLogRepository.save(exerciseLog);
-    }
 
     @Transactional
     public ExerciseLog updateExerciseLog(ExerciseLog exerciseLog, String[] imgPaths,

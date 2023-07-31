@@ -38,3 +38,5 @@ out/
 
 ### google oauth ###
 application-google.yml
+application-local.yml
+application-server.yml

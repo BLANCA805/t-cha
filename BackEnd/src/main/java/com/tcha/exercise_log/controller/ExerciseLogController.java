@@ -45,9 +45,12 @@ public class ExerciseLogController {
     ) throws IOException {
         String[] imgPaths = null;
 
+       int len = images.length;
         if (images != null) {
 
-            imgPaths = s3Uploader.upload(images, "exercise_log_image");
+            for (int i = 0; i < len; i++) {
+                imgPaths[i] = s3Uploader.upload(images[i], "exercise_log_image");
+            }
         }
         ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
 

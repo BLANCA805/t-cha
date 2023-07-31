@@ -2,10 +2,13 @@ package com.tcha.pt_live.controller;
 
 import com.tcha.pt_live.dto.PtLiveDto;
 import com.tcha.pt_live.service.PtLiveService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/lives")
 @Validated
@@ -21,16 +25,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PtLiveController {
 
+    @Value("${OPENVIDU_URL}")
+    private String OPENVIDU_URL;
+
+    @Value("${OPENVIDU_SECRET}")
+    private String OPENVIDU_SECRET;
+
+    private OpenVidu openvidu;
+
+    @PostConstruct
+    public void init() {
+        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+    }
+
     private final PtLiveService ptLiveService;
 
     /*
     유저가 PT 수업 예약
-    결제 성공 시 live row 생성
+    결제 성공 시 live room 생성
+    -> 오픈비두 session 초기화(initializeSession)ㅈ
      */
     @PostMapping("/{class-id}/{user-profile-id}")
     public ResponseEntity<PtLiveDto.Response> postPtLive(
             @PathVariable("class-id") long ptClassId,
-            @PathVariable("user-profile-id") long userProfileId) {
+            @PathVariable("user-profile-id") long userProfileId)
+            throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.debug("[PtLiveController] postPtLive 접근 확인 ::: ptClassId = {}, userProfileId = {}",
                 ptClassId, userProfileId);
@@ -41,6 +60,15 @@ public class PtLiveController {
 
         return ResponseEntity.ok().body(null);
     }
+
+//    @PostMapping("/api/sessions")
+//    public ResponseEntity<String> initializeSession(
+//            @RequestBody(required = false) Map<String, Object> params)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//        SessionProperties properties = SessionProperties.fromJson(params).build();
+//        Session session = openvidu.createSession(properties);
+//        return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
+//    }
 
     /*
     live 정보 수정

@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,16 +33,16 @@ public class BookmarkService {
     //최초 즐겨찾기 등록
     public BookmarkDto.Response createBookmark(Long userProfileId, String trainerId) {
         //유저프로필 객체 가져오기
-        UserProfile userProfile = userProfileRepository.findById(String.valueOf(userProfileId))
+        UserProfile userProfile = userProfileRepository.findById(userProfileId)
                 .get();
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(trainerId);
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).get();
 
         //새로운 즐겨찾기 entity객체 만들어서 저장하기
         Bookmark bookmark = bookMarkRepository.save(
                 bookmarkMapper.postToBookmark(userProfile, trainer));
-        
+
         return bookmarkMapper.bookMarkToBookMarkDto(bookmark);
     }
 
@@ -55,8 +57,7 @@ public class BookmarkService {
     public List<BookmarkDto.Response> findAllUserIdBookMark(Long userProfileId) {
 
         //유저프로필 객체 가져오기
-        UserProfile userProfile = userProfileRepository.findById(String.valueOf(userProfileId))
-                .get();
+        UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
 
         //해당 유저프로필 객체의 즐겨찾기 목록 가져오기
         List<Bookmark> responseBookMarks = bookMarkRepository.findByUserProfile(userProfile);

@@ -4,8 +4,10 @@ import com.tcha.exercise_log.dto.ExerciseLogDto;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.service.ExerciseLogService;
+import com.tcha.utils.upload.service.*;
 
 import com.tcha.utils.pagination.MultiResponseDto;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +23,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/exercise-logs")
@@ -29,40 +33,62 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 public class ExerciseLogController {
+
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogMapper exerciseLogMapper;
+    private final S3Uploader s3Uploader;
+
     @PostMapping
-    public ResponseEntity postExerciseLog(@RequestBody ExerciseLogDto.Post postRequest) {
+    public ResponseEntity postExerciseLog(
+            @RequestPart(value = "dto") ExerciseLogDto.Post postRequest,
+            @RequestPart(value = "images", required = false) MultipartFile[] images
+    ) throws IOException {
+        String[] imgPaths = null;
+
+        if (images != null) {
+
+            imgPaths = s3Uploader.upload(images, "exercise_log_image");
+        }
         ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
-        ExerciseLog exerciseLogForResponse = exerciseLogService.createExerciseLog(exerciseLogToService);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(exerciseLogForResponse);
+
+        ExerciseLog exerciseLogForResponse = exerciseLogService.createExerciseLog(
+                exerciseLogToService, imgPaths);
+        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
+                exerciseLogForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity getExerciseLogPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
+    public ResponseEntity getExerciseLogPage(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-        Page<ExerciseLog> exerciseLogPage = exerciseLogService.findExerciseLogPages(page ,size);
+        Page<ExerciseLog> exerciseLogPage = exerciseLogService.findExerciseLogPages(page, size);
         List<ExerciseLog> exerciseLogs = exerciseLogPage.getContent();
-        List<ExerciseLogDto.Response> responses = exerciseLogMapper.exerciseLogsToResponses(exerciseLogs);
+        List<ExerciseLogDto.Response> responses = exerciseLogMapper.exerciseLogsToResponses(
+                exerciseLogs);
 
-        return new ResponseEntity<>(new MultiResponseDto<>(responses, exerciseLogPage),HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, exerciseLogPage),
+                HttpStatus.OK);
     }
 
     @GetMapping("/{exercise-log-id}")
     public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
         ExerciseLog exerciseLogForResponse = exerciseLogService.findExerciseLog(id);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(exerciseLogForResponse);
+        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
+                exerciseLogForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @PatchMapping("/{exercise-log-id}")
-    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id, @RequestBody ExerciseLogDto.Patch patchRequest) {
+    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id,
+            @RequestBody ExerciseLogDto.Patch patchRequest) {
         ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(patchRequest);
-        ExerciseLog exerciseLogForResponse = exerciseLogService.updateExerciseLog(exerciseLogToService);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(exerciseLogForResponse);
+        ExerciseLog exerciseLogForResponse = exerciseLogService.updateExerciseLog(
+                exerciseLogToService);
+        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
+                exerciseLogForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

@@ -1,11 +1,14 @@
 package com.tcha.exercise_log.dto;
 
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ExerciseLogDto {
+
     @Getter
     @AllArgsConstructor
     public static class Post {
@@ -14,23 +17,19 @@ public class ExerciseLogDto {
 
         private String content;
 
+        private String[] images;
+
     }
 
     @Getter
     @AllArgsConstructor
     public static class Patch {
 
-        private Long id;
-
         private String title;
 
         private String content;
 
-        public ExerciseLogDto.Patch addExerciseLogId(Long id) {
-            Assert.notNull(id, "id must not be null");
-            this.id = id;
-            return this;
-        }
+        private String[] images;
 
     }
 
@@ -44,6 +43,8 @@ public class ExerciseLogDto {
         private String title;
 
         private String content;
+
+        private String[] images;
 
     }
 }

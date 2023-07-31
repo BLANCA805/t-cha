@@ -62,8 +62,10 @@ public class ReviewService {
     //트레이너 리뷰 저장
     @Transactional
     public Review createReview(Review review, String trainerId, Long userProfileId) {
+        UUID saveTrainerId = UUID.fromString(trainerId);
+
         UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
-        Trainer trainer = trainerRepository.findById(trainerId);
+        Trainer trainer = trainerRepository.findById(saveTrainerId).get();
 
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);

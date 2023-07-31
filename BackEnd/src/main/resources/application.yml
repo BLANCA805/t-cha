@@ -1,3 +1,7 @@
 spring:
   profiles:
     active: google, rds, local
+  server: # http response 에 UTF-8 인코딩을 강제하는 옵션, 인코딩에 관련된 문제에서 안정적인 응답을 보장하기 위해
+    servlet:
+      encoding:
+        force-response: true

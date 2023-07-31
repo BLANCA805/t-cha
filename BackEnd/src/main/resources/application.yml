@@ -12,16 +12,8 @@ spring:
       path: /h2 # h2.console.enabled.path: /h2 => h2 console 사용 경로 url 설정(고정)
   datasource:
     url: jdbc:h2:mem:test  # h2 datasource.url: jdbc:h2:mem:test => jdbc url 을 설정(고정)
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId:
-            clientSecret:
-            scope: # Google OAuth 2.0 인증을 사용할 때 요청할 권한 범위(scopes)를 설정, consent screen 과 연관
-              - email
-              - profile
+  profiles:
+    active: google
   server: # http response 에 UTF-8 인코딩을 강제하는 옵션, 인코딩에 관련된 문제에서 안정적인 응답을 보장하기 위해
     servlet:
       encoding:

@@ -1,6 +1,8 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { logIn } from "src/redux/slicers";
+
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
@@ -8,6 +10,7 @@ import Box from "@mui/material/Box";
 
 import styled from "styled-components";
 import { AppDispatch } from "src/redux/store";
+import useAxios from "src/hooks/use-axios";
 
 interface AuthProps {
   open: boolean;
@@ -65,17 +68,24 @@ const Text = styled.div`
 const Auth = ({ open, onClose }: AuthProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const onClick = () => {
-    dispatch(
-      logIn({
-        token: "token",
-        userName: "사용자 이름",
-        profileImage: "이미지 URL",
+  const Sign = () => {
+    axios
+      .post("http://70.12.245.39:8080/users?email=email@gmail.com")
+      .then((response) => {
+        if (response.data) {
+          console.log(response.data);
+          dispatch(
+            logIn({
+              token: response.data.id,
+            })
+          );
+          onClose();
+        }
       })
-    );
-    onClose();
+      .catch((error) => {
+        console.log(error);
+      });
   };
-
   return (
     <ModalWrapper
       open={open}
@@ -89,7 +99,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
         </ImageWrapper>
         <ContentsWrapper>
           <Text>SNS 계정으로 간편 로그인/회원가입</Text>
-          <Button onClick={onClick}>Google로 로그인하기</Button>
+          <Button onClick={Sign}>Google로 로그인하기</Button>
           <Button onClick={onClose}>Close modal</Button>
         </ContentsWrapper>
       </Container>

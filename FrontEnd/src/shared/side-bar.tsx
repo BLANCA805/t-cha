@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import { AppDispatch, type RootState } from "src/redux/store";
 import { logOut } from "src/redux/slicers";
@@ -36,10 +37,31 @@ function SideBar() {
     dispatch(logOut());
   };
 
+  const test = () => {
+    const token = user.token;
+    axios
+      .post(`http://70.12.245.39:8080/userProfiles/${token}`, {
+        name: "임병국",
+        profileImage: "이미지주소",
+      })
+      .then((response) => {
+        if (response.data) {
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   if (user.isLogined) {
     return (
       <Wrapper>
         <ul>
+          <li>
+            <button onClick={test}>test</button>
+          </li>
+          <br />
           <li>{user.isLogined && <Link to="profile">마이페이지</Link>}</li>
           <br />
           <li>

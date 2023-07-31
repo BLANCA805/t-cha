@@ -2,8 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import Router from "./Router";
+import { Provider } from "react-redux";
 
 import { ThemeProvider } from "styled-components";
+import store from "./store";
 
 const color = {
   primary: "#285943",
@@ -37,8 +39,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <ThemeProvider theme={theme}>
-    <React.StrictMode>
-      <RouterProvider router={Router} />
-    </React.StrictMode>
+    <Provider store={store}>
+      <React.StrictMode>
+        <RouterProvider router={Router} />
+      </React.StrictMode>
+    </Provider>
   </ThemeProvider>
 );

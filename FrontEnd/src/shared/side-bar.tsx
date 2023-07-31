@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import store from "src/store";
 
 import Auth from "@shared/auth";
 
@@ -24,6 +25,10 @@ function SideBar() {
 
   const handleAuthClose = () => {
     setAuthOpen(false);
+  };
+
+  const testClick = () => {
+    console.log(store.getState());
   };
 
   const id = "1";
@@ -53,6 +58,9 @@ function SideBar() {
         </li>
         <li>
           <Link to="customer-center">고객센터</Link>
+        </li>
+        <li>
+          <button onClick={testClick}>test</button>
         </li>
       </ul>
       <Modal open={authOpen} onClose={handleAuthClose}>

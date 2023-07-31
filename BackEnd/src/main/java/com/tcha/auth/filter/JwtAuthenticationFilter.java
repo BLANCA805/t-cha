@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
     //UsernamePasswordAuthenticationFilter : Username/Password 기반의 인증을 처리
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
@@ -30,12 +31,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // attemptAuthentication() : 내부에서 인증을 하기 위한 메소드
     @SneakyThrows
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    public Authentication attemptAuthentication(HttpServletRequest request,
+            HttpServletResponse response) {
         ObjectMapper objectMapper = new ObjectMapper(); // request로 전달받은 username(email)과 password를 dto로 역직렬화하기 위함.
         LoginDto loginDto = objectMapper.readValue(request.getInputStream(), LoginDto.class);
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()); // 인증 처리를 위해 token 생성
-        return authenticationManager.authenticate(authenticationToken); // 생성한 token 을 authenticationManager 에게 전달하여 인증 처리를 위임
+                new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
+                        loginDto.getPassword()); // 인증 처리를 위해 token 생성
+        return authenticationManager.authenticate(
+                authenticationToken); // 생성한 token 을 authenticationManager 에게 전달하여 인증 처리를 위임
     }
 
     //successfulAuthentication() : 클라이언트의 인증 정보를 이용해 인증에 성공하면 호출될 메소드
@@ -47,12 +51,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         User user = (User) authResult.getPrincipal(); // Authentication 에 담긴 principal(사용자 정보, User 객체)호출
         String accessToken = delegateAccessToken(user); // AccessToken 생성
         String refreshToken = delegateRefreshToken(user); // RefreshToken
-        response.setHeader("Authorization", "Bearer " + accessToken); // Response Header에 AccessToken 추가 + Bearer 명시
+        response.setHeader("Authorization",
+                "Bearer " + accessToken); // Response Header에 AccessToken 추가 + Bearer 명시
         response.setHeader("Refresh", refreshToken); // Response Header에 RefreshToken 추가
         String authUserId = userService.findByEmail(user.getEmail()).getId().toString();
         response.setHeader("Id", authUserId);
 
-        this.getSuccessHandler().onAuthenticationSuccess(request, response, authResult); // 인증 성공 시 필터에서 successHandler 호출
+        this.getSuccessHandler().onAuthenticationSuccess(request, response,
+                authResult); // 인증 성공 시 필터에서 successHandler 호출
         // 인증 실패 시에는 별도의 코드가 없더라도 failureHandler 자동으로 호출됨
     }
 
@@ -62,18 +68,24 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("username", user.getEmail());
         claims.put("roles", user.getRoles());
         String subject = user.getEmail();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        Date expiration = jwtTokenizer.getTokenExpiration(
+                jwtTokenizer.getAccessTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(
+                jwtTokenizer.getSecretKey());
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration,
+                base64EncodedSecretKey);
         return accessToken;
     }
 
     //delegateRefreshToken() : 인증된 principal(user) 정보로 RefreshToken 생성
     private String delegateRefreshToken(User user) {
         String subject = user.getEmail();
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        Date expiration = jwtTokenizer.getTokenExpiration(
+                jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(
+                jwtTokenizer.getSecretKey());
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration,
+                base64EncodedSecretKey);
         return refreshToken;
     }
 }

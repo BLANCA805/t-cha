@@ -9,13 +9,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +40,7 @@ public class User extends Auditable {
     @OneToOne(mappedBy = "user")
     private UserProfile userProfile;
 
-//    @Column(unique = true) // email 컬럼에 unique 제약 조건 추가
+    //    @Column(unique = true) // email 컬럼에 unique 제약 조건 추가
     private String email;
 
     @Column(nullable = false)

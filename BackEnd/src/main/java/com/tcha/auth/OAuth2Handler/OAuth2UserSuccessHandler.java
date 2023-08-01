@@ -40,8 +40,9 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
             Authentication authentication) throws IOException, ServletException {
 
-        var oAuth2User = (OAuth2User)authentication.getPrincipal(); // OAuth2 인증을 통해 사용자 정보 추출
-        String email = String.valueOf(oAuth2User.getAttributes().get("email")); // 사용자 정보 중 email 추출(username)
+        var oAuth2User = (OAuth2User) authentication.getPrincipal(); // OAuth2 인증을 통해 사용자 정보 추출
+        String email = String.valueOf(
+                oAuth2User.getAttributes().get("email")); // 사용자 정보 중 email 추출(username)
         String name = String.valueOf(oAuth2User.getAttributes().get("name")); // 사용자 정보 중 name 추출
         List<String> authorities = null; // 어플리케이션에서 사용할 인증서에 역할을 생성
         //TODO.
@@ -49,8 +50,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
             User isNew = userService.findByEmail(email);
 
             authorities = isNew.getRoles(); // 기존에 db에 저장된 권한 호출
-        }
-        catch (BusinessLogicException e){//판단 이후 회원가입 로직을 진행시킬지 로그인 진행을 시킬지 선택
+        } catch (BusinessLogicException e) {//판단 이후 회원가입 로직을 진행시킬지 로그인 진행을 시킬지 선택
             User firstUser = new User();
             authorities = authorityUtils.createRoles(email); // 새로운 권한 생성
 
@@ -74,7 +74,8 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         String accessToken = delegateAccessToken(username, authorities); // username : email
         String refreshToken = delegateRefreshToken(username);
         String uri = createURI(accessToken, refreshToken).toString();
-        getRedirectStrategy().sendRedirect(request, response, uri); // 생성한 토큰을 URI에 담고 다시 front 애플리케이션으로 redirect 실행
+        getRedirectStrategy().sendRedirect(request, response,
+                uri); // 생성한 토큰을 URI에 담고 다시 front 애플리케이션으로 redirect 실행
     }
 
     //AccessToken 생성
@@ -83,18 +84,24 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         claims.put("username", username);
         claims.put("roles", authorities);
         String subject = username;
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+        Date expiration = jwtTokenizer.getTokenExpiration(
+                jwtTokenizer.getAccessTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(
+                jwtTokenizer.getSecretKey());
+        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration,
+                base64EncodedSecretKey);
         return accessToken;
     }
 
     //RefreshToken 생성
     private String delegateRefreshToken(String username) {
         String subject = username;
-        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+        Date expiration = jwtTokenizer.getTokenExpiration(
+                jwtTokenizer.getRefreshTokenExpirationMinutes());
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(
+                jwtTokenizer.getSecretKey());
+        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration,
+                base64EncodedSecretKey);
         return refreshToken;
     }
 

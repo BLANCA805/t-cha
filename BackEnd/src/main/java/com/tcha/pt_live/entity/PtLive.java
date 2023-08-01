@@ -1,5 +1,6 @@
 package com.tcha.pt_live.entity;
 
+import com.tcha.pt_class.entity.PtClass;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
@@ -32,10 +33,10 @@ public class PtLive extends Auditable {
     @Column(name = "LIVE_ID")
     private Long id;
 
-//    @NotNull
-//    @OneToOne
-//    @JoinColumn(name = "CLASS_ID")
-//    private PtClass ptClass;
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "CLASS_ID")
+    private PtClass ptClass;
 
     @ManyToOne
     private UserProfile userProfile;

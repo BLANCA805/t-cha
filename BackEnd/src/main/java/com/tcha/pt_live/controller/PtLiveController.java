@@ -25,18 +25,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PtLiveController {
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
-
-    private OpenVidu openvidu;
-
-    @PostConstruct
-    public void init() {
-        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
+//    @Value("${OPENVIDU_URL}")
+//    private String OPENVIDU_URL;
+//
+//    @Value("${OPENVIDU_SECRET}")
+//    private String OPENVIDU_SECRET;
+//
+//    private OpenVidu openvidu;
+//
+//    @PostConstruct
+//    public void init() {
+//        this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+//    }
 
     private final PtLiveService ptLiveService;
 
@@ -45,21 +45,21 @@ public class PtLiveController {
     결제 성공 시 live room 생성
     -> 오픈비두 session 초기화(initializeSession)ㅈ
      */
-    @PostMapping("/{class-id}/{user-profile-id}")
-    public ResponseEntity<PtLiveDto.Response> postPtLive(
-            @PathVariable("class-id") long ptClassId,
-            @PathVariable("user-profile-id") long userProfileId)
-            throws OpenViduJavaClientException, OpenViduHttpException {
-
-        log.debug("[PtLiveController] postPtLive 접근 확인 ::: ptClassId = {}, userProfileId = {}",
-                ptClassId, userProfileId);
-
-        // 결제 로직 추가
-
-        ptLiveService.createPtLive(ptClassId, userProfileId); // 리턴 값(프론트에 전달할 값) 추가
-
-        return ResponseEntity.ok().body(null);
-    }
+//    @PostMapping("/{class-id}/{user-profile-id}")
+//    public ResponseEntity<PtLiveDto.Response> postPtLive(
+//            @PathVariable("class-id") long ptClassId,
+//            @PathVariable("user-profile-id") long userProfileId)
+//            throws OpenViduJavaClientException, OpenViduHttpException {
+//
+//        log.debug("[PtLiveController] postPtLive 접근 확인 ::: ptClassId = {}, userProfileId = {}",
+//                ptClassId, userProfileId);
+//
+//        // 결제 로직 추가
+//
+//        ptLiveService.createPtLive(ptClassId, userProfileId); // 리턴 값(프론트에 전달할 값) 추가
+//
+//        return ResponseEntity.ok().body(null);
+//    }
 
 //    @PostMapping("/api/sessions")
 //    public ResponseEntity<String> initializeSession(

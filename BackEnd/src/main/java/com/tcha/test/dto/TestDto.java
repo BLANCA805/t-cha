@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-public class testDto {
+public class TestDto {
     @Getter
     @AllArgsConstructor
     @Builder
@@ -14,6 +14,8 @@ public class testDto {
         private String title;
 
         private String content;
+
+        private List<String> images;
 
     }
 
@@ -41,8 +43,6 @@ public class testDto {
         private String content;
 
         private List<String> images;
-
-        private List<String> videos;
 
     }
 }

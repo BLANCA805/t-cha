@@ -1,5 +1,6 @@
 package com.tcha.test.entity;
 
+import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -22,7 +23,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class test {
+public class Test extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -25,13 +25,14 @@ export default function ToggleButtons(props: {
       onChange={handleTab}
       style={{ width: props.width }}
     >
-      {props.tabs.map((tab: { text: string; path: string }) => (
+      {props.tabs.map((tab: { text: string; path: string }, index) => (
         <ToggleButton
           value={tab.path}
           onClick={() => clickButton(`${tab.path}`)}
           style={{
             width: "100%",
           }}
+          key={index}
         >
           {tab.text}
         </ToggleButton>

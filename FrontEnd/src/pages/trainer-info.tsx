@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.light};
 `;
 
-function TrainerDetail() {
+function TrainerInfo() {
   return (
     <Container>
       <Wrapper>
@@ -33,4 +33,4 @@ function TrainerDetail() {
   );
 }
 
-export default TrainerDetail;
+export default TrainerInfo;

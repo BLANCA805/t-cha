@@ -1,18 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import storageSession from "redux-persist/lib/storage/session";
 import { persistReducer } from "redux-persist";
-import { combineReducers } from "@reduxjs/toolkit";
 
-import authReducer from "./slicers";
-
-const rootReducer = combineReducers({
-  auth: authReducer,
-});
+import rootReducer from "./slicers";
 
 const persistConfig = {
   key: "root",
   storage: storageSession,
-  whitelist: ["auth"],
+  whitelist: ["auth", "profile"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 import { AppDispatch, type RootState } from "src/redux/store";
-import { logOut } from "src/redux/slicers";
+import { logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 
@@ -42,10 +42,13 @@ function SideBar() {
     axios
       .post(`http://70.12.245.39:8080/userProfiles/${token}`, {
         name: "임병국",
-        profileImage: "이미지주소",
+        profileImage: "이미지",
       })
       .then((response) => {
         if (response.data) {
+          dispatch(
+            postProfile({ name: response.data.name, id: response.data.id })
+          );
           console.log(response.data);
         }
       })

@@ -1,9 +1,16 @@
-import styled from "styled-components";
 import { Link } from "react-router-dom";
-// import Button from "@mui/material/Button";
-import {DefaultButton} from "@shared/button";
+import { useDispatch, useSelector } from "react-redux";
+
+import { type RootState } from "../redux/store";
+import { registTrainer, test } from "src/redux/slicers";
+
+import { DefaultButton } from "@shared/button";
 // import ReverseButton from "@shared/reversebutton";
 import TrainerButtons from "@user-trainer/trainer-buttons";
+
+// import Button from "@mui/material/Button";
+
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
@@ -111,6 +118,12 @@ const Uscol = styled.div`
 `;
 
 function User() {
+  const profile = useSelector((state: RootState) => state.profile);
+  const dispatch = useDispatch();
+
+  const tester = () => {
+    dispatch(test());
+  };
   return (
     <Wrapper>
       <Profile>
@@ -128,8 +141,12 @@ function User() {
           </Link>
         </ProfileModify>
       </Profile>
-
-      <TrainerButtons />
+      {!profile.isTrainer && (
+        <Link to="trainer_registration">
+          <DefaultButton> 트레이너 등록하기 </DefaultButton>
+        </Link>
+      )}
+      {profile.isTrainer && <TrainerButtons />}
 
       <UserContainer>
         <Usrow>
@@ -155,6 +172,9 @@ function User() {
           </Uscol>
         </Usrow>
       </UserContainer>
+      {profile.isTrainer && (
+        <DefaultButton onClick={tester}>트레이너 취소</DefaultButton>
+      )}
     </Wrapper>
   );
 }

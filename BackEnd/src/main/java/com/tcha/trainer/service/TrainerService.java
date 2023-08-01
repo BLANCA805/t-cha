@@ -77,40 +77,24 @@ public class TrainerService {
 
     public List<TrainerDto.ResponseList> findAllTrainers() {
 
-        // trainer 테이블
-//        private String id; // 트레이너 id
-//        private String introduction; // 트레이너 한 줄 소개
-//        private String tags; // 트레이너 태그
-//        private LocalDateTime createdAt; // 트레이너 등록일
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (Trainer t : trainerRepository.findAll()) {
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(4.5F)
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(1)
+                    .revisitGrade(0)
+                    .build();
 
-        // user_profile 테이블 (트레이너 테이블의 user_profile_id로 접근)
-//        private String profileName; // 유저 이름 (트레이너 이름)
-//        private String profileImg; // 유저 프로필 사진 (트레이너 프사)
-
-        // redis에서 전달되는 값
-//        private float stars; // 트레이너 별점
-
-        // pt_live 테이블 (트레이너 테이블의 user_profile_id로 접근)
-//        private int userCount; // 누적 회원 수
-//        private int ptCount; // 누적 예약 수
-//        private int reviewCount; // 누적 리뷰 수
-//        private int revisitGrade; // 재방문율에 따른 등급 (0(일반), 1(브론즈), 2(실버), 3(골드))
-
-        // userProfile 객체 가져오기
-//        UserProfile userProfile =
-//                userProfileRepository.findById(postRequest.getUserProfileId()).get();
-
-        List<TrainerDto.ResponseList> trainerList = new ArrayList<TrainerDto.ResponseList>();
-//        for (Trainer t : trainerRepository.findAll()) {
-//            trainerList.add(ResponseList.builder()
-//                            .id(t.getId().toString())
-//                            .introduction(t.getIntroduction())
-//                            .tags(t.getTags())
-//                            .createdAt(t.getCreatedAt())
-//                    .profileName()
-//                    .profileImg()
-//                    .
-//        }
+            trainerList.add(trainer);
+        }
 
         return trainerList;
     }
@@ -120,17 +104,17 @@ public class TrainerService {
         trainerRepository.deleteById(UUID.fromString(trainerId));
     }
 
-    public List<Trainer> findTrainers(TrainerDto.Get search) {
+    public List<TrainerDto.ResponseList> findTrainers(TrainerDto.Get search) {
 
         String keyword = "%" + search.getKeyword() + "%";
 
-        // 태그로 검색
-        List<Trainer> trainerList = trainerRepository.findByTagsLikeIgnoreCase(keyword);
+        // 1. 트레이너 이름으로 검색
 
-        // 유저 이름으로 검색
+        // 2. 태그로 검색
 
-        // 날짜, 시간으로 검샋
+        // 3. 날짜, 시간으로 검색
 
-        return trainerList;
+        return null;
     }
+
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -8,20 +8,106 @@ import { logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Fab from "@mui/material/Fab";
+
 import styled from "styled-components";
 
-const Wrapper = styled.div`
-  margin: 0.5%;
-  padding: 3rem;
-  background-color: white;
-  width: 20%;
-  border-radius: 10px;
+const Sticky = styled.div`
+  position: fixed;
+  bottom: 0;
 `;
 
 function SideBar() {
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setOpen(open);
+    };
+
+  function list() {
+    if (user.isLogined) {
+      return (
+        <Box
+          sx={{ auto: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <List>
+            <button onClick={test}>test</button>
+            {[
+              ["profile", "마이페이지"],
+              ["", "home"],
+              ["profile/schedule", "내 캘린더"],
+              ["profile/chat", "채팅 목록"],
+              ["trainer", "트레이너"],
+              ["customer-center", "고객센터"],
+            ].map((data, index) => (
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <Link to={data[0]}>
+                    <ListItemText primary={data[1]} />
+                  </Link>
+                </ListItemButton>
+              </ListItem>
+            ))}
+            <button onClick={LogOut}>로그아웃</button>
+          </List>
+          <Divider />
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{ auto: 250 }}
+          role="presentation"
+          onClick={toggleDrawer(false)}
+          onKeyDown={toggleDrawer(false)}
+        >
+          <List>
+            <Button onClick={handleAuthOpen}>로그인</Button>
+            {[
+              ["", "홈"],
+              ["trainer", "트레이너"],
+              ["customer_center", "고객센터"],
+            ].map((data, index) => (
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <Link to={data[0]}>
+                    <ListItemText primary={data[1]} />
+                  </Link>
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+        </Box>
+      );
+    }
+  }
+
   const [authOpen, setAuthOpen] = useState(false);
 
   const handleAuthOpen = () => {
+    toggleDrawer(false);
     setAuthOpen(true);
   };
 
@@ -57,69 +143,19 @@ function SideBar() {
       });
   };
 
-  if (user.isLogined) {
-    return (
-      <Wrapper>
-        <ul>
-          <li>
-            <button onClick={test}>test</button>
-          </li>
-          <br />
-          <li>{user.isLogined && <Link to="profile">마이페이지</Link>}</li>
-          <br />
-          <li>
-            <Link to="">홈</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="profile/schedule">내 캘린더</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="profile/chat">채팅 목록</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="trainer">트레이너</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="customer-center">고객센터</Link>
-          </li>
-          <br />
-          <li>
-            <button onClick={LogOut}>로그아웃</button>
-          </li>
-        </ul>
-        <Auth open={authOpen} onClose={handleAuthClose} />
-      </Wrapper>
-    );
-  } else {
-    return (
-      <Wrapper>
-        <ul>
-          <li>
-            <Link to="#" onClick={handleAuthOpen}>
-              로그인
-            </Link>
-          </li>
-          <br />
-          <li>
-            <Link to="">홈</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="trainer">트레이너</Link>
-          </li>
-          <br />
-          <li>
-            <Link to="customer-center">고객센터</Link>
-          </li>
-        </ul>
-        <Auth open={authOpen} onClose={handleAuthClose} />
-      </Wrapper>
-    );
-  }
+  return (
+    <Sticky>
+      <React.Fragment>
+        <Button onClick={toggleDrawer(true)}>
+          <Fab variant="extended">Nav</Fab>
+        </Button>
+        <Drawer open={open} onClose={toggleDrawer(false)}>
+          {list()}
+        </Drawer>
+      </React.Fragment>
+      <Auth open={authOpen} onClose={handleAuthClose} />
+    </Sticky>
+  );
 }
 
 export default SideBar;

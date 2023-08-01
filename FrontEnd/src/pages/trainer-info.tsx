@@ -22,7 +22,7 @@ function TrainerInfo() {
       <Wrapper>
         <ToggleButtons
           tabs={[
-            { text: "트레이너 상세 정보", path: "info" },
+            { text: "트레이너 상세 정보", path: "detail" },
             { text: "트레이너 리뷰", path: "review" },
           ]}
           width="100%"

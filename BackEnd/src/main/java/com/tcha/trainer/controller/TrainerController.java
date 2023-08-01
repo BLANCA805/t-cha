@@ -28,7 +28,7 @@ public class TrainerController {
 
     @PostMapping("/{user-profile-id}")
     public ResponseEntity<TrainerDto.Response> postTrainer(
-            @PathVariable("user-profile-id") String userProfileId,
+            @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
         log.debug("[TrainerController] postTrainer 접근 확인 ::: "

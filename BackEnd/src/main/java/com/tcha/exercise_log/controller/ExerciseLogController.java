@@ -4,7 +4,6 @@ import com.tcha.exercise_log.dto.ExerciseLogDto;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.service.ExerciseLogService;
-import com.tcha.utils.upload.service.*;
 
 import com.tcha.utils.pagination.MultiResponseDto;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class ExerciseLogController {
 
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogMapper exerciseLogMapper;
-    private final S3Uploader s3Uploader;
+   private final S3Uploader s3Uploader;
 
     @PostMapping()
     public ResponseEntity postExerciseLog(

@@ -2,6 +2,7 @@ package com.tcha.exercise_log.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tcha.pt_live.entity.PtLive;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,13 +48,12 @@ public class ExerciseLog extends Auditable {
     @JsonManagedReference
     private List<ExerciseLogVideo> exerciseVideoList = new ArrayList<>();
 
-    @Column(length = 2000, nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
-}
 
-    /*
-    화상PT_라이브와 1대1 매핑
     @OneToOne
     @JoinColumn(name = "LIVE_ID")
     private PtLive ptLive;
-     */
+
+}
+

@@ -41,3 +41,4 @@ application-google.yml
 application-local.yml
 application-server.yml
 application-rds.yml
+application-s3.yml

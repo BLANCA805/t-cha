@@ -1,7 +1,5 @@
 package com.tcha.user_profile.controller;
 
-import com.tcha.user.dto.UserDto;
-import com.tcha.user.entity.User;
 import com.tcha.user_profile.dto.UserProfileDto;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.mapper.UserProfileMapper;
@@ -32,22 +30,28 @@ public class UserProfileController {
 
 
     @PostMapping
-    public ResponseEntity postUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Post postRequest) {
+    public ResponseEntity postUserProfile(@PathVariable("user-id") String userId,
+            @RequestBody UserProfileDto.Post postRequest) {
 
         UserProfile userProfileForService = userProfileMapper.postToUserProfile(postRequest);
-        UserProfile userProfileForResponse = userProfileService.testUserProfile(userId, userProfileForService);
-        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
+        UserProfile userProfileForResponse = userProfileService.testUserProfile(userId,
+                userProfileForService);
+        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
+                userProfileForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
 
     }
 
     @PatchMapping
-    public ResponseEntity patchUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Patch patchRequest) {
+    public ResponseEntity patchUserProfile(@PathVariable("user-id") String userId,
+            @RequestBody UserProfileDto.Patch patchRequest) {
 
         UserProfile userProfileForService = userProfileMapper.patchToUserProfile(patchRequest);
-        UserProfile userProfileForResponse = userProfileService.updateUserProfile(userId, userProfileForService);
-        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
+        UserProfile userProfileForResponse = userProfileService.updateUserProfile(userId,
+                userProfileForService);
+        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
+                userProfileForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
 
@@ -56,7 +60,8 @@ public class UserProfileController {
     @GetMapping
     public ResponseEntity getOneUserProfile(@PathVariable("user-id") String userId) {
         UserProfile userProfileForResponse = userProfileService.findOneUserProfile(userId);
-        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
+        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
+                userProfileForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -65,7 +70,8 @@ public class UserProfileController {
     @DeleteMapping
     public ResponseEntity deleteOneUser(@PathVariable("user-id") String userId) {
         UserProfile userProfileForResponse = userProfileService.deleteOneUserProfile(userId);
-        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(userProfileForResponse);
+        UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
+                userProfileForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

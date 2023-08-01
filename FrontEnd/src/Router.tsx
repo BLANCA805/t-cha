@@ -47,31 +47,31 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: ":user_id",
+        path: "profile",
         element: <User />,
       },
       {
-        path: ":user_id/bookmarked_trainers",
+        path: "profile/bookmarked_trainers",
         element: <BookMarkedTrainerList />,
       },
       {
-        path: ":user_id/schedule",
+        path: "profile/schedule",
         element: <UserSchedule />,
       },
       {
-        path: ":user_id/info_modify",
+        path: "profile/info_modify",
         element: <UserInfoModify />,
       },
       {
-        path: ":user_id/payment_detail",
+        path: "profile/payment_detail",
         element: <PaymentDetail />,
       },
       {
-        path: ":user_id/review",
+        path: "profile/review",
         element: <ReviewWrittenByUser />,
       },
       {
-        path: ":user_id/chat",
+        path: "profile/chat",
         element: <ChatList />,
         children: [
           {

@@ -1,20 +1,20 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { connect } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { logIn } from "src/redux/slicers";
 
-import { actionCreators } from "src/store";
-import store from "src/store";
+import axios from "axios";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
+import { AppDispatch } from "src/redux/store";
+import useAxios from "src/hooks/use-axios";
 
 interface AuthProps {
   open: boolean;
   onClose: () => void;
-  userLogIn: any;
 }
 
 const ModalWrapper = styled(Modal)`
@@ -65,23 +65,26 @@ const Text = styled.div`
   margin-bottom: 15px;
 `;
 
-const Auth = ({ open, onClose, userLogIn }: AuthProps) => {
-  // const [userData, setUserData] = useState({});
+const Auth = ({ open, onClose }: AuthProps) => {
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onClick = () => {
-    // const api = "http://70.12.245.39:8080/users";
-    // axios
-    //   .post(api, { headers: {} })
-    //   .then((response) => {
-    //     setUserData(response.data);
-    //     onClose();
-    //     console.log(response.data.id);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    userLogIn();
-    console.log(store.getState());
+  const Sign = () => {
+    axios
+      .post("http://70.12.245.39:8080/users?email=email@gmail.com")
+      .then((response) => {
+        if (response.data) {
+          console.log(response.data);
+          dispatch(
+            logIn({
+              token: response.data.id,
+            })
+          );
+          onClose();
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <ModalWrapper
@@ -96,7 +99,7 @@ const Auth = ({ open, onClose, userLogIn }: AuthProps) => {
         </ImageWrapper>
         <ContentsWrapper>
           <Text>SNS 계정으로 간편 로그인/회원가입</Text>
-          <Button onClick={onClick}>Google로 로그인하기</Button>
+          <Button onClick={Sign}>Google로 로그인하기</Button>
           <Button onClick={onClose}>Close modal</Button>
         </ContentsWrapper>
       </Container>
@@ -104,15 +107,4 @@ const Auth = ({ open, onClose, userLogIn }: AuthProps) => {
   );
 };
 
-function mapStateToProps(state: any) {
-  console.log(state);
-  return { state };
-}
-
-function mapDispatchToProps(dispatch: any) {
-  return {
-    userLogIn: () => dispatch(actionCreators.userLogIn()),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Auth);
+export default Auth;

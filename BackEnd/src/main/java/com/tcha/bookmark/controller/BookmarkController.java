@@ -27,6 +27,7 @@ public class BookmarkController {
     public ResponseEntity<BookmarkDto.Response> postBookMark(
             @PathVariable("user-profile-id") Long userProfileId,
             @PathVariable("trainer-id") String trainerId) {
+        System.out.println("data test >>>>>>>>>> " + userProfileId + " " + trainerId);
         BookmarkDto.Response response = bookmarkService.createBookmark(userProfileId, trainerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

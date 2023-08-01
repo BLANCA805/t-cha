@@ -33,16 +33,13 @@ public class BookmarkService {
     //최초 즐겨찾기 등록
     public BookmarkDto.Response createBookmark(Long userProfileId, String trainerId) {
         //유저프로필 객체 가져오기
-        UserProfile userProfile = userProfileRepository.findById(userProfileId)
-                .get();
+        UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).get();
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
         //새로운 즐겨찾기 entity객체 만들어서 저장하기
-        Bookmark bookmark = bookMarkRepository.save(
-                bookmarkMapper.postToBookmark(userProfile, trainer));
-
+        Bookmark bookmark = bookMarkRepository.save(bookmarkMapper.postToBookmark(userProfile, trainer));
         return bookmarkMapper.bookMarkToBookMarkDto(bookmark);
     }
 

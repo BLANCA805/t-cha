@@ -20,7 +20,7 @@ public class Guide {
     @Column(nullable = false)
     private String code;
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Enumerated(EnumType.STRING)
@@ -28,16 +28,19 @@ public class Guide {
     private Status status = Status.STATUS_ACTIVE;
 
 
-    public enum Status{
+    public enum Status {
         STATUS_ACTIVE("사용"),
         STATUS_INACTIVE("미사용");
 
         @Getter
         private String status;
-        Status(String status){ this.status = status;}
+
+        Status(String status) {
+            this.status = status;
+        }
     }
 
-    Guide(String code, String content, String title){
+    Guide(String code, String content, String title) {
         this.code = code;
         this.content = content;
         this.title = title;

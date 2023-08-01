@@ -40,4 +40,10 @@ public class PtClass extends Auditable {
     private LocalDateTime startAt;
 
     private LocalDateTime closeAt;
+
+    // builder chain으로 불러오는 거랑, 이렇게 함수로 불러오는 것 중에 뭐가 나을지 찾아보기
+    public String getTrainerName() {
+        return this.trainer.getUserProfile().getName();
+    }
+
 }

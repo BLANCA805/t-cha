@@ -10,18 +10,21 @@ import lombok.Getter;
 
 import java.util.UUID;
 
-@Getter
+//@Getter
 @AllArgsConstructor
 public class BookmarkDto {
-    
+
     @Builder
+    @Getter
     @AllArgsConstructor
     public static class Response {
 
         @NotBlank
-        private UserProfile userProfile;
+        private String userProfileName;
         @NotBlank
-        private Trainer trainer;
+        private String trainerName;
+        @NotBlank
+        private String trainerId;
         private Long id;
     }
 

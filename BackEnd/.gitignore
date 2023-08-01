@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### google oauth ###
+application-google.yml
+application-local.yml
+application-server.yml
+application-rds.yml

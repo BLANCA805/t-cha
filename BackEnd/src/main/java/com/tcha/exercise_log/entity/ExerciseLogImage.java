@@ -36,7 +36,7 @@ public class ExerciseLogImage extends Auditable {
     private Long exerciseLogId;
 
     @Column(nullable = false, columnDefinition = "MEDIUMTEXT")
-    private String img;
+    private String imgURL;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EXERCISE_LOG_ID")

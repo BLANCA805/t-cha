@@ -63,9 +63,7 @@ function SideBar() {
           <button onClick={testClick}>test</button>
         </li>
       </ul>
-      <Modal open={authOpen} onClose={handleAuthClose}>
-        <Auth open={authOpen} onClose={handleAuthClose} />
-      </Modal>
+      <Auth open={authOpen} onClose={handleAuthClose} />
     </Wrapper>
   );
 }

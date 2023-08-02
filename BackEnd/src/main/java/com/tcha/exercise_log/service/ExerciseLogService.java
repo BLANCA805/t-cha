@@ -125,23 +125,23 @@ public class ExerciseLogService {
 
 
     @Transactional
-    public ExerciseLog updateExerciseLog(ExerciseLog exerciseLog, String[] imgPaths,
+    public ExerciseLog updateExerciseLog(Long id,ExerciseLog exerciseLog, String[] imgPaths,
             String[] videoPaths) {
 
-        ExerciseLog findExerciseLog = exerciseLogRepository.findById(exerciseLog.getId()).get();
+        ExerciseLog findExerciseLog = exerciseLogRepository.findById(id).get();
 
         findExerciseLog.setTitle(exerciseLog.getTitle());
         findExerciseLog.setContent(exerciseLog.getContent());
 
         // 이미지 테이블의 기존 정보 delete
         List<ExerciseLogImage> exerciseLogImagesList = exerciseLogImageRepository.findAllImagesByExerciseLogId(
-                exerciseLog.getId());
+                id);
         if (exerciseLogImagesList.size() != 0) {
             exerciseLogImageRepository.deleteAll(exerciseLogImagesList);
         }
         // 비디오 테이블의 기존 정보 delete
         List<ExerciseLogVideo> exerciseLogVideosList = exerciseLogVideoRepository.findAllVideosByExerciseLogId(
-                exerciseLog.getId());
+                id);
         if (exerciseLogVideosList.size() != 0) {
             exerciseLogVideoRepository.deleteAll(exerciseLogVideosList);
         }
@@ -149,20 +149,23 @@ public class ExerciseLogService {
         List<ExerciseLogImage> imgList = new ArrayList<>();
         List<ExerciseLogVideo> videoList = new ArrayList<>();
 
-        for (String img : imgPaths) {
-            ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
-                    .imgURL(img)
-                    .exerciseLog(findExerciseLog)
-                    .build();
-            imgList.add(exerciseLogImage);
+        if(imgPaths != null) {
+            for (String img : imgPaths) {
+                ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
+                        .imgURL(img)
+                        .exerciseLog(findExerciseLog)
+                        .build();
+                imgList.add(exerciseLogImage);
+            }
         }
-
-        for (String video : videoPaths) {
-            ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
-                    .video(video)
-                    .exerciseLog(findExerciseLog)
-                    .build();
-            videoList.add(exerciseLogVideo);
+        if(videoPaths != null) {
+            for (String video : videoPaths) {
+                ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
+                        .video(video)
+                        .exerciseLog(findExerciseLog)
+                        .build();
+                videoList.add(exerciseLogVideo);
+            }
         }
 
         findExerciseLog.setExerciseImageList(exerciseLogImageRepository.saveAll(imgList));

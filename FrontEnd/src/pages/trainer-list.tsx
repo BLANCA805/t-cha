@@ -19,7 +19,7 @@ function TrainerList() {
 
   useEffect(() => {
     axios
-      .get("http://70.12.245.39:8080/trainers")
+      .get("http://i9a805.p.ssafy.io:8080/trainers")
       .then((response) => {
         setItems(response.data);
       })

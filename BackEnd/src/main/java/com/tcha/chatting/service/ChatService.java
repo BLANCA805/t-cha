@@ -1,7 +1,7 @@
 //package com.tcha.chatting.service;
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.tcha.chatting.dto.Channel;
+////import com.tcha.chatting.dto.ChattingRoom;
 //import jakarta.annotation.PostConstruct;
 //import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
@@ -18,24 +18,24 @@
 //public class ChatService {
 //
 //    private final ObjectMapper objectMapper;
-//    private Map<String, Channel> chatRooms;
+////    private Map<String, ChattingRoom> chatRooms;
 //
 //    @PostConstruct
 //    private void init() {
 //        chatRooms = new LinkedHashMap<>();
 //    }
 //
-//    public List<Channel> findAllRoom() {
+//    public List<ChattingRoom> findAllRoom() {
 //        return new ArrayList<>(chatRooms.values());
 //    }
 //
-//    public Channel findRoomById(String roomId) {
+//    public ChattingRoom findRoomById(String roomId) {
 //        return chatRooms.get(roomId);
 //    }
 //
-//    public Channel createRoom(String name) {
+//    public ChattingRoom createRoom(String name) {
 //        String randomId = UUID.randomUUID().toString();
-//        Channel chatRoom = Channel.builder()
+//        ChattingRoom chatRoom = ChattingRoom.builder()
 //                .id(randomId)
 //                .name(name)
 //                .build();

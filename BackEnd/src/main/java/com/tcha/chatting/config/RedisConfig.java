@@ -1,38 +1,59 @@
-//package com.tcha.chatting.config;
-//
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.data.redis.connection.RedisConnectionFactory;
-//import org.springframework.data.redis.core.RedisTemplate;
-//import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-//import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-//import org.springframework.data.redis.serializer.StringRedisSerializer;
-//
-//@Configuration
-//@RequiredArgsConstructor
-//public class RedisConfig {
-//
-//    /**
-//     * redis pub/sub 메시지를 처리하는 listener 설정
-//     */
-//    @Bean
-//    public RedisMessageListenerContainer redisMessageListener(
-//            RedisConnectionFactory connectionFactory) {
-//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-//        container.setConnectionFactory(connectionFactory);
-//        return container;
-//    }
-//
-//    /**
-//     * 어플리케이션에서 사용할 redisTemplate 설정
-//     */
-//    @Bean
-//    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-//        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(connectionFactory);
-//        redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-//        return redisTemplate;
-//    }
-//}
+package com.tcha.chatting.config;
+
+import com.tcha.chatting.dto.ChattingMessgae;
+import com.tcha.chatting.service.RedisSubService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisServer;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.nio.channels.Channel;
+
+@Configuration
+@RequiredArgsConstructor
+public class RedisConfig {
+    @Bean
+    RedisConnectionFactory redisConnectionFactory() {
+        return new LettuceConnectionFactory();
+    }
+
+    // redisTemplate 설정
+    // redis에 command를 수행하기 위해 사용
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChattingMessgae.class));
+        return redisTemplate;
+    }
+
+    //리스너어댑터 설정
+    @Bean
+    MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(new RedisSubService());
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.addMessageListener(messageListenerAdapter(), topic());
+        return container;
+    }
+
+    // pub/sun토픽 설정
+    @Bean
+    ChannelTopic topic() {
+        return new ChannelTopic("topicTest");
+    }
+}

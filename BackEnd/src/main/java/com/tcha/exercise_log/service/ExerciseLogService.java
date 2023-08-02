@@ -25,7 +25,7 @@ public class ExerciseLogService {
 
     private final ExerciseLogRepository exerciseLogRepository;
     private final PtLiveRepository ptLiveRepository;
-    private final ExerciseLogMapper exerciseLogMapper;
+    private final S3Uploader s3Uploader;
 
 
     //운동일지 저장
@@ -35,10 +35,8 @@ public class ExerciseLogService {
 
         exerciseLog.setPtLive(ptLive);
 
-
         return exerciseLogRepository.save(exerciseLog);
     }
-
 
 
     //Pagenation으로 운동 일지를 불러옴
@@ -75,43 +73,20 @@ public class ExerciseLogService {
         findExerciseLog.setTitle(exerciseLog.getTitle());
         findExerciseLog.setContent(exerciseLog.getContent());
 
-        // 이미지 테이블의 기존 정보 delete
-        List<ExerciseLogImage> exerciseLogImagesList = exerciseLogImageRepository.findAllImagesByExerciseLogId(
-                id);
-        if (exerciseLogImagesList.size() != 0) {
-            exerciseLogImageRepository.deleteAll(exerciseLogImagesList);
+        List<String> imgList = findExerciseLog.getImages();
+
+        // s3의 기존 정보 delete
+        for (String s : imgList) {
+            s3Uploader.delete(s);
         }
-        // 비디오 테이블의 기존 정보 delete
-        List<ExerciseLogVideo> exerciseLogVideosList = exerciseLogVideoRepository.findAllVideosByExerciseLogId(
-                id);
-        if (exerciseLogVideosList.size() != 0) {
-            exerciseLogVideoRepository.deleteAll(exerciseLogVideosList);
+        List<String> videoList = findExerciseLog.getVideos();
+
+        for (String s : videoList) {
+            s3Uploader.delete(s);
         }
 
-        List<ExerciseLogImage> imgList = new ArrayList<>();
-        List<ExerciseLogVideo> videoList = new ArrayList<>();
-
-        if(imgPaths != null) {
-            for (String img : imgPaths) {
-                ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
-                        .imgURL(img)
-                        .exerciseLog(findExerciseLog)
-                        .build();
-                imgList.add(exerciseLogImage);
-            }
-        }
-        if(videoPaths != null) {
-            for (String video : videoPaths) {
-                ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
-                        .video(video)
-                        .exerciseLog(findExerciseLog)
-                        .build();
-                videoList.add(exerciseLogVideo);
-            }
-        }
-
-        findExerciseLog.setExerciseImageList(exerciseLogImageRepository.saveAll(imgList));
-        findExerciseLog.setExerciseVideoList(exerciseLogVideoRepository.saveAll(videoList));
+        findExerciseLog.setImages(exerciseLog.getImages());
+        findExerciseLog.setVideos(exerciseLog.getVideos());
 
         return exerciseLogRepository.save(findExerciseLog);
 
@@ -122,21 +97,17 @@ public class ExerciseLogService {
     public void deleteExerciseLog(Long id) {
 
         ExerciseLog findExerciseLog = exerciseLogRepository.findById(id).get();
-        // 이미지 테이블의 기존 정보 delete
-        List<ExerciseLogImage> exerciseLogImagesList = exerciseLogImageRepository.findAllImagesByExerciseLogId(
-                findExerciseLog.getId());
-        if (exerciseLogImagesList != null) {
-            for (ExerciseLogImage entity : exerciseLogImagesList) {
-                s3Uploader.delete(entity.getImgURL());
-            }
+
+        List<String> imgList = findExerciseLog.getImages();
+
+        // s3의 기존 정보 delete
+        for (String s : imgList) {
+            s3Uploader.delete(s);
         }
-        // 비디오 테이블의 기존 정보 delete
-        List<ExerciseLogVideo> exerciseLogVideosList = exerciseLogVideoRepository.findAllVideosByExerciseLogId(
-                findExerciseLog.getId());
-        if (exerciseLogVideosList != null) {
-            for (ExerciseLogVideo entity : exerciseLogVideosList) {
-                s3Uploader.delete(entity.getVideo());
-            }
+        List<String> videoList = findExerciseLog.getVideos();
+
+        for (String s : videoList) {
+            s3Uploader.delete(s);
         }
 
         exerciseLogRepository.delete(findExerciseLog);

@@ -59,9 +59,9 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage), HttpStatus.OK);
     }
 
-    @GetMapping("/{trainer-id}")
-    public ResponseEntity<MultiResponseDto> getReviewPage(
-            @PathVariable(value = "trainer-id") UUID trainerID,
+    @GetMapping("/trainer/{trainer-id}")
+    public ResponseEntity<MultiResponseDto> getReviewPageByTrainerId(
+            @PathVariable(value = "trainer-id") String trainerID,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
@@ -72,8 +72,8 @@ public class ReviewController {
         return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage), HttpStatus.OK);
     }
 
-    @GetMapping("/{user-profile-id}")
-    public ResponseEntity<MultiResponseDto> getReviewPage(
+    @GetMapping("/user/{user-profile-id}")
+    public ResponseEntity<MultiResponseDto> getReviewPageByUserId(
             @PathVariable(value = "user-profile-id") Long userProfileID,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {

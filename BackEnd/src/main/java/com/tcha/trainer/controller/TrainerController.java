@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,8 +35,8 @@ public class TrainerController {
         log.debug("[TrainerController] postTrainer 접근 확인 ::: "
                 + "userProfileId 값 = {}, postRequest 값 = {}", userProfileId, postRequest);
 
-        TrainerDto.Response createdTrainer = trainerService.createTrainer(userProfileId,
-                postRequest);
+        TrainerDto.Response createdTrainer =
+                trainerService.createTrainer(userProfileId, postRequest);
 
         return ResponseEntity.ok().body(createdTrainer);
     }
@@ -80,12 +81,12 @@ public class TrainerController {
     /*
     트레이너 아이디를 통해 트레이너를 삭제한다.
      */
-    @DeleteMapping("{trainer-id}")
-    public ResponseEntity deleteTrainer(@PathVariable("trainer-id") String trainerId) {
+    @DeleteMapping("/{trainer-id}")
+    public ResponseEntity<?> deleteTrainer(@PathVariable("trainer-id") String trainerId) {
 
         trainerService.deleteTrainer(trainerId);
 
-        return (ResponseEntity) ResponseEntity.noContent();
+        return (ResponseEntity<?>) ResponseEntity.noContent();
     }
 
     /*
@@ -93,9 +94,10 @@ public class TrainerController {
     유저가 선택한 날짜와 시간에 수업 가능한 트레이너를 검색한다.
      */
     @GetMapping("/search")
-    public ResponseEntity<List<Trainer>> searchTrainer(@RequestBody TrainerDto.Get getRequest) {
+    public ResponseEntity<List<TrainerDto.ResponseList>> searchTrainer(
+            @RequestBody TrainerDto.Get getRequest) {
 
-        List<Trainer> searchResult = trainerService.findTrainers(getRequest);
+        List<TrainerDto.ResponseList> searchResult = trainerService.findTrainers(getRequest);
 
         return ResponseEntity.ok(searchResult);
     }

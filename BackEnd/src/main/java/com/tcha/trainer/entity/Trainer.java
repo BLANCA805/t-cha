@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
@@ -41,11 +42,13 @@ public class Trainer extends Auditable {
 
     private String introduction;
 
+    @Lob
     @Column(columnDefinition = "TEXT")
     private String tags;
 
     private String title;
 
+    @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
 
@@ -60,7 +63,7 @@ public class Trainer extends Auditable {
     // 리뷰
     @OneToMany(mappedBy = "trainer")
     private List<Review> reviews = new ArrayList<>();
-    
+
 //    // 클래스
 //    @OneToMany(mappedBy = "trainer")
 //    private List<PtClass> classes = new ArrayList<>();

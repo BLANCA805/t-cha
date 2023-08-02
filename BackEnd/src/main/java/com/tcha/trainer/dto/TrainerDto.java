@@ -15,19 +15,21 @@ public class TrainerDto {
     트레이너 등록 요청
      */
     @Getter
+    @Builder
     public static class Post {
 
         private String introduction;
         private String title;
         private String content;
         private String tags;
-        private List<MultipartFile> images;
+//        private List<MultipartFile> images;
     }
 
     /*
     트레이너 정보 수정 요청
     */
     @Getter
+    @Builder
     public static class Patch {
 
         private String introduction;

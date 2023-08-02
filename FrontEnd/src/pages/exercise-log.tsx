@@ -64,7 +64,6 @@ function ExerciseLog() {
       .catch((error) => {
         console.log(error);
       });
-    dispatch(registTrainer());
   };
 
   return (

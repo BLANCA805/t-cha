@@ -32,7 +32,9 @@ function TrainerButtons() {
   return (
     <TrainerContainer>
       <TrRow>
-        <Link to="">트레이너 정보 수정 (트레이너 상세 페이지)</Link>
+        <Link to="trainer_info_modify">
+          트레이너 정보 수정 (트레이너 상세 페이지)
+        </Link>
       </TrRow>
       <TrRow>
         <Link to="">트레이너 스케줄 관리, 일정</Link>

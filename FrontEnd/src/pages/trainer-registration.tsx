@@ -68,7 +68,7 @@ function TrainerRegistration() {
       .then((response) => {
         if (response.data) {
           console.log(response.data);
-          dispatch(registTrainer());
+          dispatch(registTrainer({ trainerId: response.data.id }));
         }
       })
       .catch((error) => {

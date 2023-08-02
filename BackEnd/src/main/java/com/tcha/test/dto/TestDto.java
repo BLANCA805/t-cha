@@ -30,7 +30,6 @@ public class TestDto {
 
     }
 
-
     @AllArgsConstructor
     @Getter
     @Builder

@@ -1,14 +1,11 @@
 package com.tcha.exercise_log.service;
 
 import com.tcha.exercise_log.dto.ExerciseLogDto;
-import com.tcha.exercise_log.dto.ExerciseLogDto.Response;
-import com.tcha.exercise_log.entity.ExerciseLogImage;
-import com.tcha.exercise_log.entity.ExerciseLogVideo;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
-import com.tcha.exercise_log.repository.ExerciseLogImageRepository;
 import com.tcha.exercise_log.repository.ExerciseLogRepository;
 import com.tcha.exercise_log.entity.ExerciseLog;
-import com.tcha.exercise_log.repository.ExerciseLogVideoRepository;
+import com.tcha.pt_live.entity.PtLive;
+import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.utils.upload.service.S3Uploader;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,43 +24,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExerciseLogService {
 
     private final ExerciseLogRepository exerciseLogRepository;
-    private final ExerciseLogImageRepository exerciseLogImageRepository;
-    private final ExerciseLogVideoRepository exerciseLogVideoRepository;
-    private final S3Uploader s3Uploader;
-
+    private final PtLiveRepository ptLiveRepository;
     private final ExerciseLogMapper exerciseLogMapper;
 
 
     //운동일지 저장
     @Transactional
-    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, String[] imgPaths,
-            String[] videoPaths) {
+    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
 
-        List<ExerciseLogImage> imgList = new ArrayList<>();
-        List<ExerciseLogVideo> videoList = new ArrayList<>();
+        exerciseLog.setPtLive(ptLive);
 
-        if (imgPaths != null) {
-            for (String img : imgPaths) {
-                ExerciseLogImage exerciseLogImage = ExerciseLogImage.builder()
-                        .imgURL(img)
-                        .exerciseLog(exerciseLog)
-                        .build();
-                imgList.add(exerciseLogImage);
-            }
-        }
 
-        if (videoPaths != null) {
-            for (String video : videoPaths) {
-                ExerciseLogVideo exerciseLogVideo = ExerciseLogVideo.builder()
-                        .video(video)
-                        .exerciseLog(exerciseLog)
-                        .build();
-                videoList.add(exerciseLogVideo);
-            }
-        }
-
-        exerciseLog.setExerciseImageList(exerciseLogImageRepository.saveAll(imgList));
-        exerciseLog.setExerciseVideoList(exerciseLogVideoRepository.saveAll(videoList));
         return exerciseLogRepository.save(exerciseLog);
     }
 
@@ -78,7 +50,7 @@ public class ExerciseLogService {
                 PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
-    //운동일지 1개 찾기
+    //운동일지 1개 찾기(PK)
     @Transactional(readOnly = true)
     public ExerciseLog findExerciseLog(Long id) {
         ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
@@ -86,47 +58,17 @@ public class ExerciseLogService {
         return exerciseLog;
     }
 
-//    @Transactional(readOnly = true)
-//    public ExerciseLog findExerciseLogByLiveId(Long liveId) {
-//        Optional<ExerciseLog> exerciseLog = exerciseLogRepository.findByLiveId(liveId);
-//
-//        return exerciseLog.get();
-//    }
-
-
+    //운동일지 1개 찾기(ptLiveId)
     @Transactional(readOnly = true)
-    public ExerciseLogDto.Response getExerciseLog(Long id) {
-        ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
+    public ExerciseLog findExerciseLogByLiveId(Long liveId) {
+        ExerciseLog exerciseLog = exerciseLogRepository.findByLiveId(liveId).get();
 
-        //image 넣기
-        List<String> imgPaths = new ArrayList<>();
-        List<ExerciseLogImage> exerciseLogImagesList = exerciseLogImageRepository.findAllImagesByExerciseLogId(
-                id);
-        if (exerciseLogImagesList.size() != 0) {
-            for (ExerciseLogImage img : exerciseLogImagesList) {
-                imgPaths.add(img.getImgURL());
-            }
-        }
-
-        //video 넣기
-        List<String> videoPaths = new ArrayList<>();
-        List<ExerciseLogVideo> exerciseLogVideosList = exerciseLogVideoRepository.findAllVideosByExerciseLogId(
-                id);
-        if (exerciseLogVideosList.size() != 0) {
-            for (ExerciseLogVideo video : exerciseLogVideosList) {
-                videoPaths.add(video.getVideo());
-            }
-        }
-
-        //response 만들기(List<String> images에 넣는 것 때문에 Mapper에 넣기 애매)
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,imgPaths,videoPaths);
+        return exerciseLog;
     }
 
 
-
     @Transactional
-    public ExerciseLog updateExerciseLog(Long id,ExerciseLog exerciseLog, String[] imgPaths,
-            String[] videoPaths) {
+    public ExerciseLog updateExerciseLog(ExerciseLog exerciseLog, Long id) {
 
         ExerciseLog findExerciseLog = exerciseLogRepository.findById(id).get();
 

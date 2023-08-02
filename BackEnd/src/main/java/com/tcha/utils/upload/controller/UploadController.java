@@ -3,6 +3,7 @@ package com.tcha.utils.upload.controller;
 import com.tcha.utils.upload.service.S3Uploader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class UploadController {
     private final S3Uploader s3Uploader;
-
     @PostMapping("/images")
     public List<String> postImage(
             @RequestPart(value = "images", required = false) MultipartFile[] images
@@ -39,29 +39,18 @@ public class UploadController {
                 imgList.add(s);
             }
         }
-
         return imgList;
         }
 
     @DeleteMapping("/images")
     public ResponseEntity deleteImage(
-            @RequestParam List<String> images
+            @RequestParam String image
     ) throws IOException {
-
-        if (images != null) {
-            for(String s : images){
-                s = s.replaceAll("[^\\w+]", "");
-
-                System.out.println(s);
-
-                s3Uploader.delete(s);
+        if (image != null) {
+                s3Uploader.delete(image);
             }
-        }
-
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
-
-
 
         @PostMapping("/videos")
     public List<String> postVideo(
@@ -69,18 +58,23 @@ public class UploadController {
     ) throws IOException {
 
         String[] videoPaths = null;
-            List<String> videoList = new ArrayList<>();
-
-        if (videos != null) {
-            videoPaths = s3Uploader.upload(videos, "video");
-        }
-
-            if (videoPaths != null) {
+        List<String> videoList = new ArrayList<>();
+            if (videos != null) {
+                videoPaths = s3Uploader.upload(videos, "video");
                 for (String s : videoPaths) {
                     videoList.add(s);
                 }
             }
-
         return videoList;
         }
+
+    @DeleteMapping("/videos")
+    public ResponseEntity deleteVideo(
+            @RequestParam String video
+    ) throws IOException {
+        if (video != null) {
+            s3Uploader.delete(video);
+        }
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

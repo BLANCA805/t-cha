@@ -16,8 +16,9 @@ public class TestService {
 
     public Test createTest(Test test
             ) {
-
-
+        for(String s : test.getImages()) {
+            System.out.println(s);
+        }
         return testRepository.save(test);
     }
 }

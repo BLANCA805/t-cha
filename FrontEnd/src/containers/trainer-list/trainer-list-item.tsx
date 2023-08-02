@@ -28,48 +28,52 @@ const Container = styled.div`
 
 interface PtListItemProps {
   data: {
-    id: number;
-    name: string;
-    keywordTags: string[];
-    registrationDate: string;
-    studentCount: number;
-    reservationCount: number;
+    id: string;
+    profileName: string;
+    profileImg: string;
+    introduction: string;
+    tags: string;
+    stars: number;
+    createdAt: string;
+    userCount: number;
+    ptCount: number;
     reviewCount: number;
-    reReservationRate: number;
+    revisitGrade: number;
   };
 }
 
 function TrainerListItem(props: PtListItemProps) {
   const moveToDetail = useNavigate();
+
   return (
-    <Wrapper onClick={() => moveToDetail(`${props.data.id}/info`)}>
+    <Wrapper onClick={() => moveToDetail(`info/detail`)}>
       <Avatar
         style={{ width: "10%", height: "10%", margin: "5%" }}
         alt=""
         src=""
       />
       <DataWrapper>
-        <h2>{props.data.name}</h2>
+        <h2>{props.data.profileName}</h2>
         <KeywordWrapper>
-          {props.data.keywordTags.map((keywordData, index) => (
+          {props.data.tags.split(",").map((tag, index) => (
             <div style={{ marginLeft: "5px", marginRight: "5px" }} key={index}>
-              <h4>#{keywordData}</h4>
+              <h4>#{tag}</h4>
             </div>
           ))}
         </KeywordWrapper>
-        <h4>등록 일자 : {props.data.registrationDate}</h4>
+        <h4>등록 일자 : {props.data.createdAt}</h4>
         <Container>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
-            회원 수 : {props.data.studentCount}
+            회원 수 : {props.data.userCount}
           </h5>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
-            예약 수 : {props.data.reservationCount}
+            예약 수 : {props.data.ptCount}
           </h5>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
             리뷰 수 : {props.data.reviewCount}
           </h5>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
-            재등록율 : {props.data.reReservationRate} %
+            재등록율 : {props.data.revisitGrade} %
           </h5>
         </Container>
       </DataWrapper>

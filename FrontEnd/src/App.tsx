@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 import SideBar from "@shared/side-bar";
+import Test from "./test";
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,9 +21,9 @@ const Container = styled.div`
 function App() {
   return (
     <Wrapper>
-      <SideBar />
       <Container>
         <Outlet />
+        <SideBar />
       </Container>
     </Wrapper>
   );

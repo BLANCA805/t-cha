@@ -5,8 +5,8 @@ const Wrapper = styled.div`
   padding: 3%;
 `;
 
-function TrainerInfo() {
+function TrainerDetail() {
   return <Wrapper>트레이너 상세 정보 페이지 입니다.</Wrapper>;
 }
 
-export default TrainerInfo;
+export default TrainerDetail;

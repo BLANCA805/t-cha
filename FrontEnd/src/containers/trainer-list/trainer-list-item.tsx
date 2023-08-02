@@ -51,7 +51,7 @@ function TrainerListItem(props: PtListItemProps) {
         style={{ width: "10%", height: "10%", margin: "5%" }}
         alt=""
         src=""
-      />
+      /> 
       <DataWrapper>
         <h2>{props.data.profileName}</h2>
         <KeywordWrapper>

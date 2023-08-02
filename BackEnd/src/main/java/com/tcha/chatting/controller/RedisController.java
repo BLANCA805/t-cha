@@ -18,6 +18,8 @@ public class RedisController {
 
     @PostMapping
     public String pubSub(@RequestBody ChattingMessgae chattingMessgae) {
+        System.out.println(chattingMessgae.getContext() + "\n" + chattingMessgae.getSender() + "\n"
+                + chattingMessgae.getType());
         //메세지 보내기
         redisPublisher.sendMessage(chattingMessgae);
         return "success";

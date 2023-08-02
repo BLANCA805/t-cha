@@ -8,12 +8,23 @@ import { isTemplateSpan } from "typescript";
 import UserSchedule from "@/user-schedule";
 
 const Wrapper = styled.div`
-  
 
 `;
 
 
 function UserScheduleList() {
+  //추가로 구현해야할 로직 
+  //calendar 날짜 누르면 해당 날짜에 예약된, 현재 유저의 예약건들 전부 upload
+  //data쪽
+  //현재시점 기준으로 완료된 수업이면
+    //붉은계열 색으로 칸 변경
+    //버튼 리뷰쓰기로 바뀜 + 일지보기 버튼도?
+  //입장 10분 전이면
+    //버튼 BLACK PT방 입장으로 바뀜
+  //아직 진행되지 않은 수업이면
+    //예정이라는 GRAY버튼 
+
+
   // const [items, setItems] = useState<Array<any>>([]);
   // useEffect(() => {
   //   axios

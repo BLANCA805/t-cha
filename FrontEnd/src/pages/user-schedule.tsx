@@ -7,7 +7,7 @@ const Wrapper= styled.div`
   display:flex;
   flex-direction: column;
   height:100vh;
-  margin: 0% 1%;
+  margin: 1% 1%;
   `;
 
 const PageTitle=styled.div`
@@ -43,10 +43,7 @@ function UserSchedule() {
         <DatePicker />
       </Calendar>
       <ScheduleInfo>
-        {/* <UserScheduleListItem /> */}
-        {/* <UserScheduleListItem /> */}
         <UserScheduleList /> 
-        {/* must be component with UserScheduleItem */}
       </ScheduleInfo>
     </Wrapper>
   );

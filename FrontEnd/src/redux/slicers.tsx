@@ -1,13 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, combineReducers } from "@reduxjs/toolkit";
 
-const initialState = {
+const authInitialState = {
   isLogined: false,
   token: "",
 };
 
+const profileInitialState = {
+  name: "",
+  profileId: 0,
+  isTrainer: false,
+};
+
 const authSlice = createSlice({
   name: "auth",
-  initialState: initialState,
+  initialState: authInitialState,
   reducers: {
     logIn: (state, action) => {
       state.isLogined = true;
@@ -20,6 +26,35 @@ const authSlice = createSlice({
   },
 });
 
-export const { logIn, logOut } = authSlice.actions;
+const profileSlice = createSlice({
+  name: "profile",
+  initialState: profileInitialState,
+  reducers: {
+    registTrainer: (state) => {
+      state.isTrainer = true;
+    },
+    postProfile: (state, action) => {
+      state.name = action.payload.name;
+      state.profileId = action.payload.id;
+    },
+    deleteProfile: (state) => {
+      state.name = "";
+      state.profileId = 0;
+      state.isTrainer = false;
+    },
+    test: (state) => {
+      state.isTrainer = false;
+    },
+  },
+});
 
-export default authSlice.reducer;
+const rootReducer = combineReducers({
+  auth: authSlice.reducer,
+  profile: profileSlice.reducer,
+});
+
+export const { logIn, logOut } = authSlice.actions;
+export const { registTrainer, postProfile, deleteProfile, test } =
+  profileSlice.actions;
+
+export default rootReducer;

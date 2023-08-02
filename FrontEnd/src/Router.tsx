@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router-dom";
 
 import App from "./App";
 
+import Test from "./test";
+
 import Main from "@/main";
 
 import ChatList from "@/chat-list";
@@ -17,11 +19,13 @@ import UserSchedule from "@/user-schedule";
 import UserInfoModify from "@/user-info-modify";
 import PaymentDetail from "@/payment-detail";
 import ReviewWrittenByUser from "@/review-written-by-user";
+import TrainerRegistration from "@/trainer-registration";
+import ExerciseLog from "@/exercise-log";
 
 import TrainerList from "@/trainer-list";
-import TrainerDetail from "@/trainer-detail";
-import TrainerInfo from "@trainer-detail/trainer-info";
-import TrainerReview from "@trainer-detail/trainer-review";
+import TrainerInfo from "@/trainer-info";
+import TrainerDetail from "@trainer-info/trainer-detail";
+import TrainerReview from "@trainer-info/trainer-review";
 
 const router = createBrowserRouter([
   {
@@ -81,16 +85,24 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: "profile/trainer_registration",
+        element: <TrainerRegistration />,
+      },
+      {
+        path: "profile/exercise_log",
+        element: <ExerciseLog />,
+      },
+      {
         path: "trainer",
         element: <TrainerList />,
       },
       {
-        path: "trainer/:trainer_id",
-        element: <TrainerDetail />,
+        path: "trainer/info",
+        element: <TrainerInfo />,
         children: [
           {
-            path: "info",
-            element: <TrainerInfo />,
+            path: "detail",
+            element: <TrainerDetail />,
           },
           {
             path: "review",
@@ -99,6 +111,10 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "test",
+    element: <Test />,
   },
 ]);
 

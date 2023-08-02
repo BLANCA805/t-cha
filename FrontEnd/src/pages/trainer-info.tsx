@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.light};
 `;
 
-function TrainerDetail() {
+function TrainerInfo() {
   return (
     <Container>
       <Wrapper>
@@ -22,7 +22,7 @@ function TrainerDetail() {
       <Wrapper>
         <ToggleButtons
           tabs={[
-            { text: "트레이너 상세 정보", path: "info" },
+            { text: "트레이너 상세 정보", path: "detail" },
             { text: "트레이너 리뷰", path: "review" },
           ]}
           width="100%"
@@ -33,4 +33,4 @@ function TrainerDetail() {
   );
 }
 
-export default TrainerDetail;
+export default TrainerInfo;

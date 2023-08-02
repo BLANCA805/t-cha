@@ -9,6 +9,7 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.pagination.MultiResponseDto;
 import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
@@ -17,6 +18,10 @@ import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,8 +44,11 @@ public class BookmarkService {
         Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
         //새로운 즐겨찾기 entity객체 만들어서 저장하기
-        Bookmark bookmark = bookMarkRepository.save(bookmarkMapper.postToBookmark(userProfile, trainer));
-        return bookmarkMapper.bookMarkToBookMarkDto(bookmark);
+        Bookmark bookmark = bookMarkRepository.save(Bookmark.builder()
+                .userProfile(userProfile)
+                .trainer(trainer).build());
+
+        return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
     }
 
 
@@ -51,22 +59,16 @@ public class BookmarkService {
 
 
     //유저별 즐겨찾기 목록 확인
-    public List<BookmarkDto.Response> findAllUserIdBookMark(Long userProfileId) {
+    public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size, Long userProfileId) {
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
 
         //해당 유저프로필 객체의 즐겨찾기 목록 가져오기
-        List<Bookmark> responseBookMarks = bookMarkRepository.findByUserProfile(userProfile);
-        List<BookmarkDto.Response> responses = new ArrayList<>();
+        Page<Bookmark> pageBookMarks = bookMarkRepository.findByUserProfile(userProfile, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<BookmarkDto.Response> Bookmarks = bookmarkMapper.bookmarkListToBookmarkDtoResponse(pageBookMarks.getContent());
 
-        //entity객체를 dto로 타입 변경
-        for (Bookmark responseBookmark : responseBookMarks) {
-            BookmarkDto.Response response = bookmarkMapper.bookMarkToBookMarkDto(
-                    responseBookmark);
-            responses.add(response);
-        }
-        return responses;
+        return new MultiResponseDto<BookmarkDto.Response>(Bookmarks, pageBookMarks);
     }
 
 }

@@ -2,8 +2,12 @@ package com.tcha.bookmark.controller;
 
 import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.service.BookmarkService;
+import com.tcha.notice.dto.NoticeDto;
+import com.tcha.notice.entity.Notice;
+import com.tcha.utils.pagination.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +31,13 @@ public class BookmarkController {
     public ResponseEntity<BookmarkDto.Response> postBookMark(
             @PathVariable("user-profile-id") Long userProfileId,
             @PathVariable("trainer-id") String trainerId) {
-        System.out.println("data test >>>>>>>>>> " + userProfileId + " " + trainerId);
         BookmarkDto.Response response = bookmarkService.createBookmark(userProfileId, trainerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //즐겨찾기 삭제
     @DeleteMapping("/{bookmark-id}")
-    public ResponseEntity patchBookMark(
+    public ResponseEntity deleteBookMark(
             @PathVariable("bookmark-id") Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
         return ResponseEntity.noContent().build();
@@ -42,9 +45,11 @@ public class BookmarkController {
 
     //유저별 즐겨찾기 목록보기
     @GetMapping("/{user-profile-id}")
-    public ResponseEntity<List<BookmarkDto.Response>> getBookMark(
+    public ResponseEntity<MultiResponseDto<BookmarkDto.Response>> getBookMark(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
             @PathVariable("user-profile-id") Long userProfileId) {
-        List<BookmarkDto.Response> response = bookmarkService.findAllUserIdBookMark(userProfileId);
+        MultiResponseDto<BookmarkDto.Response> response = bookmarkService.findAllUserIdBookMark(page, size, userProfileId);
         return ResponseEntity.ok().body(response);
     }
 }

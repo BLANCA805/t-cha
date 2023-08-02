@@ -4,6 +4,8 @@ import com.tcha.user.entity.User;
 import com.tcha.user.service.UserService;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,31 +21,19 @@ public class UserProfileService {
     private final UserService userService;
     private final UserProfileRepository userProfileRepository;
 
-    public UserProfile createUserProfile(UserProfile userProfile) {
-//        String userProfileId = UUID.randomUUID().toString();
-//
-//        userProfile.setId(userProfileId);
+    public UserProfile createUserProfile(String userId, UserProfile userProfile) {
 
-        return userProfileRepository.save(userProfile);
+        User user = new User();
+        user.setId(userId);
 
-    }
-
-    public UserProfile testUserProfile(String userId, UserProfile userProfile) {
-        User foundUser = userService.findVerifiedUser(userId);
-
-        UserProfile userProfileForSave = new UserProfile();
-
-//        String userProfileId = UUID.randomUUID().toString();
-//
-//        userProfileForSave.setId(userProfileId);
-        userProfileForSave.setUser(foundUser);
+        userProfile.setUser(user);
 
         Optional.ofNullable(userProfile.getName())
-                .ifPresent(name -> userProfileForSave.setName(name));
+                .ifPresent(name -> userProfile.setName(name));
         Optional.ofNullable(userProfile.getProfileImage())
-                .ifPresent(profileImage -> userProfileForSave.setProfileImage(profileImage));
+                .ifPresent(profileImage -> userProfile.setProfileImage(profileImage));
 
-        return userProfileRepository.save(userProfileForSave);
+        return userProfileRepository.save(userProfile);
 
     }
 
@@ -79,6 +69,17 @@ public class UserProfileService {
 
         return userProfileRepository.save(userProfileForSave);
     }
+
+    public UserProfile findVerifiedUserProfile(Long userProfileId) {
+
+        Optional<UserProfile> optionalUserProfile = userProfileRepository.findById(userProfileId);
+
+        UserProfile findUserProfile = optionalUserProfile.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.USER_PROFILE_NOT_FOUND));
+
+        return findUserProfile;
+    }
+
 }
 
 /*

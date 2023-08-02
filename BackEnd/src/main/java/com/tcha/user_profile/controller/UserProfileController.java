@@ -34,7 +34,7 @@ public class UserProfileController {
             @RequestBody UserProfileDto.Post postRequest) {
 
         UserProfile userProfileForService = userProfileMapper.postToUserProfile(postRequest);
-        UserProfile userProfileForResponse = userProfileService.testUserProfile(userId,
+        UserProfile userProfileForResponse = userProfileService.createUserProfile(userId,
                 userProfileForService);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
                 userProfileForResponse);

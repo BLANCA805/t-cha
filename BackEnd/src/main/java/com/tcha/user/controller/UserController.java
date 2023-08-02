@@ -28,11 +28,8 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping
-//    public ResponseEntity postUser(@RequestBody UserDto.Post postRequest) {
     public ResponseEntity postUser(@RequestParam String email) {
 
-//        User userToService = userMapper.postToUser(postRequest);
-//        User userForResponse = userService.testUser(userToService); //id 생성, 기본 상태 및 권한 설정
         User userForResponse = userService.testUser(email); //id 생성, 기본 상태 및 권한 설정
         UserDto.Response response = userMapper.userToResponse(userForResponse);
 

@@ -11,6 +11,7 @@ public class AnswerDto {
     public static class Post {
 
         private String content;
+
     }
 
     @AllArgsConstructor

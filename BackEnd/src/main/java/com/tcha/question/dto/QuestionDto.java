@@ -1,6 +1,7 @@
 package com.tcha.question.dto;
 
 import com.tcha.question.entity.Question.QuestionStatus;
+import com.tcha.user_profile.entity.UserProfile;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,6 +29,8 @@ public class QuestionDto {
         private String title;
 
         private String content;
+
+        private UserProfile userProfile;
 
         private QuestionStatus status;
 

@@ -3,6 +3,7 @@ import { type RootState } from "../redux/store";
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
 
+import { api } from "@shared/common-data";
 import { registTrainer } from "src/redux/slicers";
 
 import TextField from "@mui/material/TextField";
@@ -55,7 +56,7 @@ function ExerciseLog() {
     //   body.append("images", image);
     // });
     axios
-      .post(`http://70.12.245.39:8080/exercise-logs`, body)
+      .post(`${api}/exercise-logs`, body)
       .then((response) => {
         if (response.data) {
           console.log(response.data);

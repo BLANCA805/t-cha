@@ -141,13 +141,12 @@ function User() {
           </Link>
         </ProfileModify>
       </Profile>
-      {!profile.isTrainer && (
+      {!profile.trainerId && (
         <Link to="trainer_registration">
           <DefaultButton> 트레이너 등록하기 </DefaultButton>
         </Link>
       )}
-      {/* {profile.isTrainer && <TrainerButtons />} */}
-      <TrainerButtons />
+      {profile.trainerId && <TrainerButtons />}
       <UserContainer>
         <Usrow>
           <Uscol>
@@ -172,7 +171,7 @@ function User() {
           </Uscol>
         </Usrow>
       </UserContainer>
-      {profile.isTrainer && (
+      {profile.trainerId && (
         <DefaultButton onClick={tester}>트레이너 취소</DefaultButton>
       )}
     </Wrapper>

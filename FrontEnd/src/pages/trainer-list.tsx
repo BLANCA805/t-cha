@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import TrainerListItem from "@trainer-list/trainer-list-item";
+import { api } from "@shared/common-data";
 
 import TrainerListHeader from "@trainer-list/trainer-list-header";
+import TrainerListItem from "@trainer-list/trainer-list-item";
 
 import styled from "styled-components";
 
@@ -19,7 +20,7 @@ function TrainerList() {
 
   useEffect(() => {
     axios
-      .get("http://70.12.245.39:8080/trainers")
+      .get(`${api}/trainers`)
       .then((response) => {
         setItems(response.data);
         console.log(response.data);

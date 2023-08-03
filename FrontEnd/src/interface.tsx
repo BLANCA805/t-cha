@@ -23,3 +23,38 @@ export interface TrainerReviewData {
     totalPages: number;
   };
 }
+
+export interface NoticeData {
+  data: {
+    id: number;
+    status: string;
+    title: string;
+    content: string;
+  }[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+export interface InquiryData {
+  data: {
+    questionId: number;
+    userProfileId: number;
+    title: string;
+    content: string;
+    name: string;
+    userProfileImage: any;
+    status: string;
+    createdAt: string;
+    modifiedAt: string;
+  }[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}

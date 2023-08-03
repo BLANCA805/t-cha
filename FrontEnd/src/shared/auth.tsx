@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { logIn } from "src/redux/slicers";
-
 import axios from "axios";
+
+import { api } from "./common-data";
+import { AppDispatch } from "src/redux/store";
+
+import { logIn } from "src/redux/slicers";
 
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
-import { AppDispatch } from "src/redux/store";
-import useAxios from "src/hooks/use-axios";
 
 interface AuthProps {
   open: boolean;
@@ -70,7 +71,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
 
   const Sign = () => {
     axios
-      .post("http://70.12.245.39:8080/users?email=email@gmail.com")
+      .post(`${api}/users?email=email@gmail.com`)
       .then((response) => {
         if (response.data) {
           console.log(response.data);

@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+import { api } from "@shared/common-data";
 import { TrainerReviewData, TrainerDetailData } from "src/interface";
 
 import TrainerDetail from "@trainer-info/trainer-detail";
@@ -23,6 +24,8 @@ const Wrapper = styled.div`
 function TrainerInfo() {
   const trainer = useLocation().state;
 
+  console.log(trainer);
+
   const [tab, setTab] = useState<string>("detail");
   const [detail, getDetail] = useState<TrainerDetailData>();
   const [review, getReview] = useState<TrainerReviewData>();
@@ -34,8 +37,8 @@ function TrainerInfo() {
   useEffect(() => {
     axios
       .all([
-        axios.get(`http://70.12.245.39:8080/trainers/${trainer}`),
-        axios.get(`http://70.12.245.39:8080/reviews/trainer/${trainer}`),
+        axios.get(`${api}/trainers/${trainer}`),
+        axios.get(`${api}/reviews/trainer/${trainer}`),
       ])
       .then(
         axios.spread((detail, review) => {

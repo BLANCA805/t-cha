@@ -1,4 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
+import { type RootState } from "src/redux/store";
+import { api } from "@shared/common-data";
 
 import styled from "styled-components";
 
@@ -45,7 +50,19 @@ interface trainerListItemProps {
 function TrainerListItem(props: trainerListItemProps) {
   const navigate = useNavigate();
 
+  const user = useSelector((state: RootState) => state.profile);
   const trainer = props.data.id;
+
+  const bookmark = () => {
+    axios
+      .post(`${api}/bookmarks/${user}/${trainer}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Wrapper onClick={() => navigate(`info`, { state: trainer })}>
@@ -78,6 +95,7 @@ function TrainerListItem(props: trainerListItemProps) {
             재등록율 : {props.data.revisitGrade} %
           </h5>
         </Container>
+        <button onClick={bookmark}>즐겨찾기 등록</button>
       </DataWrapper>
     </Wrapper>
   );

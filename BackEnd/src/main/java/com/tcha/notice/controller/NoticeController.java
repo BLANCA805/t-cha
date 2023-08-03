@@ -59,7 +59,7 @@ public class NoticeController {
     public ResponseEntity patchNotice(@PathVariable("notice-id") Long id,
             @RequestBody NoticeDto.Patch patchRequest) {
         Notice noticeToService = noticeMapper.patchToNotice(patchRequest);
-        Notice noticeForResponse = noticeService.updateNotice(noticeToService);
+        Notice noticeForResponse = noticeService.updateNotice(noticeToService, id);
         NoticeDto.Response response = noticeMapper.noticeToResponse(noticeForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);

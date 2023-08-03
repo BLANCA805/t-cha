@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +41,13 @@ public class ExerciseLog extends Auditable {
     @Column(length = 255, nullable = false)
     private String title;
 
-    @OneToMany(mappedBy = "exerciseLog", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<ExerciseLogImage> exerciseImageList = new ArrayList<>();
+    @ElementCollection
+    @OrderColumn
+    private List<String> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exerciseLog", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
-    private List<ExerciseLogVideo> exerciseVideoList = new ArrayList<>();
+    @ElementCollection
+    @OrderColumn
+    private List<String> videos = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;

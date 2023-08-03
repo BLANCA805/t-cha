@@ -36,11 +36,12 @@ public class ReviewService {
 
     //Pagenation으로 트레이너(해당 트레이너) 리뷰을 불러옴
     @Transactional(readOnly = true)
-    public Page<Review> findReviewPagesByTrainerId(UUID trainerId, int page, int size) {
+    public Page<Review> findReviewPagesByTrainerId(String trainerId, int page, int size) {
 
+        UUID TrainerId = UUID.fromString(trainerId);
         return reviewRepository.findAllByTrainerId(
 
-                trainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+                TrainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
     //Pagenation으로 트레이너(해당 유저) 리뷰을 불러옴

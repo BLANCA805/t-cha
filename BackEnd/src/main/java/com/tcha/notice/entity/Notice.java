@@ -42,23 +42,5 @@ public class Notice extends Auditable {
     }
 
 }
-    /*
-    TODO
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id")
-        @OnDelete(action = OnDeleteAction.CASCADE)
-        private User user;
 
-     -------------------- 회원 일치 확인-------------------
-        public QnaQuestion changeQnaQuestion(QnaQuestion sourceQnaQuestion, CustomBeanUtils<QnaQuestion> beanUtils) {
-                // 질문을 수정하려는 회원이 질문을 등록한 회원과 일치하는가?
-                this.member.checkIsMyself(sourceQnaQuestion.getMember().getMemberId());
-
-                // 답변 완료된 질문인가?
-                isQuestionAnswered();
-
-                return beanUtils.copyNonNullProperties(sourceQnaQuestion, this);
-        }
-}
-*/
 

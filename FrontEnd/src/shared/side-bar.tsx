@@ -126,7 +126,7 @@ function SideBar() {
   const test = () => {
     const token = user.token;
     axios
-      .post(`http://i9a805.p.ssafy.io:8080/userProfiles/${token}`, {
+      .post(`http://70.12.245.39:8080/userProfiles/${token}`, {
         name: "임병국",
         profileImage: "이미지",
       })

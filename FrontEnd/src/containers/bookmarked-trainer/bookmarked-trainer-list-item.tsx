@@ -23,26 +23,34 @@ const Wrapper = styled.div`
     height:15rem;
     background-color: ${({ theme }) => theme.color.light};
     border-radius: 10px;
-    margin-bottom: 0.5%;
+    margin-bottom: 1%;
 
 `;
 
 const PhotoWrapper = styled.div`
-    flex:3;
+    flex:3.5;
     display:flex;
+    height:100%;
+    width:100%;
     justify-content: center;
     align-items: center;
 `;
 
+const ImgWrapper = styled.div`
+    display:flex;
+    aspect-ratio:1/1;
+    height:80%;
+    `;
+
 const TRimg = styled.img`
-    height:12rem;
-    width:12rem;
     border-radius: 50%;
+    height:100%;
+    width:100%;
     background-color: lightgray;
 `;
 
 const DataWrapper = styled.div`
-    flex:6;
+    flex:5.5;
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -71,16 +79,18 @@ function BookedTrainerListItem(props: BookedTrainerListItemProps){
     return(
         <Wrapper>
             <PhotoWrapper>
-                <TRimg />
+                <ImgWrapper>
+                    <TRimg />
+                </ImgWrapper>
             </PhotoWrapper>
             <DataWrapper>
                 <NameWrapper>
-                    <b style={{fontSize:"3.5rem"}}> {props.data.name}</b>
-                    <b style={{fontSize:"2.5rem", marginLeft:"1rem"}}>트레이너</b>
+                    <b style={{fontSize:"3rem"}}> {props.data.name}</b>
+                    <b style={{fontSize:"2rem", marginLeft:"1rem"}}>트레이너</b>
                 </NameWrapper>
                 <KeywordWrapper>
                     {props.data.keywordTags.map((tag, index) => (
-                        <b style={{fontSize:"1.5rem", marginLeft:"1%"}}> #{tag}</b>
+                        <b style={{fontSize:"1.25rem", marginLeft:"1%"}}> #{tag}</b>
                     ))}        
                 </KeywordWrapper>
             </DataWrapper>

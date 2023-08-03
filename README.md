@@ -28,8 +28,10 @@
   - 깃랩 및 깃허브 스트릭  
   ![image.png](./image.png)
   ![image-1.png](./image-1.png)
-- 협업 규칙을 지키기위한 노력의 모습 
-  ![image-2.png](./image-2.png)
+- 협업 규칙을 지키기위한 노력의 모습  
+  ![image-3.png](./image-3.png)  
+  ![image-2.png](./image-2.png)  
+  ![image-4.png](./image-4.png)  
 
 --- 
 

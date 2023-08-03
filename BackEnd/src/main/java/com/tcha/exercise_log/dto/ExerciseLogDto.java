@@ -19,6 +19,10 @@ public class ExerciseLogDto {
 
         private String content;
 
+        private List<String> images;
+
+        private List<String> videos;
+
     }
 
     @Getter
@@ -29,6 +33,10 @@ public class ExerciseLogDto {
         private String title;
 
         private String content;
+
+        private List<String> images;
+
+        private List<String> videos;
 
     }
 
@@ -48,5 +56,8 @@ public class ExerciseLogDto {
 
         private List<String> videos;
 
+        private String profileName;
+
+        private String trainerName;
     }
 }

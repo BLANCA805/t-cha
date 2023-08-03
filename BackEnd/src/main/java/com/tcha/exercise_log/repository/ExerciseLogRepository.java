@@ -12,7 +12,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface ExerciseLogRepository extends JpaRepository<ExerciseLog, Long> {
 
-//    Optional<ExerciseLog> findByLiveId(Long liveId);
+    @Query("SELECT e FROM ExerciseLog e WHERE e.ptLive.id = :ptLiveId")
+    Optional<ExerciseLog> findByLiveId(Long ptLiveId);
 
 //    @Query("SELECT e FROM ExerciseLog e WHERE e.trainer.id = :trainer_id")
 //    Page<Review> findAllByTrainerId(@Param("trainer_id") UUID trainerId, Pageable pageable);

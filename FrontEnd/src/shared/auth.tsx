@@ -70,7 +70,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
 
   const Sign = () => {
     axios
-      .post("http://70.12.245.39:8080/users?email=email@gmail.com")
+      .post("http://i9a805.p.ssafy.io:8080/users?email=email@gmail.com")
       .then((response) => {
         if (response.data) {
           console.log(response.data);

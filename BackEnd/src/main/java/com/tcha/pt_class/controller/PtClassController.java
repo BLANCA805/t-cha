@@ -30,18 +30,15 @@ public class PtClassController {
     /*
     트레이너가 pt 수업 생성(오픈)
     여러 개의 수업을 한 번에 오픈 -> list로 수업 시작 시간 받아오기
+    반환 값 -> 해당 트레이너의 전체 수업 일정
      */
-    @PostMapping("/{trainer-id}")
-    public ResponseEntity<PtClassDto.Response> postPtClass(
-            @PathVariable("trainer-id") String trainerId,
-            @RequestBody List<LocalDateTime> startTimeList) {
+    @PostMapping()
+    public ResponseEntity<List<PtClassDto.Response>> postPtClass(
+            @RequestBody PtClassDto.Post postRequest) {
 
-        log.debug("[PtClassController] postPtClass 접근 확인 ::: trainerId = {}, startTimeList = {}",
-                trainerId, startTimeList);
+        List<PtClassDto.Response> classList = ptClassService.createPtClass(postRequest);
 
-        ptClassService.createPtClass(trainerId, startTimeList); // 리턴 값(프론트에 전달할 값) 추가
-
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(classList);
     }
 
     /*
@@ -92,5 +89,5 @@ public class PtClassController {
 
         return ResponseEntity.ok().body(null);
     }
-    
+
 }

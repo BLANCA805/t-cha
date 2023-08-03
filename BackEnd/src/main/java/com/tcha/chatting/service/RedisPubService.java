@@ -12,7 +12,7 @@ public class RedisPubService {
     //redisTemplate: redis command를 수행
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void sendMessage(ChattingMessgae chattingMessgae) {
-        redisTemplate.convertAndSend("topicTest", chattingMessgae);
+    public void sendMessage(ChannelTopic topic, ChattingMessgae chattingMessgae) {
+        redisTemplate.convertAndSend(topic.getTopic(), chattingMessgae);
     }
 }

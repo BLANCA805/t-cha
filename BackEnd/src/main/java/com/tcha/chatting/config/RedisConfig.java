@@ -30,30 +30,21 @@ public class RedisConfig {
     // redis에 command를 수행하기 위해 사용
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ChattingMessgae.class));
-        return redisTemplate;
-    }
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
 
-    //리스너어댑터 설정
-    @Bean
-    MessageListenerAdapter messageListenerAdapter() {
-        return new MessageListenerAdapter(new RedisSubService());
+        return redisTemplate;
     }
 
     @Bean
     public RedisMessageListenerContainer redisMessageListener(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(messageListenerAdapter(), topic());
         return container;
     }
 
-    // pub/sun토픽 설정
-    @Bean
-    ChannelTopic topic() {
-        return new ChannelTopic("topicTest");
-    }
 }

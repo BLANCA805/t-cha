@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ChattingMessgae {
 
 
-    //    private Long channelId;
+    private String roomId;
     private MessageType type;
     private String sender; // 보낸 사람
     private String context; // 메세지 내용

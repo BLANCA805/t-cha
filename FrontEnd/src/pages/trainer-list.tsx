@@ -3,7 +3,7 @@ import axios from "axios";
 
 import TrainerListItem from "@trainer-list/trainer-list-item";
 
-import TrainerListHeader from "src/containers/trainer-info/trainer-list-header";
+import TrainerListHeader from "@trainer-list/trainer-list-header";
 
 import styled from "styled-components";
 
@@ -15,18 +15,20 @@ const Wrapper = styled.div`
 `;
 
 function TrainerList() {
-  const [items, setItems] = useState<Array<any>>([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://70.12.245.39:8080/trainers")
       .then((response) => {
         setItems(response.data);
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
   return (
     <Wrapper>
       <TrainerListHeader />

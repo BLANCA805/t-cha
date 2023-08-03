@@ -146,9 +146,7 @@ function SideBar() {
   return (
     <Sticky>
       <React.Fragment>
-        <Button onClick={toggleDrawer(true)}>
-          <Fab variant="extended">Nav</Fab>
-        </Button>
+        <Fab onClick={toggleDrawer(true)}>Nav</Fab>
         <Drawer open={open} onClose={toggleDrawer(false)}>
           {list()}
         </Drawer>

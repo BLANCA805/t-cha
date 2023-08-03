@@ -26,7 +26,7 @@ const Container = styled.div`
   display: flex;
 `;
 
-interface PtListItemProps {
+interface trainerListItemProps {
   data: {
     id: string;
     profileName: string;
@@ -35,23 +35,25 @@ interface PtListItemProps {
     tags: string;
     stars: number;
     createdAt: string;
-    userCount: number;
+    ptudentCount: number;
     ptCount: number;
     reviewCount: number;
     revisitGrade: number;
   };
 }
 
-function TrainerListItem(props: PtListItemProps) {
-  const moveToDetail = useNavigate();
+function TrainerListItem(props: trainerListItemProps) {
+  const navigate = useNavigate();
+
+  const trainer = props.data.id;
 
   return (
-    <Wrapper onClick={() => moveToDetail(`info/detail`)}>
+    <Wrapper onClick={() => navigate(`info`, { state: trainer })}>
       <Avatar
         style={{ width: "10%", height: "10%", margin: "5%" }}
         alt=""
         src=""
-      /> 
+      />
       <DataWrapper>
         <h2>{props.data.profileName}</h2>
         <KeywordWrapper>
@@ -64,7 +66,7 @@ function TrainerListItem(props: PtListItemProps) {
         <h4>등록 일자 : {props.data.createdAt}</h4>
         <Container>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
-            회원 수 : {props.data.userCount}
+            회원 수 : {props.data.ptudentCount}
           </h5>
           <h5 style={{ marginLeft: "5px", marginRight: "5px" }}>
             예약 수 : {props.data.ptCount}

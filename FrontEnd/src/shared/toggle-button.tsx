@@ -1,21 +1,19 @@
 import * as React from "react";
-import { useNavigate } from "react-router-dom";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 export default function ToggleButtons(props: {
-  tabs: { text: string; path: string }[];
+  tabs: { text: string; name: string }[];
   width: string;
+  clickTab: (name: string) => void;
 }) {
-  const [tab, setTab] = React.useState<string | null>("left");
-
-  const clickButton = useNavigate();
+  const [tab, setTab] = React.useState<string>(`${props.tabs[0].name}`);
 
   const handleTab = (
     event: React.MouseEvent<HTMLElement>,
-    newTab: string | null
+    clickedTab: string
   ) => {
-    setTab(newTab);
+    setTab(clickedTab);
   };
 
   return (
@@ -25,10 +23,10 @@ export default function ToggleButtons(props: {
       onChange={handleTab}
       style={{ width: props.width }}
     >
-      {props.tabs.map((tab: { text: string; path: string }, index) => (
+      {props.tabs.map((tab: { text: string; name: string }, index) => (
         <ToggleButton
-          value={tab.path}
-          onClick={() => clickButton(`${tab.path}`)}
+          value={tab.name}
+          onClick={() => props.clickTab(tab.name)}
           style={{
             width: "100%",
           }}

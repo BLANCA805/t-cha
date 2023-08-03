@@ -9,6 +9,7 @@ const profileInitialState = {
   name: "",
   profileId: 0,
   isTrainer: false,
+  trainerId: "",
 };
 
 const authSlice = createSlice({
@@ -30,8 +31,9 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: profileInitialState,
   reducers: {
-    registTrainer: (state) => {
+    registTrainer: (state, action) => {
       state.isTrainer = true;
+      state.trainerId = action.payload.trainerId;
     },
     postProfile: (state, action) => {
       state.name = action.payload.name;

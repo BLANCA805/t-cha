@@ -1,3 +1,4 @@
+import { useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -6,6 +7,7 @@ const Wrapper = styled.div`
 `;
 
 function TrainerReview() {
+  const trainer = useOutletContext();
   return <Wrapper>트레이너 리뷰 페이지 입니다.</Wrapper>;
 }
 

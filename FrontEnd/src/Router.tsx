@@ -26,6 +26,7 @@ import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";
 import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
+import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,18 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
+        element: <User />,
+      },
+      {
+        path: "profile/trainer_info_modify",
+        element: <TrainerInfoModify />,
+      },
+      {
+        path: "trainer_schedule",
+        element: <User />,
+      },
+      {
+        path: "trainer_ptudent",
         element: <User />,
       },
       {
@@ -99,16 +112,6 @@ const router = createBrowserRouter([
       {
         path: "trainer/info",
         element: <TrainerInfo />,
-        children: [
-          {
-            path: "detail",
-            element: <TrainerDetail />,
-          },
-          {
-            path: "review",
-            element: <TrainerReview />,
-          },
-        ],
       },
     ],
   },

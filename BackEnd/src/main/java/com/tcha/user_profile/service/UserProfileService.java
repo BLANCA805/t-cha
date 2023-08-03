@@ -4,6 +4,8 @@ import com.tcha.user.entity.User;
 import com.tcha.user.service.UserService;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,23 +22,16 @@ public class UserProfileService {
     private final UserProfileRepository userProfileRepository;
 
     public UserProfile createUserProfile(UserProfile userProfile) {
-//        String userProfileId = UUID.randomUUID().toString();
-//
-//        userProfile.setId(userProfileId);
+
+        verifyUserProfile(userProfile);
 
         return userProfileRepository.save(userProfile);
 
     }
 
-    public UserProfile testUserProfile(String userId, UserProfile userProfile) {
-        User foundUser = userService.findVerifiedUser(userId);
+    public UserProfile updateUserProfile(Long userProfileId, UserProfile userProfile) {
 
-        UserProfile userProfileForSave = new UserProfile();
-
-//        String userProfileId = UUID.randomUUID().toString();
-//
-//        userProfileForSave.setId(userProfileId);
-        userProfileForSave.setUser(foundUser);
+        UserProfile userProfileForSave = findOneUserProfile(userProfileId);
 
         Optional.ofNullable(userProfile.getName())
                 .ifPresent(name -> userProfileForSave.setName(name));
@@ -47,38 +42,37 @@ public class UserProfileService {
 
     }
 
-    public UserProfile updateUserProfile(String userId, UserProfile userProfile) {
+    public UserProfile findOneUserProfile(Long userProfileId) {
 
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfileForSave = foundUser.getUserProfile();
-
-        Optional.ofNullable(userProfile.getName())
-                .ifPresent(name -> userProfileForSave.setName(name));
-        Optional.ofNullable(userProfile.getProfileImage())
-                .ifPresent(profileImage -> userProfileForSave.setProfileImage(profileImage));
-
-        return userProfileRepository.save(userProfileForSave);
-
+        return findVerifiedUserProfile(userProfileId);
     }
 
-    public UserProfile findOneUserProfile(String userId) {
+    public UserProfile deleteOneUserProfile(Long userProfileId) {
 
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfile = foundUser.getUserProfile();
+        UserProfile userProfileForSave = findVerifiedUserProfile(userProfileId);
 
-        return userProfile;
-    }
-
-    public UserProfile deleteOneUserProfile(String userId) {
-
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfileForSave = foundUser.getUserProfile();
-
-        userProfileForSave.setName(null);
+        userProfileForSave.setName(null); // 삭제 예정
         userProfileForSave.setProfileImage(null);
 
         return userProfileRepository.save(userProfileForSave);
     }
+
+    public UserProfile findVerifiedUserProfile(Long userProfileId) {
+
+        Optional<UserProfile> optionalUserProfile = userProfileRepository.findById(userProfileId);
+
+        UserProfile findUserProfile = optionalUserProfile.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.USER_PROFILE_NOT_FOUND));
+
+        return findUserProfile;
+    }
+
+    private void verifyUserProfile(UserProfile userProfile) {
+
+        userService.findVerifiedUser(userProfile.getUser().getId());
+
+    }
+
 }
 
 /*

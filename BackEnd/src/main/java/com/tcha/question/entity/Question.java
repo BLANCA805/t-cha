@@ -1,5 +1,7 @@
 package com.tcha.question.entity;
 
+import com.tcha.answer.entity.Answer;
+import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +10,10 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,12 +30,16 @@ public class Question extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "QUESTION_ID")
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "USER_PROFILE_ID")
+    private UserProfile userProfile;
 
     @Column(nullable = true)
     private String title;
 
-    //    @Lob
     @Column(columnDefinition = "TEXT", nullable = true)
     private String content;
 

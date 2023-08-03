@@ -66,7 +66,7 @@ function UserScheduleListItem(props: ScheduleListItemProps) {
         <PtInfoWrapper>
           <h2 style={{marginTop:"2px", marginBottom:"2px"}}>{props.data.ptName}</h2>
           <TrainerName>
-            <b style={{fontSize:"5px"}}>트레이너</b>
+            <b style={{fontSize:"0.5rem"}}>트레이너</b>
             <b style={{fontSize:"1rem"}}> {props.data.trName}</b>
           </TrainerName>
         </PtInfoWrapper>

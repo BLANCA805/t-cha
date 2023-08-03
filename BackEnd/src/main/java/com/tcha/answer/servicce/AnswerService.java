@@ -2,6 +2,9 @@ package com.tcha.answer.servicce;
 
 import com.tcha.answer.entity.Answer;
 import com.tcha.answer.repository.AnswerRepository;
+import com.tcha.question.entity.Question;
+import com.tcha.question.servicce.QuestionService;
+import com.tcha.user_profile.service.UserProfileService;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.util.Optional;
@@ -16,9 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class AnswerService {
 
+    private final QuestionService questionService;
+    private final UserProfileService userProfileService;
     private final AnswerRepository answerRepository;
 
     public Answer createAnswer(Answer answer) {
+
+        verifyAnswer(answer);
 
         return answerRepository.save(answer);
 
@@ -45,6 +52,13 @@ public class AnswerService {
                 () -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         return findAnswer;
+    }
+
+    private void verifyAnswer(Answer answer) {
+
+        userProfileService.findVerifiedUserProfile(answer.getUserProfile().getId());
+        questionService.findVerifiedQuestion(answer.getQuestion().getId());
+        
     }
 
 }

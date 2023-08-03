@@ -2,6 +2,8 @@ package com.tcha.question.servicce;
 
 import com.tcha.question.entity.Question;
 import com.tcha.question.repository.QuestionRepository;
+import com.tcha.user_profile.entity.UserProfile;
+import com.tcha.user_profile.service.UserProfileService;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.util.Optional;
@@ -19,9 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class QuestionService {
 
+    private final UserProfileService userProfileService;
     private final QuestionRepository questionRepository;
 
     public Question createQuestion(Question question) {
+
+        verifyQuestion(question);
 
         return questionRepository.save(question);
 
@@ -57,6 +62,12 @@ public class QuestionService {
                 () -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         return findQuestion;
+    }
+
+    private void verifyQuestion(Question question) {
+
+        userProfileService.findVerifiedUserProfile(question.getUserProfile().getId());
+
     }
 
 }

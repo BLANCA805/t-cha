@@ -21,18 +21,6 @@
     - 기본 기능에 대한 API는 구현 완료
       - 서비스 로직, 트랜잭션, Validation 등 디테일을 추가할 예정
 
-### 팀원 자랑
-- 부족한 실력을 메꾸기 위해 모두가 평일 개인 시간, 주말을 거의 full로 할애함
-  - 디스코드 캠각코
-  - 주말에도 데일리 스크럼, 위클리 미팅 진행
-  - 깃랩 및 깃허브 스트릭  
-  ![image.png](./image.png)
-  ![image-1.png](./image-1.png)
-- 협업 규칙을 지키기위한 노력의 모습  
-  ![image-3.png](./image-3.png)  
-  ![image-2.png](./image-2.png)  
-  ![image-4.png](./image-4.png)  
-
 --- 
 
 # 노션 메인
@@ -84,3 +72,17 @@ https://www.notion.so/c9b7804480144484b4160cd7b320ab9a
 
 # 프로토타입
 https://www.notion.so/d48a33989b864e9fa6312d7caec01820
+
+
+
+# 팀원 자랑
+- 부족한 실력을 메꾸기 위해 모두가 평일 개인 시간, 주말을 거의 full로 할애함
+  - 디스코드 캠각코
+  - 주말에도 데일리 스크럼, 위클리 미팅 진행
+  - 깃랩 및 깃허브 스트릭  
+  ![image.png](./image.png)
+  ![image-1.png](./image-1.png)
+- 협업 규칙을 지키기위한 노력의 모습  
+  ![image-3.png](./image-3.png)  
+  ![image-2.png](./image-2.png)  
+  ![image-4.png](./image-4.png)  

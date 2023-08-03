@@ -7,7 +7,7 @@ import { AppDispatch, type RootState } from "src/redux/store";
 import { logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-
+import {api} from "@shared/common-data";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -126,7 +126,7 @@ function SideBar() {
   const test = () => {
     const token = user.token;
     axios
-      .post(`http://70.12.245.39:8080/userProfiles/${token}`, {
+      .post(`${api}/userProfiles/${token}`, {
         name: "임병국",
         profileImage: "이미지",
       })

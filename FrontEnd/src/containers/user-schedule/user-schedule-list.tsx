@@ -28,7 +28,7 @@ function UserScheduleList() {
   // const [items, setItems] = useState<Array<any>>([]);
   // useEffect(() => {
   //   axios
-  //     .get("http://localhost:8080/exercise-logs/{profileid}")
+  //     .get(`${api}/exercise-logs/{profileid}`)
   //     .then((response) => {
   //       setItems(response.data);
   //       console.log(response);

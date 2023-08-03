@@ -1,12 +1,15 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+
+import { TrainerReviewData, TrainerDetailData } from "src/interface";
+
+import TrainerDetail from "@trainer-info/trainer-detail";
+import TrainerReview from "@trainer-info/trainer-review";
 
 import ToggleButtons from "@shared/toggle-button";
 
 import styled from "styled-components";
-import TrainerDetail from "@trainer-info/trainer-detail";
-import TrainerReview from "@trainer-info/trainer-review";
 
 const Container = styled.div``;
 
@@ -20,26 +23,24 @@ const Wrapper = styled.div`
 function TrainerInfo() {
   const trainer = useLocation().state;
 
-  const [state, setState] = useState<string>("detail");
-  const [detail, setDetail] = useState([]);
-  const [review, setReview] = useState("");
+  const [tab, setTab] = useState<string>("detail");
+  const [detail, getDetail] = useState<TrainerDetailData>();
+  const [review, getReview] = useState<TrainerReviewData>();
 
   const clickTab = (name: string) => {
-    setState(name); // 새로운 탭 클릭 시, 상태 변경
+    setTab(name); // 새로운 탭 클릭 시, 상태 변경
   };
 
   useEffect(() => {
     axios
       .all([
         axios.get(`http://70.12.245.39:8080/trainers/${trainer}`),
-        axios.get(`http://70.12.245.39:8080/reviews/trainers/${trainer}`),
+        axios.get(`http://70.12.245.39:8080/reviews/trainer/${trainer}`),
       ])
       .then(
         axios.spread((detail, review) => {
-          setDetail(detail.data);
-          console.log(detail.data);
-          setReview(review.data);
-          console.log(review.data);
+          getDetail(detail.data);
+          getReview(review.data);
         })
       )
       .catch((error) => {
@@ -61,8 +62,10 @@ function TrainerInfo() {
           width="100%"
           clickTab={clickTab}
         />
-        {<TrainerDetail />}
-        {state === "review" && <TrainerReview />}
+        {tab === "detail" && detail && <TrainerDetail data={detail} />}
+        {tab === "review" && review && (
+          <TrainerReview data={review.data} pageInfo={review.pageInfo} />
+        )}
       </Wrapper>
     </Container>
   );

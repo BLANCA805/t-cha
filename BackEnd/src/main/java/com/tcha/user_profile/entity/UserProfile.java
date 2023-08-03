@@ -18,6 +18,7 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,8 +27,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class UserProfile extends Auditable{
+public class UserProfile extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +55,7 @@ public class UserProfile extends Auditable{
     @OneToMany(mappedBy = "userProfile")
     private List<PtLive> ptLives = new ArrayList<>();
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String name;
 
     @Column(nullable = true)

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/{user-profile-id}/questions")
+@RequestMapping("/questions")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
@@ -32,11 +32,10 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping
-    public ResponseEntity postQuestion(@PathVariable("user-profile-id") Long userProfileId,
-            @RequestBody QuestionDto.Post postRequest) {
+    public ResponseEntity postQuestion(@RequestBody QuestionDto.Post postRequest) {
 
         Question questionForService = questionMapper.postToQuestion(postRequest);
-        Question questionForResponse = questionService.createQuestion(userProfileId, questionForService);
+        Question questionForResponse = questionService.createQuestion(questionForService);
         QuestionDto.Response response = questionMapper.questionToResponse(questionForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

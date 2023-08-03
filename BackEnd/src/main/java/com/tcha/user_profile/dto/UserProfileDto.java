@@ -2,13 +2,17 @@ package com.tcha.user_profile.dto;
 
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 public class UserProfileDto {
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class Post {
+
+        private String userId;
 
         private String name;
 
@@ -28,6 +32,7 @@ public class UserProfileDto {
 
     @Getter
     @AllArgsConstructor
+    @Builder
     public static class Response {
 
         private Long id;

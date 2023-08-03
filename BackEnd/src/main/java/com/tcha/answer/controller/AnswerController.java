@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/{question-id}/answers")
+@RequestMapping("/answers")
 @Validated
 @Slf4j
 @RequiredArgsConstructor
@@ -28,11 +28,10 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @PostMapping
-    public ResponseEntity postAnswer(@PathVariable("question-id") Long questionId,
-            @RequestBody AnswerDto.Post postRequest) {
+    public ResponseEntity postAnswer(@RequestBody AnswerDto.Post postRequest) {
 
         Answer answerForService = answerMapper.postToAnswer(postRequest);
-        Answer answerForResponse = answerService.createAnswer(questionId, answerForService);
+        Answer answerForResponse = answerService.createAnswer(answerForService);
         AnswerDto.Response response = answerMapper.answerToResponse(answerForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);

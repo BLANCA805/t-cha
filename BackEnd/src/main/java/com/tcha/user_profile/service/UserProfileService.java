@@ -21,26 +21,17 @@ public class UserProfileService {
     private final UserService userService;
     private final UserProfileRepository userProfileRepository;
 
-    public UserProfile createUserProfile(String userId, UserProfile userProfile) {
+    public UserProfile createUserProfile(UserProfile userProfile) {
 
-        User user = new User();
-        user.setId(userId);
-
-        userProfile.setUser(user);
-
-        Optional.ofNullable(userProfile.getName())
-                .ifPresent(name -> userProfile.setName(name));
-        Optional.ofNullable(userProfile.getProfileImage())
-                .ifPresent(profileImage -> userProfile.setProfileImage(profileImage));
+        verifyUserProfile(userProfile);
 
         return userProfileRepository.save(userProfile);
 
     }
 
-    public UserProfile updateUserProfile(String userId, UserProfile userProfile) {
+    public UserProfile updateUserProfile(Long userProfileId, UserProfile userProfile) {
 
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfileForSave = foundUser.getUserProfile();
+        UserProfile userProfileForSave = findOneUserProfile(userProfileId);
 
         Optional.ofNullable(userProfile.getName())
                 .ifPresent(name -> userProfileForSave.setName(name));
@@ -51,20 +42,16 @@ public class UserProfileService {
 
     }
 
-    public UserProfile findOneUserProfile(String userId) {
+    public UserProfile findOneUserProfile(Long userProfileId) {
 
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfile = foundUser.getUserProfile();
-
-        return userProfile;
+        return findVerifiedUserProfile(userProfileId);
     }
 
-    public UserProfile deleteOneUserProfile(String userId) {
+    public UserProfile deleteOneUserProfile(Long userProfileId) {
 
-        User foundUser = userService.findVerifiedUser(userId);
-        UserProfile userProfileForSave = foundUser.getUserProfile();
+        UserProfile userProfileForSave = findVerifiedUserProfile(userProfileId);
 
-        userProfileForSave.setName(null);
+        userProfileForSave.setName(null); // 삭제 예정
         userProfileForSave.setProfileImage(null);
 
         return userProfileRepository.save(userProfileForSave);
@@ -78,6 +65,12 @@ public class UserProfileService {
                 () -> new BusinessLogicException(ExceptionCode.USER_PROFILE_NOT_FOUND));
 
         return findUserProfile;
+    }
+
+    private void verifyUserProfile(UserProfile userProfile) {
+
+        userService.findVerifiedUser(userProfile.getUser().getId());
+
     }
 
 }

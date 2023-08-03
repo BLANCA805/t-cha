@@ -24,10 +24,9 @@ public class QuestionService {
     private final UserProfileService userProfileService;
     private final QuestionRepository questionRepository;
 
-    public Question createQuestion(Long userProfileId, Question question) {
+    public Question createQuestion(Question question) {
 
-        UserProfile userProfile = userProfileService.findVerifiedUserProfile(userProfileId);
-        question.setUserProfile(userProfile);
+        verifyQuestion(question);
 
         return questionRepository.save(question);
 
@@ -63,6 +62,12 @@ public class QuestionService {
                 () -> new BusinessLogicException(ExceptionCode.QUESTION_NOT_FOUND));
 
         return findQuestion;
+    }
+
+    private void verifyQuestion(Question question) {
+
+        userProfileService.findVerifiedUserProfile(question.getUserProfile().getId());
+
     }
 
 }

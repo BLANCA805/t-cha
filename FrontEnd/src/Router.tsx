@@ -27,6 +27,8 @@ import TrainerInfo from "@/trainer-info";
 import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
+import TrainerSchedule from "@user-trainer/trainer-schedule";
+import TrainerPtudent from "@/trainer/member-list";
 
 const router = createBrowserRouter([
   {
@@ -60,12 +62,12 @@ const router = createBrowserRouter([
         element: <TrainerInfoModify />,
       },
       {
-        path: "trainer_schedule",
-        element: <User />,
+        path: "profile/trainer_schedule",
+        element: <TrainerSchedule />,
       },
       {
-        path: "trainer_ptudent",
-        element: <User />,
+        path: "profile/trainer_ptudent",
+        element: <TrainerPtudent />,
       },
       {
         path: "profile/bookmarked_trainers",

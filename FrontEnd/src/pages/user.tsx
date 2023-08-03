@@ -146,8 +146,8 @@ function User() {
           <DefaultButton> 트레이너 등록하기 </DefaultButton>
         </Link>
       )}
-      {profile.isTrainer && <TrainerButtons />}
-
+      {/* {profile.isTrainer && <TrainerButtons />} */}
+      <TrainerButtons />
       <UserContainer>
         <Usrow>
           <Uscol>

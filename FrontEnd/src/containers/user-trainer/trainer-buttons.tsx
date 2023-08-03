@@ -37,10 +37,10 @@ function TrainerButtons() {
         </Link>
       </TrRow>
       <TrRow>
-        <Link to="">트레이너 스케줄 관리, 일정</Link>
+        <Link to="trainer_schedule">트레이너 스케줄 관리, 일정</Link>
       </TrRow>
       <TrRow>
-        <Link to="">내 회원 리스트</Link>
+        <Link to="trainer_ptudent">내 회원 리스트</Link>
       </TrRow>
     </TrainerContainer>
   );

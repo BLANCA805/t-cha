@@ -64,7 +64,7 @@ function TrainerRegistration() {
     //   body.append("images", image);
     // });
     axios
-      .post(`http://i9a805.p.ssafy.io:8080/trainers/${profileId}`, registrationForm)
+      .post(`http://70.12.245.39:8080/trainers/${profileId}`, registrationForm)
       .then((response) => {
         if (response.data) {
           console.log(response.data);

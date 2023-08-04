@@ -77,12 +77,12 @@ public class PtClassService {
         return ptClassMapper.classListToclassResponseDtoList(trainerClassList);
     }
 
-    public List<PtClassDto.Response> findAllPtClasses() {
-
-        List<PtClass> classList = ptClassRepository.findAll();
-
-        return ptClassMapper.classListToclassResponseDtoList(classList);
-    }
+//    public List<PtClassDto.Response> findAllPtClasses() {
+//
+//        List<PtClass> classList = ptClassRepository.findAll();
+//
+//        return ptClassMapper.classListToclassResponseDtoList(classList);
+//    }
 
 //    public void deletePtClass(String trainerId, long ptClassId) {
 //    }

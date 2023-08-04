@@ -6,11 +6,12 @@ import com.tcha.trainer.dto.TrainerDto;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
+import com.tcha.user.entity.User;
+import com.tcha.user.service.UserService;
 import com.tcha.user_profile.entity.UserProfile;
-import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.user_profile.service.UserProfileService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,24 +23,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TrainerService {
 
-    private final UserProfileRepository userProfileRepository;
+    private final UserProfileService userProfileService;
+    private final UserService userService;
     private final TagRepository tagRepository;
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
 
-    public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
+    public Trainer createTrainer(Trainer trainer) {
 
-        // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
-        UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();
+        UserProfile userProfile = userProfileService.findVerifiedUserProfile(
+                trainer.getUserProfile().getId());
+        User user = userService.findVerifiedUser(userProfile.getUser().getId());
+
+        // 해당 유저에게 트레이너 권한 제공
+        user.getRoles().add("TRAINER");
+        userService.createUser(user);
 
         // 트레이너 생성
-        Trainer createdTrainer = trainerRepository.save(
-                trainerMapper.trainerPostDtoToTrainer(postRequest, postUser));
+        Trainer createdTrainer = trainerRepository.save(trainer);
 
         // 태그 테이블 설정
         String trainerStr =
                 createdTrainer.getId().toString() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
-        String[] tagList = postRequest.getTags().split(",");
+        String[] tagList = trainer.getTags().split(",");
         for (String t : tagList) {
             // 존재하지 않는 태그일 경우, 이름만 가지고 있는 새로운 태그 엔티티 생성
             Tag tag = tagRepository.findByName(t).orElseGet(() -> Tag.builder().name(t).build());
@@ -51,13 +57,12 @@ public class TrainerService {
 
         // 트레이너 이미지 테이블 설정
 
-        return trainerMapper.trainerToResponseDto(createdTrainer);
+        return createdTrainer;
     }
-
 
     public TrainerDto.Response updateTrainer(String trainerId, TrainerDto.Patch patchRequest) {
 
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow();
 
         trainer.setIntroduction(patchRequest.getIntroduction());
         trainer.setTitle(patchRequest.getTitle());
@@ -70,7 +75,7 @@ public class TrainerService {
 
     public TrainerDto.Response findOneTrainer(String trainerId) {
 
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow();
 
         return trainerMapper.trainerToResponseDto(trainer);
     }
@@ -101,7 +106,7 @@ public class TrainerService {
 
     public void deleteTrainer(String trainerId) {
 
-        trainerRepository.deleteById(UUID.fromString(trainerId));
+        trainerRepository.deleteById(trainerId);
     }
 
     public List<TrainerDto.ResponseList> findTrainers(TrainerDto.Get search) {

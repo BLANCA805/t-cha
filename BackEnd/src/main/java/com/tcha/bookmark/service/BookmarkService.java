@@ -71,4 +71,19 @@ public class BookmarkService {
         return new MultiResponseDto<BookmarkDto.Response>(Bookmarks, pageBookMarks);
     }
 
+    public BookmarkDto.Response getFindBookmarkIdByUserProfileIdAndTrainerId(Long userProfileId, String trainerId) {
+
+        //유저프로필 객체 가져오기
+        UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
+
+        //트레이너 객체 가져오기
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).get();
+
+        //유저프로필과 트레이너 객체 이용해서 북마크 객체 가져오기
+        Bookmark bookmark = bookMarkRepository.findBookmarkByUserProfileAndTrainer(userProfile, trainer);
+
+        return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
+
+    }
 }
+

@@ -3,6 +3,8 @@ import { type RootState } from "../../redux/store";
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
 
+import {api} from "@shared/common-data";
+
 import TextField from "@mui/material/TextField";
 
 import styled from "styled-components";
@@ -63,7 +65,7 @@ function TrainerInfoModify() {
     // });
     console.log(form);
     axios
-      .patch(`http://70.12.245.39:8080/trainers/${trainerId}`, form)
+      .patch(`${api}/trainers/${trainerId}`, form)
       .then((response) => {
         if (response.data) {
           console.log(response.data);

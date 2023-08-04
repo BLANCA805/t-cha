@@ -4,6 +4,8 @@ import { logIn } from "src/redux/slicers";
 
 import axios from "axios";
 
+import {api} from "@shared/common-data";
+
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -70,7 +72,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
 
   const Sign = () => {
     axios
-      .post("http://70.12.245.39:8080/users?email=email@gmail.com")
+      .post(`${api}/users?email=email@gmail.com`)
       .then((response) => {
         if (response.data) {
           console.log(response.data);

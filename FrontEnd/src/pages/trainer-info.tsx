@@ -9,6 +9,7 @@ import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
 
 import ToggleButtons from "@shared/toggle-button";
+import { DefaultButton } from "@shared/button";
 
 import styled from "styled-components";
 
@@ -20,6 +21,74 @@ const Wrapper = styled.div`
   border-radius: 5px;
   background-color: ${({ theme }) => theme.color.light};
 `;
+
+const Profile = styled.div`
+  display: flex;
+  flex-direction: row;
+  /* height: 15rem; */
+  border-radius: 10px;
+  width: 100%;
+`;
+
+
+const ProfilePhoto = styled.div`
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5%;
+  height: 100%;
+  width: 100%;
+`;
+
+const Profileinfo = styled.div`
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 5%;
+  height: 100%;
+  width: 100%;
+`;
+
+const ProfileModify = styled.div`
+  flex: 4;
+  display: flex;
+  /* align-items: center; */
+  justify-content: center;
+`;
+
+const ProfilePhotoimg = styled.img`
+  border-radius: 50%;
+  background-color: gray;
+`;
+const UserId = styled.div`
+  flex: 5.5;
+  display: flex;
+  align-items: end;
+  font-weight: bold;
+  font-size: 4rem;
+  margin-top: 1px;
+  margin-bottom: 1px;
+`;
+const TrainerHashtag = styled.div`
+  flex: 2;
+  font-weight: 700;
+  align-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  /* background-color: pink; */
+`;
+const TrainerIntroduct = styled.div`
+  flex: 4;
+  font-size: 1rem;
+  margin-top: 1px;
+  margin-bottom: 1px;
+  /* background-color: lightcyan; */
+`;
+
+
+
 
 function TrainerInfo() {
   const trainer = useLocation().state;
@@ -54,7 +123,22 @@ function TrainerInfo() {
   return (
     <Container>
       <Wrapper>
-        <h3>트레이너 상세 페이지 입니다.</h3>
+        <Profile>
+          <ProfilePhoto>
+            <ProfilePhotoimg src="/logo192.png" />
+          </ProfilePhoto>
+          <Profileinfo>
+            <UserId>Username</UserId>
+            {/* <UserId>{trainer.id}</UserId> */}
+            <TrainerHashtag>#Tag1 #Tag2 #Tag3</TrainerHashtag>
+            <TrainerIntroduct>Introduction who am I</TrainerIntroduct>
+          </Profileinfo>
+          <ProfileModify>
+            <Link to="">
+              <DefaultButton> 수정 </DefaultButton>
+            </Link>
+          </ProfileModify>
+        </Profile>
       </Wrapper>
       <Wrapper>
         <ToggleButtons

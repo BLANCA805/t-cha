@@ -8,7 +8,7 @@ import { AppDispatch, type RootState } from "src/redux/store";
 import { deleteProfile, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-
+import {api} from "@shared/common-data";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";

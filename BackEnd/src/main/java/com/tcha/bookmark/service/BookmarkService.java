@@ -41,7 +41,7 @@ public class BookmarkService {
         UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow();
 
         //새로운 즐겨찾기 entity객체 만들어서 저장하기
         Bookmark bookmark = bookMarkRepository.save(Bookmark.builder()
@@ -59,14 +59,17 @@ public class BookmarkService {
 
 
     //유저별 즐겨찾기 목록 확인
-    public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size, Long userProfileId) {
+    public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size,
+            Long userProfileId) {
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
 
         //해당 유저프로필 객체의 즐겨찾기 목록 가져오기
-        Page<Bookmark> pageBookMarks = bookMarkRepository.findByUserProfile(userProfile, PageRequest.of(page - 1, size, Sort.by("id").descending()));
-        List<BookmarkDto.Response> Bookmarks = bookmarkMapper.bookmarkListToBookmarkDtoResponse(pageBookMarks.getContent());
+        Page<Bookmark> pageBookMarks = bookMarkRepository.findByUserProfile(userProfile,
+                PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<BookmarkDto.Response> Bookmarks = bookmarkMapper.bookmarkListToBookmarkDtoResponse(
+                pageBookMarks.getContent());
 
         return new MultiResponseDto<BookmarkDto.Response>(Bookmarks, pageBookMarks);
     }

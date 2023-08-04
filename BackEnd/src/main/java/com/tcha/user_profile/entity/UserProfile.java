@@ -33,7 +33,7 @@ public class UserProfile extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_PROFILE_ID")
+//    @Column(name = "USER_PROFILE_ID")
     private Long id;
 
     @OneToOne

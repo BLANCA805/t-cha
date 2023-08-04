@@ -30,7 +30,7 @@ public class PtLive extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "LIVE_ID")
+//    @Column(name = "LIVE_ID")
     private Long id;
 
     @NotNull

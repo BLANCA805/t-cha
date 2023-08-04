@@ -82,13 +82,13 @@ public class PtClassController {
     /*
     등록된 모든 pt 수업 조회
      */
-    @GetMapping
-    public ResponseEntity<List<PtClassDto.Response>> getAllPtClasses() {
-
-        List<PtClassDto.Response> ptClassList = ptClassService.findAllPtClasses();
-
-        return ResponseEntity.ok().body(ptClassList);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<PtClassDto.Response>> getAllPtClasses() {
+//
+//        List<PtClassDto.Response> ptClassList = ptClassService.findAllPtClasses();
+//
+//        return ResponseEntity.ok().body(ptClassList);
+//    }
 
     /*
     pt 수업 id를 통해 등록된 pt 수업 삭제

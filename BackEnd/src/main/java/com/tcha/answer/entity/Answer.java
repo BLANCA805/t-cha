@@ -27,7 +27,7 @@ public class Answer extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ANSWER_ID")
+//    @Column(name = "ANSWER_ID")
     private Long id;
 
     @OneToOne

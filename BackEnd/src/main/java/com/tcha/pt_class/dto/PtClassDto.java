@@ -32,16 +32,19 @@ public class PtClassDto {
     public static class Patch {
 
         @NotBlank
+        private String trainerId;
+
+        @NotBlank
         private Long classId;
-        private LocalDateTime startAt; // 변경할 시간
     }
 
     @Getter
     @Builder
     public static class Response {
 
-        // 현재 트레이너의 전체 수업 목록
+        private String trainerId;
         private long classId;
+        private long liveId;
         private LocalDateTime startAt;
     }
 }

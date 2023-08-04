@@ -42,28 +42,41 @@ public class PtClassController {
     }
 
     /*
-    pt 수업 정보 수정
+    pt 수업 정보 수정(== 삭제)
      */
-    @PatchMapping("/{trainer-id}")
-    public ResponseEntity<PtClassDto.Response> patchPtClass(
-            @PathVariable("trainer-id") String trainerId,
+    @PatchMapping()
+    public ResponseEntity<List<PtClassDto.Response>> patchPtClass(
             @RequestBody PtClassDto.Patch patchRequest) {
 
-        ptClassService.updatePtClass(trainerId, patchRequest);
+        List<PtClassDto.Response> classList = ptClassService.updatePtClass(patchRequest);
 
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(classList);
     }
 
     /*
-    pt 수업 id를 통해 수업 정보 조회
+    - 트레이너 id를 통해 해당 트레이너의 수업 조회
+    - 날짜 및 시간을 통해 수업 조회
      */
-    @GetMapping("/{pt-class-id}")
-    public ResponseEntity<PtClassDto.Response> getOnePtClass(
-            @PathVariable("pt-class-id") String ptClassId) {
+    @GetMapping()
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassBy(
+            @RequestParam(required = false) String trainerId,
+            @RequestParam(required = false) LocalDateTime dateTime) {
 
-        PtClassDto.Response ptClass = ptClassService.findOnePtClass(ptClassId);
+        List<PtClassDto.Response> trainerClassList = ptClassService.findPtClassByTrainer(trainerId);
 
-        return ResponseEntity.ok().body(ptClass);
+        return ResponseEntity.ok().body(trainerClassList);
+    }
+
+    /*
+    날짜 및 시간을 통해 수업 정보 조회
+     */
+    @GetMapping("/{trainer-id}")
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassByTrainer(
+            @PathVariable("trainer-id") String trainerId) {
+
+        List<PtClassDto.Response> trainerClassList = ptClassService.findPtClassByTrainer(trainerId);
+
+        return ResponseEntity.ok().body(trainerClassList);
     }
 
     /*
@@ -80,14 +93,14 @@ public class PtClassController {
     /*
     pt 수업 id를 통해 등록된 pt 수업 삭제
      */
-    @DeleteMapping("{trainer-id}")
-    public ResponseEntity<?> deletePtClass(
-            @PathVariable("trainer-id") String trainerId,
-            @RequestParam long ptClassId) {
-
-        ptClassService.deletePtClass(trainerId, ptClassId);
-
-        return ResponseEntity.ok().body(null);
-    }
+//    @DeleteMapping("{trainer-id}")
+//    public ResponseEntity<?> deletePtClass(
+//            @PathVariable("trainer-id") String trainerId,
+//            @RequestParam long ptClassId) {
+//
+//        ptClassService.deletePtClass(trainerId, ptClassId);
+//
+//        return ResponseEntity.ok().body(null);
+//    }
 
 }

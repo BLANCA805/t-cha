@@ -1,5 +1,7 @@
 import React from "react";
+
 import { TrainerDetailData } from "src/interface";
+
 import styled from "styled-components";
 
 const Wrapper = styled.div`

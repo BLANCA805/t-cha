@@ -1,9 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { type RootState } from "../redux/store";
 import { useState, ChangeEvent } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import {api} from "@shared/common-data";
+import { api } from "@shared/common-data";
+import { type RootState } from "../redux/store";
 
 import { registTrainer } from "src/redux/slicers";
 
@@ -58,6 +59,8 @@ function TrainerRegistration() {
     }
   };
 
+  const navigate = useNavigate();
+
   const register = (event: any) => {
     event.preventDefault();
     const body = new FormData();
@@ -71,6 +74,7 @@ function TrainerRegistration() {
         if (response.data) {
           console.log(response.data);
           dispatch(registTrainer({ trainerId: response.data.id }));
+          navigate(`trainers/${profileId}`);
         }
       })
       .catch((error) => {

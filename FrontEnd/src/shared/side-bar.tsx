@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
+import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { logOut, postProfile } from "src/redux/slicers";
+import { deleteProfile, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 import {api} from "@shared/common-data";
@@ -43,7 +44,7 @@ function SideBar() {
     };
 
   function list() {
-    if (user.isLogined) {
+    if (user.token) {
       return (
         <Box
           sx={{ auto: 250 }}
@@ -59,7 +60,7 @@ function SideBar() {
               ["profile/schedule", "내 캘린더"],
               ["profile/chat", "채팅 목록"],
               ["trainer", "트레이너"],
-              ["customer-center", "고객센터"],
+              ["customer_center", "고객센터"],
             ].map((data, index) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton>
@@ -121,12 +122,14 @@ function SideBar() {
 
   const LogOut = () => {
     dispatch(logOut());
+    dispatch(deleteProfile());
   };
 
   const test = () => {
     const token = user.token;
     axios
-      .post(`${api}/userProfiles/${token}`, {
+      .post(`${api}/userProfiles`, {
+        userId: token,
         name: "임병국",
         profileImage: "이미지",
       })

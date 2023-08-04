@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 
 const ContainerSet = styled.div`
   display: flex;
@@ -29,11 +31,13 @@ const TrRow = styled.div`
 `;
 
 function TrainerButtons() {
+  const trainerId = useSelector((state: RootState) => state.profile.trainerId);
+  console.log(trainerId);
   return (
     <TrainerContainer>
       <TrRow>
-        <Link to="trainer_info_modify">
-          트레이너 정보 수정 (트레이너 상세 페이지)
+        <Link to="/trainer/info" state={trainerId}>
+          트레이너 상세 페이지
         </Link>
       </TrRow>
       <TrRow>

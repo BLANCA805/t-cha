@@ -2,8 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import {api} from "@shared/common-data";
-
+import { api } from "@shared/common-data";
 import { TrainerReviewData, TrainerDetailData } from "src/interface";
 
 import TrainerDetail from "@trainer-info/trainer-detail";
@@ -93,6 +92,8 @@ const TrainerIntroduct = styled.div`
 
 function TrainerInfo() {
   const trainer = useLocation().state;
+
+  console.log(trainer);
 
   const [tab, setTab] = useState<string>("detail");
   const [detail, getDetail] = useState<TrainerDetailData>();

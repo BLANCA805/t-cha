@@ -4,10 +4,12 @@ import com.tcha.user_profile.dto.UserProfileDto;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.mapper.UserProfileMapper;
 import com.tcha.user_profile.service.UserProfileService;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +32,9 @@ public class UserProfileController {
 
 
     @PostMapping
-//    public ResponseEntity postUserProfile(@PathVariable("user-id") String userId, @RequestBody UserProfileDto.Post postRequest) {
     public ResponseEntity postUserProfile(@RequestBody UserProfileDto.Post postRequest) {
 
         UserProfile userProfileForService = userProfileMapper.postToUserProfile(postRequest);
-//        UserProfile userProfileForResponse = userProfileService.createUserProfile(userId, userProfileForService);
         UserProfile userProfileForResponse = userProfileService.createUserProfile(
                 userProfileForService);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
@@ -45,7 +45,8 @@ public class UserProfileController {
     }
 
     @PatchMapping("/{user-profile-id}")
-    public ResponseEntity patchUserProfile(@PathVariable("user-profile-id") Long userProfileId,
+    public ResponseEntity patchUserProfile(
+            @Positive @PathVariable("user-profile-id") Long userProfileId,
             @RequestBody UserProfileDto.Patch patchRequest) {
 
         UserProfile userProfileForService = userProfileMapper.patchToUserProfile(patchRequest);
@@ -59,7 +60,8 @@ public class UserProfileController {
     }
 
     @GetMapping("/{user-profile-id}")
-    public ResponseEntity getOneUserProfile(@PathVariable("user-profile-id") Long userProfileId) {
+    public ResponseEntity getOneUserProfile(
+            @Positive @PathVariable("user-profile-id") Long userProfileId) {
 
         UserProfile userProfileForResponse = userProfileService.findOneUserProfile(userProfileId);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(
@@ -68,9 +70,10 @@ public class UserProfileController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    //TODO 회원 상태 변경 로직
+    //이미지 삭제 로직, 테스트용으로만 존재할 듯 하다.
     @DeleteMapping("/{user-profile-id}")
-    public ResponseEntity deleteOneUser(@PathVariable("user-profile-id") Long userProfileId) {
+    public ResponseEntity deleteOneUserProfile(
+            @Positive @PathVariable("user-profile-id") Long userProfileId) {
 
         UserProfile userProfileForResponse = userProfileService.deleteOneUserProfile(userProfileId);
         UserProfileDto.Response response = userProfileMapper.userProfileToResponse(

@@ -1,5 +1,7 @@
 package com.tcha.user_profile.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +14,10 @@ public class UserProfileDto {
     @Builder
     public static class Post {
 
+        @NotBlank
         private String userId;
 
+        @NotBlank
         private String name;
 
         private String profileImage;

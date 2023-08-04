@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface PtClassRepository extends JpaRepository<PtClass, Long> {
 
     @Query("SELECT c FROM PtClass c JOIN FETCH c.trainer t WHERE t.id = :trainerId AND DATE(c.startAt) = :date")
-    List<PtClass> findClassByTrainerAndDate(UUID trainerId, LocalDate date);
+    List<PtClass> findClassByTrainerAndDate(String trainerId, LocalDate date);
 
     List<PtClass> findClassByTrainer(String trainerId);
 

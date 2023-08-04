@@ -1,5 +1,6 @@
 package com.tcha.auth.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -8,7 +9,8 @@ import lombok.Getter;
 //admin 계정용으로 사용할 예정
 @Getter
 public class LoginDto {
-    @NotBlank(message = "공백일 수 없습니다.")
+
+    @Email
     private String email;
     @Size(min = 8, max = 20, message = "비밀번호 길이는 8 이상 20 이하여야 합니다.")
     private String password;

@@ -22,7 +22,7 @@ public interface ExerciseLogMapper {
                 .images(exerciseLog.getImages())
                 .videos(exerciseLog.getVideos())
                 .profileName(exerciseLog.getPtLive().getUserProfile().getName())
-                .trainerName(exerciseLog.getPtLive().getPtClass().getTrainerName())
+                .trainerName(exerciseLog.getPtLive().getPtClass().getTrainer().getUserProfile().getName())
                 .build();
     }
 

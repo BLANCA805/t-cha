@@ -51,7 +51,6 @@ public class UserProfileService {
 
         UserProfile userProfileForSave = findVerifiedUserProfile(userProfileId);
 
-        userProfileForSave.setName(null); // 삭제 예정
         userProfileForSave.setProfileImage(null);
 
         return userProfileRepository.save(userProfileForSave);

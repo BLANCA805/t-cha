@@ -30,8 +30,7 @@ public class PtClassService {
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
         // 요청을 보낸 트레이너가 유효한 트레이너인지 확인 (에러 핸들링 추가)
-        Trainer trainer = trainerRepository.findById(
-                UUID.fromString(postRequest.getTrainerId())).orElseThrow();
+        Trainer trainer = trainerRepository.findById(postRequest.getTrainerId()).orElseThrow();
 
         // pt 수업 등록할 날짜
         LocalDate date = postRequest.getDate();

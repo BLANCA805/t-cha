@@ -55,7 +55,7 @@ function TrainerListItem(props: trainerListItemProps) {
 
   const bookmark = () => {
     axios
-      .post(`${api}/bookmarks/${user}/${trainer}`)
+      .post(`${api}/bookmarks/${user.profileId}/${trainer}`)
       .then((response) => {
         console.log(response.data);
       })
@@ -65,13 +65,13 @@ function TrainerListItem(props: trainerListItemProps) {
   };
 
   return (
-    <Wrapper onClick={() => navigate(`info`, { state: trainer })}>
+    <Wrapper>
       <Avatar
         style={{ width: "10%", height: "10%", margin: "5%" }}
         alt=""
         src=""
       />
-      <DataWrapper>
+      <DataWrapper onClick={() => navigate(`info`, { state: trainer })}>
         <h2>{props.data.profileName}</h2>
         <KeywordWrapper>
           {props.data.tags.split(",").map((tag, index) => (
@@ -95,8 +95,8 @@ function TrainerListItem(props: trainerListItemProps) {
             재등록율 : {props.data.revisitGrade} %
           </h5>
         </Container>
-        <button onClick={bookmark}>즐겨찾기 등록</button>
       </DataWrapper>
+      <button onClick={bookmark}>즐겨찾기 등록</button>
     </Wrapper>
   );
 }

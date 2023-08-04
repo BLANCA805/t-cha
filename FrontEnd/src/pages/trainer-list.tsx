@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-import {api} from "@shared/common-data";
-
-import TrainerListItem from "@trainer-list/trainer-list-item";
+import { api } from "@shared/common-data";
 
 import TrainerListHeader from "@trainer-list/trainer-list-header";
+import TrainerListItem from "@trainer-list/trainer-list-item";
 
 import styled from "styled-components";
 

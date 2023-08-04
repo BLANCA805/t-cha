@@ -3,8 +3,7 @@ import { type RootState } from "../../redux/store";
 import { useState, ChangeEvent } from "react";
 import axios from "axios";
 
-import {api} from "@shared/common-data";
-
+import { api } from "@shared/common-data";
 import TextField from "@mui/material/TextField";
 
 import styled from "styled-components";

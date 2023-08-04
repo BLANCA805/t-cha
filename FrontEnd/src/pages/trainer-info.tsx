@@ -11,9 +11,19 @@ import TrainerReview from "@trainer-info/trainer-review";
 import ToggleButtons from "@shared/toggle-button";
 import { DefaultButton } from "@shared/button";
 
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import StarOutlineRoundedIcon from '@mui/icons-material/StarOutlineRounded';
+
+import {Button, Typography} from '@mui/material';
 import styled from "styled-components";
 
-const Container = styled.div``;
+
+const Container = styled.div`
+  display:flex;
+  flex-direction: column;
+  height:100vh;
+  /* background-color: lightpink; */
+`;
 
 const Wrapper = styled.div`
   margin: 1%;
@@ -87,8 +97,58 @@ const TrainerIntroduct = styled.div`
   /* background-color: lightcyan; */
 `;
 
+const BottomTab = styled.div`
+  display:flex;
+  flex-direction:row;
+  justify-content: center;
+  position:fixed;
+  bottom:0;
+  z-index:1;
+  /* min-height:4rem; */
+  min-height:9rem;
+  width:100%;
+  background-color: ${({ theme }) => theme.color.light};;
+  border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
+`;
 
+const BookmarkWrapper = styled.div`
+  flex:2;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  /* border: 0.1rem solid; */
+  /* background-color: #f3f3f3; */
+`;
+const RegisterWrapper = styled.div`
+  flex:10;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: violet; */
+`;
 
+const BookmarkButton = styled.div`
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height:75%;
+  aspect-ratio: 1/1;
+  margin-left:20%;
+  color: #276e68!important;
+  /* background-color: lightgrey; */
+   
+`;
+
+const RegisterButton = styled(Button)`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height:75%;
+  width:90%;
+  background-color: #276e68!important;
+  /* background-color: ${({ theme }) => theme.color.primary}!important; */
+  border-radius: 10px !important;
+`;
 
 function TrainerInfo() {
   const trainer = useLocation().state;
@@ -98,6 +158,12 @@ function TrainerInfo() {
   const [tab, setTab] = useState<string>("detail");
   const [detail, getDetail] = useState<TrainerDetailData>();
   const [review, getReview] = useState<TrainerReviewData>();
+  
+
+
+  //즐겨찾기 버튼 상태변경 -> 아이콘버전
+  const [bookmark, setBookmark] = useState(false);
+
 
   const clickTab = (name: string) => {
     setTab(name); // 새로운 탭 클릭 시, 상태 변경
@@ -154,6 +220,20 @@ function TrainerInfo() {
           <TrainerReview data={review.data} pageInfo={review.pageInfo} />
         )}
       </Wrapper>
+      <BottomTab>
+        <BookmarkWrapper>
+          {/* <BookmarkButton onClick={toggleBookmarkIcon} backgroundImage = {bookmarkIcon}></BookmarkButton> */}
+          <BookmarkButton onClick={() =>setBookmark(!bookmark)}>
+          {bookmark ? <StarRoundedIcon style={{fontSize: "7em"}} /> : <StarOutlineRoundedIcon style={{fontSize: "7em"}} />}
+          </BookmarkButton>
+       
+        </BookmarkWrapper>
+        <RegisterWrapper>
+          <RegisterButton href="pt_reservation" variant="contained">
+            <Typography variant="h4">예약 및 결제하기</Typography>
+          </RegisterButton> 
+        </RegisterWrapper>
+      </BottomTab>
     </Container>
   );
 }

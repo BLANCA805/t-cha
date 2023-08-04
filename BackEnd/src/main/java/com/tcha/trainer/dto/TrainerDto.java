@@ -18,6 +18,7 @@ public class TrainerDto {
     @Builder
     public static class Post {
 
+        private Long userProfileId;
         private String introduction;
         private String title;
         private String content;

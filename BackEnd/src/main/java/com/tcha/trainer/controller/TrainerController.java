@@ -2,6 +2,7 @@ package com.tcha.trainer.controller;
 
 import com.tcha.trainer.dto.TrainerDto;
 import com.tcha.trainer.entity.Trainer;
+import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,19 +26,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrainerController {
 
     private final TrainerService trainerService;
+    private final TrainerMapper trainerMapper;
 
-    @PostMapping("/{user-profile-id}")
+    @PostMapping
     public ResponseEntity<TrainerDto.Response> postTrainer(
-            @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
-        log.debug("[TrainerController] postTrainer 접근 확인 ::: "
-                + "userProfileId 값 = {}, postRequest 값 = {}", userProfileId, postRequest);
+        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(postRequest);
+        Trainer createdTrainer = trainerService.createTrainer(trainerForService);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(createdTrainer);
 
-        TrainerDto.Response createdTrainer =
-                trainerService.createTrainer(userProfileId, postRequest);
-
-        return ResponseEntity.ok().body(createdTrainer);
+        return ResponseEntity.ok().body(response);
     }
 
     /*

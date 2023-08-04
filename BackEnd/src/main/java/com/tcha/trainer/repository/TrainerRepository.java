@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TrainerRepository extends JpaRepository<Trainer, UUID> {
+public interface TrainerRepository extends JpaRepository<Trainer, String> {
 
     List<Trainer> findByTagsLikeIgnoreCase(String keyword);
 

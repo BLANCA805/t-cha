@@ -10,12 +10,11 @@ public interface PtLiveMapper {
 
     default PtLiveDto.Response ptLiveToResponseDto(PtLive ptLive) {
         return PtLiveDto.Response.builder()
-                .trainerId(ptLive.getPtClass().getTrainer().getId().toString())
-                .trainerProfileImage(
-                        ptLive.getPtClass().getTrainer().getUserProfile().getProfileImage())
-                .trainerName(ptLive.getPtClass().getTrainer().getUserProfile().getName())
-                .startAt(ptLive.getPtClass().getStartAt())
-                .closeAt(ptLive.getPtClass().getCloseAt())
+                .ptLiveId(ptLive.getId())
+//                .trainerProfileImage()
+//                .trainerName()
+//                .startAt()
+//                .closeAt()
                 .price("7,000원")
                 .build();
     }

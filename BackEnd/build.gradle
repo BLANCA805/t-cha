@@ -83,7 +83,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // SpringBoot devtools
     // 서버 재시작없이 수정사항 적용하기 위한 라이브러리
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     //java -> XML
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 

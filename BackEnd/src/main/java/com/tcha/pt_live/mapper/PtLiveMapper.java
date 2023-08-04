@@ -13,7 +13,6 @@ public interface PtLiveMapper {
                 .trainerId(ptLive.getPtClass().getTrainer().getId().toString())
                 .trainerProfileImage(
                         ptLive.getPtClass().getTrainer().getUserProfile().getProfileImage())
-//                .trainerName(ptLive.getPtClass().getTrainerName())
                 .trainerName(ptLive.getPtClass().getTrainer().getUserProfile().getName())
                 .startAt(ptLive.getPtClass().getStartAt())
                 .closeAt(ptLive.getPtClass().getCloseAt())

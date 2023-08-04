@@ -40,7 +40,7 @@ public class User extends Auditable {
     @OneToOne(mappedBy = "user")
     private UserProfile userProfile;
 
-    //    @Column(unique = true) // email 컬럼에 unique 제약 조건 추가
+    @Column(unique = true, nullable = false, updatable = false)
     private String email;
 
     @Column(nullable = false)

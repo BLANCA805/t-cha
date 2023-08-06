@@ -4,12 +4,12 @@ package com.tcha.pt_class.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 
 public class PtClassDto {
@@ -30,9 +30,9 @@ public class PtClassDto {
     public static class Patch {
 
         @NotBlank
-        private String trainerId;
-        @NotBlank
-        private Long classId;
+        private String userId; // 예약을 신청/취소하는 유저
+        @NotNull
+        private Long ptClassId; // 예약/취소하려는 수업
     }
 
     @Getter
@@ -54,8 +54,9 @@ public class PtClassDto {
     public static class Response {
 
         private String trainerId;
-        private long classId;
-        private long liveId;
+        private Long classId;
+        private Long liveId;
         private LocalDateTime startAt;
     }
+
 }

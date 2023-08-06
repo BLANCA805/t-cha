@@ -1,18 +1,18 @@
 package com.tcha.pt_class.service;
 
 import com.tcha.pt_class.dto.PtClassDto;
-import com.tcha.pt_class.dto.PtClassDto.Get;
-import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.mapper.PtClassMapper;
 import com.tcha.pt_class.repository.PtClassRepository;
+import com.tcha.pt_live.entity.PtLive;
 import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
+import com.tcha.user.entity.User;
+import com.tcha.user.repository.UserRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,9 @@ public class PtClassService {
     private final PtClassRepository ptClassRepository;
     private final TrainerRepository trainerRepository;
     private final PtLiveRepository ptLiveRepository;
+    private final UserRepository userRepository;
     private final PtClassMapper ptClassMapper;
+
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
@@ -53,36 +55,57 @@ public class PtClassService {
         return ptClassMapper.classListToclassResponseDtoList(classList);
     }
 
-    public List<PtClassDto.Response> updatePtClass(PtClassDto.Patch patchRequest) {
 
-        // 수정(==삭제)하고자 하는 수업에 대한 유효성 검증
-        PtClass ptClass = ptClassRepository.findById(patchRequest.getClassId()).orElseThrow();
+    public PtClassDto.Response updatePtClass(PtClassDto.Patch patchRequest) {
 
-        // 1. 요청 트레이너의 수업인지 확인
-        if (!ptClass.getTrainer().getId().toString().equals(patchRequest.getTrainerId())) {
-            return null;
+        // user 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
+        User user = userRepository.findById(patchRequest.getUserId()).orElseThrow();
+
+        // ptClass 객체 가져오기 (유효성 검증 로직 추가)
+        PtClass ptClass = ptClassRepository.findById(patchRequest.getPtClassId()).orElseThrow();
+
+        // 예약 신청인지 취소인지 판단
+        Long ptLiveId = ptClass.getPtLiveId();
+        // 1. 수업 예약 신청이라면 (저장된 라이브 아이디 없음)
+        if (ptLiveId == null) {
+            // 결제 로직
+
+            // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
+            PtLive createdPtLive = ptLiveRepository.save(
+                    PtLive.builder()
+                            .ptClassId(ptClass.getId())
+                            .userProfile(user.getUserProfile())
+                            .trainerId(ptClass.getTrainer().getId().toString())
+                            .build());
+
+            // ptClass에 ptLive 아이디 추가해주기 (update)
+            ptClass.setPtLiveId(createdPtLive.getId());
+
+            return null; // 신청한 수업에 대한 정보 반환
         }
-        // 2. 이미 예약된 수업인지 확인
-        if (ptClass.getPtLiveId() != null &&
-                ptLiveRepository.findById(ptClass.getPtLiveId()).isPresent()) {
-            return null;
+
+        // 2. 수업 예약 취소라면
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
+        // 취소 요청을 보낸 유저가 예약한 유저와 일치하는지 확인
+        if (user.getUserProfile().equals(ptLive.getUserProfile())) {
+            ptClass.setPtLiveId(null);
+            ptLive.setUserProfile(null);
+
+            return null; // 예약 취소 성공에 대한 정보 반환
         }
 
-        // 수업 삭제(삭제 상태값 컬럼 변경)
-        ptClass.setIsDel(1);
-
-        return null; // 수정하기
+        return ptClassMapper.classToClassResponseDto(ptClass);
     }
 
-    public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
 
-//        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+    public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
 
         List<PtClass> trainerClassList =
                 ptClassRepository.findClassByTrainer(UUID.fromString(trainerId));
 
         return ptClassMapper.classListToclassResponseDtoList(trainerClassList);
     }
+
 
     public List<PtClassDto.Response> findPtClassByDatetime(PtClassDto.Get getRequest) {
 
@@ -112,6 +135,27 @@ public class PtClassService {
         return ptClassMapper.classListToclassResponseDtoList(datetimeClassList);
     }
 
+
+    public List<PtClassDto.Response> deletePtClass(long ptClassId, String trainerId) {
+
+        // 삭제하고자 하는 수업에 대한 유효성 검증
+        PtClass ptClass = ptClassRepository.findById(ptClassId).orElseThrow();
+
+        // 1. 요청 트레이너의 수업인지 확인 (다른 트레이너의 수업이면 삭제 불가)
+        if (!ptClass.getTrainer().getId().toString().equals(trainerId)) {
+            return null;
+        }
+        // 2. 이미 예약된 수업인지 확인 (예약된 상태라면 삭제 불가)
+        if (ptClass.getPtLiveId() != null) {
+            return null;
+        }
+
+        // 수업 삭제(삭제 상태값 컬럼 변경)
+        ptClass.setIsDel(1);
+
+        return null; // 리턴값 추후 수정
+    }
+
 //    public List<PtClassDto.Response> findAllPtClasses() {
 //
 //        List<PtClass> classList = ptClassRepository.findAll();
@@ -119,6 +163,4 @@ public class PtClassService {
 //        return ptClassMapper.classListToclassResponseDtoList(classList);
 //    }
 
-//    public void deletePtClass(String trainerId, long ptClassId) {
-//    }
 }

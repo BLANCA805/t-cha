@@ -127,20 +127,3 @@ public class BookmarkService {
         return trainer;
     }
 }
-
-/* createBookmark에서 해보니깐 문제가 있는거 같은데 공부하거나 물어보기
-    new를 이용하여 생성자로 새로운 userProfile 생성 후, Id값 넣은 다음 저장 시 넣어준 Id값빼곤 다른 값은 null들어감 => 해결 방법 찾아보기
-
-    //새로운 유저프로필 객체 생성하기
-        UserProfile userProfile = new UserProfile();
-        userProfile.setId(userProfileId);
-    //새로운 트레이너 객체 생성하기
-        Trainer trainer = new Trainer();
-        trainer.setId(UUID.fromString(trainerId));
-
-    //값의 입력을 확인하기 위해 사용한 print문
-        System.out.println("유저 프로필 정보 확인: " + userProfile.getName() + " " + userProfile.getId());
-        System.out.println("유저 프로필 정보 확인: " + userProfile.getId());
-        System.out.println("유저 프로필 정보 확인: " + userProfile.getId() + " " + bookmark.getUserProfile().getName());
-        System.out.println("트레이너 정보 확인: " + trainer.getId() + " " + trainer.getTitle());
-*/

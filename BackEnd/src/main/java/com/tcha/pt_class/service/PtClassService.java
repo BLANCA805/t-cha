@@ -1,6 +1,8 @@
 package com.tcha.pt_class.service;
 
 import com.tcha.pt_class.dto.PtClassDto;
+import com.tcha.pt_class.dto.PtClassDto.Get;
+import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.mapper.PtClassMapper;
 import com.tcha.pt_class.repository.PtClassRepository;
@@ -8,7 +10,9 @@ import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -72,9 +76,40 @@ public class PtClassService {
 
     public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
 
-        List<PtClass> trainerClassList = ptClassRepository.findClassByTrainer(trainerId);
+//        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+
+        List<PtClass> trainerClassList =
+                ptClassRepository.findClassByTrainer(UUID.fromString(trainerId));
 
         return ptClassMapper.classListToclassResponseDtoList(trainerClassList);
+    }
+
+    public List<PtClassDto.Response> findPtClassByDatetime(PtClassDto.Get getRequest) {
+
+        LocalDate date = getRequest.getDate();
+        LocalTime fromTime = getRequest.getFromTime();
+        LocalTime toTime = getRequest.getToTime();
+
+        // 1. 날짜만 선택한 경우 -> 해당 날짜의 수업만 검색 -> where로 날짜 필터링
+        // 2. 시간만 선택한 경우 -> 오늘 이후 날짜의 해당 시간(구간) 수업만 검색
+        // 3. 둘 다 선택한 경우 -> 해당 날짜의 해당 시간(구간)의 수업만 검색
+
+        LocalDateTime from, to = null;
+        List<PtClass> datetimeClassList;
+
+        if (date == null) { // 시간만 선택한 경우
+            //fromTime과 현재 시간 비교, 더 미래 시간으로 from 설정
+            from = LocalDateTime.of(LocalDate.now(), fromTime).isAfter(LocalDateTime.now())
+                    ? LocalDateTime.of(LocalDate.now(), fromTime) : LocalDateTime.now();
+            to = LocalDateTime.of(LocalDate.now(), toTime);
+            datetimeClassList = ptClassRepository.findClassByTime(from, to);
+        } else {
+            from = LocalDateTime.of(date, fromTime);
+            to = LocalDateTime.of(date, toTime);
+            datetimeClassList = ptClassRepository.findClassByDate(from, to);
+        }
+
+        return ptClassMapper.classListToclassResponseDtoList(datetimeClassList);
     }
 
 //    public List<PtClassDto.Response> findAllPtClasses() {

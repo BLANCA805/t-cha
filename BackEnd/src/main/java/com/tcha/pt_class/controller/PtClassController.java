@@ -2,7 +2,6 @@ package com.tcha.pt_class.controller;
 
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.service.PtClassService;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,15 +41,15 @@ public class PtClassController {
     }
 
     /*
-    pt 수업 정보 수정(== 삭제)
+    유저가 pt 수업 예약 or 예약 취소
      */
     @PatchMapping()
-    public ResponseEntity<List<PtClassDto.Response>> patchPtClass(
+    public ResponseEntity<PtClassDto.Response> patchPtClass(
             @RequestBody PtClassDto.Patch patchRequest) {
 
-        List<PtClassDto.Response> classList = ptClassService.updatePtClass(patchRequest);
+        PtClassDto.Response ptClass = ptClassService.updatePtClass(patchRequest);
 
-        return ResponseEntity.ok().body(classList);
+        return ResponseEntity.ok().body(ptClass);
     }
 
     /*
@@ -90,16 +89,15 @@ public class PtClassController {
 //    }
 
     /*
-    pt 수업 id를 통해 등록된 pt 수업 삭제
+    트레이너가 pt 수업 삭제
      */
-//    @DeleteMapping("{trainer-id}")
-//    public ResponseEntity<?> deletePtClass(
-//            @PathVariable("trainer-id") String trainerId,
-//            @RequestParam long ptClassId) {
-//
-//        ptClassService.deletePtClass(trainerId, ptClassId);
-//
-//        return ResponseEntity.ok().body(null);
-//    }
+    @DeleteMapping("/{pt-class-id}")
+    public ResponseEntity<List<PtClassDto.Response>> deletePtClass(
+            @PathVariable("pt-class-id") long classId, @RequestParam String trainerId) {
+
+        List<PtClassDto.Response> classList = ptClassService.deletePtClass(classId, trainerId);
+
+        return ResponseEntity.ok().body(classList);
+    }
 
 }

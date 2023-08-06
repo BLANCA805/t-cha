@@ -54,13 +54,11 @@ public class PtClassController {
     }
 
     /*
-    - 트레이너 id를 통해 해당 트레이너의 수업 조회
-    - 날짜 및 시간을 통해 수업 조회
+    트레이너 id를 통해 해당 트레이너의 수업 조회
      */
-    @GetMapping()
-    public ResponseEntity<List<PtClassDto.Response>> getPtClassBy(
-            @RequestParam(required = false) String trainerId,
-            @RequestParam(required = false) LocalDateTime dateTime) {
+    @GetMapping("/{trainer-id}")
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassByTrainer(
+            @PathVariable("trainer-id") String trainerId) {
 
         List<PtClassDto.Response> trainerClassList = ptClassService.findPtClassByTrainer(trainerId);
 
@@ -70,13 +68,14 @@ public class PtClassController {
     /*
     날짜 및 시간을 통해 수업 정보 조회
      */
-    @GetMapping("/{trainer-id}")
-    public ResponseEntity<List<PtClassDto.Response>> getPtClassByTrainer(
-            @PathVariable("trainer-id") String trainerId) {
+    @GetMapping()
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassByDatetime(
+            @RequestBody PtClassDto.Get getRequest) {
 
-        List<PtClassDto.Response> trainerClassList = ptClassService.findPtClassByTrainer(trainerId);
+        List<PtClassDto.Response> datetimeClassList =
+                ptClassService.findPtClassByDatetime(getRequest);
 
-        return ResponseEntity.ok().body(trainerClassList);
+        return ResponseEntity.ok().body(datetimeClassList);
     }
 
     /*

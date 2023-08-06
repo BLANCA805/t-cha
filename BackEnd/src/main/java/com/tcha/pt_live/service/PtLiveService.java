@@ -27,20 +27,23 @@ public class PtLiveService {
     private final PtClassRepository ptClassRepository;
     private final PtLiveMapper ptLiveMapper;
 
-    public PtLiveDto.Response createPtLive(long ptClassId, long userProfileId) {
+    public PtLiveDto.Response createPtLive(PtLiveDto.Post postRequest) {
 
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
-        UserProfile userProfile = userProfileRepository.findById(userProfileId).orElseThrow();
+        UserProfile userProfile =
+                userProfileRepository.findById(postRequest.getUserProfileId()).orElseThrow();
 
         // ptClass 객체 가져오기 (유효성 검증 로직 추가)
-        PtClass ptClass = ptClassRepository.findById(ptClassId).orElseThrow();
+        PtClass ptClass = ptClassRepository.findById(postRequest.getPtClassId()).orElseThrow();
 
-        // 새로운 ptLive 객체 생성해서 DB insert
+        // 결제 로직 추가
+
+        // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
         PtLive createdPtLive = ptLiveRepository.save(
-                PtLive.builder()
-                        .ptClass(ptClass)
-                        .userProfile(userProfile)
-                        .build());
+                PtLive.builder().ptClassId(ptClass.getId()).userProfile(userProfile).build());
+
+        // ptClass에 ptLive 아이디 추가해주기 (update)
+        ptClass.setPtLiveId(createdPtLive.getId());
 
         return ptLiveMapper.ptLiveToResponseDto(createdPtLive);
     }

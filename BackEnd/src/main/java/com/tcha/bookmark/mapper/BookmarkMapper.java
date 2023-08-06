@@ -3,8 +3,6 @@ package com.tcha.bookmark.mapper;
 import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.entity.Bookmark;
 import org.mapstruct.Mapper;
-
-import java.awt.print.Book;
 import java.util.List;
 
 @Mapper(componentModel = "spring")

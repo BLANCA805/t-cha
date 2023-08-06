@@ -2,24 +2,21 @@ package com.tcha.bookmark.controller;
 
 import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.service.BookmarkService;
-import com.tcha.notice.dto.NoticeDto;
-import com.tcha.notice.entity.Notice;
 import com.tcha.utils.pagination.MultiResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequestMapping("/bookmarks")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RestControllerAdvice
+@Validated
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
@@ -29,7 +26,7 @@ public class BookmarkController {
     */
     @PostMapping("{user-profile-id}/{trainer-id}")
     public ResponseEntity<BookmarkDto.Response> postBookmark(
-            @PathVariable("user-profile-id") Long userProfileId,
+            @PathVariable("user-profile-id") String userProfileId,
             @PathVariable("trainer-id") String trainerId) {
         BookmarkDto.Response response = bookmarkService.createBookmark(userProfileId, trainerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -38,7 +35,7 @@ public class BookmarkController {
     //즐겨찾기 삭제
     @DeleteMapping("/{bookmark-id}")
     public ResponseEntity deleteBookmark(
-            @PathVariable("bookmark-id") Long bookmarkId) {
+            @PathVariable("bookmark-id") String bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
         return ResponseEntity.noContent().build();
     }
@@ -48,16 +45,20 @@ public class BookmarkController {
     public ResponseEntity<MultiResponseDto<BookmarkDto.Response>> getBookmark(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @PathVariable("user-profile-id") Long userProfileId) {
-        MultiResponseDto<BookmarkDto.Response> response = bookmarkService.findAllUserIdBookMark(page, size, userProfileId);
+            @PathVariable("user-profile-id") String userProfileId) {
+        MultiResponseDto<BookmarkDto.Response> response = bookmarkService.findAllUserIdBookMark(
+                page, size, userProfileId);
         return ResponseEntity.ok().body(response);
     }
 
     //트레이너 상세조회 페이지에서 즐겨찾기 등록 여부 확인
     @GetMapping("/{user-profile-id}/{trainer-id}")
-    public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(@PathVariable("user-profile-id") Long userProfileID, @PathVariable("trainer-id") String trainerId) {
+    public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
+            @PathVariable("user-profile-id") String userProfileID,
+            @PathVariable("trainer-id") String trainerId) {
 
-        BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(userProfileID, trainerId);
+        BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
+                userProfileID, trainerId);
 
         return ResponseEntity.ok().body(response);
     }

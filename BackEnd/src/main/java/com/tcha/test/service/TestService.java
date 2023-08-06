@@ -4,7 +4,10 @@ package com.tcha.test.service;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.test.entity.Test;
 import com.tcha.test.repository.TestRepository;
+import com.tcha.trainer.dto.TrainerDto;
+import com.tcha.trainer.dto.TrainerDto.Rank;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +31,14 @@ public class TestService {
     private final String STAR_KEY = "star";
     private final String REVIEW_KEY = "review";
     private final String PT_KEY = "PT";
+
+    private final String BOOKMARK_KEY = "bookmark";
     private final String NEW_KEY = "new";
     private final Map<String, String> keyMap = new HashMap<>() {{
         put("평균 별점", STAR_KEY);
         put("리뷰 수", REVIEW_KEY);
         put("누적 PT 수", PT_KEY);
+        put("즐겨찾기 수", BOOKMARK_KEY);
         put("최근", NEW_KEY);
     }};
 
@@ -44,7 +50,6 @@ public class TestService {
         ZSetOperations.add(keyMap.get("평균 별점"), test.getTitle(),
                 test.getStar());
 
-        System.out.println(ZSetOperations);
         return testRepository.save(test);
     }
 
@@ -61,7 +66,6 @@ public class TestService {
         } else {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
         }
-//        List<TagRankDTO> result = typedTuples.stream().map(TagRankDTO::convertToTagRankDTO).collect(Collectors.toList());
         System.out.println(typedTuples);
 
         return testRepository.findAll(

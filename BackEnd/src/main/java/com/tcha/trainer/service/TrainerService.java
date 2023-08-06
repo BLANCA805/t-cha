@@ -3,16 +3,24 @@ package com.tcha.trainer.service;
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
 import com.tcha.trainer.dto.TrainerDto;
+import com.tcha.trainer.dto.TrainerDto.Rank;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +34,37 @@ public class TrainerService {
     private final TagRepository tagRepository;
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
+
+    private final RedisTemplate<String, String> redisTemplate;
+    private final String STAR_KEY = "star";
+    private final String REVIEW_KEY = "review";
+    private final String PT_KEY = "PT";
+
+    private final String BOOKMARK_KEY = "bookmark";
+    private final String NEW_KEY = "new";
+    private final Map<String, String> keyMap = new HashMap<>() {{
+        put("평균 별점", STAR_KEY);
+        put("리뷰 수", REVIEW_KEY);
+        put("누적 PT 수", PT_KEY);
+        put("즐겨찾기 수", BOOKMARK_KEY);
+        put("최근", NEW_KEY);
+    }};
+
+    /*
+            ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        Set<ZSetOperations.TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get(STAR_KEY);
+
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+//        List<TagRankDTO> result = typedTuples.stream().map(TagRankDTO::convertToTagRankDTO).collect(Collectors.toList());
+        System.out.println(typedTuples);
+     */
 
     public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
 
@@ -95,6 +134,23 @@ public class TrainerService {
 
             trainerList.add(trainer);
         }
+
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        Set<TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get("평균 별점");
+
+        System.out.println(key);
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+        System.out.println(result);
 
         return trainerList;
     }

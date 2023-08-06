@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,6 +93,32 @@ public class TrainerDto {
         private int ptCount; // 누적 예약 수
         private int reviewCount; // 누적 리뷰 수
         private int revisitGrade; // 재방문율에 따른 등급 (0(일반), 1(브론즈), 2(실버), 3(골드))
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Rank {
+
+        private String id;
+        private double star;
+
+        public static Rank convertToRank(ZSetOperations.TypedTuple<String> Tuple) {
+            Rank result = Rank.builder()
+                    .id(Tuple.getValue())
+                    .star(Tuple.getScore())
+                    .build();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Rank{" +
+                    "id='" + id + '\'' +
+                    ", star=" + star +
+                    '}';
+        }
     }
 
 }

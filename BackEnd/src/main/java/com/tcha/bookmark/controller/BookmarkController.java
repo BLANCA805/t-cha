@@ -55,8 +55,8 @@ public class BookmarkController {
     //트레이너 상세조회 페이지에서 즐겨찾기 등록 여부 확인
     @GetMapping("/{user-profile-id}/{trainer-id}")
     public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
-            @Validated @PathVariable("user-profile-id") @Positive Long userProfileID,
-            @Validated @PathVariable("trainer-id") String trainerId) {
+            @PathVariable("user-profile-id") @Positive Long userProfileID,
+            @PathVariable("trainer-id") String trainerId) {
 
         BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
                 userProfileID, trainerId);

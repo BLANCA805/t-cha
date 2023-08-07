@@ -70,6 +70,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const Sign = () => {
+    console.log(api)
     axios
       .post(`${api}/users?email=email@gmail.com`)
       .then((response) => {

@@ -6,10 +6,13 @@ import com.tcha.exercise_log.repository.ExerciseLogRepository;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.pt_live.repository.PtLiveRepository;
+import com.tcha.trainer.entity.Trainer;
+import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.utils.upload.service.S3Uploader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class ExerciseLogService {
 
     private final ExerciseLogRepository exerciseLogRepository;
+    private final TrainerRepository trainerRepository;
     private final PtLiveRepository ptLiveRepository;
+
+    private final ExerciseLogMapper exerciseLogMapper;
     private final S3Uploader s3Uploader;
 
 
@@ -32,11 +38,27 @@ public class ExerciseLogService {
     @Transactional
     public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
         PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
+//        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
+//        Trainer trainer = trainerRepository.findById(trainerId).get();
 
         exerciseLog.setPtLive(ptLive);
+//        exerciseLog.setTrainerName(trainer.getUserProfile().getName());
 
         return exerciseLogRepository.save(exerciseLog);
     }
+//    @Transactional
+//    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
+//        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
+//        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
+//        Trainer trainer = trainerRepository.findById(trainerId).get();
+//
+//        exerciseLog.setPtLive(ptLive);
+//
+//        exerciseLogMapper.exerciseLogToResponse(exerciseLog,trainer.getUserProfile().getName());
+//
+//        exerciseLogRepository.save(exerciseLog)
+//        return ;
+//    }
 
 
     //Pagenation으로 운동 일지를 불러옴

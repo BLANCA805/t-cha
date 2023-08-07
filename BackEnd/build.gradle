@@ -66,7 +66,9 @@ dependencies {
     //H2
     runtimeOnly 'com.h2database:h2'
     //Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.1.2'
+    implementation 'io.lettuce:lettuce-core:6.2.4.RELEASE'
+
     //Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'

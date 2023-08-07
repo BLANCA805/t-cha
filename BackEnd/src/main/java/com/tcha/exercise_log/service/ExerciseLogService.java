@@ -38,12 +38,13 @@ public class ExerciseLogService {
     @Transactional
     public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
         PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
-//        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
-//        Trainer trainer = trainerRepository.findById(trainerId).get();
 
+        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
+        Trainer trainer = trainerRepository.findById(trainerId).get();
         exerciseLog.setPtLive(ptLive);
-//        exerciseLog.setTrainerName(trainer.getUserProfile().getName());
+        exerciseLog.setTrainerName(trainer.getUserProfile().getName());
 
+//        exerciseLog.setTrainerName(ptLive.getTrainerName());
         return exerciseLogRepository.save(exerciseLog);
     }
 //    @Transactional

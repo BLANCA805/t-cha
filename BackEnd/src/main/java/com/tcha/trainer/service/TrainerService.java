@@ -50,22 +50,6 @@ public class TrainerService {
         put("최근", NEW_KEY);
     }};
 
-    /*
-            ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<String>> typedTuples;
-
-        //String key = "ranking";
-        String key = keyMap.get(STAR_KEY);
-
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
-        } else {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
-        }
-//        List<TagRankDTO> result = typedTuples.stream().map(TagRankDTO::convertToTagRankDTO).collect(Collectors.toList());
-        System.out.println(typedTuples);
-     */
-
     public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
 
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
@@ -141,7 +125,6 @@ public class TrainerService {
         //String key = "ranking";
         String key = keyMap.get("평균 별점");
 
-        System.out.println(key);
         if (ZSetOperations.size(key) >= 5) {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
         } else {

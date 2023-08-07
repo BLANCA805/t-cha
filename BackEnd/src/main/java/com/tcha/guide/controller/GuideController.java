@@ -32,7 +32,7 @@ public class GuideController {
 
     //기능 코드별 사용 가이드 보기
     @GetMapping("/{code}")
-    public ResponseEntity<List<GuideDto.Response>> getGuide(@Valid @PathVariable("code") String code) {
+    public ResponseEntity<List<GuideDto.Response>> getGuide(@PathVariable("code") String code) {
         List<GuideDto.Response> response = guideService.findAllCodeGuide(code);
         return ResponseEntity.ok().body(response);
 
@@ -40,7 +40,7 @@ public class GuideController {
 
     //1개의 사용 가이드 확인
     @GetMapping("/code/{guide-id}")
-    public ResponseEntity<GuideDto.Response> getOneGuide(@Valid @PathVariable("guide-id") @Positive Long guideId) {
+    public ResponseEntity<GuideDto.Response> getOneGuide(@PathVariable("guide-id") @Positive Long guideId) {
         GuideDto.Response response = guideService.findOneGuide(guideId);
 
         return ResponseEntity.ok().body(response);
@@ -48,14 +48,14 @@ public class GuideController {
 
     //서비스 가이드 수정
     @PatchMapping("{guide-id}")
-    public ResponseEntity<GuideDto.Response> patchGuide(@Valid @PathVariable("guide-id") @Positive Long guideId, @Valid @RequestBody GuideDto.Patch patchRequest) {
+    public ResponseEntity<GuideDto.Response> patchGuide(@PathVariable("guide-id") @Positive Long guideId, @Valid @RequestBody GuideDto.Patch patchRequest) {
         GuideDto.Response response = guideService.patchGuide(guideId, patchRequest);
         return ResponseEntity.ok().body(response);
     }
 
     //서비스 가이드 삭제
     @DeleteMapping("{guide-id}")
-    public ResponseEntity deleteGuide(@Valid @PathVariable("guide-id") @Positive Long guideId) {
+    public ResponseEntity deleteGuide(@PathVariable("guide-id") @Positive Long guideId) {
         guideService.deleteGuide(guideId);
         return ResponseEntity.noContent().build();
     }

@@ -25,6 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Test extends Auditable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,8 +36,11 @@ public class Test extends Auditable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @ElementCollection
-    @OrderColumn
-    private List<String> images;
+    @Column(nullable = false)
+    private Double star;
+//
+//    @ElementCollection
+//    @OrderColumn
+//    private List<String> images;
 
 }

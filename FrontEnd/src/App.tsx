@@ -31,7 +31,7 @@ const Container = styled.div`
 
 function App() {
   return (
-    <Wrapper> 
+    <Wrapper>
       <Container>
         <Outlet />
         <SideBar />

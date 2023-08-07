@@ -74,7 +74,7 @@ function TrainerRegistration() {
         if (response.data) {
           console.log(response.data);
           dispatch(registTrainer({ trainerId: response.data.id }));
-          navigate(`trainers/${profileId}`);
+          navigate(-1);
         }
       })
       .catch((error) => {

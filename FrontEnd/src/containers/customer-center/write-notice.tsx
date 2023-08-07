@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { type RootState } from "../../redux/store";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
@@ -22,6 +23,8 @@ function WriteInquiry() {
   const [content, setContent] = useState("");
   const [status, setStatus] = useState(false);
 
+  const navigate = useNavigate();
+
   const form = {
     title: title,
     content: content,
@@ -40,11 +43,11 @@ function WriteInquiry() {
 
   const upLoad = (event: any) => {
     event.preventDefault();
-    console.log(form);
     axios
       .post(`${api}/notices`, form)
       .then((response) => {
         console.log(response.data);
+        navigate(-1);
       })
       .catch((error) => {
         console.log(error);

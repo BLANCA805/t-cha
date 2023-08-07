@@ -8,7 +8,6 @@ import { AppDispatch, type RootState } from "src/redux/store";
 import { deleteProfile, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -53,7 +52,9 @@ function SideBar() {
           onKeyDown={toggleDrawer(false)}
         >
           <List>
-            <button onClick={test}>test</button>
+            {!profile.profileId && (
+              <button onClick={test}>프로필 생성하기</button>
+            )}
             {[
               ["profile", "마이페이지"],
               ["", "home"],
@@ -117,6 +118,7 @@ function SideBar() {
   };
 
   const user = useSelector((state: RootState) => state.auth);
+  const profile = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<AppDispatch>();
 

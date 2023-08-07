@@ -167,7 +167,7 @@ function User() {
             <Link to="chat">채팅목록</Link>
           </Uscol>
           <Uscol>
-            <Link to="customer_center">고객센터</Link>
+            <Link to="/customer_center">고객센터</Link>
           </Uscol>
         </Usrow>
       </UserContainer>

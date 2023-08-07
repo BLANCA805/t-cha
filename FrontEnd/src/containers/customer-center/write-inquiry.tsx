@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { type RootState } from "../../redux/store";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { api } from "@shared/common-data";
@@ -20,11 +21,14 @@ const Form = styled.form`
 function WriteInquiry() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
+
+  const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.profile.profileId);
 
   const form = {
+    userProfileId: user,
     title: title,
     content: content,
     status: status ? "QUESTION_PRIVATE" : "QUESTION_PUBLIC",
@@ -43,11 +47,13 @@ function WriteInquiry() {
   const upLoad = (event: any) => {
     event.preventDefault();
     axios
-      .post(`${api}/questions/`, form)
+      .post(`${api}/questions`, form)
       .then((response) => {
         console.log(response.data);
+        navigate(-1);
       })
       .catch((error) => {
+        console.log(form);
         console.log(error);
       });
   };

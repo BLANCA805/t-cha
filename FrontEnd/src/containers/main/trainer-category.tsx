@@ -33,15 +33,6 @@ const ImgTag = styled.img`
 function TrainerCategory() {
   const [items, setItems] = useState<Array<any>>([]);
 
-  const [{ response, error }] = useAxios({
-    method: "get",
-    url: "https://picsum.photos/v2/list?page=12&limit=5",
-  });
-
-  function cl() {
-    console.log(response);
-    console.log(error);
-  }
   useEffect(() => {
     axios
       .get("https://picsum.photos/v2/list?page=12&limit=5")
@@ -58,7 +49,7 @@ function TrainerCategory() {
       <h3>딱 필요한 트레이너를 찾는 가장 현명한 방법</h3>
       <Wrapper>
         <Column style={{ display: "flex", alignItems: "end" }}>
-          <Link to="pt">모든 트레이너 보러가기</Link>
+          <Link to="trainer">모든 트레이너 보러가기</Link>
         </Column>
         <Column>
           <Carousel>
@@ -72,7 +63,6 @@ function TrainerCategory() {
           </Carousel>
         </Column>
       </Wrapper>
-      <button onClick={cl}>test</button>
     </Container>
   );
 }

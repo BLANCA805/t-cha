@@ -58,3 +58,27 @@ export interface InquiryData {
     totalPages: number;
   };
 }
+
+export interface BookmarkedTrainerData {
+  data: {
+    id: number;
+    trainerId: string;
+    trainerName: string;
+    userProfileName: string;
+  }[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+export interface BookmarkedTrainerDataProps {
+  data: {
+    id: number;
+    trainerId: string;
+    trainerName: string;
+    userProfileName: string;
+  };
+}

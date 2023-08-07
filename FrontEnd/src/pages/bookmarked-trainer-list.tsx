@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 import axios from "axios";
 
 import { api } from "@shared/common-data";
 
+import { BookmarkedTrainerData } from "src/interface";
 import BookmarkedTrainerListItem from "src/containers/bookmarked-trainer/bookmarked-trainer-list-item";
 
 import { TitleWrapper, PageTitleText } from "@shared/page-title";
@@ -19,11 +22,13 @@ const Wrapper = styled.div`
 const ContentsWrapper = styled.div``;
 
 function BookmarkedTrainerList() {
-  const [items, setItems] = useState([]);
+  const user = useSelector((state: RootState) => state.profile);
+
+  const [items, setItems] = useState<BookmarkedTrainerData>();
 
   useEffect(() => {
     axios
-      .get(`${api}/trainers`)
+      .get(`${api}/bookmarks/${user.profileId}?page=1&size=5`)
       .then((response) => {
         setItems(response.data);
         console.log(response.data);
@@ -31,27 +36,8 @@ function BookmarkedTrainerList() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-  // [
-  //   {
-  //     id: 1,
-  //     name: "이채림",
-  //     keywordTags: ["근력", "유산소", "필라테스"],
-  //     profileImg: "",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "하정호",
-  //     keywordTags: ["근력운동", "체력증진", "저녁반"],
-  //     profileImg: "",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "변정원",
-  //     keywordTags: ["근력", "자세교정", "새벽가능"],
-  //     profileImg: "",
-  //   },
-  // ];
+  }, [user.profileId]);
+
   return (
     <Wrapper>
       <TitleWrapper>
@@ -59,9 +45,8 @@ function BookmarkedTrainerList() {
       </TitleWrapper>
 
       <ContentsWrapper>
-        {items.map((item) => (
-          <BookmarkedTrainerListItem data={item} />
-        ))}
+        {items &&
+          items.data.map((item) => <BookmarkedTrainerListItem data={item} />)}
       </ContentsWrapper>
     </Wrapper>
   );

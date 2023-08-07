@@ -10,8 +10,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PtClassMapper {
 
-    PtClassDto.Response classToClassResponseDto(PtClass ptClass);
-
     List<PtClassDto.Response> classListToclassResponseDtoList(List<PtClass> classList);
 
     default PtClass classPostDtoToClass(Trainer trainer, LocalDateTime startTime) {
@@ -19,6 +17,15 @@ public interface PtClassMapper {
                 .trainer(trainer)
                 .startAt(startTime)
                 .closeAt(startTime.plusHours(1))
+                .build();
+    }
+
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass) {
+        return PtClassDto.Response.builder()
+                .trainerId(ptClass.getTrainer().getId().toString())
+                .classId(ptClass.getId())
+//                .liveId(ptClass.getPtLiveId())
+                .startAt(ptClass.getStartAt())
                 .build();
     }
 

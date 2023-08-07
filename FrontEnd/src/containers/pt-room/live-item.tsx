@@ -1,12 +1,17 @@
-import React from "react";
-import { useOpenvidu } from "./hooks/use-openvidu";
+import React, { FC } from "react";
+import { useOpenvidu } from "src/hooks/use-openvidu";
+import { PtRoomData } from "src/interface";
 
-const VideoCallComponent = () => {
+const LiveItem: FC<PtRoomData> = ({ profileId, liveId }) => {
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
-    useOpenvidu(1, 1);
+    useOpenvidu(profileId, liveId);
 
+  const test = () => {
+    console.log(streamList);
+  };
   return (
     <div>
+      <button onClick={test}></button>
       {publisher && (
         <div>
           <video
@@ -25,4 +30,4 @@ const VideoCallComponent = () => {
   );
 };
 
-export default VideoCallComponent;
+export default LiveItem;

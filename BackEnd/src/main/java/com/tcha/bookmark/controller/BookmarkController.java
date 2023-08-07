@@ -3,6 +3,7 @@ package com.tcha.bookmark.controller;
 import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.service.BookmarkService;
 import com.tcha.utils.pagination.MultiResponseDto;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class BookmarkController {
     */
     @PostMapping("{user-profile-id}/{trainer-id}")
     public ResponseEntity<BookmarkDto.Response> postBookmark(
-            @PathVariable("user-profile-id") String userProfileId,
+            @PathVariable("user-profile-id") @Positive long userProfileId,
             @PathVariable("trainer-id") String trainerId) {
         BookmarkDto.Response response = bookmarkService.createBookmark(userProfileId, trainerId);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -35,7 +36,7 @@ public class BookmarkController {
     //즐겨찾기 삭제
     @DeleteMapping("/{bookmark-id}")
     public ResponseEntity deleteBookmark(
-            @PathVariable("bookmark-id") String bookmarkId) {
+            @PathVariable("bookmark-id") @Positive Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
         return ResponseEntity.noContent().build();
     }
@@ -43,9 +44,9 @@ public class BookmarkController {
     //유저별 즐겨찾기 목록보기
     @GetMapping("/{user-profile-id}")
     public ResponseEntity<MultiResponseDto<BookmarkDto.Response>> getBookmark(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size,
-            @PathVariable("user-profile-id") String userProfileId) {
+            @RequestParam(value = "page", defaultValue = "1") @Positive Integer page,
+            @RequestParam(value = "size", defaultValue = "10") @Positive Integer size,
+            @PathVariable("user-profile-id") @Positive Long userProfileId) {
         MultiResponseDto<BookmarkDto.Response> response = bookmarkService.findAllUserIdBookMark(
                 page, size, userProfileId);
         return ResponseEntity.ok().body(response);
@@ -54,8 +55,8 @@ public class BookmarkController {
     //트레이너 상세조회 페이지에서 즐겨찾기 등록 여부 확인
     @GetMapping("/{user-profile-id}/{trainer-id}")
     public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
-            @PathVariable("user-profile-id") String userProfileID,
-            @PathVariable("trainer-id") String trainerId) {
+            @Validated @PathVariable("user-profile-id") @Positive Long userProfileID,
+            @Validated @PathVariable("trainer-id") String trainerId) {
 
         BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
                 userProfileID, trainerId);

@@ -14,6 +14,17 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.color.primary};
 `;
 
+// const Wrapper = styled.div`
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100vh;
+//   background-color: ${({ theme }) => theme.color.secondary};
+//   color: ${({ theme }) => theme.color.primary};
+//   overflow: auto;
+// `;
+
 const Container = styled.div`
   width: 100%;
 `;

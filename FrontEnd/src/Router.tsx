@@ -27,6 +27,7 @@ import TrainerInfo from "@/trainer-info";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 import TrainerSchedule from "@user-trainer/trainer-schedule";
 import TrainerPtudent from "@/trainer/member-list";
+import PtReservation from "@/pt-reservation";
 
 const router = createBrowserRouter([
   {
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
       {
         path: "trainer/info",
         element: <TrainerInfo />,
+      },
+      {
+        path: "trainer/pt_reservation",
+        element: <PtReservation />,
       },
     ],
   },

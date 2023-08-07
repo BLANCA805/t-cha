@@ -5,7 +5,11 @@ import lombok.Getter;
 public enum ExceptionCode {
     USER_NOT_FOUND(404, "User not found"),
     USER_PROFILE_NOT_FOUND(404, "User Profile not found"),
-    QUESTION_NOT_FOUND(404, "Question not found");
+    QUESTION_NOT_FOUND(404, "Question not found"),
+
+    //에러 처리 확인을 위해 추가(08.06 06:55)
+    TRAINER_NOT_FOUND(404, "Trainer not found"),
+    BOOKMARK_NOT_FOUND(404, "Bookmark not found");
 
     /* 참고용
     MEMBER_NOT_FOUND(404, "Member not found"),

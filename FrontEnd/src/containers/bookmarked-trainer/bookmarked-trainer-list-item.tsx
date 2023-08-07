@@ -1,14 +1,6 @@
 import styled from "styled-components";
 import { DefaultButton } from "@shared/button";
-
-interface BookmarkedTrainerListItemProps {
-  data: {
-    id: number;
-    name: string;
-    keywordTags: string[];
-    profileImg?: string;
-  };
-}
+import { BookmarkedTrainerDataProps } from "src/interface";
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,7 +57,7 @@ const KeywordWrapper = styled.div`
   margin-left: 3%;
 `;
 
-function BookmarkedTrainerListItem(props: BookmarkedTrainerListItemProps) {
+function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
   return (
     <Wrapper>
       <PhotoWrapper>
@@ -75,13 +67,13 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerListItemProps) {
       </PhotoWrapper>
       <DataWrapper>
         <NameWrapper>
-          <b style={{ fontSize: "3rem" }}> {props.data.name}</b>
+          <b style={{ fontSize: "3rem" }}> {props.data.trainerName}</b>
           <b style={{ fontSize: "2rem", marginLeft: "1rem" }}>트레이너</b>
         </NameWrapper>
         <KeywordWrapper>
-          {props.data.keywordTags.map((tag, index) => (
+          {/* {props.keywordTags.map((tag, index) => (
             <b style={{ fontSize: "1.25rem", marginLeft: "1%" }}> #{tag}</b>
-          ))}
+          ))} */}
         </KeywordWrapper>
       </DataWrapper>
       <BookmarkWrapper>

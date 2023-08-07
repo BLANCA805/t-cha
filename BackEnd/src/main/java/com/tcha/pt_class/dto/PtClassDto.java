@@ -9,8 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 public class PtClassDto {
 
@@ -37,6 +39,7 @@ public class PtClassDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
     public static class Get {
 
         @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-DD", timezone = "Asia/Seoul")

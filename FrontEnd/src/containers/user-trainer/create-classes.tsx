@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+import { api } from "@shared/common-data";
+import axios from "axios";
+
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -11,6 +14,8 @@ import { DateCalendar } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,17 +70,95 @@ const RegisterButton = styled(Button)`
   border-radius: 5px !important;
 `;
 
-function PtReservation() {
+function CreateClasses() {
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [expanded, setExpanded] = useState<string | false>(false);
 
-  let date = selectedDate?.format("YY-MM-DD");
+  const times = [
+    "00:00",
+    "00:30",
+    "01:00",
+    "01:30",
+    "02:00",
+    "02:30",
+    "03:00",
+    "03:30",
+    "04:00",
+    "04:30",
+    "05:00",
+    "05:30",
+    "06:00",
+    "06:30",
+    "07:00",
+    "07:30",
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+    "20:00",
+    "20:30",
+    "21:00",
+    "21:30",
+    "22:00",
+    "22:30",
+    "23:00",
+    "23:30",
+  ];
+
+  const trainerId = useSelector((state: RootState) => state.profile.trainerId);
+
+  const startTimeList: string[] = [];
+
+  const date = selectedDate?.format("YYYY-MM-DD");
+
+  const body = {
+    trainerId: trainerId,
+    date: date,
+    startTimeList: startTimeList,
+  };
 
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
+
+  const addTime = (event: string) => {
+    startTimeList.push(event);
+    console.log(startTimeList);
+  };
+
+  const createClass = () => {
+    console.log(body);
+    axios
+      .post(`http://70.12.245.39:8080/classes`, body)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Wrapper>
@@ -115,50 +198,17 @@ function PtReservation() {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>{/* Nulla facilisi. Phasg quam. */}</Typography>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
+              {times.map((time, index) => (
+                <button key={index} onClick={() => addTime(time)}>
+                  {time}
+                </button>
+              ))}
             </AccordionDetails>
           </StyledAccordion>
 
           <RegisterWrapper>
-            <div>
-              <h2>** 주의사항 **</h2>
-              <p>예약 확정 전 반드시 읽어주시기 바랍니다.</p>
-              <p>
-                1. 예약 확정 이후 트레이너께서 확인하시면 결제 알림 메시지가
-                보내지며, 수락 시 등록된 카드로 결제가 진행됩니다.
-              </p>
-              <p>2. PT 기본 시간은 1시간입니다.</p>
-              <p>
-                3. 쌍방 예약 확정 이후에는 일정 변경이 번거로울 수 있으니
-                예약정보를 반드시 다시 확인한 후 예약을 확정해 주세요.
-              </p>
-            </div>
-          </RegisterWrapper>
-
-          <RegisterWrapper>
-            <RegisterButton href="pt_reservation" variant="contained">
-              <Typography variant="h6">예약 및 결제하기</Typography>
+            <RegisterButton variant="contained" onClick={createClass}>
+              <Typography variant="h6">PT 일정 생성하기</Typography>
             </RegisterButton>
           </RegisterWrapper>
         </ReservationWrapper>
@@ -167,4 +217,4 @@ function PtReservation() {
   );
 }
 
-export default PtReservation;
+export default CreateClasses;

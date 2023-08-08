@@ -82,3 +82,8 @@ export interface BookmarkedTrainerDataProps {
     userProfileName: string;
   };
 }
+
+export interface PtRoomData {
+  profileId: number;
+  liveId: number;
+}

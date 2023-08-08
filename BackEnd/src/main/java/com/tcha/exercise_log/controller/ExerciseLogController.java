@@ -46,11 +46,8 @@ public class ExerciseLogController {
     ) throws IOException {
 
         ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
-
-        ExerciseLog exerciseLogForResponse = exerciseLogService.createExerciseLog(
+        ExerciseLogDto.Response response = exerciseLogService.createExerciseLog(
                 exerciseLogToService, ptLiveId);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
@@ -71,18 +68,14 @@ public class ExerciseLogController {
 
     @GetMapping("/{exercise-log-id}")
     public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
-        ExerciseLog exerciseLogForResponse = exerciseLogService.findExerciseLog(id);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
 
+        ExerciseLogDto.Response response = exerciseLogService.findExerciseLog(id);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     @GetMapping("ptLive/{pt-live-id}")
     public ResponseEntity getOneExerciseLogByLiveId(@PathVariable(value = "pt-live-id") Long id) {
-        ExerciseLog exerciseLogForResponse = exerciseLogService.findExerciseLogByLiveId(id);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
+        ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(id);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -93,10 +86,8 @@ public class ExerciseLogController {
     ) throws IOException {
 
         ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(patchRequest);
-        ExerciseLog exerciseLogForResponse = exerciseLogService.updateExerciseLog(
+        ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
                 exerciseLogToService, id);
-        ExerciseLogDto.Response response = exerciseLogMapper.exerciseLogToResponse(
-                exerciseLogForResponse);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }

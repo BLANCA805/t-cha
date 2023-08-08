@@ -78,6 +78,14 @@ public class TrainerController {
         return ResponseEntity.ok().body(trainerList);
     }
 
+    @GetMapping("/sorted-by-star")
+    public ResponseEntity<List<TrainerDto.ResponseList>> getAllTrainersByStar() {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByStarTrainers();
+
+        return ResponseEntity.ok().body(trainerList);
+    }
+
     /*
     트레이너 아이디를 통해 트레이너를 삭제한다.
      */

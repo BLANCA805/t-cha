@@ -20,7 +20,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
@@ -129,8 +131,9 @@ public class TrainerService {
     }
     public List<TrainerDto.ResponseList> findSortedByStarTrainers() {
 
-
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         Set<TypedTuple<String>> typedTuples;
 
         //String key = "ranking";
@@ -146,13 +149,23 @@ public class TrainerService {
                         Collectors.toList());
 
         List<UUID> idList = new ArrayList<>();
-        List<Double> starList = new ArrayList<>();
+        List<Float> starList = new ArrayList<>();
+        List<Integer> reviewCountList = new ArrayList<>();
+        List<Integer> PTList = new ArrayList<>();
+        List<Integer> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
-            idList.add(UUID.fromString(rank.getId()));
-            starList.add(rank.getStar());
+            String trainerId = rank.getId();
+            String valueKey = "count:" + trainerId;
+            idList.add(UUID.fromString(trainerId));
+            starList.add((float) rank.getStar());
+            reviewCountList.add(Integer.parseInt(valueOperations.get(valueKey)));
+//            PTList(valueK)
         }
+        System.out.println(starList);
+        System.out.println(reviewCountList);
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
-        for (Trainer t : trainerRepository.findByIdList(idList).get()) {
+        for (int idx=0; idx< result.size();idx++) {
+            Trainer t = trainerRepository.findById(idList.get(idx)).get();
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId().toString())
                     .introduction(t.getIntroduction())
@@ -160,11 +173,11 @@ public class TrainerService {
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(4.5F)
+                    .stars(starList.get(idx))
                     .userCount(1)
                     .ptCount(1)
-                    .reviewCount(1)
-                    .revisitGrade(0)
+                    .reviewCount(reviewCountList.get((idx)))
+//                    .revisitGrade(0)
                     .build();
 
             trainerList.add(trainer);

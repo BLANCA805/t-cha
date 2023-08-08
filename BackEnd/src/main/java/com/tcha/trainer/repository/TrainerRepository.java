@@ -17,4 +17,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, UUID> {
     @Query("SELECT t FROM Trainer t WHERE t.id IN :idList")
     Optional<List<Trainer>> findByIdList(@Param("idList") List<UUID> idList);
 
+
+
 }

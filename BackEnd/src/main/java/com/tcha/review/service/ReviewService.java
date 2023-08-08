@@ -109,11 +109,11 @@ public class ReviewService {
         if (valueOperations.get(starKey) == null){
             valueOperations.set(starKey,"0");
         }
-        List<Map<String,String>> list = new ArrayList<>();
+
         listOperations.leftPush(listKey, String.valueOf(review.getStar()));
 
-        System.out.println(redisTemplate.keys("count:"));
-        if(listOperations.size(listKey) >= 5) {
+
+        if(listOperations.size(listKey) >= 2) {
             Zset();
         }
 
@@ -122,20 +122,19 @@ public class ReviewService {
 
     public void ReviewCount(String valueKey, long num){
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        int x = Integer.parseInt(valueOperations.get(valueKey));
+        long x = Long.parseLong(valueOperations.get(valueKey));
         valueOperations.set(valueKey, String.valueOf(x + num));
     }
 
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 30000)
     public void Zset() {
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        Set<String> keys = redisTemplate.keys("list:");
+        Set<String> keys = redisTemplate.keys("list:*");
 
-        System.out.println(keys);
         for (String s : keys) {
             String trainerId = s.split(":")[1];
 
@@ -145,17 +144,19 @@ public class ReviewService {
             String listKey = "list:" + trainerId;
 
             double sumStar = 0;
+            ReviewCount(valueKey, listOperations.size(listKey));
 
             for (int i = 0; i < listOperations.size(listKey); i++) {
                 sumStar += Double.parseDouble(listOperations.leftPop(listKey));
             }
-            ReviewCount(valueKey, listOperations.size(listKey));
             Double totalStar = Double.parseDouble(valueOperations.get(starKey)) + sumStar;
             valueOperations.set(starKey, String.valueOf(totalStar));
             Double reviewConut = Double.parseDouble(valueOperations.get(valueKey));
 
             ZSetOperations.add(keyMap.get("평균 별점"), trainerId,
                     totalStar / reviewConut);
+            System.out.println(totalStar);
+            System.out.println(reviewConut);
             ZSetOperations.add(keyMap.get("리뷰 수"), trainerId,
                     reviewConut);
         }

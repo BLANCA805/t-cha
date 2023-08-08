@@ -12,6 +12,7 @@
       "@user/*": ["src/containers/user/*"],
       "@user-trainer/*": ["src/containers/user-trainer/*"]
     },
+    "typeRoots": ["./@types", "./node_modules/@types"],
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext", "ES6"],
     "allowJs": true,

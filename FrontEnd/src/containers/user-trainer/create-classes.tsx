@@ -16,6 +16,10 @@ import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
+import TransferList from "@shared/transfer-list";
+
+
+// import 
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,6 +73,8 @@ const RegisterButton = styled(Button)`
   /* background-color: ${({ theme }) => theme.color.primary}!important; */
   border-radius: 5px !important;
 `;
+
+
 
 function CreateClasses() {
   const initialDate = dayjs();
@@ -160,9 +166,11 @@ function CreateClasses() {
       });
   };
 
+
+
   return (
     <Wrapper>
-      <PageTitle>예약하기</PageTitle>
+      <PageTitle>PT 일정 생성하기</PageTitle>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
@@ -182,7 +190,9 @@ function CreateClasses() {
         </ReservationWrapper>
 
         <ReservationWrapper>
-          <StyledAccordion
+
+          <TransferList times={times}></TransferList>
+          {/* <StyledAccordion
             expanded={expanded === "panel1"}
             onChange={handleChange("panel1")}
           >
@@ -204,8 +214,14 @@ function CreateClasses() {
                 </button>
               ))}
             </AccordionDetails>
-          </StyledAccordion>
+          </StyledAccordion> */}
+          {/* {times.map((time, index) => (
+                <button key={index} onClick={() => addTime(time)}>
+                  {time}
+                </button>
+              ))} */}
 
+              
           <RegisterWrapper>
             <RegisterButton variant="contained" onClick={createClass}>
               <Typography variant="h6">PT 일정 생성하기</Typography>

@@ -72,7 +72,7 @@ function PtReservation() {
 
   let date = selectedDate?.format("YY-MM-DD");
 
-  const handleChange =
+  const handleDropdown =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
@@ -101,7 +101,7 @@ function PtReservation() {
         <ReservationWrapper>
           <StyledAccordion
             expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
+            onChange={handleDropdown("panel1")}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}

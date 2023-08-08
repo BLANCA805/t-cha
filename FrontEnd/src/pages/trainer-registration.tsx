@@ -58,6 +58,8 @@ const SubmitButton = styled.div`
 const InputCustomButton = styled(TchaButton)`
   margin: 0% !important;
 `;
+
+
 function TrainerRegistration() {
   const [introduction, setIntroduction] = useState("");
   const [title, setTitle] = useState("");

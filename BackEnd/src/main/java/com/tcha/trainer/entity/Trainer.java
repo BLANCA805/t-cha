@@ -38,7 +38,6 @@ public class Trainer extends Auditable {
     private UUID id;
 
     @OneToOne
-    @JoinColumn(name = "USER_PROFILE_ID")
     private UserProfile userProfile;
 
     private String introduction;

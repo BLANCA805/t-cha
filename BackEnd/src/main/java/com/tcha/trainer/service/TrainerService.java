@@ -136,7 +136,6 @@ public class TrainerService {
         //String key = "ranking";
         String key = keyMap.get("평균 별점");
 
-        System.out.println(key);
         if (ZSetOperations.size(key) >= 5) {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
         } else {

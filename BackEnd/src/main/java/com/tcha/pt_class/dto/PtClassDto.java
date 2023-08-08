@@ -6,13 +6,11 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 public class PtClassDto {
 
@@ -59,7 +57,7 @@ public class PtClassDto {
         private String trainerId;
         private Long classId;
         private Long liveId;
-        private LocalDateTime startAt;
+        private LocalDate startDate;
+        private LocalTime startTime;
     }
-
 }

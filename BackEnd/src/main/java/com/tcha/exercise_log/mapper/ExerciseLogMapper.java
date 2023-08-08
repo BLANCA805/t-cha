@@ -14,7 +14,8 @@ public interface ExerciseLogMapper {
 
     ExerciseLog patchToExerciseLog(ExerciseLogDto.Patch patchRequest);
 
-    default ExerciseLogDto.Response exerciseLogToResponse(ExerciseLog exerciseLog) {
+    default ExerciseLogDto.Response exerciseLogToResponse(ExerciseLog exerciseLog,
+            String trainerName) {
         return ExerciseLogDto.Response.builder()
                 .id(exerciseLog.getId())
                 .title(exerciseLog.getTitle())
@@ -22,7 +23,7 @@ public interface ExerciseLogMapper {
                 .images(exerciseLog.getImages())
                 .videos(exerciseLog.getVideos())
                 .profileName(exerciseLog.getPtLive().getUserProfile().getName())
-                .trainerName(exerciseLog.getTrainerName())
+                .trainerName(trainerName)
                 .build();
     }
 

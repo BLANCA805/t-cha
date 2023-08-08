@@ -56,8 +56,5 @@ public class ExerciseLog extends Auditable {
     @JoinColumn(name = "LIVE_ID")
     private PtLive ptLive;
 
-    @Column()
-    private String trainerName;
-
 }
 

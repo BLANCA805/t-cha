@@ -1,8 +1,5 @@
 package com.tcha.trainer.service;
 
-import com.tcha.pt_class.dto.PtClassDto;
-import com.tcha.pt_class.dto.PtClassDto.Get;
-import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.service.PtClassService;
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
@@ -55,22 +52,6 @@ public class TrainerService {
         put("즐겨찾기 수", BOOKMARK_KEY);
         put("최근", NEW_KEY);
     }};
-
-    /*
-            ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
-        Set<ZSetOperations.TypedTuple<String>> typedTuples;
-
-        //String key = "ranking";
-        String key = keyMap.get(STAR_KEY);
-
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
-        } else {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
-        }
-//        List<TagRankDTO> result = typedTuples.stream().map(TagRankDTO::convertToTagRankDTO).collect(Collectors.toList());
-        System.out.println(typedTuples);
-     */
 
     public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
 
@@ -142,22 +123,53 @@ public class TrainerService {
             trainerList.add(trainer);
         }
 
-//        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
-//        Set<TypedTuple<String>> typedTuples;
-//
-//        //String key = "ranking";
-//        String key = keyMap.get("평균 별점");
-//
-//        System.out.println(key);
-//        if (ZSetOperations.size(key) >= 5) {
-//            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
-//        } else {
-//            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
-//        }
-//        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
-//                .collect(
-//                        Collectors.toList());
-//        System.out.println(result);
+
+
+        return trainerList;
+    }
+    public List<TrainerDto.ResponseList> findSortedByStarTrainers() {
+
+
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        Set<TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get("평균 별점");
+
+        System.out.println(key);
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+
+        List<UUID> idList = new ArrayList<>();
+        List<Double> starList = new ArrayList<>();
+        for (TrainerDto.Rank rank:result) {
+            idList.add(UUID.fromString(rank.getId()));
+            starList.add(rank.getStar());
+        }
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (Trainer t : trainerRepository.findByIdList(idList).get()) {
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(4.5F)
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(1)
+                    .revisitGrade(0)
+                    .build();
+
+            trainerList.add(trainer);
+        }
 
         return trainerList;
     }

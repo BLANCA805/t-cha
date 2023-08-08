@@ -38,6 +38,8 @@ public class ReviewDto {
 
         private float star;
 
+        private LocalDateTime createdAt; // 트레이너 등록일
+
         private String profileImg; // 유저 프로필 사진
 
         private String profileName; // 유저 이름

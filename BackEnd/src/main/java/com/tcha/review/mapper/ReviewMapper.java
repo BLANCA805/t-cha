@@ -23,6 +23,7 @@ public interface ReviewMapper {
                 .id(review.getId())
                 .content(review.getContent())
                 .star(review.getStar())
+                .createdAt(review.getCreatedAt())
                 .profileImg(review.getUserProfile().getProfileImage())
                 .profileName(review.getUserProfile().getName())
                 .trainerProfileImg(review.getTrainer().getUserProfile().getProfileImage())

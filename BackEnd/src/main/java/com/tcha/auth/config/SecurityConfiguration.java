@@ -56,8 +56,8 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS)// 세션 정책 : 세션을 생성하지 않도록 설정 => JWT 사용 환경에선 세션을 사용하지 않음(SecurityContext 정보를 얻을 때 Session 을 사용하지 않음)
                 .and()
-                .requiresChannel((requiresChannel) -> requiresChannel.requestMatchers(
-                        "/oauth2/authorization/google").requiresSecure())
+//                .requiresChannel((requiresChannel) -> requiresChannel.requestMatchers(
+//                        "/oauth2/authorization/google").requiresSecure())
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()

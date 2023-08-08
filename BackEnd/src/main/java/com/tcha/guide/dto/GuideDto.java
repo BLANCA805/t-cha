@@ -1,6 +1,8 @@
 package com.tcha.guide.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +17,9 @@ public class GuideDto {
     @Builder
     public static class Post {
 
-        @NotBlank
+        @NotNull
         private String code;
+        @NotBlank
         private String title;
 
         private String content;
@@ -25,18 +28,18 @@ public class GuideDto {
 
     @Getter
     @Builder
-    @NotBlank
     @AllArgsConstructor
     public static class Patch {
-        @NotBlank
-        private Long id;
+
         @NotBlank
         private String code;
+        @NotBlank
+        private String title;
 
         private String content;
 
         private Status status;
-        private String title;
+
     }
 
     @Getter

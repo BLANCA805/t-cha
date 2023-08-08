@@ -9,7 +9,14 @@ public enum ExceptionCode {
 
     //에러 처리 확인을 위해 추가(08.06 06:55)
     TRAINER_NOT_FOUND(404, "Trainer not found"),
-    BOOKMARK_NOT_FOUND(404, "Bookmark not found");
+    BOOKMARK_NOT_FOUND(404, "Bookmark not found"),
+
+    //에러 처리 확인을 위해 추가(08.07 02:22)
+    GUIDE_NOT_FOUND(404, "Guide not found"),
+    GUIDE_EXISTS(409, "Guide exists"),
+    NOTICE_NOT_FOUND(404, "Notice not found");
+//    NOTICE_EXISTS(409, "Notice exists");
+
 
     /* 참고용
     MEMBER_NOT_FOUND(404, "Member not found"),

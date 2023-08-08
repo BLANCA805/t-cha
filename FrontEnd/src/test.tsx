@@ -1,7 +1,7 @@
 import React from "react";
 import { useOpenvidu } from "./hooks/use-openvidu";
 
-const VideoCallComponent = () => {
+const Test = () => {
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
     useOpenvidu(1, 1);
 
@@ -18,11 +18,12 @@ const VideoCallComponent = () => {
             autoPlay
             muted
           />
-          {/* publisher를 표시하거나 영상 통화 상태를 UI에 반영하는 등의 기능 추가 */}
+          <button onClick={() => onChangeCameraStatus}>화면 조절</button>
+          <button onClick={() => onChangeMicStatus}>마이크 조절</button>
         </div>
       )}
     </div>
   );
 };
 
-export default VideoCallComponent;
+export default Test;

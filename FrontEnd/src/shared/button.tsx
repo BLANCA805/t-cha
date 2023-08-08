@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button, Typography } from "@mui/material";
 
 export const DefaultButton = styled.button`
     display:flex;
@@ -21,4 +22,21 @@ export const ReverseButton = styled.button`
     border: 2px solid #125b51;
     border-radius: 5px;
     font-size:1rem;
+`;
+
+export const TchaButton = styled(Button)`
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:75%;
+    width:90%;
+    margin:1% 2% !important;
+    background-color: #2e726c!important;
+    /* background-color: ${({ theme }) => theme.color.primary}!important; */
+    border-radius: 5px !important;
+
+`;
+
+export const GrayButton = styled(TchaButton)`
+    background-color: ${({ theme }) => theme.color.primary} !important;
 `;

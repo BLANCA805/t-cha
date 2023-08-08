@@ -1,17 +1,58 @@
 import { useDispatch, useSelector } from "react-redux";
 import { type RootState } from "../../redux/store";
-import { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent } from "react";
 import axios from "axios";
 
 import { api } from "@shared/common-data";
-import TextField from "@mui/material/TextField";
+import { TchaButton, GrayButton } from "@shared/button";
+import { SmallTitleWrapper } from "@shared/page-title";
 
+import TextField from "@mui/material/TextField";
+import {Button, Typography} from "@mui/material"
 import styled from "styled-components";
+
+const Wrapper= styled.form`
+  display: flex;
+  flex-direction: column;
+  /* width:100%; */
+  height:100vh;
+  margin:1%;
+  justify-content: start;
+  align-content:center;
+  `;
+const Container= styled.form`
+  display:flex;
+  justify-content: center;
+  align-items:center;
+  /* width:60%; */
+  padding:1%;
+  background-color: ${({ theme }) => theme.color.light};
+  border-radius: 10px;
+`;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.color.light};
+  width:90%;
+  `;
+
+const FormDetailWrapper = styled.form`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* align-items: center; */
+  margin-bottom:1rem;
+  `;
+
+const SubmitButton=styled.form`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  margin:5% 0%;
+`;
+const InputCustomButton=styled(TchaButton)`
+  margin:0% !important;
 `;
 
 function TrainerInfoModify() {
@@ -55,6 +96,15 @@ function TrainerInfoModify() {
     }
   };
 
+  //imageInput 커스터마이징 -useref로 input태그에 접근해서 클릭이벤트 연결, 
+  //원래input은 안보이게 수정 (display:"none")
+  const imageInput = React.useRef<HTMLInputElement>(null);
+  const onClickImageUpload = () => {
+    if (imageInput.current) {
+      imageInput.current.click();
+    }
+  };
+
   const modify = (event: any) => {
     event.preventDefault();
     const body = new FormData();
@@ -76,39 +126,97 @@ function TrainerInfoModify() {
   };
 
   return (
-    <Form onSubmit={modify}>
-      <TextField
-        value={introduction}
-        label="Introduction"
-        variant="outlined"
-        onChange={handleIntroduction}
-      />
-      <TextField
-        value={title}
-        label="Title"
-        variant="outlined"
-        onChange={handleTitle}
-      />
-      <TextField
-        value={content}
-        label="Content"
-        variant="outlined"
-        onChange={handleContent}
-      />
-      <TextField
-        value={tags}
-        label="Tag"
-        variant="outlined"
-        onChange={handleTags}
-      />
-      <input
-        type="file"
-        accept="image/jpg,impge/png,image/jpeg,image/gif"
-        name="trainer_img"
-        onChange={handleImage}
-      ></input>
-      <button type="submit">제출하기</button>
-    </Form>
+    <Wrapper>
+      <SmallTitleWrapper>
+          트레이너 정보수정
+      </SmallTitleWrapper>
+      <Container>
+        <Form onSubmit={modify}>
+          <FormDetailWrapper
+            style={{marginTop:"3%"}}
+            >
+            <TextField
+              value={introduction}
+              onChange={handleIntroduction}
+              label="간단한 트레이너 자기소개를 작성해주세요 (최대 nn자)"
+              style={{width:"100%"}}
+              variant="outlined"
+            />
+          </FormDetailWrapper>
+          
+          <FormDetailWrapper>
+            <TextField
+              value={tags}
+              onChange={handleTags}
+              label="태그를 입력해주세요 (ex - #태그1  #태그2  #태그3) , 최대 3개"
+              style={{width:"100%"}}
+              variant="outlined"
+            />
+          </FormDetailWrapper>
+
+          <FormDetailWrapper>
+            <TextField
+              value={title}
+              onChange={handleTitle}
+              label="PT 제목을 입력해주세요 (최대 nn자)"
+              style={{width:"100%"}}
+              variant="outlined"
+            />
+          </FormDetailWrapper>
+          
+          <FormDetailWrapper>
+            <input
+              type="file"
+              accept="image/jpg,impge/png,image/jpeg,image/gif"
+              name="trainer_img"
+              onChange={handleImage}
+              style={{display:"none"}}
+              ref={imageInput}
+              ></input>
+              <InputCustomButton onClick={onClickImageUpload}
+                style={{width:"7rem", height:"3rem", marginLeft:"0%",fontSize:"1rem"}}
+                variant="contained" >
+                사진등록
+              </InputCustomButton>
+
+          </FormDetailWrapper>
+
+          <FormDetailWrapper>
+            <TextField
+              value={content}
+              onChange={handleContent}
+              label="PT 내용을 상세히 입력해주세요"
+              multiline minRows={15}
+              style={{width:"100%"}}
+              variant="outlined"
+            />
+          </FormDetailWrapper>
+          
+
+          <SubmitButton>
+            <GrayButton 
+              type="submit"
+              style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
+              variant="contained">
+                임시저장
+            </GrayButton>
+            <TchaButton 
+              type="submit"
+              style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
+              variant="contained">
+                등록하기
+            </TchaButton>
+            <TchaButton 
+              //원래 있던페이지로 돌아가는 Linkto 코드 필요 
+              style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
+              variant="contained">
+                작성취소
+            </TchaButton>
+            {/* <button type="submit"></button> */}
+          </SubmitButton>
+        </Form>
+      </Container>
+    </Wrapper>
   );
 }
 

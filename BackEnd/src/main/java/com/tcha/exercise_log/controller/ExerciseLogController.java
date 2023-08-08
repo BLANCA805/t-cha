@@ -5,12 +5,15 @@ import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.service.ExerciseLogService;
 
+import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.question.dto.QuestionDto;
 import com.tcha.question.entity.Question;
 import com.tcha.utils.pagination.MultiResponseDto;
 import com.tcha.utils.upload.service.S3Uploader;
+
 import java.io.IOException;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,19 +42,44 @@ public class ExerciseLogController {
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogMapper exerciseLogMapper;
 
+    //운동일지 생성
     @PostMapping("/{pt-live-id}")
     public ResponseEntity postExerciseLog(
             @PathVariable(value = "pt-live-id") Long ptLiveId,
             @RequestBody ExerciseLogDto.Post postRequest
-    ) throws IOException {
+    ) {
+        //이미 운동일지가 생성되어 있는지 체크, 에러(코드: 409) 없다면 아래의 코드들 실행
+        exerciseLogService.duplicateVerifiedByPtLiveId(ptLiveId);
 
+        //postRequest -> entity로 변경, 초기 상태: write
         ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
+
+        //새로운 운동일지 생성
         ExerciseLogDto.Response response = exerciseLogService.createExerciseLog(
                 exerciseLogToService, ptLiveId);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
 
+    //운동일지 수정하기
+    @PatchMapping("/{exercise-log-id}")
+    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id,
+                                           @RequestBody ExerciseLogDto.Patch patchRequest
+    ) {
+
+        //존재하는 운동일지인지 체크
+        ExerciseLog exerciseLog = exerciseLogService.findVerifiedById(id);
+
+        //운동일지 내용 업데이트
+        ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
+                exerciseLog, patchRequest, id);
+
+//        ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(exerciseLog, patchRequest);
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    //운동일지 리스트 가져오기
     @GetMapping
     public ResponseEntity getExerciseLogPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -66,6 +94,8 @@ public class ExerciseLogController {
                 HttpStatus.OK);
     }
 
+
+    //운동일지 1개 가져오기
     @GetMapping("/{exercise-log-id}")
     public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
 
@@ -73,6 +103,7 @@ public class ExerciseLogController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
+    //pt live id로 운동일지 1개 가져오기 (혹시 라이브로 접근할 경우, 사용)
     @GetMapping("ptLive/{pt-live-id}")
     public ResponseEntity getOneExerciseLogByLiveId(@PathVariable(value = "pt-live-id") Long id) {
         ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(id);
@@ -80,18 +111,7 @@ public class ExerciseLogController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @PatchMapping("/{exercise-log-id}")
-    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id,
-            @RequestBody ExerciseLogDto.Patch patchRequest
-    ) throws IOException {
-
-        ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(patchRequest);
-        ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
-                exerciseLogToService, id);
-
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-
+    //운동일지 삭제하기
     @DeleteMapping("/{exercise-log-id}")
     public ResponseEntity deleteOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
         exerciseLogService.deleteExerciseLog(id);

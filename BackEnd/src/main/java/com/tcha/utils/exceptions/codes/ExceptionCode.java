@@ -1,5 +1,6 @@
 package com.tcha.utils.exceptions.codes;
 
+import com.tcha.exercise_log.dto.ExerciseLogDto;
 import lombok.Getter;
 
 public enum ExceptionCode {
@@ -14,7 +15,11 @@ public enum ExceptionCode {
     //에러 처리 확인을 위해 추가(08.07 02:22)
     GUIDE_NOT_FOUND(404, "Guide not found"),
     GUIDE_EXISTS(409, "Guide exists"),
-    NOTICE_NOT_FOUND(404, "Notice not found");
+    NOTICE_NOT_FOUND(404, "Notice not found"),
+    EXERCISELOG_EXISTS(409, "Exerciselog not found"),
+    EXERCISELOG_NOT_FOUND(404, "Exerciselog not found"),
+
+    PTLIVE_NOT_FOUND(404, "Ptlive not found");
 //    NOTICE_EXISTS(409, "Notice exists");
 
 

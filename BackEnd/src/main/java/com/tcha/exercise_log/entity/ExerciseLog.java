@@ -2,6 +2,7 @@ package com.tcha.exercise_log.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tcha.guide.entity.Guide;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.CascadeType;
@@ -16,8 +17,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -56,8 +59,21 @@ public class ExerciseLog extends Auditable {
     @JoinColumn(name = "LIVE_ID")
     private PtLive ptLive;
 
-    @Column()
-    private String trainerName;
+    //상태 변경 -> 초기 생성값 write(작성 가능)
+    @Column(nullable = false)
+    private exerciseLogStaus status;
+//    = exerciseLogStaus.WRITE;
+
+    public enum exerciseLogStaus {
+        READ("읽기"), WRITE("쓰기");
+
+        @Getter
+        private String status;
+
+        exerciseLogStaus(String staus) {
+            this.status = staus;
+        }
+    }
 
 }
 

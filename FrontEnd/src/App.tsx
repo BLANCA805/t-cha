@@ -3,6 +3,19 @@ import styled from "styled-components";
 
 import SideBar from "@shared/side-bar";
 import Test from "./test";
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  html, body {
+    /* margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh; */
+    background-color:#D8E6E7;
+  }
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,12 +44,15 @@ const Container = styled.div`
 
 function App() {
   return (
-    <Wrapper>
-      <Container>
-        <Outlet />
-        <SideBar />
-      </Container>
-    </Wrapper>
+    <>
+    <GlobalStyle />
+      <Wrapper>
+        <Container>
+          <Outlet />
+          <SideBar />
+        </Container>
+      </Wrapper>
+  </>
   );
 }
 

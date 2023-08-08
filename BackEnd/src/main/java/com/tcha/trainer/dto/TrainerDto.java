@@ -1,11 +1,16 @@
 package com.tcha.trainer.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,8 +52,15 @@ public class TrainerDto {
     public static class Get {
 
         private String keyword;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-        private LocalDateTime datetime; // *고민* 날짜와 시간을 분리?
+        @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-DD", timezone = "Asia/Seoul")
+        private LocalDate date;
+        @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @Builder.Default
+        private LocalTime fromTime = LocalTime.parse("00:00");
+        @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @Builder.Default
+        private LocalTime toTime = LocalTime.parse("23:59");
+//        private LocalDateTime datetime; // *고민* 날짜와 시간을 분리?
     }
 
     /*
@@ -92,6 +104,32 @@ public class TrainerDto {
         private int ptCount; // 누적 예약 수
         private int reviewCount; // 누적 리뷰 수
         private int revisitGrade; // 재방문율에 따른 등급 (0(일반), 1(브론즈), 2(실버), 3(골드))
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Rank {
+
+        private String id;
+        private double star;
+
+        public static Rank convertToRank(ZSetOperations.TypedTuple<String> Tuple) {
+            Rank result = Rank.builder()
+                    .id(Tuple.getValue())
+                    .star(Tuple.getScore())
+                    .build();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Rank{" +
+                    "id='" + id + '\'' +
+                    ", star=" + star +
+                    '}';
+        }
     }
 
 }

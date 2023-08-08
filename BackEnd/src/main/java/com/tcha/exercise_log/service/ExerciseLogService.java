@@ -36,29 +36,15 @@ public class ExerciseLogService {
 
     //운동일지 저장
     @Transactional
-    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
+    public ExerciseLogDto.Response createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
         PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
-//        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
-//        Trainer trainer = trainerRepository.findById(trainerId).get();
 
+        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
+        Trainer trainer = trainerRepository.findById(trainerId).get();
         exerciseLog.setPtLive(ptLive);
-//        exerciseLog.setTrainerName(trainer.getUserProfile().getName());
-
-        return exerciseLogRepository.save(exerciseLog);
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
+                trainer.getUserProfile().getName());
     }
-//    @Transactional
-//    public ExerciseLog createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
-//        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
-//        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
-//        Trainer trainer = trainerRepository.findById(trainerId).get();
-//
-//        exerciseLog.setPtLive(ptLive);
-//
-//        exerciseLogMapper.exerciseLogToResponse(exerciseLog,trainer.getUserProfile().getName());
-//
-//        exerciseLogRepository.save(exerciseLog)
-//        return ;
-//    }
 
 
     //Pagenation으로 운동 일지를 불러옴
@@ -72,23 +58,28 @@ public class ExerciseLogService {
 
     //운동일지 1개 찾기(PK)
     @Transactional(readOnly = true)
-    public ExerciseLog findExerciseLog(Long id) {
+    public ExerciseLogDto.Response findExerciseLog(Long id) {
         ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
 
-        return exerciseLog;
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
+                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                        .get().getUserProfile().getName());
     }
 
     //운동일지 1개 찾기(ptLiveId)
     @Transactional(readOnly = true)
-    public ExerciseLog findExerciseLogByLiveId(Long liveId) {
+    public ExerciseLogDto.Response findExerciseLogByLiveId(Long liveId) {
         ExerciseLog exerciseLog = exerciseLogRepository.findByLiveId(liveId).get();
 
-        return exerciseLog;
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
+                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                        .get().getUserProfile().getName());
+
     }
 
 
     @Transactional
-    public ExerciseLog updateExerciseLog(ExerciseLog exerciseLog, Long id) {
+    public ExerciseLogDto.Response updateExerciseLog(ExerciseLog exerciseLog, Long id) {
 
         ExerciseLog findExerciseLog = exerciseLogRepository.findById(id).get();
 
@@ -110,7 +101,9 @@ public class ExerciseLogService {
         findExerciseLog.setImages(exerciseLog.getImages());
         findExerciseLog.setVideos(exerciseLog.getVideos());
 
-        return exerciseLogRepository.save(findExerciseLog);
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(findExerciseLog),
+                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                        .get().getUserProfile().getName());
 
     }
 

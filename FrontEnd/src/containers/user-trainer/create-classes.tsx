@@ -151,7 +151,7 @@ function CreateClasses() {
   const createClass = () => {
     console.log(body);
     axios
-      .post(`http://70.12.245.39:8080/classes`, body)
+      .post(`${api}/classes`, body)
       .then((response) => {
         console.log(response.data);
       })

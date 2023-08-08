@@ -27,7 +27,7 @@ import TrainerInfo from "@/trainer-info";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 import TrainerSchedule from "@user-trainer/trainer-schedule";
 import CreateClasses from "@user-trainer/create-classes";
-import TrainerPtudent from "@/trainer/member-list";
+import PtudentList from "@user-trainer/ptudent-list";
 import PtReservation from "@/pt-reservation";
 import PtRoom from "@/pt-room";
 
@@ -73,8 +73,8 @@ const router = createBrowserRouter([
         element: <CreateClasses />,
       },
       {
-        path: "profile/trainer_ptudent",
-        element: <TrainerPtudent />,
+        path: "profile/trainer_ptudent_list",
+        element: <PtudentList />,
       },
       {
         path: "profile/bookmarked_trainers",

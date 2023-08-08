@@ -3,7 +3,6 @@ package com.tcha.bookmark.service;
 
 import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.entity.Bookmark;
-import com.tcha.bookmark.exception.ConversionUtil;
 import com.tcha.bookmark.mapper.BookmarkMapper;
 import com.tcha.bookmark.repository.BookmarkRepository;
 import com.tcha.trainer.entity.Trainer;
@@ -37,7 +36,7 @@ public class BookmarkService {
     private final BookmarkRepository bookMarkRepository;
 
     //최초 즐겨찾기 등록
-    public BookmarkDto.Response createBookmark(String userProfileId, String trainerId) {
+    public BookmarkDto.Response createBookmark(Long userProfileId, String trainerId) {
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = findVerifiedUserProfileById(userProfileId);
@@ -54,18 +53,14 @@ public class BookmarkService {
     }
 
     //즐겨찾기에서 삭제, deleteById의 경우 내부 로직으로 null값에 대한 에러처리가 이뤄지고 있음
-    public void deleteBookmark(String stringId) {
-
-        //즐겨찾기 삭제를 위한 id의 타입 변경
-        Long id = ConversionUtil.stringToLong(stringId, 0L);
-
+    public void deleteBookmark(Long id) {
         bookMarkRepository.deleteById(id);
     }
 
 
     //유저별 즐겨찾기 목록 확인
     public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size,
-            String userProfileId) {
+                                                                        Long userProfileId) {
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = findVerifiedUserProfileById(userProfileId);
@@ -82,7 +77,7 @@ public class BookmarkService {
 
     //유저 프로필 Id와 트레이너 Id를 이용하여 북마크 조회하기
     public BookmarkDto.Response getFindBookmarkIdByUserProfileIdAndTrainerId(
-            String userProfileId,
+            Long userProfileId,
             String trainerId) {
 
         //유저프로필 객체 가져오기
@@ -101,10 +96,10 @@ public class BookmarkService {
     }
 
     //존재하는 유저 프로필인지에 대한 유효성 검증
-    public UserProfile findVerifiedUserProfileById(String stringUserProfileId) {
+    public UserProfile findVerifiedUserProfileById(Long userProfileId) {
 
         //userProfileId 타입 변환
-        Long userProfileId = ConversionUtil.stringToLong(stringUserProfileId, 0L);
+//        Long userProfileId = ConversionUtil.stringToLong(stringUserProfileId, 0L);
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = userProfileRepository.findById(userProfileId).orElseThrow(
@@ -114,14 +109,14 @@ public class BookmarkService {
     }
 
     //존재하는 트레이너인지 대한 유효성 검증
-    public Trainer findVerifiedTrainerById(String stringTrainerId) {
+    public Trainer findVerifiedTrainerById(String trainerId) {
 
         //trainerId 타입 변환
-        UUID trainerId = ConversionUtil.stringToUUID(stringTrainerId,
-                UUID.fromString("00000000-0000-0000-0000-000000000000"));
+//        UUID trainerId = ConversionUtil.stringToUUID(stringTrainerId,
+//                UUID.fromString("00000000-0000-0000-0000-000000000000"));
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
+        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;

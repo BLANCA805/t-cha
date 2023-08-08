@@ -1,6 +1,10 @@
 package com.tcha.trainer.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,8 +52,15 @@ public class TrainerDto {
     public static class Get {
 
         private String keyword;
-        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-        private LocalDateTime datetime; // *고민* 날짜와 시간을 분리?
+        @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-DD", timezone = "Asia/Seoul")
+        private LocalDate date;
+        @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @Builder.Default
+        private LocalTime fromTime = LocalTime.parse("00:00");
+        @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @Builder.Default
+        private LocalTime toTime = LocalTime.parse("23:59");
+//        private LocalDateTime datetime; // *고민* 날짜와 시간을 분리?
     }
 
     /*

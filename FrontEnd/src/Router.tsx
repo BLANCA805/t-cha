@@ -26,8 +26,10 @@ import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 import TrainerSchedule from "@user-trainer/trainer-schedule";
-import MemberList from "@user-trainer/member-list";
+import CreateClasses from "@user-trainer/create-classes";
+import TrainerPtudent from "@/trainer/member-list";
 import PtReservation from "@/pt-reservation";
+import PtRoom from "@/pt-room";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Main />,
+      },
+      {
+        path: "pt/:class_id",
+        element: <PtRoom />,
       },
       {
         path: "customer_center",
@@ -63,8 +69,12 @@ const router = createBrowserRouter([
         element: <TrainerSchedule />,
       },
       {
-        path: "profile/member_list",
-        element: <MemberList />,
+        path: "profile/trainer_schedule/create_classes",
+        element: <CreateClasses />,
+      },
+      {
+        path: "profile/trainer_ptudent",
+        element: <TrainerPtudent />,
       },
       {
         path: "profile/bookmarked_trainers",

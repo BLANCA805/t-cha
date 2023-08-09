@@ -120,7 +120,7 @@ public class ReviewService {
     }
 
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 3600000)
     public void Zset() {
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();

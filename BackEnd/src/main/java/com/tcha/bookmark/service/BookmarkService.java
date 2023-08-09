@@ -22,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,6 +37,7 @@ public class BookmarkService {
     private final TrainerRepository trainerRepository;
     private final BookmarkMapper bookmarkMapper;
     private final BookmarkRepository bookMarkRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     //최초 즐겨찾기 등록
     public BookmarkDto.Response createBookmark(Long userProfileId, String trainerId) {
@@ -49,11 +53,25 @@ public class BookmarkService {
                 .userProfile(userProfile)
                 .trainer(trainer).build());
 
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String bookmarkKey = "bookmark:" + trainerId;
+
+//        valueOperations.increment(bookmarkKey,1.0);
+        String s = valueOperations.get(bookmarkKey);
+        valueOperations.set(bookmarkKey,String.valueOf(Double.parseDouble(s) + 1.0));
         return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
     }
 
     //즐겨찾기에서 삭제, deleteById의 경우 내부 로직으로 null값에 대한 에러처리가 이뤄지고 있음
     public void deleteBookmark(Long id) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        String trainerId = bookMarkRepository.findById(id).get().getTrainer().getId();
+        String bookmarkKey = "bookmark:" + trainerId;
+
+//        valueOperations.increment(bookmarkKey,-1.0);
+
+        String s = valueOperations.get(bookmarkKey);
+        valueOperations.set(bookmarkKey,String.valueOf(Double.parseDouble(s) - 1.0));
         bookMarkRepository.deleteById(id);
     }
 
@@ -113,10 +131,10 @@ public class BookmarkService {
 
         //trainerId 타입 변환
 //        UUID trainerId = ConversionUtil.stringToUUID(stringTrainerId,
-//                UUID.fromString("00000000-0000-0000-0000-000000000000"));
+//                "000000000000-0000-0000-000000000000"));
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;

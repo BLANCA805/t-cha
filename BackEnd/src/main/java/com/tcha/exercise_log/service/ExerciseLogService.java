@@ -39,7 +39,7 @@ public class ExerciseLogService {
     public ExerciseLogDto.Response createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
         PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
 
-        UUID trainerId = UUID.fromString(ptLive.getTrainerId());
+        String trainerId = ptLive.getTrainerId();
         Trainer trainer = trainerRepository.findById(trainerId).get();
         exerciseLog.setPtLive(ptLive);
         return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
@@ -62,7 +62,7 @@ public class ExerciseLogService {
         ExerciseLog exerciseLog = exerciseLogRepository.findById(id).get();
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
-                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                trainerRepository.findById(exerciseLog.getPtLive().getTrainerId())
                         .get().getUserProfile().getName());
     }
 
@@ -72,11 +72,10 @@ public class ExerciseLogService {
         ExerciseLog exerciseLog = exerciseLogRepository.findByLiveId(liveId).get();
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
-                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                trainerRepository.findById(exerciseLog.getPtLive().getTrainerId())
                         .get().getUserProfile().getName());
 
     }
-
 
     @Transactional
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog exerciseLog, Long id) {
@@ -102,7 +101,7 @@ public class ExerciseLogService {
         findExerciseLog.setVideos(exerciseLog.getVideos());
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(findExerciseLog),
-                trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId()))
+                trainerRepository.findById(exerciseLog.getPtLive().getTrainerId())
                         .get().getUserProfile().getName());
 
     }

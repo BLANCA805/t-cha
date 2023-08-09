@@ -69,7 +69,7 @@ public class TrainerService {
 
         // 태그 테이블 설정
         String trainerStr =
-                createdTrainer.getId().toString() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
+                createdTrainer.getId() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
         String[] tagList = postRequest.getTags().split(",");
         for (String t : tagList) {
             // 이미 존재하는 태그일 경우, 트레이너 아이디 추가 & 존재하지 않는 태그일 경우 새로운 태그 생성
@@ -124,21 +124,27 @@ public class TrainerService {
     }
 
     public List<TrainerDto.ResponseList> findAllTrainers() {
-
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (Trainer t : trainerRepository.findAll()) {
+            String trainerId = t.getId();
+
+            String valueKey = "count:" + trainerId;
+            String starKey = "star:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(4.5F)
-                    .userCount(1)
+                    .stars(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(valueKey)))
+                    .userCount(Integer.parseInt(valueOperations.get(bookmarkKey)))
                     .ptCount(1)
-                    .reviewCount(1)
-                    .revisitGrade(0)
+                    .reviewCount(Integer.parseInt(valueOperations.get(valueKey)))
+//                    .revisitGrade(0)
                     .build();
 
             trainerList.add(trainer);
@@ -167,33 +173,32 @@ public class TrainerService {
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
         List<Double> PTList = new ArrayList<>();
-        List<Double> bookmarkList = new ArrayList<>();
-        for (TrainerDto.Rank rank : result) {
+        List<Integer> bookmarkList = new ArrayList<>();
+        for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
             idList.add(trainerId);
             starList.add((float) rank.getStar());
             reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+            bookmarkList.add(Integer.parseInt(valueOperations.get(bookmarkKey)));
 //            PTList(valueK)
         }
-
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
-        for (int idx = 0; idx < result.size(); idx++) {
-
+        for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
-
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
                     .stars(starList.get(idx))
-                    .userCount(1)
+                    .userCount(bookmarkList.get(idx))
                     .ptCount(1)
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
-                    //                    .revisitGrade(0)
+//                    .revisitGrade(0)
                     .build();
 
             trainerList.add(trainer);
@@ -211,8 +216,8 @@ public class TrainerService {
         //String key = "ranking";
         String key = keyMap.get("평균 별점");
 
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        if (ZSetOperations.size(key) >= 10) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);  //score순으로 5개 보여줌
         } else {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
         }
@@ -224,28 +229,29 @@ public class TrainerService {
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
         List<Double> PTList = new ArrayList<>();
-        List<Double> bookmarkList = new ArrayList<>();
+        List<Integer> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
             idList.add(trainerId);
             starList.add((float) rank.getStar());
             reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+            bookmarkList.add(Integer.parseInt(valueOperations.get(bookmarkKey)));
 //            PTList(valueK)
         }
-
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
                     .stars(starList.get(idx))
-                    .userCount(1)
+                    .userCount(bookmarkList.get(idx))
                     .ptCount(1)
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
 //                    .revisitGrade(0)
@@ -265,8 +271,8 @@ public class TrainerService {
         //String key = "ranking";
         String key = keyMap.get("리뷰 수");
 
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        if (ZSetOperations.size(key) >= 10) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);  //score순으로 5개 보여줌
         } else {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
         }
@@ -278,27 +284,29 @@ public class TrainerService {
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
         List<Double> PTList = new ArrayList<>();
-        List<Double> bookmarkList = new ArrayList<>();
+        List<Integer> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
             idList.add(trainerId);
             starList.add((float) rank.getStar());
             reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+            bookmarkList.add(Integer.parseInt(valueOperations.get(bookmarkKey)));
 //            PTList(valueK)
         }
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
                     .stars(starList.get(idx))
-                    .userCount(1)
+                    .userCount(bookmarkList.get(idx))
                     .ptCount(1)
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
 //                    .revisitGrade(0)
@@ -315,10 +323,10 @@ public class TrainerService {
         Set<TypedTuple<String>> typedTuples;
 
         //String key = "ranking";
-        String key = keyMap.get("리뷰 수");
+        String key = keyMap.get("누적 PT 수");
 
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        if (ZSetOperations.size(key) >= 10) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);  //score순으로 5개 보여줌
         } else {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
         }
@@ -330,27 +338,29 @@ public class TrainerService {
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
         List<Double> PTList = new ArrayList<>();
-        List<Double> bookmarkList = new ArrayList<>();
+        List<Integer> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
             idList.add(trainerId);
             starList.add((float) rank.getStar());
             reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+            bookmarkList.add(Integer.parseInt(valueOperations.get(bookmarkKey)));
 //            PTList(valueK)
         }
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
                     .stars(starList.get(idx))
-                    .userCount(1)
+                    .userCount(bookmarkList.get(idx))
                     .ptCount(1)
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
 //                    .revisitGrade(0)
@@ -367,10 +377,10 @@ public class TrainerService {
         Set<TypedTuple<String>> typedTuples;
 
         //String key = "ranking";
-        String key = keyMap.get("북");
+        String key = keyMap.get("즐겨찾기 수");
 
-        if (ZSetOperations.size(key) >= 5) {
-            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        if (ZSetOperations.size(key) >= 10) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);  //score순으로 5개 보여줌
         } else {
             typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
         }
@@ -382,27 +392,29 @@ public class TrainerService {
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
         List<Double> PTList = new ArrayList<>();
-        List<Double> bookmarkList = new ArrayList<>();
+        List<Integer> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
             idList.add(trainerId);
             starList.add((float) rank.getStar());
             reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+            bookmarkList.add(Integer.parseInt(valueOperations.get(bookmarkKey)));
 //            PTList(valueK)
         }
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
                     .stars(starList.get(idx))
-                    .userCount(1)
+                    .userCount(bookmarkList.get(idx))
                     .ptCount(1)
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
 //                    .revisitGrade(0)
@@ -422,6 +434,8 @@ public class TrainerService {
     public List<TrainerDto.ResponseList> findTrainers(TrainerDto.Get search) {
 
         Set<Trainer> searchResult = new HashSet<>();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         // 이름, 태그로 검색
         if (search.getKeyword() != null) {
@@ -464,18 +478,24 @@ public class TrainerService {
         // 검색 결과
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (Trainer t : searchResult) {
+            String trainerId = t.getId();
+
+            String valueKey = "count:" + trainerId;
+            String starKey = "star:" + trainerId;
+            String bookmarkKey = "bookmark:" + trainerId;
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
+                    .id(t.getId())
                     .introduction(t.getIntroduction())
                     .tags(t.getTags())
                     .createdAt(t.getCreatedAt())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(4.5F)
-                    .userCount(1)
+                    .stars(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(valueKey)))
+                    .userCount(Integer.parseInt(valueOperations.get(bookmarkKey)))
                     .ptCount(1)
-                    .reviewCount(1)
-                    .revisitGrade(0)
+                    .reviewCount(Integer.parseInt(valueOperations.get(valueKey)))
+//                    .revisitGrade(0)
                     .build();
 
             trainerList.add(trainer);

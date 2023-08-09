@@ -98,12 +98,14 @@ public class TrainerDto {
         private String profileImg; // 유저 프로필 사진 (트레이너 프사)
         private String introduction; // 트레이너 한 줄 소개
         private String tags; // 트레이너 태그
-        private float stars; // 트레이너 별점
-        private LocalDateTime createdAt; // 트레이너 등록일
-        private int userCount; // 누적 회원 수
-        private int ptCount; // 누적 예약 수
+
+        // 트레이너 관련 데이터
+        private double stars; // 트레이너 평균 별점
         private int reviewCount; // 누적 리뷰 수
+        private LocalDate createdAt; // 트레이너 등록일 (yyyy-MM-DD)
+        private int ptCount; // 누적 PT 수
         private int revisitGrade; // 재방문율에 따른 등급 (0(일반), 1(브론즈), 2(실버), 3(골드))
+        private int bookmarkCount; // 북마크 수
     }
 
     @Getter

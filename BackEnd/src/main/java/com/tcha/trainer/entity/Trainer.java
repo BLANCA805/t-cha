@@ -34,7 +34,7 @@ public class Trainer extends Auditable {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
 //    @Column(name = "TRAINER_ID", columnDefinition = "BINARY(16)")
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "BINARY(16)") // CHAR(36)으로 수정 후 String으로 id 타입 변경하기
     private UUID id;
 
     @OneToOne

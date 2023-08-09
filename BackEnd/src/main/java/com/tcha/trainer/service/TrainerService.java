@@ -1,6 +1,7 @@
 package com.tcha.trainer.service;
 
 
+import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.service.PtClassService;
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
@@ -72,7 +73,7 @@ public class TrainerService {
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
         UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();
 
-        // 트레이너 생성
+        // 트레이너 생성 (권한 확인, 이미 트레이너라면 exceptioncode 날리기)
         Trainer createdTrainer = trainerRepository.save(
                 trainerMapper.trainerPostDtoToTrainer(postRequest, postUser));
 
@@ -98,19 +99,21 @@ public class TrainerService {
 
     public TrainerDto.Response updateTrainer(String trainerId, TrainerDto.Patch patchRequest) {
 
+        // 트레이너 유효성 검증 로직 추가
         Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
         trainer.setIntroduction(patchRequest.getIntroduction());
         trainer.setTitle(patchRequest.getTitle());
         trainer.setContent(patchRequest.getContent());
         trainer.setTags(patchRequest.getTags());
-        // user 변경되지 않도록(set XX) 설정하기
+        // 연결된 user 변경되지 않도록(setUserProfile 안되도록) 설정하기
 
         return trainerMapper.trainerToResponseDto(trainer);
     }
 
     public TrainerDto.Response findOneTrainer(String trainerId) {
 
+        // 트레이너 유효성 검증 추가
         Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
         return trainerMapper.trainerToResponseDto(trainer);
@@ -118,24 +121,8 @@ public class TrainerService {
 
     public List<TrainerDto.ResponseList> findAllTrainers() {
 
-        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
-        for (Trainer t : trainerRepository.findAll()) {
-            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
-                    .introduction(t.getIntroduction())
-                    .tags(t.getTags())
-                    .createdAt(t.getCreatedAt())
-                    .profileName(t.getUserProfile().getName())
-                    .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(4.5F)
-                    .userCount(1)
-                    .ptCount(1)
-                    .reviewCount(1)
-                    .revisitGrade(0)
-                    .build();
-
-            trainerList.add(trainer);
-        }
+        // 유효한 트레이너만 가져올 수 있도록 쿼리 수정
+        List<Trainer> trainerList = trainerRepository.findAll();
 
 //        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
 //        Set<TypedTuple<String>> typedTuples;
@@ -154,17 +141,26 @@ public class TrainerService {
 //                        Collectors.toList());
 //        System.out.println(result);
 
-        return trainerList;
+        return trainerMapper.trainerListToResponseListDtoList(trainerList);
     }
 
-    public void deleteTrainer(String trainerId) {
+    public TrainerDto.Response deleteTrainer(String trainerId) {
 
-        trainerRepository.deleteById(UUID.fromString(trainerId));
+        // 삭제하려는 트레이너 (유효성 검증 추가 & 현재 로그인한 유저와 트레이너에 연결된 유저가 동일한지 확인)
+        Trainer deletedTrainer =
+                trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+
+        deletedTrainer.setTags(null);
+        deletedTrainer.setIntroduction(null);
+        deletedTrainer.setTitle(null);
+        deletedTrainer.setContent(null);
+
+        return trainerMapper.trainerToResponseDto(deletedTrainer);
     }
 
-    public List<TrainerDto.ResponseList> findTrainers(TrainerDto.Get search) {
+    public List<TrainerDto.ResponseList> searchTrainers(TrainerDto.Get search) {
 
-        Set<Trainer> searchResult = new HashSet<>();
+        Set<Trainer> searchResultSet = new HashSet<>();
 
         // 이름, 태그로 검색
         if (search.getKeyword() != null) {
@@ -172,7 +168,7 @@ public class TrainerService {
 
             // 1. 트레이너 이름으로 검색
             if (trainerRepository.findByNameContaining(keyword).isPresent()) {
-                searchResult.addAll(trainerRepository.findByNameContaining(keyword).get());
+                searchResultSet.addAll(trainerRepository.findByNameContaining(keyword).get());
             }
 
             // 2. 트레이너 태그로 검색
@@ -182,49 +178,31 @@ public class TrainerService {
             for (Tag tag : tagList) {
                 String[] trainers = tag.getTrainers().split(",");
                 for (String trainerId : trainers) {
-                    searchResult.add(
+                    searchResultSet.add(
                             trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow());
                 }
             }
         }
 
-//        // 날짜, 시간으로 검색
-//        // 선택된 날짜, 시간에 가능한 수업 조회
-//        PtClassDto.Get getRequest = PtClassDto.Get.builder()
-//                .date(search.getDate())
-//                .fromTime(search.getFromTime())
-//                .toTime(search.getToTime())
-//                .build();
-//
-//        List<PtClassDto.Response> classList = ptClassService.findPtClassByDatetime(getRequest);
-//
-//        // 각 수업의 트레이너 조회
-//        for (PtClassDto.Response pt_class : classList) {
-//            searchResult.add(trainerRepository.findById(
-//                    UUID.fromString(pt_class.getTrainerId())).orElseThrow());
-//        }
+        // 날짜, 시간으로 검색
+        // 선택된 날짜, 시간에 가능한 수업 조회
+        PtClassDto.Get getRequest = PtClassDto.Get.builder()
+                .date(search.getDate())
+                .fromTime(search.getFromTime())
+                .toTime(search.getToTime())
+                .build();
 
-        // 검색 결과
-        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
-        for (Trainer t : searchResult) {
-            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
-                    .id(t.getId().toString())
-                    .introduction(t.getIntroduction())
-                    .tags(t.getTags())
-                    .createdAt(t.getCreatedAt())
-                    .profileName(t.getUserProfile().getName())
-                    .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(4.5F)
-                    .userCount(1)
-                    .ptCount(1)
-                    .reviewCount(1)
-                    .revisitGrade(0)
-                    .build();
+        List<PtClassDto.Response> classList = ptClassService.findPtClassByDatetime(getRequest);
 
-            trainerList.add(trainer);
+        // 각 수업의 트레이너 조회
+        for (PtClassDto.Response pt_class : classList) {
+            searchResultSet.add(trainerRepository.findById(
+                    UUID.fromString(pt_class.getTrainerId())).orElseThrow());
         }
 
-        return trainerList;
+        List<Trainer> searchResultList = searchResultSet.stream().toList();
+
+        return trainerMapper.trainerListToResponseListDtoList(searchResultList);
     }
 
 }

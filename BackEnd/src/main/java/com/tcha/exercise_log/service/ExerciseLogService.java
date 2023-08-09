@@ -4,6 +4,7 @@ import com.tcha.exercise_log.dto.ExerciseLogDto;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.repository.ExerciseLogRepository;
 import com.tcha.exercise_log.entity.ExerciseLog;
+import com.tcha.pt_class.repository.PtClassRepository;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.trainer.entity.Trainer;
@@ -12,6 +13,9 @@ import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
 import com.tcha.utils.upload.service.S3Uploader;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +37,7 @@ public class ExerciseLogService {
     private final PtLiveRepository ptLiveRepository;
     private final ExerciseLogMapper exerciseLogMapper;
     private final S3Uploader s3Uploader;
+    private final PtClassRepository ptClassRepository;
 
 
     //운동일지 저장
@@ -54,7 +59,8 @@ public class ExerciseLogService {
         //DB에 새로운 운동일지 생성
         ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
 
-        return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog, trainer.getUserProfile().getName());
+        return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog,
+                trainer.getUserProfile().getName());
     }
 
 
@@ -72,7 +78,8 @@ public class ExerciseLogService {
     public ExerciseLogDto.Response findExerciseLog(Long id) {
         ExerciseLog exerciseLog = findVerifiedById(id);
 
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLog, findTrainerNameByExerciseLog(exerciseLog));
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
+                findTrainerNameByExerciseLog(exerciseLog));
     }
 
     //운동일지 1개 찾기(ptLiveId)
@@ -81,17 +88,17 @@ public class ExerciseLogService {
         //운동일지에 대한 유효성 검증 완
         ExerciseLog exerciseLog = findVerifiedById(liveId);
 
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLog, findTrainerNameByExerciseLog(exerciseLog));
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLog,
+                findTrainerNameByExerciseLog(exerciseLog));
     }
 
 
     /**
-     * 업데이트: 트레이너가 진행
-     * => ptlive를 통해서 운동일지를 업로드 할수 있음
-     * => 따라서 트레이너에 대한 유효성 검사는 필요없음
+     * 업데이트: 트레이너가 진행 => ptlive를 통해서 운동일지를 업로드 할수 있음 => 따라서 트레이너에 대한 유효성 검사는 필요없음
      */
     @Transactional
-    public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog, ExerciseLogDto.Patch patchRequest, Long id) {
+    public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog,
+            ExerciseLogDto.Patch patchRequest, Long id) {
 
         existExerciseLog.setTitle(patchRequest.getTitle());
         existExerciseLog.setContent(patchRequest.getContent());
@@ -111,7 +118,8 @@ public class ExerciseLogService {
         existExerciseLog.setImages(patchRequest.getImages());
         existExerciseLog.setVideos(patchRequest.getVideos());
 
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(existExerciseLog), findTrainerNameByExerciseLog(existExerciseLog));
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(existExerciseLog),
+                findTrainerNameByExerciseLog(existExerciseLog));
     }
 
     //운동일지 삭제
@@ -144,30 +152,42 @@ public class ExerciseLogService {
         //운동일지 상태 읽기로 변경
         exerciseLog.setStatus(ExerciseLog.exerciseLogStaus.READ);
 
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(exerciseLog), null);
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(exerciseLog),
+                null);
     }
 
-
-    /** 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기
-
-     배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준 1시간지났으면 바로 read로 변경
-
+    /**
+     *  운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기
+     배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준 1시간 지났으면 바로 read로 변경
      */
-
+//    @Scheduled
+//    public void executeExerciseLogStatusChange() {
+//        System.out.println("현재 시각 : " + LocalDateTime.now());
+//        //운동일지 불러오기, 일단 운동일지에는 운동 시작 시간이 없으므로, r/w 여부로 운동일지 가져오기
+//        List<ExerciseLog> list = exerciseLogRepository.findByStatus().get();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+//
+//        //불러온 운동일지 상태 for문 돌면서 수정하기
+//        for (ExerciseLog e : list) {
+//            //해당 운동일지의 수업 시작 시간 가져오기
+//            LocalTime startTime = ptClassRepository.findById(e.getPtLive().getPtClassId()).get().getStartTime();
+//
+//
+//            e.getStatus()
+//        }
+//
+//    }
 
     /**
      * READ, WRITE해 대한 에러 핸들링 코드 작성
      */
 
-//    @Scheduled
-//    public void 
-
-
     //존재하는 트레이너인지 대한 유효성 검증
     @Transactional
     public Trainer findVerifiedTrainerById(String trainerId) {
 
-        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
+        Trainer trainer = trainerRepository.findById(trainerId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;
     }
@@ -185,7 +205,8 @@ public class ExerciseLogService {
     //존재하는 ptlive인지에 대한 검증
     @Transactional
     public PtLive findVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
-        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
         return ptLive;
     }
 
@@ -193,7 +214,8 @@ public class ExerciseLogService {
     //운동일지 삭제 & 조회 & 작성 완료시 존재하는 운동일지인지에 대해 운동일지 아이디로 검증
     @Transactional
     public ExerciseLog findVerifiedById(Long id) {
-        ExerciseLog exerciseLog = exerciseLogRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.EXERCISELOG_NOT_FOUND));
+        ExerciseLog exerciseLog = exerciseLogRepository.findById(id)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.EXERCISELOG_NOT_FOUND));
         return exerciseLog;
     }
 
@@ -201,7 +223,8 @@ public class ExerciseLogService {
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
         String result = "알수없음";
         try {
-            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get().getUserProfile().getName();
+            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
+                    .getUserProfile().getName();
         } catch (Exception e) {
             return result;
         }

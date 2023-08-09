@@ -10,8 +10,9 @@ import { SmallTitleWrapper } from "@shared/page-title";
 import TextField from "@mui/material/TextField";
 import {Button, Typography} from "@mui/material"
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
-const Wrapper= styled.form`
+const Wrapper= styled.div`
   display: flex;
   flex-direction: column;
   /* width:100%; */
@@ -20,7 +21,7 @@ const Wrapper= styled.form`
   justify-content: start;
   align-content:center;
   `;
-const Container= styled.form`
+const Container= styled.div`
   display:flex;
   justify-content: center;
   align-items:center;
@@ -37,7 +38,7 @@ const Form = styled.form`
   width:90%;
   `;
 
-const FormDetailWrapper = styled.form`
+const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -45,7 +46,7 @@ const FormDetailWrapper = styled.form`
   margin-bottom:1rem;
   `;
 
-const SubmitButton=styled.form`
+const SubmitButton=styled.div`
   display:flex;
   justify-content: center;
   align-items: center;
@@ -105,6 +106,8 @@ function TrainerInfoModify() {
     }
   };
 
+  const navigate = useNavigate();
+
   const modify = (event: any) => {
     event.preventDefault();
     const body = new FormData();
@@ -118,12 +121,19 @@ function TrainerInfoModify() {
       .then((response) => {
         if (response.data) {
           console.log(response.data);
+          navigate("/trainer/info", {state: trainerId});
         }
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  
+  const goToBack = () =>{
+    navigate("/trainer/info", {state: trainerId});
+  };
+
+
 
   return (
     <Wrapper>
@@ -194,25 +204,21 @@ function TrainerInfoModify() {
           
 
           <SubmitButton>
-            <GrayButton 
-              type="submit"
-              style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-              variant="contained">
-                임시저장
-            </GrayButton>
             <TchaButton 
               type="submit"
               style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-              variant="contained">
-                등록하기
+              variant="contained"
+              >
+                수정하기
             </TchaButton>
             <TchaButton 
-              //원래 있던페이지로 돌아가는 Linkto 코드 필요 
               style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-              variant="contained">
-                작성취소
+              variant="contained"
+              onClick={goToBack}
+              >
+                수정취소
             </TchaButton>
-            {/* <button type="submit"></button> */}
+            
           </SubmitButton>
         </Form>
       </Container>

@@ -12,9 +12,9 @@ import { Typography } from "@mui/material";
 import { TchaButton, GrayButton,DefaultButton } from "@shared/button";
 import styled, { isStyledComponent } from "styled-components";
 
+import TestEditorForm from "@shared/text-editor";
 
-
-const Wrapper= styled.form`
+const Wrapper= styled.div`
   display: flex;
   flex-direction: column;
   /* width:100%; */
@@ -23,7 +23,7 @@ const Wrapper= styled.form`
   justify-content: start;
   align-content:center;
   `;
-const Container= styled.form`
+const Container= styled.div`
   display:flex;
   justify-content: center;
   align-items:center;
@@ -41,7 +41,7 @@ const Form = styled.form`
   width:90%;
   `;
 
-const FormDetailWrapper = styled.form`
+const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -49,7 +49,7 @@ const FormDetailWrapper = styled.form`
   margin-bottom:1rem;
   `;
 
-const SubmitButton=styled.form`
+const SubmitButton=styled.div`
   display:flex;
   justify-content: center;
   align-items: center;
@@ -164,14 +164,15 @@ function ExerciseLog() {
             <Typography variant="h5" style={{marginTop:"0.5rem"}}>
               내용:
             </Typography>
-            <TextField
+            {/* <TextField
               value={content}
               onChange={handleContent}
               label="내용을 입력하세요 "
               multiline minRows={5}
               style={{width:"88%"}}
               variant="outlined"
-            />
+            /> */}
+            <TestEditorForm></TestEditorForm>
           </FormDetailWrapper>
           
 

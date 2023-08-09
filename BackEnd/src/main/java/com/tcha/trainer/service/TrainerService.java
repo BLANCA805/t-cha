@@ -70,10 +70,10 @@ public class TrainerService {
 
     public TrainerDto.Response createTrainer(long userProfileId, TrainerDto.Post postRequest) {
 
-        // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
+        // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인 & 이미 트레이너 권한을 갖고 있는지 확인)
         UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();
 
-        // 트레이너 생성 (권한 확인, 이미 트레이너라면 exceptioncode 날리기)
+        // 트레이너 생성
         Trainer createdTrainer = trainerRepository.save(
                 trainerMapper.trainerPostDtoToTrainer(postRequest, postUser));
 

@@ -135,7 +135,7 @@ function SideBar() {
     axios
       .post(`${api}/userProfiles`, {
         userId: token,
-        name: "임병국",
+        name: token.slice(0, 3),
         profileImage: "이미지",
       })
       .then((response) => {

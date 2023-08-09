@@ -109,11 +109,11 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
         </KeywordWrapper>
       </DataWrapper>
       <BookmarkWrapper>
-        {!isBookmarked && (
-          <DefaultButton onClick={reBookmark}>북마크설정</DefaultButton>
-        )}
         {isBookmarked && (
           <DefaultButton onClick={deleteBookmark}>북마크해제</DefaultButton>
+        )}
+        {!isBookmarked && (
+          <DefaultButton onClick={reBookmark}>북마크설정</DefaultButton>
         )}
       </BookmarkWrapper>
     </Wrapper>

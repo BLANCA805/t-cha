@@ -1,3 +1,15 @@
+export interface userProfileData {
+  createdAt: string;
+  id: number;
+  modifiedAt: string;
+  name: string;
+  profileImage: string;
+}
+
+export interface TrainerProps {
+  trainer: string;
+}
+
 export interface TrainerDetailData {
   content: string;
   id: string;
@@ -11,10 +23,13 @@ export interface TrainerDetailData {
 
 export interface TrainerReviewData {
   data: {
-    id: string;
+    id: number;
     content: string;
     star: number;
-    created_at: string;
+    profileImg: string;
+    profileName: string;
+    trainerProfileImg: string;
+    trainerProfileName: string;
   }[];
   pageInfo: {
     page: number;

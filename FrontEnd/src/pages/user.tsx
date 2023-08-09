@@ -11,6 +11,10 @@ import TrainerButtons from "@user-trainer/trainer-buttons";
 // import Button from "@mui/material/Button";
 
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { api } from "@shared/common-data";
+import { userProfileData } from "src/interface";
 
 const Wrapper = styled.div`
   display: flex;
@@ -119,21 +123,33 @@ const Uscol = styled.div`
 
 function User() {
   const profile = useSelector((state: RootState) => state.profile);
-  const dispatch = useDispatch();
 
-  const tester = () => {
-    dispatch(test());
-  };
+  const [userData, setUserData] = useState<userProfileData>();
+
+  useEffect(() => {
+    axios
+      .get(`${api}/userProfiles/${profile.profileId}`)
+      .then((response) => {
+        setUserData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [profile.profileId]);
+
   return (
     <Wrapper>
       <Profile>
         <ProfilePhoto>
-          <ProfilePhotoimg src="/logo192.png" />
+          <ProfilePhotoimg
+            src={
+              userData?.profileImage ? userData.profileImage : "/logo192.png"
+            }
+            alt={userData?.profileImage}
+          />
         </ProfilePhoto>
         <Profileinfo>
-          <UserId>Username</UserId>
-          <TrainerHashtag>#Tag1 #Tag2 #Tag3</TrainerHashtag>
-          <TrainerIntroduct>Introduction who am I</TrainerIntroduct>
+          <UserId>{userData?.name}</UserId>
         </Profileinfo>
         <ProfileModify>
           <Link to="info_modify">
@@ -171,9 +187,6 @@ function User() {
           </Uscol>
         </Usrow>
       </UserContainer>
-      {profile.trainerId && (
-        <DefaultButton onClick={tester}>트레이너 취소</DefaultButton>
-      )}
     </Wrapper>
   );
 }

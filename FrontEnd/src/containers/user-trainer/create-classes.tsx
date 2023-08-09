@@ -128,7 +128,7 @@ function CreateClasses() {
 
   const trainerId = useSelector((state: RootState) => state.profile.trainerId);
 
-  const startTimeList: string[] = [];
+  let startTimeList: string[] = [];
 
   const date = selectedDate?.format("YYYY-MM-DD");
 
@@ -149,11 +149,11 @@ function CreateClasses() {
   };
 
   const createClass = () => {
-    console.log(body);
     axios
       .post(`${api}/classes`, body)
       .then((response) => {
         console.log(response.data);
+        startTimeList = [];
       })
       .catch((error) => {
         console.log(error);
@@ -162,7 +162,7 @@ function CreateClasses() {
 
   return (
     <Wrapper>
-      <PageTitle>예약하기</PageTitle>
+      <PageTitle>PT 일정 설정하기</PageTitle>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar
@@ -208,7 +208,7 @@ function CreateClasses() {
 
           <RegisterWrapper>
             <RegisterButton variant="contained" onClick={createClass}>
-              <Typography variant="h6">PT 일정 생성하기</Typography>
+              <Typography variant="h6">PT 일정 설정하기</Typography>
             </RegisterButton>
           </RegisterWrapper>
         </ReservationWrapper>

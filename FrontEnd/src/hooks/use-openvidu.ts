@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import axios from "axios";
 
-const OPENVIDU_SERVER_URL = "https://i9a805.p.ssafy.io/";
+const OPENVIDU_SERVER_URL = "https://i9a805.p.ssafy.io:4443/";
 const OPENVIDU_SERVER_SECRET = "blanca05";
 
 export function getToken(liveId: string): Promise<any> {
@@ -35,7 +35,7 @@ export function createSession(sessionId: string): Promise<any> {
             "No connection to OpenVidu Server. This may be a certificate error at " +
               OPENVIDU_SERVER_URL
           );
-          window.location.assign(OPENVIDU_SERVER_URL + "accept-certificate");
+          // window.location.assign(OPENVIDU_SERVER_URL + "accept-certificate");
         }
       });
   });

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import { api } from "@shared/common-data";
-import { TrainerReviewData, TrainerDetailData } from "src/interface";
+import { TrainerDetailData } from "src/interface";
 
 import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
@@ -16,7 +16,7 @@ import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 
 import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
-import { profile } from "console";
+
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 
@@ -90,6 +90,12 @@ const TrainerHashtag = styled.div`
   margin-bottom: 0.5rem;
   /* background-color: pink; */
 `;
+
+const HashTagWrapper = styled.div`
+  display: flex;
+  justify-content: start;
+`;
+
 const TrainerIntroduct = styled.div`
   flex: 4;
   font-size: 1rem;
@@ -102,9 +108,8 @@ const BottomTab = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: fixed;
+  position: sticky;
   bottom: 0;
-  z-index: 1;
   /* min-height:4rem; */
   min-height: 9rem;
   width: 100%;
@@ -154,11 +159,12 @@ function TrainerInfo() {
   const trainer = useLocation().state;
   const user = useSelector((state: RootState) => state.profile);
 
-  const navigater = useNavigate();
+  const navigate = useNavigate();
 
   const [tab, setTab] = useState<string>("detail");
   const [detail, getDetail] = useState<TrainerDetailData>();
-  const [review, getReview] = useState<TrainerReviewData>();
+
+  const keywordTags = detail?.tags.split(",");
 
   //즐겨찾기 버튼 상태변경 -> 아이콘버전
   const [bookmark, setBookmark] = useState(false);
@@ -169,24 +175,24 @@ function TrainerInfo() {
 
   useEffect(() => {
     axios
-      .all([
-        axios.get(`${api}/trainers/${trainer}`),
-        axios.get(`${api}/reviews/trainer/${trainer}`),
-      ])
-      .then(
-        axios.spread((detail, review) => {
-          getDetail(detail.data);
-          getReview(review.data);
-        })
-      )
+      .get(`${api}/trainers/${trainer}`)
+      .then((response) => {
+        getDetail(response.data);
+      })
       .catch((error) => {
         console.log(error);
       });
   }, [trainer]);
 
   const moveToModify = () => {
-    navigater("/profile/trainer_info_modify");
+    navigate("/profile/trainer_info_modify");
   };
+
+  const moveToReservation = () => {
+    navigate("/trainer/pt_reservation", { state: trainer });
+  };
+
+  console.log(keywordTags);
 
   return (
     <Container>
@@ -196,10 +202,13 @@ function TrainerInfo() {
             <ProfilePhotoimg src="/logo192.png" />
           </ProfilePhoto>
           <Profileinfo>
-            <UserId>Username</UserId>
-            {/* <UserId>{trainer.id}</UserId> */}
-            <TrainerHashtag>#Tag1 #Tag2 #Tag3</TrainerHashtag>
-            <TrainerIntroduct>Introduction who am I</TrainerIntroduct>
+            <UserId>{detail?.profileName}</UserId>
+            <HashTagWrapper>
+              {keywordTags?.map((tag) => (
+                <TrainerHashtag key={tag}>#{tag}</TrainerHashtag>
+              ))}
+            </HashTagWrapper>
+            <TrainerIntroduct>{detail?.title}</TrainerIntroduct>
           </Profileinfo>
           {trainer === user.trainerId && (
             <ProfileModify>
@@ -218,11 +227,9 @@ function TrainerInfo() {
           clickTab={clickTab}
         />
         {tab === "detail" && detail && <TrainerDetail data={detail} />}
-        {tab === "review" && review && (
-          <TrainerReview data={review.data} pageInfo={review.pageInfo} />
-        )}
+        {tab === "review" && <TrainerReview trainer={trainer} />}
       </Wrapper>
-      {trainer !== user.trainerId && (
+      {trainer === user.trainerId && (
         <BottomTab>
           <BookmarkWrapper>
             {/* <BookmarkButton onClick={toggleBookmarkIcon} backgroundImage = {bookmarkIcon}></BookmarkButton> */}
@@ -235,7 +242,7 @@ function TrainerInfo() {
             </BookmarkButton>
           </BookmarkWrapper>
           <RegisterWrapper>
-            <RegisterButton href="pt_reservation" variant="contained">
+            <RegisterButton onClick={moveToReservation} variant="contained">
               <Typography variant="h4">예약 및 결제하기</Typography>
             </RegisterButton>
           </RegisterWrapper>

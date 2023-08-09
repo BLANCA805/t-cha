@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +14,8 @@ import { SmallTitleWrapper } from "@shared/page-title";
 import TextField from "@mui/material/TextField";
 import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
+import { error } from "console";
+import { useImageUpload } from "src/hooks/use-image";
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,6 +67,23 @@ const TagWrapper = styled.div`
   flex-direction: row;
 `;
 
+const ImageWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  min-height: 20%;
+`;
+
+const Image = styled.img`
+  width: 17%;
+  height: 17%;
+  overflow: hidden;
+  margin: 1%;
+  &:hover {
+    opacity: 50%;
+  }
+`;
+
 function TrainerRegistration() {
   const [introduction, setIntroduction] = useState("");
   const [title, setTitle] = useState("");
@@ -72,7 +91,10 @@ function TrainerRegistration() {
   const [tag, setTag] = useState("");
   const [enteredTags, setEnteredTags] = useState("");
   const [tagsForView, setTagsForView] = useState("");
-  const [images, setImages] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [images, setImages] = useState<string[]>([]);
+  const [imagesForView, setImagesForView] = useState<string[]>([]);
+
   const profileId = useSelector((state: RootState) => state.profile.profileId);
 
   const dispatch = useDispatch();
@@ -82,6 +104,7 @@ function TrainerRegistration() {
     title: title,
     content: content,
     tags: enteredTags.slice(0, -1),
+    images: images,
   };
 
   const handleIntroduction = (event: any) => {
@@ -106,44 +129,62 @@ function TrainerRegistration() {
   const clearTag = () => {
     setEnteredTags("");
   };
+
   const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const file = files[0];
-      console.log(files);
-      setImages((prev) => [...prev, files]);
+      for (let file of files) {
+        setFiles((prev) => [...prev, file]);
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImagesForView((prev: string[]) => [
+            ...prev,
+            reader.result as string,
+          ]);
+        };
+      }
     } else {
-      // 이미지를 선택하지 않은 경우에 대한 예외 처리
-      console.log("No image selected.");
+      console.log("이미지가 선택되지 않았습니다.");
     }
   };
 
   //imageInput 커스터마이징 -useref로 input태그에 접근해서 클릭이벤트 연결,
   //원래input은 안보이게 수정 (display:"none")
   const imageInput = React.useRef<HTMLInputElement>(null);
+
   const onClickImageUpload = () => {
     if (imageInput.current) {
       imageInput.current.click();
     }
   };
 
+  const deleteImage = (index: number) => {
+    const updatedFiles = [...files];
+    const updatedImagesForView = [...imagesForView];
+
+    updatedFiles.splice(index, 1);
+    updatedImagesForView.splice(index, 1);
+
+    setFiles(updatedFiles);
+    setImagesForView(updatedImagesForView);
+  };
+
   const navigate = useNavigate();
 
-  const register = (event: any) => {
-    event.preventDefault();
-    const body = new FormData();
-    body.append("dto", JSON.stringify(registrationForm));
-    // images.forEach((image) => {
-    //   body.append("images", image);
-    // });
-    axios
-      .post(`${api}/trainers/${profileId}`, registrationForm)
-      .then((response) => {
-        if (response.data) {
-          console.log(response.data);
-          dispatch(registTrainer({ trainerId: response.data.id }));
-          navigate("/profile");
-        }
+  const Register = async (img: File[]) => {
+    await useImageUpload(img, setImages)
+      .then(() => {
+        axios
+          .post(`${api}/trainers/${profileId}`, registrationForm)
+          .then((response) => {
+            console.log(response.data);
+            dispatch(registTrainer({ trainerId: response.data.id }));
+            navigate("/profile");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -152,10 +193,6 @@ function TrainerRegistration() {
 
   const goToBack = () => {
     navigate("/profile");
-  };
-
-  const testForJW = () => {
-    axios.post();
   };
 
   return (
@@ -236,8 +273,18 @@ function TrainerRegistration() {
             >
               사진등록
             </InputCustomButton>
-            <button onClick={testForJW}>정원이 누르기</button>
           </FormDetailWrapper>
+
+          <ImageWrapper>
+            {imagesForView.map((image: string, index) => (
+              <Image
+                key={index}
+                src={image}
+                alt=""
+                onClick={() => deleteImage(index)}
+              />
+            ))}
+          </ImageWrapper>
 
           <FormDetailWrapper>
             <TextField
@@ -256,7 +303,7 @@ function TrainerRegistration() {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
-              onClick={register}
+              onClick={() => Register(files)}
             >
               등록하기
             </TchaButton>

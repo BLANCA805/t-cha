@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import axios from "axios";
+import Pagination from "@mui/material/Pagination";
 
 import { api } from "@shared/common-data";
 
@@ -25,10 +26,17 @@ function BookmarkedTrainerList() {
   const user = useSelector((state: RootState) => state.profile);
 
   const [items, setItems] = useState<BookmarkedTrainerData>();
+  const [page, setPage] = useState(1);
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
 
   useEffect(() => {
     axios
-      .get(`${api}/bookmarks/${user.profileId}?page=1&size=5`)
+      .get(`${api}/bookmarks/${user.profileId}?page=${page}&size=5`)
       .then((response) => {
         setItems(response.data);
         console.log(response.data);
@@ -36,7 +44,7 @@ function BookmarkedTrainerList() {
       .catch((error) => {
         console.log(error);
       });
-  }, [user.profileId]);
+  }, [user.profileId, page]);
 
   return (
     <Wrapper>
@@ -48,6 +56,13 @@ function BookmarkedTrainerList() {
         {items &&
           items.data.map((item) => <BookmarkedTrainerListItem data={item} />)}
       </ContentsWrapper>
+      <Pagination
+        count={items?.pageInfo.totalPages}
+        page={page}
+        onChange={handleChangePage}
+        color="standard"
+        style={{ alignSelf: "center" }}
+      />
     </Wrapper>
   );
 }

@@ -99,5 +99,10 @@ public class ReviewController {
         reviewService.deleteReview(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+    @DeleteMapping()
+    public ResponseEntity deleteAllReview() {
+        reviewService.deleteReviewAll();
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 
 }

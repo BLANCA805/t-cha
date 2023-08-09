@@ -8,11 +8,11 @@ import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -49,6 +49,7 @@ public class ReviewService {
         put("즐겨찾기 수", BOOKMARK_KEY);
         put("최근", NEW_KEY);
     }};
+
     //Pagenation으로 트레이너 리뷰을 불러옴
     @Transactional(readOnly = true)
     public Page<Review> findReviewPages(int page, int size) {
@@ -62,7 +63,7 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public Page<Review> findReviewPagesByTrainerId(String trainerId, int page, int size) {
 
-        UUID TrainerId = UUID.fromString(trainerId);
+        String TrainerId = trainerId;
         return reviewRepository.findAllByTrainerId(
 
                 TrainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
@@ -87,46 +88,39 @@ public class ReviewService {
     //트레이너 리뷰 저장
     @Transactional
     public Review createReview(Review review, String trainerId, Long userProfileId) {
-        UUID saveTrainerId = UUID.fromString(trainerId);
 
         UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
-        Trainer trainer = trainerRepository.findById(saveTrainerId).get();
+        Trainer trainer = trainerRepository.findById(trainerId).get();
 
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);
-
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
-        String valueKey = "count:"+trainerId;
-        String starKey = "star:"+trainerId;
-        String listKey = "list:"+trainerId;
-        if (valueOperations.get(valueKey) == null){
-            valueOperations.set(valueKey,"0");
+        String valueKey = "count:" + trainerId;
+        String starKey = "star:" + trainerId;
+        String listKey = "list:" + trainerId;
+        if (valueOperations.get(valueKey) == null) {
+            valueOperations.set(valueKey, "0");
         }
-        if (valueOperations.get(starKey) == null){
-            valueOperations.set(starKey,"0");
+        if (valueOperations.get(starKey) == null) {
+            valueOperations.set(starKey, "0");
         }
 
-        listOperations.leftPush(listKey, String.valueOf(review.getStar()));
+        listOperations.leftPush(listKey,
+                String.valueOf(review.getStar()) + ":" + String.valueOf(1));
 
-
-        if(listOperations.size(listKey) >= 2) {
+        if (listOperations.size(listKey) >= 10) {
             Zset();
         }
 
         return reviewRepository.save(review);
     }
 
-    public void ReviewCount(String valueKey, long num){
-        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-        long x = Long.parseLong(valueOperations.get(valueKey));
-        valueOperations.set(valueKey, String.valueOf(x + num));
-    }
 
-    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 60000)
     public void Zset() {
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
@@ -144,30 +138,51 @@ public class ReviewService {
             String listKey = "list:" + trainerId;
 
             double sumStar = 0;
-            ReviewCount(valueKey, listOperations.size(listKey));
-
+            double reviewCount = 0;
             for (int i = 0; i < listOperations.size(listKey); i++) {
-                sumStar += Double.parseDouble(listOperations.leftPop(listKey));
+
+                String[] strings = listOperations.leftPop(listKey).split(":");
+                System.out.println(Arrays.toString(strings));
+
+                sumStar += Double.parseDouble(strings[0]);
+                reviewCount += Double.parseDouble(strings[1]);
             }
             Double totalStar = Double.parseDouble(valueOperations.get(starKey)) + sumStar;
             valueOperations.set(starKey, String.valueOf(totalStar));
-            Double reviewConut = Double.parseDouble(valueOperations.get(valueKey));
+            Double reviewConut = Double.parseDouble(valueOperations.get(valueKey)) + reviewCount;
+            valueOperations.set(valueKey, String.valueOf(reviewConut));
 
             ZSetOperations.add(keyMap.get("평균 별점"), trainerId,
                     totalStar / reviewConut);
-            System.out.println(totalStar);
-            System.out.println(reviewConut);
             ZSetOperations.add(keyMap.get("리뷰 수"), trainerId,
                     reviewConut);
         }
     }
 
-
     //트레이너 리뷰 삭제
     @Transactional
     public void deleteReview(Long id) {
         Review findReview = findReview(id);
+        String trainerId = String.valueOf(findReview.getTrainer().getId());
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+        String valueKey = "count:" + trainerId;
+        String starKey = "star:" + trainerId;
+        String listKey = "list:" + trainerId;
+        if (valueOperations.get(valueKey) == null) {
+            valueOperations.set(valueKey, "0");
+        }
+        if (valueOperations.get(starKey) == null) {
+            valueOperations.set(starKey, "0");
+        }
+
+        listOperations.leftPush(listKey,
+                String.valueOf(-1 * findReview.getStar()) + ":" + String.valueOf(-1));
         reviewRepository.delete(findReview);
     }
 
+    public void deleteReviewAll() {
+        reviewRepository.deleteAll();
+    }
 }

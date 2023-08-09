@@ -10,13 +10,15 @@ import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import io.netty.channel.unix.Unix;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
+
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +43,7 @@ public class TrainerService {
     private final PtClassService ptClassService;
 
     private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, Double> redisTemplateDouble;
     private final String STAR_KEY = "star";
     private final String REVIEW_KEY = "review";
     private final String PT_KEY = "PT";
@@ -79,6 +82,22 @@ public class TrainerService {
         }
 
         // 트레이너 이미지 테이블 설정
+        ListOperations<String, Double> listOperations = redisTemplateDouble.opsForList();
+
+        // 트레이너 레디스 등록
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        String trainerId = createdTrainer.getId();
+        ZSetOperations.add(keyMap.get("평균 별점"), trainerId,
+                0);
+        ZSetOperations.add(keyMap.get("리뷰 수"), trainerId,
+                0);
+        ZSetOperations.add(keyMap.get("누적 PT 수"), trainerId,
+                0);
+        ZSetOperations.add(keyMap.get("즐겨찾기 수"), trainerId,
+                0);
+        ZSetOperations.add(keyMap.get("최근"), trainerId,
+                createdTrainer.getCreatedAt().toEpochSecond(ZoneOffset.UTC));
+
 
         return trainerMapper.trainerToResponseDto(createdTrainer);
     }
@@ -86,7 +105,7 @@ public class TrainerService {
 
     public TrainerDto.Response updateTrainer(String trainerId, TrainerDto.Patch patchRequest) {
 
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow();
 
         trainer.setIntroduction(patchRequest.getIntroduction());
         trainer.setTitle(patchRequest.getTitle());
@@ -99,7 +118,7 @@ public class TrainerService {
 
     public TrainerDto.Response findOneTrainer(String trainerId) {
 
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow();
 
         return trainerMapper.trainerToResponseDto(trainer);
     }
@@ -125,12 +144,65 @@ public class TrainerService {
             trainerList.add(trainer);
         }
 
+        return trainerList;
+    }
+    public List<TrainerDto.ResponseList> findSortedByNewTrainers() {
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        Set<TypedTuple<String>> typedTuples;
 
+        //String key = "ranking";
+        String key = keyMap.get("최근");
+
+        if (ZSetOperations.size(key) >= 10) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 9);  //score순으로 10개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+        List<String> idList = new ArrayList<>();
+        List<Float> starList = new ArrayList<>();
+        List<Double> reviewCountList = new ArrayList<>();
+        List<Double> PTList = new ArrayList<>();
+        List<Double> bookmarkList = new ArrayList<>();
+        for (TrainerDto.Rank rank : result) {
+            String trainerId = rank.getId();
+            String valueKey = "count:" + trainerId;
+            idList.add(trainerId);
+            starList.add((float) rank.getStar());
+            reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+//            PTList(valueK)
+        }
+
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (int idx = 0; idx < result.size(); idx++) {
+
+            Trainer t = trainerRepository.findById(idList.get(idx)).get();
+
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(starList.get(idx))
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    //                    .revisitGrade(0)
+                    .build();
+
+            trainerList.add(trainer);
+        }
 
         return trainerList;
     }
-    public List<TrainerDto.ResponseList> findSortedByStarTrainers() {
 
+    public List<TrainerDto.ResponseList> findSortedByStarTrainers() {
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
@@ -148,21 +220,20 @@ public class TrainerService {
                 .collect(
                         Collectors.toList());
 
-        List<UUID> idList = new ArrayList<>();
+        List<String> idList = new ArrayList<>();
         List<Float> starList = new ArrayList<>();
-        List<Integer> reviewCountList = new ArrayList<>();
-        List<Integer> PTList = new ArrayList<>();
-        List<Integer> bookmarkList = new ArrayList<>();
+        List<Double> reviewCountList = new ArrayList<>();
+        List<Double> PTList = new ArrayList<>();
+        List<Double> bookmarkList = new ArrayList<>();
         for (TrainerDto.Rank rank:result) {
             String trainerId = rank.getId();
             String valueKey = "count:" + trainerId;
-            idList.add(UUID.fromString(trainerId));
+            idList.add(trainerId);
             starList.add((float) rank.getStar());
-            reviewCountList.add(Integer.parseInt(valueOperations.get(valueKey)));
+            reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
 //            PTList(valueK)
         }
-        System.out.println(starList);
-        System.out.println(reviewCountList);
+
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx=0; idx< result.size();idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
@@ -176,7 +247,164 @@ public class TrainerService {
                     .stars(starList.get(idx))
                     .userCount(1)
                     .ptCount(1)
-                    .reviewCount(reviewCountList.get((idx)))
+                    .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+//                    .revisitGrade(0)
+                    .build();
+
+            trainerList.add(trainer);
+        }
+
+        return trainerList;
+    }
+    public List<TrainerDto.ResponseList> findSortedByReviewTrainers() {
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        Set<TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get("리뷰 수");
+
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+
+        List<String> idList = new ArrayList<>();
+        List<Float> starList = new ArrayList<>();
+        List<Double> reviewCountList = new ArrayList<>();
+        List<Double> PTList = new ArrayList<>();
+        List<Double> bookmarkList = new ArrayList<>();
+        for (TrainerDto.Rank rank:result) {
+            String trainerId = rank.getId();
+            String valueKey = "count:" + trainerId;
+            idList.add(trainerId);
+            starList.add((float) rank.getStar());
+            reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+//            PTList(valueK)
+        }
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (int idx=0; idx< result.size();idx++) {
+            Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(starList.get(idx))
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+//                    .revisitGrade(0)
+                    .build();
+
+            trainerList.add(trainer);
+        }
+
+        return trainerList;
+    }public List<TrainerDto.ResponseList> findSortedByPtTrainers() {
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        Set<TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get("리뷰 수");
+
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+
+        List<String> idList = new ArrayList<>();
+        List<Float> starList = new ArrayList<>();
+        List<Double> reviewCountList = new ArrayList<>();
+        List<Double> PTList = new ArrayList<>();
+        List<Double> bookmarkList = new ArrayList<>();
+        for (TrainerDto.Rank rank:result) {
+            String trainerId = rank.getId();
+            String valueKey = "count:" + trainerId;
+            idList.add(trainerId);
+            starList.add((float) rank.getStar());
+            reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+//            PTList(valueK)
+        }
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (int idx=0; idx< result.size();idx++) {
+            Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(starList.get(idx))
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+//                    .revisitGrade(0)
+                    .build();
+
+            trainerList.add(trainer);
+        }
+
+        return trainerList;
+    }public List<TrainerDto.ResponseList> findSortedByBookmarkTrainers() {
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        Set<TypedTuple<String>> typedTuples;
+
+        //String key = "ranking";
+        String key = keyMap.get("북");
+
+        if (ZSetOperations.size(key) >= 5) {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
+        } else {
+            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
+        }
+        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
+                .collect(
+                        Collectors.toList());
+
+        List<String> idList = new ArrayList<>();
+        List<Float> starList = new ArrayList<>();
+        List<Double> reviewCountList = new ArrayList<>();
+        List<Double> PTList = new ArrayList<>();
+        List<Double> bookmarkList = new ArrayList<>();
+        for (TrainerDto.Rank rank:result) {
+            String trainerId = rank.getId();
+            String valueKey = "count:" + trainerId;
+            idList.add(trainerId);
+            starList.add((float) rank.getStar());
+            reviewCountList.add(Double.parseDouble(valueOperations.get(valueKey)));
+//            PTList(valueK)
+        }
+        List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
+        for (int idx=0; idx< result.size();idx++) {
+            Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
+                    .id(t.getId().toString())
+                    .introduction(t.getIntroduction())
+                    .tags(t.getTags())
+                    .createdAt(t.getCreatedAt())
+                    .profileName(t.getUserProfile().getName())
+                    .profileImg(t.getUserProfile().getProfileImage())
+                    .stars(starList.get(idx))
+                    .userCount(1)
+                    .ptCount(1)
+                    .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
 //                    .revisitGrade(0)
                     .build();
 
@@ -188,7 +416,7 @@ public class TrainerService {
 
     public void deleteTrainer(String trainerId) {
 
-        trainerRepository.deleteById(UUID.fromString(trainerId));
+        trainerRepository.deleteById(trainerId);
     }
 
     public List<TrainerDto.ResponseList> findTrainers(TrainerDto.Get search) {
@@ -212,7 +440,7 @@ public class TrainerService {
                 String[] trainers = tag.getTrainers().split(",");
                 for (String trainerId : trainers) {
                     searchResult.add(
-                            trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow());
+                            trainerRepository.findById(trainerId).orElseThrow());
                 }
             }
         }
@@ -230,7 +458,7 @@ public class TrainerService {
 //        // 각 수업의 트레이너 조회
 //        for (PtClassDto.Response pt_class : classList) {
 //            searchResult.add(trainerRepository.findById(
-//                    UUID.fromString(pt_class.getTrainerId())).orElseThrow());
+//                    String(pt_class.getTrainerId())).orElseThrow());
 //        }
 
         // 검색 결과

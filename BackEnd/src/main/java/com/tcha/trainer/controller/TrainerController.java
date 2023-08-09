@@ -85,6 +85,12 @@ public class TrainerController {
 
         return ResponseEntity.ok().body(trainerList);
     }
+    @GetMapping("/sorted-by-review")
+    public ResponseEntity<List<TrainerDto.ResponseList>> getAllTrainersByReview() {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByReviewTrainers();
+        return ResponseEntity.ok().body(trainerList);
+    }
 
     /*
     트레이너 아이디를 통해 트레이너를 삭제한다.

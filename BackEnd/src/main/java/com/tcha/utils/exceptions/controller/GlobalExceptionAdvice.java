@@ -81,7 +81,6 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleNumberFormatException(NumberFormatException e) {
-        System.out.println("여기: ");
         log.error("# handle Exception", e);
         // TODO 애플리케이션의 에러는 에러 로그를 로그에 기록하고, 관리자에게 이메일이나 카카오 톡,
         //  슬랙 등으로 알려주는 로직이 있는게 좋습니다.
@@ -91,32 +90,32 @@ public class GlobalExceptionAdvice {
         return response;
     }
 
-    //잘못된 인자값 들어온 경우, 에러 핸들러 (예: String -> UUID)
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
-        log.error("# handle Exception", e);
-
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST, "Invalid  format: " + e.getMessage());
-
-        return response;
-    }
-
-//
-//    //exception이 존재하면 NUMBERFOMAT이 안걸림
+//    //잘못된 인자값 들어온 경우, 에러 핸들러 (예: String -> UUID)
 //    @ExceptionHandler
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ErrorResponse handleException(Exception e) {
-//        System.out.println("엥 여기??");
+//    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException e) {
 //        log.error("# handle Exception", e);
-//        System.out.println(e.getMessage() + " >> " + e.getCause() + " << " + e.getClass());
-//        // TODO 애플리케이션의 에러는 에러 로그를 로그에 기록하고, 관리자에게 이메일이나 카카오 톡,
-//        //  슬랙 등으로 알려주는 로직이 있는게 좋습니다.
 //
-//        final ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
+//        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST, "Invalid  format: " + e.getMessage());
 //
 //        return response;
 //    }
+
+    //
+//    //exception이 존재하면 NUMBERFOMAT이 안걸림
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleException(Exception e) {
+        System.out.println("엥 여기??");
+        log.error("# handle Exception", e);
+        System.out.println(e.getMessage() + " >> " + e.getCause() + " << " + e.getClass());
+        // TODO 애플리케이션의 에러는 에러 로그를 로그에 기록하고, 관리자에게 이메일이나 카카오 톡,
+        //  슬랙 등으로 알려주는 로직이 있는게 좋습니다.
+
+        final ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return response;
+    }
 
 
 }

@@ -13,13 +13,13 @@ import com.tcha.utils.exceptions.codes.ExceptionCode;
 import com.tcha.utils.upload.service.S3Uploader;
 
 import java.util.List;
-import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,6 @@ public class ExerciseLogService {
     private final ExerciseLogRepository exerciseLogRepository;
     private final TrainerRepository trainerRepository;
     private final PtLiveRepository ptLiveRepository;
-
     private final ExerciseLogMapper exerciseLogMapper;
     private final S3Uploader s3Uploader;
 
@@ -43,14 +42,19 @@ public class ExerciseLogService {
         //ptlive 찾기 (유효성 검증 완)
         PtLive ptLive = findVerifiedByPtLiveId(ptLiveId);
 
-        //트레이너 id 찾기
+        //ptlive set
+        exerciseLog.setPtLive(ptLive);
+
+        //트레이너 id 찾기 => 운동일지 생성 시에는 무조건 트레이너 존재해야 함
         String trainerId = ptLive.getTrainerId();
 
         //트레이너 찾기 (유효성 검증 완)
         Trainer trainer = findVerifiedTrainerById(trainerId);
 
-        exerciseLog.setPtLive(ptLive);
-        return exerciseLogMapper.exerciseLogToResponse(exerciseLog, trainer.getUserProfile().getName());
+        //DB에 새로운 운동일지 생성
+        ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
+
+        return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog, trainer.getUserProfile().getName());
     }
 
 
@@ -81,6 +85,11 @@ public class ExerciseLogService {
     }
 
 
+    /**
+     * 업데이트: 트레이너가 진행
+     * => ptlive를 통해서 운동일지를 업로드 할수 있음
+     * => 따라서 트레이너에 대한 유효성 검사는 필요없음
+     */
     @Transactional
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog, ExerciseLogDto.Patch patchRequest, Long id) {
 
@@ -125,16 +134,47 @@ public class ExerciseLogService {
         exerciseLogRepository.delete(findExerciseLog);
     }
 
+    //작성 및 작성완료는 해당 일지를 확인할 수 있는 트레이너만 접근이 가능하도록 다른 도메인에서 정해져있을 것임
+    //그리고 작성완료는 트레이너가 하므로, 트레이너 이름 정보 필요 없음
+    @Transactional
+    public ExerciseLogDto.Response patchWriteDoneExerciseLog(long id) {
+        //기존 운동일지 가져오기
+        ExerciseLog exerciseLog = findVerifiedById(id);
+
+        //운동일지 상태 읽기로 변경
+        exerciseLog.setStatus(ExerciseLog.exerciseLogStaus.READ);
+
+        return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(exerciseLog), null);
+    }
+
+
+    /** 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기
+
+     배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준 1시간지났으면 바로 read로 변경
+
+     */
+
+
+    /**
+     * READ, WRITE해 대한 에러 핸들링 코드 작성
+     */
+
+//    @Scheduled
+//    public void 
+
+
     //존재하는 트레이너인지 대한 유효성 검증
+    @Transactional
     public Trainer findVerifiedTrainerById(String trainerId) {
 
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(() -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;
     }
 
     //새로운 운동일지 생성 시, 중복 체크 검증
     //-> 운동일지 db에서 PTliveid가 중복된다면, 이미 운동일지는 생성된 상태 => EXERCISELOG_EXISTS반환
+    @Transactional
     public void duplicateVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
         exerciseLogRepository.findByLiveId(ptLiveId).ifPresent(exerciseLog -> {
             throw new BusinessLogicException(ExceptionCode.EXERCISELOG_EXISTS);
@@ -143,22 +183,25 @@ public class ExerciseLogService {
     }
 
     //존재하는 ptlive인지에 대한 검증
+    @Transactional
     public PtLive findVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
         PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
         return ptLive;
     }
 
 
-    //운동일지 삭제 & 조회시 존재하는 운동일지인지에 대해 운동일지 아이디로 검증
+    //운동일지 삭제 & 조회 & 작성 완료시 존재하는 운동일지인지에 대해 운동일지 아이디로 검증
+    @Transactional
     public ExerciseLog findVerifiedById(Long id) {
         ExerciseLog exerciseLog = exerciseLogRepository.findById(id).orElseThrow(() -> new BusinessLogicException(ExceptionCode.EXERCISELOG_NOT_FOUND));
         return exerciseLog;
     }
 
+    @Transactional
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
         String result = "알수없음";
         try {
-            return trainerRepository.findById(UUID.fromString(exerciseLog.getPtLive().getTrainerId())).get().getUserProfile().getName();
+            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get().getUserProfile().getName();
         } catch (Exception e) {
             return result;
         }

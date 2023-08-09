@@ -116,7 +116,7 @@ public class BookmarkService {
 //                UUID.fromString("00000000-0000-0000-0000-000000000000"));
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;

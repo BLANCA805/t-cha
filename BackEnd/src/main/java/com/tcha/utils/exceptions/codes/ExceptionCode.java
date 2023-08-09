@@ -1,5 +1,6 @@
 package com.tcha.utils.exceptions.codes;
 
+import com.tcha.exercise_log.dto.ExerciseLogDto;
 import lombok.Getter;
 
 public enum ExceptionCode {

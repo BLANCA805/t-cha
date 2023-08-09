@@ -16,8 +16,10 @@ public enum ExceptionCode {
     GUIDE_NOT_FOUND(404, "Guide not found"),
     GUIDE_EXISTS(409, "Guide exists"),
     NOTICE_NOT_FOUND(404, "Notice not found"),
-//    NOTICE_EXISTS(409, "Notice exists");
 
+    EXERCISELOG_EXISTS(409, "Exerciselog not found"),
+    EXERCISELOG_NOT_FOUND(404, "Exerciselog not found"),
+    //    NOTICE_EXISTS(409, "Notice exists");
     // 추가 (08.08 17:17, 최해미)
     PT_CLASS_NOT_FOUND(404, "PtClass not found"),
     PT_LIVE_NOT_FOUND(404, "PtLive not found"),

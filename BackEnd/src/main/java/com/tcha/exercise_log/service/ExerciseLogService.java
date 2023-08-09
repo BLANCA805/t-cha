@@ -144,7 +144,7 @@ public class ExerciseLogService {
 
     //존재하는 ptlive인지에 대한 검증
     public PtLive findVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
-        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.PTLIVE_NOT_FOUND));
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
         return ptLive;
     }
 

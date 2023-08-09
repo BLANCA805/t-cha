@@ -1,8 +1,6 @@
 package com.tcha.trainer.service;
 
-import com.tcha.pt_class.dto.PtClassDto;
-import com.tcha.pt_class.dto.PtClassDto.Get;
-import com.tcha.pt_class.entity.PtClass;
+
 import com.tcha.pt_class.service.PtClassService;
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
@@ -20,12 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.data.redis.core.ZSetOperations.TypedTuple;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,7 +67,7 @@ public class TrainerService {
         System.out.println(typedTuples);
      */
 
-    public TrainerDto.Response createTrainer(Long userProfileId, TrainerDto.Post postRequest) {
+    public TrainerDto.Response createTrainer(long userProfileId, TrainerDto.Post postRequest) {
 
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인)
         UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();

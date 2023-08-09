@@ -59,9 +59,7 @@ public class TrainerController {
     public ResponseEntity<TrainerDto.Response> patchTrainer(
             @PathVariable("trainer-id") String trainerId,
             @RequestBody TrainerDto.Patch patchRequest) {
-        System.out.println("here1");
         Trainer trainerForService = trainerMapper.patchToTrainer(patchRequest);
-        System.out.println("here2");
         Trainer trainerForResponse = trainerService.updateTrainer(trainerId, trainerForService);
         TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
 

@@ -15,7 +15,7 @@ import Checkbox from "@mui/material/Checkbox";
 
 import styled from "styled-components";
 
-const Wrapper= styled.form`
+const Wrapper= styled.div`
   display: flex;
   flex-direction: column;
   /* width:100%; */
@@ -24,7 +24,7 @@ const Wrapper= styled.form`
   justify-content: start;
   align-content:center;
   `;
-const Container= styled.form`
+const Container= styled.div`
   display:flex;
   justify-content: center;
   align-items:center;
@@ -42,7 +42,7 @@ const Form = styled.form`
   width:90%;
   `;
 
-const FormDetailWrapper = styled.form`
+const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -50,7 +50,7 @@ const FormDetailWrapper = styled.form`
   margin-bottom:1rem;
   `;
 
-const SubmitButton=styled.form`
+const SubmitButton=styled.div`
   display:flex;
   justify-content: center;
   align-items: center;
@@ -94,6 +94,11 @@ function WriteInquiry() {
         console.log(error);
       });
   };
+
+  const goToBack = () => {
+    navigate("/customer_center")
+  }
+
 
   return (
     <Wrapper>
@@ -142,25 +147,22 @@ function WriteInquiry() {
         
 
         <SubmitButton>
-          <GrayButton 
-            type="submit"
-            style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-            variant="contained">
-              임시저장
-          </GrayButton>
           <TchaButton 
             type="submit"
             style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-            variant="contained">
+            variant="contained"
+            onSubmit={upLoad}
+            >
               작성완료
           </TchaButton>
           <TchaButton 
             href="/customer_center"
             style={{width:"7rem", height:"3rem",fontSize:"1rem"}} 
-            variant="contained">
+            variant="contained"
+            onClick={goToBack}
+            >
               작성취소
           </TchaButton>
-          {/* <button type="submit"></button> */}
         </SubmitButton>
       </Form>
     </Container>

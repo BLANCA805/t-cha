@@ -1,22 +1,25 @@
 package com.tcha.pt_class.mapper;
 
 import com.tcha.pt_class.dto.PtClassDto;
+import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.trainer.entity.Trainer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PtClassMapper {
 
-    List<PtClassDto.Response> classListToclassResponseDtoList(List<PtClass> classList);
+    List<PtClassDto.Response> classListToClassResponseDtoList(List<PtClass> classList);
 
-    default PtClass classPostDtoToClass(Trainer trainer, LocalDateTime startTime) {
+    default PtClass classPostDtoToClass(Trainer trainer, LocalDate date, LocalTime time) {
         return PtClass.builder()
                 .trainer(trainer)
-                .startAt(startTime)
-                .closeAt(startTime.plusHours(1))
+                .startDate(date)
+                .startTime(time)
                 .build();
     }
 
@@ -24,9 +27,9 @@ public interface PtClassMapper {
         return PtClassDto.Response.builder()
                 .trainerId(ptClass.getTrainer().getId().toString())
                 .classId(ptClass.getId())
-//                .liveId(ptClass.getPtLiveId())
-                .startAt(ptClass.getStartAt())
+                .liveId(ptClass.getPtLiveId())
+                .startDate(ptClass.getStartDate())
+                .startTime(ptClass.getStartTime())
                 .build();
     }
-
 }

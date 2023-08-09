@@ -9,10 +9,10 @@ const Wrapper = styled.div`
   padding: 3% 0%;
 `;
 
-const ContainerSet= styled.div`
-  display:flex;
-  height:50rem;
-  background-color: #f0f0f0;  
+const ContainerSet = styled.div`
+  display: flex;
+  height: 50rem;
+  background-color: #f0f0f0;
 `;
 
 interface TrainerDetailDataProps {
@@ -23,12 +23,8 @@ const TrainerDetail: React.FC<TrainerDetailDataProps> = ({ data }) => {
   console.log(data);
   return (
     <Wrapper>
-      <ContainerSet>
-        {data.content}
-      </ContainerSet>
+      <ContainerSet>{data.content}</ContainerSet>
     </Wrapper>
-
-
   );
 };
 

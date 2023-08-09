@@ -11,6 +11,7 @@ import { DateCalendar } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
@@ -70,6 +71,8 @@ function TrainerSchedule() {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [expanded, setExpanded] = useState<string | false>(false);
 
+  const navigate = useNavigate();
+
   let date = selectedDate?.format("YY-MM-DD");
 
   const handleChange =
@@ -77,9 +80,14 @@ function TrainerSchedule() {
       setExpanded(isExpanded ? panel : false);
     };
 
+  const moveToCreatePage = () => {
+    navigate("create_classes");
+  };
+
   return (
     <Wrapper>
       <PageTitle>예약하기</PageTitle>
+      <Button onClick={moveToCreatePage}>Class 생성하러가기</Button>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateCalendar

@@ -121,6 +121,7 @@ public class TrainerService {
 
 
     public Trainer updateTrainer(String trainerId, Trainer trainer) {
+        System.out.println("here3");
 
         // 트레이너 유효성 검증 로직 추가
         Trainer trainerForSave = findVerifiedTrainer(trainerId);
@@ -138,6 +139,8 @@ public class TrainerService {
                 tagRepository.save(Tag.builder().name(t).trainers(trainerStr).build());
             }
         }
+        System.out.println("here4");
+        System.out.println(trainerForSave.getUserProfile().getProfileImage());
 
         Optional.ofNullable(trainer.getIntroduction())
                 .ifPresent(introduction -> trainerForSave.setIntroduction(introduction));
@@ -149,10 +152,11 @@ public class TrainerService {
                 .ifPresent(tags -> trainerForSave.setTags(tags));
         Optional.ofNullable(trainer.getImages())
                 .ifPresent(images -> trainerForSave.setImages(images));
+        System.out.println("here5");
 
         // 연결된 user 변경되지 않도록(setUserProfile 안되도록) 설정하기
 
-        return trainerRepository.save(trainer);
+        return trainerRepository.save(trainerForSave);
     }
 
     public TrainerDto.Response findOneTrainer(String trainerId) {

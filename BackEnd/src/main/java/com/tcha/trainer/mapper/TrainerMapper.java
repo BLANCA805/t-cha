@@ -14,8 +14,6 @@ public interface TrainerMapper {
 
     List<TrainerDto.ResponseList> trainerListToResponseListDtoList(List<Trainer> trainerList);
 
-    Trainer patchToTrainer(TrainerDto.Patch patchRequest);
-
     default Trainer trainerPostDtoToTrainer(Long userProfileId, TrainerDto.Post postRequest) {
 
         // userProfile Mapping
@@ -32,6 +30,8 @@ public interface TrainerMapper {
                 .build();
 
     }
+
+    Trainer patchToTrainer(TrainerDto.Patch patchRequest);
 
     default TrainerDto.Response trainerToResponseDto(Trainer trainer) {
 

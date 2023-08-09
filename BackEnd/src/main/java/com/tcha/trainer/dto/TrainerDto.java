@@ -27,7 +27,8 @@ public class TrainerDto {
         private String title;
         private String content;
         private String tags;
-//        private List<MultipartFile> images;
+        private List<String> images;
+
     }
 
     /*
@@ -41,7 +42,8 @@ public class TrainerDto {
         private String title;
         private String content;
         private String tags;
-        private List<MultipartFile> images;
+        private List<String> images;
+
     }
 
     /*

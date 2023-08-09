@@ -14,9 +14,42 @@ public interface TrainerMapper {
 
     List<TrainerDto.ResponseList> trainerListToResponseListDtoList(List<Trainer> trainerList);
 
+    Trainer patchToTrainer(TrainerDto.Patch patchRequest);
+
+    default Trainer trainerPostDtoToTrainer(Long userProfileId, TrainerDto.Post postRequest) {
+
+        // userProfile Mapping
+        UserProfile userProfile = new UserProfile();
+        userProfile.setId(userProfileId);
+
+        return Trainer.builder()
+                .userProfile(userProfile)
+                .introduction(postRequest.getIntroduction())
+                .tags(postRequest.getTags())
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .images(postRequest.getImages())
+                .build();
+
+    }
+
+    default TrainerDto.Response trainerToResponseDto(Trainer trainer) {
+
+        return TrainerDto.Response.builder()
+                .id(trainer.getId())
+                .introduction(trainer.getIntroduction())
+                .tags(trainer.getTags())
+                .title(trainer.getTitle())
+                .content(trainer.getContent())
+                .images(trainer.getImages())
+                .profileImg(trainer.getUserProfile().getProfileImage())
+                .profileName(trainer.getUserProfile().getName())
+                .build();
+    }
+
     default TrainerDto.ResponseList trainerToResponseListDto(Trainer trainer) {
         return TrainerDto.ResponseList.builder()
-                .id(trainer.getId().toString())
+                .id(trainer.getId())
                 .introduction(trainer.getIntroduction())
                 .tags(trainer.getTags())
                 .profileImg(trainer.getUserProfile().getProfileImage())
@@ -30,27 +63,5 @@ public interface TrainerMapper {
                 .build();
     }
 
-    default TrainerDto.Response trainerToResponseDto(Trainer trainer) {
-        return TrainerDto.Response.builder()
-                .id(trainer.getId().toString())
-                .introduction(trainer.getIntroduction())
-                .tags(trainer.getTags())
-                .title(trainer.getTitle())
-                .content(trainer.getContent())
-                .profileImg(trainer.getUserProfile().getProfileImage())
-                .profileName(trainer.getUserProfile().getName())
-                .build();
-    }
-
-    // mapper에서 다른 entity 가져오는거 괜찮은지 검색해보기
-    default Trainer trainerPostDtoToTrainer(TrainerDto.Post postRequest, UserProfile postUser) {
-        return Trainer.builder()
-                .introduction(postRequest.getIntroduction())
-                .tags(postRequest.getTags())
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .userProfile(postUser)
-                .build();
-    }
-
+    List<TrainerDto.Response> trainersToTrainerList(List<Trainer> memberListForResponse);
 }

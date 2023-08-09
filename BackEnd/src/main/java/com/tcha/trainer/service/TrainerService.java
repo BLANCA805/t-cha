@@ -3,6 +3,7 @@ package com.tcha.trainer.service;
 
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.service.PtClassService;
+import com.tcha.question.entity.Question;
 import com.tcha.tag.entity.Tag;
 import com.tcha.tag.repository.TagRepository;
 import com.tcha.trainer.dto.TrainerDto;
@@ -10,17 +11,26 @@ import com.tcha.trainer.dto.TrainerDto.Rank;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.repository.TrainerRepository;
+import com.tcha.user.entity.User;
+import com.tcha.user.service.UserService;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.user_profile.service.UserProfileService;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +41,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TrainerService {
 
-    private final UserProfileRepository userProfileRepository;
+//    private final UserProfileRepository userProfileRepository;
     private final TagRepository tagRepository;
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
     private final PtClassService ptClassService;
+    private final UserService userService;
+    private final UserProfileService userProfileService;
 
     private final RedisTemplate<String, String> redisTemplate;
     private final String STAR_KEY = "star";
@@ -68,19 +80,30 @@ public class TrainerService {
         System.out.println(typedTuples);
      */
 
-    public TrainerDto.Response createTrainer(long userProfileId, TrainerDto.Post postRequest) {
+    public Trainer createTrainer(Trainer trainer) {
+
 
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인 & 이미 트레이너 권한을 갖고 있는지 확인)
-        UserProfile postUser = userProfileRepository.findById(userProfileId).orElseThrow();
+        UserProfile postUser = userProfileService.findVerifiedUserProfile(trainer.getUserProfile().getId());
+        User user = userService.findVerifiedUser(postUser.getUser().getId());
+
+        // 해당 유저에게 트레이너 권한 제공
+        List<String> userRoles = user.getRoles();
+        if(userRoles.contains("TRAINER")){
+            throw new BusinessLogicException(ExceptionCode.TRAINER_EXISTS);
+        }
+        else {
+            userRoles.add("TRAINER");
+            userService.createUser(user);
+        }
 
         // 트레이너 생성
-        Trainer createdTrainer = trainerRepository.save(
-                trainerMapper.trainerPostDtoToTrainer(postRequest, postUser));
+        Trainer createdTrainer = trainerRepository.save(trainer);
 
         // 태그 테이블 설정
         String trainerStr =
-                createdTrainer.getId().toString() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
-        String[] tagList = postRequest.getTags().split(",");
+                createdTrainer.getId() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
+        String[] tagList = trainer.getTags().split(",");
         for (String t : tagList) {
             // 이미 존재하는 태그일 경우, 트레이너 아이디 추가 & 존재하지 않는 태그일 경우 새로운 태그 생성
             if (tagRepository.findByName(t).isPresent()) { // 존재하는 태그
@@ -93,69 +116,75 @@ public class TrainerService {
 
         // 트레이너 이미지 테이블 설정
 
-        return trainerMapper.trainerToResponseDto(createdTrainer);
+        return createdTrainer;
     }
 
 
-    public TrainerDto.Response updateTrainer(String trainerId, TrainerDto.Patch patchRequest) {
+    public Trainer updateTrainer(String trainerId, Trainer trainer) {
 
         // 트레이너 유효성 검증 로직 추가
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainerForSave = findVerifiedTrainer(trainerId);
 
-        trainer.setIntroduction(patchRequest.getIntroduction());
-        trainer.setTitle(patchRequest.getTitle());
-        trainer.setContent(patchRequest.getContent());
-        trainer.setTags(patchRequest.getTags());
+        // 태그 테이블 설정
+        String trainerStr =
+                trainerForSave.getId() + ","; // 태그 trainers에 추가할 트레이너 아이디 문자열
+        String[] tagList = trainer.getTags().split(",");
+        for (String t : tagList) {
+            // 이미 존재하는 태그일 경우, 트레이너 아이디 추가 & 존재하지 않는 태그일 경우 새로운 태그 생성
+            if (tagRepository.findByName(t).isPresent()) { // 존재하는 태그
+                Tag tag = tagRepository.findByName(t).get();
+                tag.setTrainers(tag.getTrainers() + trainerStr);
+            } else { // 존재하지 않는 태그
+                tagRepository.save(Tag.builder().name(t).trainers(trainerStr).build());
+            }
+        }
+
+        Optional.ofNullable(trainer.getIntroduction())
+                .ifPresent(introduction -> trainerForSave.setIntroduction(introduction));
+        Optional.ofNullable(trainer.getTitle())
+                .ifPresent(title -> trainerForSave.setTitle(title));
+        Optional.ofNullable(trainer.getContent())
+                .ifPresent(content -> trainerForSave.setContent(content));
+        Optional.ofNullable(trainer.getTags())
+                .ifPresent(tags -> trainerForSave.setTags(tags));
+        Optional.ofNullable(trainer.getImages())
+                .ifPresent(images -> trainerForSave.setImages(images));
+
         // 연결된 user 변경되지 않도록(setUserProfile 안되도록) 설정하기
 
-        return trainerMapper.trainerToResponseDto(trainer);
+        return trainerRepository.save(trainer);
     }
 
     public TrainerDto.Response findOneTrainer(String trainerId) {
 
         // 트레이너 유효성 검증 추가
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
+        Trainer trainer = findVerifiedTrainer(trainerId);
 
         return trainerMapper.trainerToResponseDto(trainer);
     }
 
-    public List<TrainerDto.ResponseList> findAllTrainers() {
+    public Page<Trainer> findAllTrainers(int page, int size) {
 
-        // 유효한 트레이너만 가져올 수 있도록 쿼리 수정
-        List<Trainer> trainerList = trainerRepository.findAll();
+        Page<Trainer> pageTrainers = trainerRepository.findAll(
+                PageRequest.of(page, size));
 
-//        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
-//        Set<TypedTuple<String>> typedTuples;
-//
-//        //String key = "ranking";
-//        String key = keyMap.get("평균 별점");
-//
-//        System.out.println(key);
-//        if (ZSetOperations.size(key) >= 5) {
-//            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, 4);  //score순으로 5개 보여줌
-//        } else {
-//            typedTuples = ZSetOperations.reverseRangeWithScores(key, 0, ZSetOperations.size(key));
-//        }
-//        List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
-//                .collect(
-//                        Collectors.toList());
-//        System.out.println(result);
+        return pageTrainers;
 
-        return trainerMapper.trainerListToResponseListDtoList(trainerList);
     }
 
-    public TrainerDto.Response deleteTrainer(String trainerId) {
+    public Trainer deleteTrainer(String trainerId) {
 
         // 삭제하려는 트레이너 (유효성 검증 추가 & 현재 로그인한 유저와 트레이너에 연결된 유저가 동일한지 확인)
-        Trainer deletedTrainer =
-                trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow();
 
-        deletedTrainer.setTags(null);
+        Trainer deletedTrainer = findVerifiedTrainer(trainerId);
+
         deletedTrainer.setIntroduction(null);
+        deletedTrainer.setTags(null);
         deletedTrainer.setTitle(null);
         deletedTrainer.setContent(null);
+        deletedTrainer.setImages(null);
 
-        return trainerMapper.trainerToResponseDto(deletedTrainer);
+        return deletedTrainer;
     }
 
     public List<TrainerDto.ResponseList> searchTrainers(TrainerDto.Get search) {
@@ -179,7 +208,7 @@ public class TrainerService {
                 String[] trainers = tag.getTrainers().split(",");
                 for (String trainerId : trainers) {
                     searchResultSet.add(
-                            trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow());
+                            trainerRepository.findById(trainerId).orElseThrow());
                 }
             }
         }
@@ -197,12 +226,22 @@ public class TrainerService {
         // 각 수업의 트레이너 조회
         for (PtClassDto.Response pt_class : classList) {
             searchResultSet.add(trainerRepository.findById(
-                    UUID.fromString(pt_class.getTrainerId())).orElseThrow());
+                    pt_class.getTrainerId()).orElseThrow());
         }
 
         List<Trainer> searchResultList = searchResultSet.stream().toList();
 
         return trainerMapper.trainerListToResponseListDtoList(searchResultList);
+    }
+
+    public Trainer findVerifiedTrainer(String trainerId) {
+
+        Optional<Trainer> optionalTrainer = trainerRepository.findById(trainerId);
+
+        Trainer findTrainer = optionalTrainer.orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
+
+        return findTrainer;
     }
 
 }

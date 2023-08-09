@@ -1,10 +1,16 @@
 package com.tcha.trainer.controller;
 
+import com.tcha.question.dto.QuestionDto;
+import com.tcha.question.entity.Question;
 import com.tcha.trainer.dto.TrainerDto;
+import com.tcha.trainer.entity.Trainer;
+import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
+import com.tcha.utils.pagination.MultiResponseDto;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TrainerController {
 
+    private final TrainerMapper trainerMapper;
     private final TrainerService trainerService;
 
     /**
@@ -37,10 +45,11 @@ public class TrainerController {
             @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
-        TrainerDto.Response createdTrainer =
-                trainerService.createTrainer(userProfileId, postRequest);
+        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId, postRequest);
+        Trainer trainerForResponse = trainerService.createTrainer(trainerForService);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
 
-        return new ResponseEntity<TrainerDto.Response>(createdTrainer, HttpStatus.CREATED);
+        return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.CREATED);
     }
 
     /**
@@ -51,9 +60,11 @@ public class TrainerController {
             @PathVariable("trainer-id") String trainerId,
             @RequestBody TrainerDto.Patch patchRequest) {
 
-        TrainerDto.Response updatedTrainer = trainerService.updateTrainer(trainerId, patchRequest);
+        Trainer trainerForService = trainerMapper.patchToTrainer(patchRequest);
+        Trainer trainerForResponse = trainerService.updateTrainer(trainerId, trainerForService);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
 
-        return new ResponseEntity<TrainerDto.Response>(updatedTrainer, HttpStatus.OK);
+        return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.OK);
     }
 
     /**
@@ -72,11 +83,14 @@ public class TrainerController {
      * 등록된 전체 트레이너의 정보를 조회한다. 트레이너 목록 페이지에서 보여지는 정보
      */
     @GetMapping
-    public ResponseEntity<List<TrainerDto.ResponseList>> getAllTrainers() {
+    public ResponseEntity getAllQuestions(@RequestParam int page, @RequestParam int size) {
 
-        List<TrainerDto.ResponseList> trainerList = trainerService.findAllTrainers();
+        Page<Trainer> pageTrainer = trainerService.findAllTrainers(page - 1, size);
+        List<Trainer> memberListForResponse = pageTrainer.getContent();
+        List<TrainerDto.Response> response = trainerMapper.trainersToTrainerList(
+                memberListForResponse);
 
-        return new ResponseEntity<List<TrainerDto.ResponseList>>(trainerList, HttpStatus.OK);
+        return new ResponseEntity(new MultiResponseDto<>(response, pageTrainer), HttpStatus.OK);
     }
 
     /**
@@ -86,9 +100,10 @@ public class TrainerController {
     public ResponseEntity<TrainerDto.Response> deleteTrainer(
             @PathVariable("trainer-id") String trainerId) {
 
-        TrainerDto.Response deletedTrainer = trainerService.deleteTrainer(trainerId);
+        Trainer deletedTrainer = trainerService.deleteTrainer(trainerId);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(deletedTrainer);
 
-        return new ResponseEntity<TrainerDto.Response>(deletedTrainer, HttpStatus.OK);
+        return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.OK);
     }
 
     /**

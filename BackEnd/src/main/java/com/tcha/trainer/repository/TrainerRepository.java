@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface TrainerRepository extends JpaRepository<Trainer, UUID> {
+public interface TrainerRepository extends JpaRepository<Trainer, String> {
 
     @Query("SELECT t FROM Trainer t WHERE t.userProfile.name LIKE %:keyword%")
     Optional<List<Trainer>> findByNameContaining(String keyword);

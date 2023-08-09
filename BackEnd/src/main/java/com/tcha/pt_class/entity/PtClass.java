@@ -12,7 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -38,14 +40,16 @@ public class PtClass extends Auditable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Trainer trainer;
 
-    private LocalDateTime startAt;
+    @NotNull
+    private LocalDate startDate;
 
-    private LocalDateTime closeAt;
+    @NotNull
+    private LocalTime startTime;
 
     private Long ptLiveId;
 
-    @ColumnDefault("0") // Enum으로 수정
-    private int isDel; // 삭제된 수업(1), 삭제되지 않은 수업(0, default)
+    @ColumnDefault("0") // 추후 Enum으로 수정
+    private int isDel; // 삭제되지 않은 수업(0, default), 삭제된 수업(1)
 
     // builder chain으로 불러오는 거랑, 이렇게 함수로 불러오는 것 중에 뭐가 나을까
     // ---> 큰 차이 없음. 굳이 따지면 builder chain으로 불러오는 게 나은데, 둘 다 좋지 않은 방법 (N+1 문제)

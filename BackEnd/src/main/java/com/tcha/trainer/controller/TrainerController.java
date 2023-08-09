@@ -1,11 +1,11 @@
 package com.tcha.trainer.controller;
 
 import com.tcha.trainer.dto.TrainerDto;
-import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.service.TrainerService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,18 +26,21 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
+    /**
+     * 프로필 아이디를 통해 트레이너를 등록한다.
+     *
+     * @param userProfileId 트레이너를 등록을 요청한 유저의 프로필 아이디
+     * @param postRequest   트레이너 정보(한 줄 소개, 제목, 내용, 태그)
+     */
     @PostMapping("/{user-profile-id}")
     public ResponseEntity<TrainerDto.Response> postTrainer(
             @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
-        log.debug("[TrainerController] postTrainer 접근 확인 ::: "
-                + "userProfileId 값 = {}, postRequest 값 = {}", userProfileId, postRequest);
-
         TrainerDto.Response createdTrainer =
                 trainerService.createTrainer(userProfileId, postRequest);
 
-        return ResponseEntity.ok().body(createdTrainer);
+        return new ResponseEntity<>(createdTrainer, HttpStatus.CREATED);
     }
 
     /*

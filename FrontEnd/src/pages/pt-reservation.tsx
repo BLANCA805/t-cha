@@ -6,11 +6,16 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Button } from "@mui/material";
+import { Box, Button, Modal } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { api } from "@shared/common-data";
 
 const Wrapper = styled.div`
   display: flex;
@@ -65,10 +70,25 @@ const RegisterButton = styled(Button)`
   border-radius: 5px !important;
 `;
 
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 function PtReservation() {
+  const trainer = useLocation().state;
+  const user = useSelector((state: RootState) => state.profile);
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [expanded, setExpanded] = useState<string | false>(false);
+  const [ptClassData, setPtClassData] = useState();
 
   let date = selectedDate?.format("YY-MM-DD");
 
@@ -76,6 +96,24 @@ function PtReservation() {
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
+
+  // useEffect;
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpenModal = () => setOpen(true);
+  const handleCloseModal = () => setOpen(false);
+
+  const makeReservation = () => {
+    axios
+      .post(`${api}/trainers/${trainer}`)
+      .then((response) => {
+        handleOpenModal();
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Wrapper>
@@ -115,27 +153,8 @@ function PtReservation() {
               </Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>{/* Nulla facilisi. Phasg quam. */}</Typography>
               <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
-              </Button>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">12:21</Typography>
+                <Typography variant="h5">ㅇㄴㅁㅇ</Typography>
               </Button>
             </AccordionDetails>
           </StyledAccordion>
@@ -148,7 +167,7 @@ function PtReservation() {
                 1. 예약 확정 이후 트레이너께서 확인하시면 결제 알림 메시지가
                 보내지며, 수락 시 등록된 카드로 결제가 진행됩니다.
               </p>
-              <p>2. PT 기본 시간은 1시간입니다.</p>
+              <p>2. PT 기본 시간은 50분 정도입니다.</p>
               <p>
                 3. 쌍방 예약 확정 이후에는 일정 변경이 번거로울 수 있으니
                 예약정보를 반드시 다시 확인한 후 예약을 확정해 주세요.
@@ -157,12 +176,29 @@ function PtReservation() {
           </RegisterWrapper>
 
           <RegisterWrapper>
-            <RegisterButton href="pt_reservation" variant="contained">
+            <RegisterButton onClick={makeReservation} variant="contained">
               <Typography variant="h6">예약 및 결제하기</Typography>
             </RegisterButton>
           </RegisterWrapper>
         </ReservationWrapper>
       </ContentsWrapper>
+      <div>
+        <Modal
+          open={open}
+          onClose={handleCloseModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Text in a modal
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+          </Box>
+        </Modal>
+      </div>
     </Wrapper>
   );
 }

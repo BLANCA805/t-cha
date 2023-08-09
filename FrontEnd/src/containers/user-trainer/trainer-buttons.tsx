@@ -32,7 +32,6 @@ const TrRow = styled.div`
 
 function TrainerButtons() {
   const trainerId = useSelector((state: RootState) => state.profile.trainerId);
-  console.log(trainerId);
   return (
     <TrainerContainer>
       <TrRow>

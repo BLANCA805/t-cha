@@ -34,7 +34,7 @@ const Container = styled.div`
   border-radius: 10px;
 `;
 
-const Form = styled.form`
+const Form = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.color.light};
@@ -55,16 +55,23 @@ const SubmitButton = styled.div`
   align-items: center;
   margin: 5% 0%;
 `;
+
 const InputCustomButton = styled(TchaButton)`
   margin: 0% !important;
 `;
 
+const TagWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 function TrainerRegistration() {
   const [introduction, setIntroduction] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
+  const [tag, setTag] = useState("");
+  const [enteredTags, setEnteredTags] = useState("");
+  const [tagsForView, setTagsForView] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const profileId = useSelector((state: RootState) => state.profile.profileId);
 
@@ -74,7 +81,7 @@ function TrainerRegistration() {
     introduction: introduction,
     title: title,
     content: content,
-    tags: tags,
+    tags: enteredTags.slice(0, -1),
   };
 
   const handleIntroduction = (event: any) => {
@@ -86,15 +93,25 @@ function TrainerRegistration() {
   const handleContent = (event: any) => {
     setContent(event.target.value);
   };
-  const handleTags = (event: any) => {
-    setTags(event.target.value);
+  const handleTag = (event: any) => {
+    setTag(event.target.value);
+  };
+  const addTag = () => {
+    if (tag) {
+      setEnteredTags(enteredTags + tag + ",");
+      setTagsForView(tagsForView + "#" + tag + " ");
+      setTag("");
+    }
+  };
+  const clearTag = () => {
+    setEnteredTags("");
   };
   const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       const file = files[0];
-      console.log(file);
-      setImages((prev) => [...prev, file]);
+      console.log(files);
+      setImages((prev) => [...prev, files]);
     } else {
       // 이미지를 선택하지 않은 경우에 대한 예외 처리
       console.log("No image selected.");
@@ -137,11 +154,15 @@ function TrainerRegistration() {
     navigate("/profile");
   };
 
+  const testForJW = () => {
+    axios.post();
+  };
+
   return (
     <Wrapper>
       <SmallTitleWrapper>트레이너 등록하기</SmallTitleWrapper>
       <Container>
-        <Form onSubmit={register}>
+        <Form>
           <FormDetailWrapper style={{ marginTop: "3%" }}>
             <TextField
               value={introduction}
@@ -154,11 +175,32 @@ function TrainerRegistration() {
 
           <FormDetailWrapper>
             <TextField
-              value={tags}
-              onChange={handleTags}
-              label="태그를 입력해주세요 (ex - #태그1  #태그2  #태그3) , 최대 3개"
-              style={{ width: "100%" }}
+              value={tag}
+              label="태그를 입력해주세요"
+              style={{ width: "30%" }}
               variant="outlined"
+              onChange={handleTag}
+            />
+            <TagWrapper>
+              <TchaButton
+                style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+                variant="contained"
+                onClick={addTag}
+              >
+                추가
+              </TchaButton>
+              <TchaButton
+                style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+                variant="contained"
+                onClick={clearTag}
+              >
+                비우기
+              </TchaButton>
+            </TagWrapper>
+            <TextField
+              disabled
+              value={tagsForView.slice(0, -1)}
+              style={{ width: "100%" }}
             />
           </FormDetailWrapper>
 
@@ -175,6 +217,7 @@ function TrainerRegistration() {
           <FormDetailWrapper>
             <input
               type="file"
+              multiple
               accept="image/jpg,impge/png,image/jpeg,image/gif"
               name="trainer_img"
               onChange={handleImage}
@@ -193,6 +236,7 @@ function TrainerRegistration() {
             >
               사진등록
             </InputCustomButton>
+            <button onClick={testForJW}>정원이 누르기</button>
           </FormDetailWrapper>
 
           <FormDetailWrapper>
@@ -212,6 +256,7 @@ function TrainerRegistration() {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
+              onClick={register}
             >
               등록하기
             </TchaButton>

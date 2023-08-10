@@ -40,7 +40,7 @@ public class PtClassService {
 
         // 요청을 보낸 트레이너가 유효한 트레이너인지 확인 (에러 핸들링 추가)
         Trainer trainer = trainerRepository.findById(
-                UUID.fromString(postRequest.getTrainerId())).orElseThrow();
+                postRequest.getTrainerId()).orElseThrow();
 
         // pt 수업 등록할 날짜
         LocalDate date = postRequest.getDate();
@@ -60,7 +60,7 @@ public class PtClassService {
     public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
 
         // 요청을 보낸 트레이너가 유효한 트레이너인지 확인
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         List<PtClass> trainerClassList = ptClassRepository.findClassByTrainer(trainer.getId());

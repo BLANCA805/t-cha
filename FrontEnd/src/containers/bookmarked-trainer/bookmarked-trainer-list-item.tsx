@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { DefaultButton } from "@shared/button";
 import { BookmarkedTrainerDataProps } from "src/interface";
+import axios from "axios";
+import { api } from "@shared/common-data";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "src/redux/store";
 
 const Wrapper = styled.div`
   display: flex;
@@ -58,6 +63,33 @@ const KeywordWrapper = styled.div`
 `;
 
 function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
+  const [isBookmarked, setIsBookmarked] = useState(true);
+
+  const user = useSelector((state: RootState) => state.profile.profileId);
+
+  const reBookmark = () => {
+    axios
+      .post(`${api}/bookmarks/${user}/${props.data.trainerId}`)
+      .then((response) => {
+        console.log(response);
+        setIsBookmarked(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const deleteBookmark = () => {
+    axios
+      .delete(`${api}/bookmarks/${props.data.id}`)
+      .then((response) => {
+        console.log(props.data.id);
+        console.log(response);
+        setIsBookmarked(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <Wrapper>
       <PhotoWrapper>
@@ -77,8 +109,12 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
         </KeywordWrapper>
       </DataWrapper>
       <BookmarkWrapper>
-        {/* 북마크 해제 버튼 클릭시 list에서 delete되는 로직 구현필요  */}
-        <DefaultButton>북마크해제</DefaultButton>
+        {isBookmarked && (
+          <DefaultButton onClick={deleteBookmark}>북마크해제</DefaultButton>
+        )}
+        {!isBookmarked && (
+          <DefaultButton onClick={reBookmark}>북마크설정</DefaultButton>
+        )}
       </BookmarkWrapper>
     </Wrapper>
   );

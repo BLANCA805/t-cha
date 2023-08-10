@@ -89,7 +89,6 @@ const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
 
   return (
     <TotalWrapper>
-      {/* 트레이너 리뷰 페이지 입니다. */}
       <ContainerSet>
         {reviewData?.data.map((item, index) => (
           <ReviewContainer key={index}>

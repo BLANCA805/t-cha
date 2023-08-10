@@ -7,6 +7,8 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
 import com.tcha.utils.pagination.MultiResponseDto;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,8 +115,19 @@ public class TrainerController {
     public ResponseEntity<List<TrainerDto.ResponseList>> searchTrainer(
             @RequestBody TrainerDto.Get getRequest) {
 
+//        // 검색 조건이 아무것도 없을 경우 전체 트레이너 반환
+//        String keyword = getRequest.getKeyword();
+//        LocalDate date = getRequest.getDate();
+//        LocalTime toTime = getRequest.getToTime();
+//        LocalTime fromTime = getRequest.getFromTime();
+//
+//        if (keyword == null && date == null && toTime == null && fromTime == null) {
+//
+//        }
+
         List<TrainerDto.ResponseList> searchResult = trainerService.searchTrainers(getRequest);
 
         return new ResponseEntity<List<TrainerDto.ResponseList>>(searchResult, HttpStatus.OK);
     }
+
 }

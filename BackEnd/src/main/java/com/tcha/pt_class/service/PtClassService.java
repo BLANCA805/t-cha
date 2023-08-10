@@ -10,6 +10,8 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user.entity.User;
 import com.tcha.user.repository.UserRepository;
+import com.tcha.user_profile.entity.UserProfile;
+import com.tcha.user_profile.service.UserProfileService;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
 import java.time.LocalDate;
@@ -34,6 +36,7 @@ public class PtClassService {
     private final PtLiveRepository ptLiveRepository;
     private final UserRepository userRepository;
     private final PtClassMapper ptClassMapper;
+    private final UserProfileService userProfileService;
 
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
@@ -71,9 +74,10 @@ public class PtClassService {
     public List<PtClassDto.Response> findPtClassByUser(long userProfileId) {
 
         // 유저 유효성 검사 (추가하기)
+        UserProfile userProfile = userProfileService.findVerifiedUserProfile(userProfileId);
 
         // 유저가 진행한 라이브 데이터 가져오기
-        List<PtLive> userLiveList = ptLiveRepository.findAllByUserProfile(userProfileId);
+        List<PtLive> userLiveList = ptLiveRepository.findAllByUserProfile(userProfile);
         List<PtClass> userClassList = new ArrayList<>();
 
         // 라이브 객체를 통해 클래스 객체 가져와서 리스트에 담기
@@ -142,7 +146,7 @@ public class PtClassService {
             date = LocalDate.now();
         }
         List<PtClass> datetimeClassList = ptClassRepository.findClassByTime(date, fromTime, toTime);
-        
+
         return ptClassMapper.classListToClassResponseDtoList(datetimeClassList);
     }
 

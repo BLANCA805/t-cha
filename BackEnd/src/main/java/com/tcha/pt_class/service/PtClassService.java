@@ -1,5 +1,6 @@
 package com.tcha.pt_class.service;
 
+import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.mapper.PtClassMapper;
@@ -12,14 +13,17 @@ import com.tcha.user.entity.User;
 import com.tcha.user.repository.UserRepository;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +38,6 @@ public class PtClassService {
     private final PtLiveRepository ptLiveRepository;
     private final UserRepository userRepository;
     private final PtClassMapper ptClassMapper;
-
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
@@ -142,7 +145,7 @@ public class PtClassService {
             date = LocalDate.now();
         }
         List<PtClass> datetimeClassList = ptClassRepository.findClassByTime(date, fromTime, toTime);
-        
+
         return ptClassMapper.classListToClassResponseDtoList(datetimeClassList);
     }
 
@@ -167,5 +170,120 @@ public class PtClassService {
 
         return ptClassMapper.classToClassResponseDto(ptClass);
     }
+
+
+    /************** 상태 변경 로직 작성 ***************/
+
+    /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
+
+    @Transactional
+//    @Scheduled(cron = "* 0 * * * *") // 정각에 실행
+    @Scheduled(cron = "0 * * * * *")
+    public void executePtLiveStatusHourTerminable() {
+        executePtLiveStatusChangeTerminable();
+    }
+
+    @Transactional
+//    @Scheduled(cron = "* 30 * * * *") // 30분에 실행
+    @Scheduled(cron = "30 * * * * *")
+    public void executePtLiveStatusHalfHourTerminable() {
+        executePtLiveStatusChangeTerminable();
+    }
+
+
+    //진행 -> 종료가능 변경
+    @Transactional
+//    @Scheduled(cron = "0 */30 * * * *") // 매시각 30분마다 실행
+    public void executePtLiveStatusChangeTerminable() {
+        System.out.println("진행 -> 종료가능 메소드에 들어옴: " + LocalDateTime.now());
+
+
+        //메소드 실행시각
+        LocalDateTime nowTime = LocalDateTime.now();
+
+        // status로 pt라이브 불러오기 (Progress 가져오기)
+        List<PtLive> list = ptLiveRepository.findAllByStatusProgerss().get();
+
+
+        //불러온 운동일지 상태 for문 돌면서 수정하기
+        for (PtLive pt : list) {
+            //해당 운동 클래스 가져오기
+            PtClass ptClass = ptClassRepository.findById(pt.getPtClassId()).get();
+
+            //해당 수업 시작 시간 가져오기
+            LocalTime startTime = ptClass.getStartTime();
+            LocalDate startDate = ptClass.getStartDate();
+
+            LocalDateTime start = LocalDateTime.of(startDate, startTime);
+
+
+            //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
+            if (start.isBefore(nowTime.minusHours(1))) {
+                pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
+            }
+
+//            //테스트 코드: 3분 지나면 READ로 변경
+//            if (start.isBefore(nowTime.minusMinutes(3))) {
+//              pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
+//            }
+
+        }
+
+    }
+
+
+    //    @Transactional
+//    @Scheduled(cron = "* 10 * * * *") // 매번 n:10분에 실행
+    @Transactional
+    @Scheduled(cron = "30 * * * * *")
+    public void executePtLiveStatusHourTermination() {
+        executePtLiveStatusChangeTermination();
+    }
+
+    @Transactional
+//    @Scheduled(cron = "* 40 * * * *") // 매번 n:30분에 실행
+    @Scheduled(cron = "0 * * * * *")
+    public void executePtLiveStatusHalfHourTermination() {
+        executePtLiveStatusChangeTermination();
+    }
+
+
+    //종료가능 -> 종료
+    @Transactional
+    public void executePtLiveStatusChangeTermination() {
+
+        System.out.println("종료가능 -> 종료 메소드에 들어옴: " + LocalDateTime.now());
+        //메소드 실행시각
+        LocalDateTime nowTime = LocalDateTime.now();
+
+        // status로 pt라이브 불러오기 (Progress 가져오기)
+        List<PtLive> list = ptLiveRepository.findAllByStatusTerminable().get();
+
+
+        //불러온 운동일지 상태 for문 돌면서 수정하기
+        for (PtLive pt : list) {
+            //해당 운동 클래스 가져오기
+            PtClass ptClass = ptClassRepository.findById(pt.getPtClassId()).get();
+
+            //해당 수업 시작 시간 가져오기
+            LocalTime startTime = ptClass.getStartTime();
+            LocalDate startDate = ptClass.getStartDate();
+
+            LocalDateTime start = LocalDateTime.of(startDate, startTime);
+
+
+            //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
+            if (start.isBefore(nowTime.minusMinutes(70))) {
+                pt.setStatus(PtLive.PtliveStaus.TERMINATION);
+            }
+
+//            //테스트 코드: 3분 지나면 READ로 변경
+//            if (start.isBefore(nowTime.minusMinutes(3))) {
+//              pt.setStatus(PtLive.PtliveStaus.TERMINATION);
+//            }
+
+        }
+    }
+
 
 }

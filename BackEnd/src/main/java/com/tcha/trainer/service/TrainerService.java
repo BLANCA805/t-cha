@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class TrainerService {
 
-//    private final UserProfileRepository userProfileRepository;
+    //    private final UserProfileRepository userProfileRepository;
     private final TagRepository tagRepository;
     private final TrainerRepository trainerRepository;
     private final TrainerMapper trainerMapper;
@@ -74,17 +74,16 @@ public class TrainerService {
 
     public Trainer createTrainer(Trainer trainer) {
 
-
         // userProfile 객체 가져오기 (유효성 검증 로직 추가 :: 활성상태 유저인지 확인, 일반 유저인지 확인 & 이미 트레이너 권한을 갖고 있는지 확인)
-        UserProfile postUser = userProfileService.findVerifiedUserProfile(trainer.getUserProfile().getId());
+        UserProfile postUser = userProfileService.findVerifiedUserProfile(
+                trainer.getUserProfile().getId());
         User user = userService.findVerifiedUser(postUser.getUser().getId());
 
         // 해당 유저에게 트레이너 권한 제공
         List<String> userRoles = user.getRoles();
-        if(userRoles.contains("TRAINER")){
+        if (userRoles.contains("TRAINER")) {
             throw new BusinessLogicException(ExceptionCode.TRAINER_EXISTS);
-        }
-        else {
+        } else {
             userRoles.add("TRAINER");
             userService.createUser(user);
         }

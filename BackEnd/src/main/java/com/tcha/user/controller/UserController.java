@@ -52,6 +52,15 @@ public class UserController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping
+    public ResponseEntity loginUser(@RequestParam String email) {
+
+        User foundUser = userService.findByEmail(email);
+        UserDto.LoginResponseDto response = userMapper.userToLoginDto(foundUser);
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
 }
 
 /*

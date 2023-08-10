@@ -57,12 +57,9 @@ public class TrainerDto {
         @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-DD", timezone = "Asia/Seoul")
         private LocalDate date;
         @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
-        @Builder.Default
-        private LocalTime fromTime = LocalTime.parse("00:00");
+        private LocalTime fromTime;
         @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
-        @Builder.Default
-        private LocalTime toTime = LocalTime.parse("23:59");
-//        private LocalDateTime datetime; // *고민* 날짜와 시간을 분리?
+        private LocalTime toTime;
     }
 
     /*

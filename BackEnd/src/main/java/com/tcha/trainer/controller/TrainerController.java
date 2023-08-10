@@ -8,6 +8,8 @@ import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
 import com.tcha.utils.pagination.MultiResponseDto;
 import com.tcha.utils.pagination.PageInfo;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +51,8 @@ public class TrainerController {
             @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
-        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId, postRequest);
+        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId,
+                postRequest);
         Trainer trainerForResponse = trainerService.createTrainer(trainerForService);
         TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
 
@@ -85,7 +88,7 @@ public class TrainerController {
     /**
      * 등록된 전체 트레이너의 정보를 조회한다. 트레이너 목록 페이지에서 보여지는 정보
      */
-//    @GetMapping
+    //    @GetMapping
 //    public ResponseEntity getAllTrainers(@RequestParam int page, @RequestParam int size) {
 //
 //        Page<Trainer> pageTrainer = trainerService.findAllTrainers(page - 1, size);
@@ -156,8 +159,19 @@ public class TrainerController {
     public ResponseEntity<List<TrainerDto.ResponseList>> searchTrainer(
             @RequestBody TrainerDto.Get getRequest) {
 
+//        // 검색 조건이 아무것도 없을 경우 전체 트레이너 반환
+//        String keyword = getRequest.getKeyword();
+//        LocalDate date = getRequest.getDate();
+//        LocalTime toTime = getRequest.getToTime();
+//        LocalTime fromTime = getRequest.getFromTime();
+//
+//        if (keyword == null && date == null && toTime == null && fromTime == null) {
+//
+//        }
+
         List<TrainerDto.ResponseList> searchResult = trainerService.searchTrainers(getRequest);
 
         return new ResponseEntity<List<TrainerDto.ResponseList>>(searchResult, HttpStatus.OK);
     }
+
 }

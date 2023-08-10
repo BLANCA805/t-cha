@@ -9,6 +9,17 @@ public interface UserMapper {
 
     UserDto.Response userToResponse(User user);
 
+    default UserDto.LoginResponseDto userToLoginDto(User user){
+
+        return UserDto.LoginResponseDto.builder()
+                .userId(user.getId())
+                .userProfileId(user.getUserProfile().getId())
+                .name(user.getUserProfile().getName())
+                .userProfileImage(user.getUserProfile().getProfileImage())
+                .trainerId(user.getUserProfile().getTrainer().getId())
+                .build();
+    }
+
 }
 
 /*

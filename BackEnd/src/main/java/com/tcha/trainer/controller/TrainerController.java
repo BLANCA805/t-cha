@@ -45,7 +45,8 @@ public class TrainerController {
             @PathVariable("user-profile-id") long userProfileId,
             @RequestBody TrainerDto.Post postRequest) {
 
-        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId, postRequest);
+        Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId,
+                postRequest);
         Trainer trainerForResponse = trainerService.createTrainer(trainerForService);
         TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
 
@@ -82,7 +83,7 @@ public class TrainerController {
      * 등록된 전체 트레이너의 정보를 조회한다. 트레이너 목록 페이지에서 보여지는 정보
      */
     @GetMapping
-    public ResponseEntity getAllQuestions(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity getAllTrainers(@RequestParam int page, @RequestParam int size) {
 
         Page<Trainer> pageTrainer = trainerService.findAllTrainers(page - 1, size);
         List<Trainer> memberListForResponse = pageTrainer.getContent();

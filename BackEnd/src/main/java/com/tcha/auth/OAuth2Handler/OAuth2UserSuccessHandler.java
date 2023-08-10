@@ -73,7 +73,7 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         log.info("Token 생성 시작");
         String accessToken = delegateAccessToken(username, authorities); // username : email
         String refreshToken = delegateRefreshToken(username);
-        String uri = createURI(accessToken, refreshToken).toString();
+        String uri = createURI(accessToken, refreshToken, username).toString();
         getRedirectStrategy().sendRedirect(request, response,
                 uri); // 생성한 토큰을 URI에 담고 다시 front 애플리케이션으로 redirect 실행
     }
@@ -106,12 +106,12 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
     }
 
     //front로 redirect 하는 부분
-    private URI createURI(String accessToken, String refreshToken) {
-//    private URI createURI(String accessToken, String refreshToken) {
+    private URI createURI(String accessToken, String refreshToken, String email) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        // user_id, username 을 붙여야할까?
+
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        queryParams.add("email", email);
 
         return UriComponentsBuilder // 별도 설정이 없을 경우 uri 기본 port 값은 80
                 .newInstance()

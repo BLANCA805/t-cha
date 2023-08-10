@@ -134,8 +134,8 @@ function CreateClasses() {
 
   const trainerId = useSelector((state: RootState) => state.profile.trainerId);
 
-  let startTimeList: string[] = [];
-
+  const [startTimeList, setStartTimeList] = useState<string[]>([]); 
+  
   const date = selectedDate?.format("YYYY-MM-DD");
 
   const body = {
@@ -144,32 +144,29 @@ function CreateClasses() {
     startTimeList: startTimeList,
   };
 
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
-
-  const addTime = (event: string) => {
-    startTimeList.push(event);
-    console.log(startTimeList);
-  };
 
   const createClass = () => {
     axios
       .post(`${api}/classes`, body)
       .then((response) => {
         console.log(response.data);
-        startTimeList = [];
+        setStartTimeList([])
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const handleChangeList = (items: string[]) => {
+    setStartTimeList(items)
+  } 
 
-
+  const test = () => {
+    console.log(startTimeList)
+  }
 
   return (
     <Wrapper>
+      <button onClick={test}>테스트</button>
       <PageTitle>PT 일정 설정하기</PageTitle>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -191,35 +188,11 @@ function CreateClasses() {
 
         <ReservationWrapper>
 
-          <TransferList times={times}></TransferList>
-          {/* <StyledAccordion
-            expanded={expanded === "panel1"}
-            onChange={handleChange("panel1")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography sx={{ width: "63%", flexShrink: 0 }}>시간</Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                {" "}
-                시간을 선택하세요{" "}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {times.map((time, index) => (
-                <button key={index} onClick={() => addTime(time)}>
-                  {time}
-                </button>
-              ))}
-            </AccordionDetails>
-          </StyledAccordion> */}
-          {/* {times.map((time, index) => (
-                <button key={index} onClick={() => addTime(time)}>
-                  {time}
-                </button>
-              ))} */}
+          <TransferList 
+          times={times} 
+          handleChangeList = {handleChangeList}
+          />
+          
 
               
           <RegisterWrapper>

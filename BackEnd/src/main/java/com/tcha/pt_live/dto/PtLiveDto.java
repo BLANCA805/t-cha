@@ -1,7 +1,9 @@
 package com.tcha.pt_live.dto;
 
 import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -51,6 +53,8 @@ public class PtLiveDto {
         private String trainerProfileImage;
         private String trainerName;
 
+        //라이브 상태 정보
+        private String status;
         // 유저 정보
 //        private String userId;
 //        private String userProfileImage;

@@ -5,69 +5,66 @@ const Wrapper = styled.div`
   /* display:flex; */
   /* justify-content:center; */
   /* align-items: center; */
-  height:10rem;
-  background-color:lightpink;
+  height: 10rem;
+  background-color: lightpink;
   margin-bottom: 1%;
   border-radius: 5px;
 `;
 const DataWrapper = styled.div`
-  height:100%;
-  width:100%;
-  display:flex;
-  justify-content:center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  flex-direction:row;
+  flex-direction: row;
 `;
 
 const TimeWrapper = styled.div`
-  flex:3;
-  display:flex;
-  flex-direction:column;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 `;
 
 const PtInfoWrapper = styled.div`
-  flex:6;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+  flex: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
-const TrainerName = styled.div`
-`;
+const TrainerName = styled.div``;
 
 const ButtonWrapper = styled.div`
-  flex:3;
-  display:flex;
+  flex: 3;
+  display: flex;
   justify-content: center;
-
 `;
 
-
-
-
 interface ScheduleListItemProps {
-  data:{
+  data: {
     trName: string;
-    ptName:string;
-    ptDate:string;
-    ptStartTime:string;
+    ptName: string;
+    ptDate: string;
+    ptStartTime: string;
   };
 }
-
-
-
 
 function UserScheduleListItem(props: ScheduleListItemProps) {
   return (
     <Wrapper>
       <DataWrapper>
-        <TimeWrapper> <h3>Time: {props.data.ptStartTime}</h3></TimeWrapper>
+        <TimeWrapper>
+          {" "}
+          <h3>Time: {props.data.ptStartTime}</h3>
+        </TimeWrapper>
         <PtInfoWrapper>
-          <h2 style={{marginTop:"2px", marginBottom:"2px"}}>{props.data.ptName}</h2>
+          <h2 style={{ marginTop: "2px", marginBottom: "2px" }}>
+            {props.data.ptName}
+          </h2>
           <TrainerName>
-            <b style={{fontSize:"0.5rem"}}>트레이너</b>
-            <b style={{fontSize:"1rem"}}> {props.data.trName}</b>
+            <b style={{ fontSize: "0.5rem" }}>트레이너</b>
+            <b style={{ fontSize: "1rem" }}> {props.data.trName}</b>
           </TrainerName>
         </PtInfoWrapper>
         <ButtonWrapper>
@@ -79,7 +76,7 @@ function UserScheduleListItem(props: ScheduleListItemProps) {
 }
 
 // function UserScheduleListItem() {
-//   //No Axios 테스트용 
+//   //No Axios 테스트용
 //     return (
 //     <Wrapper>
 //       <DataWrapper>
@@ -93,5 +90,4 @@ function UserScheduleListItem(props: ScheduleListItemProps) {
 //       );
 //   }
 
-  export default UserScheduleListItem;
-  
+export default UserScheduleListItem;

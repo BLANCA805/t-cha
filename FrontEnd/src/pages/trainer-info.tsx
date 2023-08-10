@@ -229,10 +229,13 @@ function TrainerInfo() {
         {tab === "detail" && detail && <TrainerDetail data={detail} />}
         {tab === "review" && <TrainerReview trainer={trainer} />}
       </Wrapper>
-      {trainer === user.trainerId && (
+      {trainer !== user.trainerId && (
         <BottomTab>
           <BookmarkWrapper>
-            {/* <BookmarkButton onClick={toggleBookmarkIcon} backgroundImage = {bookmarkIcon}></BookmarkButton> */}
+            {/* <BookmarkButton
+              onClick={toggleBookmarkIcon}
+              backgroundImage={bookmarkIcon}
+            ></BookmarkButton> */}
             <BookmarkButton onClick={() => setBookmark(!bookmark)}>
               {bookmark ? (
                 <StarRoundedIcon style={{ fontSize: "7em" }} />

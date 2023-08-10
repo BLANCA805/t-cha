@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +36,7 @@ public class PtClassService {
     private final PtLiveRepository ptLiveRepository;
     private final UserRepository userRepository;
     private final PtClassMapper ptClassMapper;
-
+    private final RedisTemplate<String, String> redisTemplate;
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
@@ -91,7 +93,11 @@ public class PtClassService {
         User user = userRepository.findById(patchRequest.getUserId()).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
 
-        // ptClass 객체 가져오기
+        // key : value를 가지는 redis 자료구조 불러오기(Pt 누적 횟수 업데이트를 위해)
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+        // ptClass 객체 가져오기 (유효성 검증 로직 추가)
+
         PtClass ptClass = ptClassRepository.findVerifiedClassById(patchRequest.getPtClassId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_CLASS_NOT_FOUND));
 
@@ -123,6 +129,14 @@ public class PtClassService {
         if (user.getUserProfile().equals(ptLive.getUserProfile())) {
             ptClass.setPtLiveId(null);
             ptLive.setUserProfile(null);
+
+
+            String trainerId = ptLive.getTrainerId();
+            String ptCountKey = "ptCount:" + trainerId;
+
+            String s = valueOperations.get(ptCountKey);
+            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+            return ptClassMapper.classToClassResponseDto(ptClass);
         }
 
         return ptClassMapper.classToClassResponseDto(ptClass);
@@ -142,7 +156,7 @@ public class PtClassService {
             date = LocalDate.now();
         }
         List<PtClass> datetimeClassList = ptClassRepository.findClassByTime(date, fromTime, toTime);
-        
+
         return ptClassMapper.classListToClassResponseDtoList(datetimeClassList);
     }
 

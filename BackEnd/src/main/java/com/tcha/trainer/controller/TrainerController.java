@@ -7,10 +7,13 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
 import com.tcha.utils.pagination.MultiResponseDto;
+import com.tcha.utils.pagination.PageInfo;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +36,7 @@ public class TrainerController {
 
     private final TrainerMapper trainerMapper;
     private final TrainerService trainerService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     /**
      * 유저 프로필 아이디를 통해 트레이너를 등록한다.
@@ -81,15 +85,55 @@ public class TrainerController {
     /**
      * 등록된 전체 트레이너의 정보를 조회한다. 트레이너 목록 페이지에서 보여지는 정보
      */
+//    @GetMapping
+//    public ResponseEntity getAllTrainers(@RequestParam int page, @RequestParam int size) {
+//
+//        Page<Trainer> pageTrainer = trainerService.findAllTrainers(page - 1, size);
+//        List<Trainer> memberListForResponse = pageTrainer.getContent();
+//
+//        List<TrainerDto.Response> response = trainerMapper.trainersToTrainerList(
+//                memberListForResponse);
+//
+//        return new ResponseEntity(new MultiResponseDto<>(response, pageTrainer), HttpStatus.OK);
+//    }
     @GetMapping
-    public ResponseEntity getAllQuestions(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity getNewTrainers(@RequestParam int page, @RequestParam int size) {
 
-        Page<Trainer> pageTrainer = trainerService.findAllTrainers(page - 1, size);
-        List<Trainer> memberListForResponse = pageTrainer.getContent();
-        List<TrainerDto.Response> response = trainerMapper.trainersToTrainerList(
-                memberListForResponse);
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByNewTrainers(page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
 
-        return new ResponseEntity(new MultiResponseDto<>(response, pageTrainer), HttpStatus.OK);
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+    }
+    @GetMapping("/sorted-by-star")
+    public ResponseEntity getAllTrainersByStar(@RequestParam int page, @RequestParam int size) {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByStarTrainers(page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+    }
+    @GetMapping("/sorted-by-pt")
+    public ResponseEntity getAllTrainersByPt(@RequestParam int page, @RequestParam int size) {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByPtTrainers(page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+    }    @GetMapping("/sorted-by-bookmark")
+    public ResponseEntity getAllTrainersByBookmark(@RequestParam int page, @RequestParam int size) {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByBookmarkTrainers(page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+    }
+    @GetMapping("/sorted-by-review")
+    public ResponseEntity getAllTrainersByReview(@RequestParam int page, @RequestParam int size) {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByReviewTrainers(page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
     }
 
     /**

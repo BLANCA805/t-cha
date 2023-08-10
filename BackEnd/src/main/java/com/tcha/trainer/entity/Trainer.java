@@ -5,7 +5,9 @@ import com.tcha.review.entity.Review;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -33,9 +35,8 @@ public class Trainer extends Auditable {
     @Id
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "uuid2")
-//    @Column(name = "TRAINER_ID", columnDefinition = "BINARY(16)")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+    @Column(columnDefinition = "CHAR(36)")
+    private String id; // UUID -> String 변경
 
     @OneToOne
     private UserProfile userProfile;
@@ -51,6 +52,10 @@ public class Trainer extends Auditable {
     @Lob
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    //이미지 접근 url
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> images;
 
     /*
     ----------- 다대일 양방향을 위한 필드 -----------
@@ -68,8 +73,6 @@ public class Trainer extends Auditable {
 //    @OneToMany(mappedBy = "trainer")
 //    private List<PtClass> classes = new ArrayList<>();
 //
-//    // 트레이너 이미지
-//    @OneToMany(mappedBy = "trainer")
-//    private List<TrainerImage> images = new ArrayList<>();
+
 
 }

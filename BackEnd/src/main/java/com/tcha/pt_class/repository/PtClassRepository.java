@@ -18,7 +18,7 @@ public interface PtClassRepository extends JpaRepository<PtClass, Long> {
 //    List<PtClass> findClassByTrainerAndDate(UUID trainerId, LocalDate date);
 
     @Query("SELECT c FROM PtClass c JOIN FETCH c.trainer t WHERE t.id = :trainerId AND c.isDel = 0")
-    List<PtClass> findClassByTrainer(UUID trainerId);
+    List<PtClass> findClassByTrainer(String trainerId);
 
     @Query("SELECT c FROM PtClass c WHERE c.id = :classId AND c.isDel = 0")
     Optional<PtClass> findVerifiedClassById(Long classId);

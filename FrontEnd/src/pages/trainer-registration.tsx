@@ -111,7 +111,6 @@ function TrainerRegistration() {
     if (files) {
       const file = files[0];
       console.log(files);
-      setImages((prev) => [...prev, files]);
     } else {
       // 이미지를 선택하지 않은 경우에 대한 예외 처리
       console.log("No image selected.");
@@ -154,9 +153,7 @@ function TrainerRegistration() {
     navigate("/profile");
   };
 
-  const testForJW = () => {
-    axios.post();
-  };
+
 
   return (
     <Wrapper>
@@ -236,7 +233,6 @@ function TrainerRegistration() {
             >
               사진등록
             </InputCustomButton>
-            <button onClick={testForJW}>정원이 누르기</button>
           </FormDetailWrapper>
 
           <FormDetailWrapper>

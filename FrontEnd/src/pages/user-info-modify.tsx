@@ -127,22 +127,51 @@ function UserInfoModify() {
 
   const navigate = useNavigate();
 
-  const Modify = async (img: File[]) => {
-    await useImageUpload(img)
-      .then(() => {
-        axios
-          .patch(`${api}/userProfiles/${profileId}`, infoForm)
-          .then((response) => {
-            console.log(response.data);
-            navigate("/profile");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  // const Modify = async (img: File[]) => {
+  //   await useImageUpload(img)
+  //     .then(() => {
+  //       axios
+  //         .patch(`${api}/userProfiles/${profileId}`, infoForm)
+  //         .then((response) => {
+  //           console.log(response.data);
+  //           navigate("/profile");
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  const Modify = async () => {
+    const formData = new FormData();
+    formData.append("images", file[0]);
+    try {
+      const uploadResponse = await axios.post(
+        `${api}/upload/images`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const imageUrl = uploadResponse.data;
+      const profileUpdateData = {
+        name: name,
+        profileImage: imageUrl[0],
+      };
+      const profileUpdateResponse = await axios.patch(
+        `${api}/userProfiles/${profileId}`,
+        profileUpdateData
+      );
+      console.log("Profile Update Response:", profileUpdateResponse.data); // 프로필 업데이트 응답 로그 출력
+      navigate("/profile");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const goToBack = () => {
@@ -196,7 +225,7 @@ function UserInfoModify() {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
-              onClick={() => Modify(file)}
+              onClick={Modify}
             >
               등록하기
             </TchaButton>

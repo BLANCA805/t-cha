@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
@@ -28,6 +28,8 @@ const Sticky = styled.div`
 
 function SideBar() {
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -125,6 +127,7 @@ function SideBar() {
   const LogOut = () => {
     dispatch(logOut());
     dispatch(deleteProfile());
+    navigate("/");
   };
 
   const test = () => {
@@ -132,7 +135,7 @@ function SideBar() {
     axios
       .post(`${api}/userProfiles`, {
         userId: token,
-        name: "임병국",
+        name: token.slice(0, 3),
         profileImage: "이미지",
       })
       .then((response) => {

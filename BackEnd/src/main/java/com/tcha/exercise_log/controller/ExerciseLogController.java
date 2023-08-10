@@ -14,6 +14,8 @@ import com.tcha.utils.upload.service.S3Uploader;
 import java.io.IOException;
 import java.util.List;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,11 +44,11 @@ public class ExerciseLogController {
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogMapper exerciseLogMapper;
 
-    //운동일지 생성
+    //운동일지 생성 -> 클라이언트에서 요청 X, 테스트용
     @PostMapping("/{pt-live-id}")
     public ResponseEntity postExerciseLog(
-            @PathVariable(value = "pt-live-id") Long ptLiveId,
-            @RequestBody ExerciseLogDto.Post postRequest
+            @PathVariable(value = "pt-live-id") @Positive Long ptLiveId,
+            @Valid @RequestBody ExerciseLogDto.Post postRequest
     ) {
         //이미 운동일지가 생성되어 있는지 체크, 에러(코드: 409) 없다면 아래의 코드들 실행
         exerciseLogService.duplicateVerifiedByPtLiveId(ptLiveId);
@@ -63,16 +65,16 @@ public class ExerciseLogController {
 
     //운동일지 수정하기
     @PatchMapping("/{exercise-log-id}")
-    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") Long id,
-                                           @RequestBody ExerciseLogDto.Patch patchRequest
+    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") @Positive Long exerciseLogId,
+                                           @Valid @RequestBody ExerciseLogDto.Patch patchRequest
     ) {
 
         //존재하는 운동일지인지 체크
-        ExerciseLog exerciseLog = exerciseLogService.findVerifiedById(id);
+        ExerciseLog exerciseLog = exerciseLogService.findVerifiedById(exerciseLogId);
 
         //운동일지 내용 업데이트
         ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
-                exerciseLog, patchRequest, id);
+                exerciseLog, patchRequest, exerciseLogId);
 
 //        ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(exerciseLog, patchRequest);
 
@@ -82,8 +84,8 @@ public class ExerciseLogController {
     //운동일지 리스트 가져오기
     @GetMapping
     public ResponseEntity getExerciseLogPage(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "size", defaultValue = "10") Integer size) {
+            @RequestParam(value = "page", defaultValue = "1") @Positive Integer page,
+            @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
 
         Page<ExerciseLog> exerciseLogPage = exerciseLogService.findExerciseLogPages(page, size);
         List<ExerciseLog> exerciseLogs = exerciseLogPage.getContent();
@@ -97,25 +99,46 @@ public class ExerciseLogController {
 
     //운동일지 1개 가져오기
     @GetMapping("/{exercise-log-id}")
-    public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
+    public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
 
-        ExerciseLogDto.Response response = exerciseLogService.findExerciseLog(id);
+        ExerciseLogDto.Response response = exerciseLogService.findExerciseLog(exerciseLogId);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     //pt live id로 운동일지 1개 가져오기 (혹시 라이브로 접근할 경우, 사용)
     @GetMapping("ptLive/{pt-live-id}")
-    public ResponseEntity getOneExerciseLogByLiveId(@PathVariable(value = "pt-live-id") Long id) {
-        ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(id);
+    public ResponseEntity getOneExerciseLogByLiveId(@PathVariable(value = "pt-live-id") @Positive Long exerciseLogId) {
+        ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(exerciseLogId);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     //운동일지 삭제하기
     @DeleteMapping("/{exercise-log-id}")
-    public ResponseEntity deleteOneExerciseLog(@PathVariable(value = "exercise-log-id") Long id) {
-        exerciseLogService.deleteExerciseLog(id);
+    public ResponseEntity deleteOneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+        exerciseLogService.deleteExerciseLog(exerciseLogId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+    //운동일지 작성 완료
+    @PatchMapping("/done/{exercise-log-id}")
+    public ResponseEntity<ExerciseLogDto.Response> patchWriteDoneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+        ExerciseLogDto.Response response = exerciseLogService.patchWriteDoneExerciseLog(exerciseLogId);
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    /*
+            @GetMapping("/{user-profile-id}/{trainer-id}")
+    public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
+            @PathVariable("user-profile-id") @Positive Long userProfileID,
+            @PathVariable("trainer-id") String trainerId) {
+
+        BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
+                userProfileID, trainerId);
+
+        return ResponseEntity.ok().body(response);
+    }
+    */
 
 }

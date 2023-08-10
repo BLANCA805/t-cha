@@ -5,18 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tcha.guide.entity.Guide;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.utils.audit.Auditable;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.OrderColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +49,7 @@ public class ExerciseLog extends Auditable {
     private PtLive ptLive;
 
     //상태 변경 -> 초기 생성값 write(작성 가능)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private exerciseLogStaus status;
 //    = exerciseLogStaus.WRITE;

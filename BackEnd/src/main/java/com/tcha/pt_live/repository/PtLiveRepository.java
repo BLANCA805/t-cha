@@ -5,6 +5,7 @@ import com.tcha.pt_live.entity.PtLive;
 import java.util.List;
 import java.util.Optional;
 
+import com.tcha.user_profile.entity.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

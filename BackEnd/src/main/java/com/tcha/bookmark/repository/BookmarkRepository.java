@@ -14,7 +14,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     @Query(value = "FROM Bookmark b WHERE b.userProfile = :userProFile")
     Page<Bookmark> findByUserProfile(UserProfile userProFile, Pageable pageable);
 
-    @Query(value = "FROM Bookmark b WHERE b.userProfile = :userProfile AND b.trainer = :trainer")
-    Optional<Bookmark> findBookmarkByUserProfileAndTrainer(UserProfile userProfile,
-            Trainer trainer);
+    @Query(value = "FROM Bookmark b WHERE b.userProfile.id = :userProfileId AND b.trainer.id = :trainerId")
+    Optional<Bookmark> findBookmarkByUserProfileAndTrainer(Long userProfileId,
+            String trainerId);
 }

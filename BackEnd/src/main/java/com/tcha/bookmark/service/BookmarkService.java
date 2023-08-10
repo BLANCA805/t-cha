@@ -60,7 +60,7 @@ public class BookmarkService {
 
     //유저별 즐겨찾기 목록 확인
     public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size,
-                                                                        Long userProfileId) {
+            Long userProfileId) {
 
         //유저프로필 객체 가져오기
         UserProfile userProfile = findVerifiedUserProfileById(userProfileId);
@@ -87,12 +87,26 @@ public class BookmarkService {
         Trainer trainer = findVerifiedTrainerById(trainerId);
 
         //유저프로필과 트레이너 객체 이용해서 북마크 객체 가져오기
-        Bookmark bookmark = bookMarkRepository.findBookmarkByUserProfileAndTrainer(userProfile,
-                        trainer)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOOKMARK_NOT_FOUND));
+        Bookmark bookmark = findVerifiedBookmarkByUserProfileAndTrainer(userProfileId, trainerId);
 
         return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
 
+    }
+
+    //유저프로필 아이디와 트레이너 아이디를 이용하여 북마크 삭제하기
+    public void deleteBookmarkByUserProfileIdAndTrainerId(Long userProfileId,
+            String trainerId) {
+        Bookmark bookmark = findVerifiedBookmarkByUserProfileAndTrainer(userProfileId, trainerId);
+        bookMarkRepository.deleteById(bookmark.getId());
+    }
+
+    //유저 프로필아이디와 트레이너 아이디로 북마크 조회시 유효성 검증
+    public Bookmark findVerifiedBookmarkByUserProfileAndTrainer(Long userProfile,
+            String trainerId) {
+        Bookmark bookmark = bookMarkRepository.findBookmarkByUserProfileAndTrainer(userProfile,
+                        trainerId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.BOOKMARK_NOT_FOUND));
+        return bookmark;
     }
 
     //존재하는 유저 프로필인지에 대한 유효성 검증
@@ -116,7 +130,7 @@ public class BookmarkService {
 //                UUID.fromString("00000000-0000-0000-0000-000000000000"));
 
         //트레이너 객체 가져오기
-        Trainer trainer = trainerRepository.findById(UUID.fromString(trainerId)).orElseThrow(
+        Trainer trainer = trainerRepository.findById(trainerId).orElseThrow(
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         return trainer;

@@ -1,15 +1,10 @@
 package com.tcha.pt_live.entity;
 
 
+import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -42,5 +37,21 @@ public class PtLive extends Auditable {
     // 트레이너의 이름이나 프로필 이미지만?
     @NotBlank
     private String trainerId;
+
+
+    //상태 변경 -> 초기 생성값 progress(작성 가능)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PtliveStaus status;
+
+    public enum PtliveStaus {
+        PROGRESS("진행중"), TERMINABLE("종료가능"), TERMINATION("종료");
+        @Getter
+        private String status;
+
+        PtliveStaus(String staus) {
+            this.status = staus;
+        }
+    }
 
 }

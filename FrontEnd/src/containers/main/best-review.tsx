@@ -1,4 +1,12 @@
+import { api } from "@shared/common-data";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { BestReviewData } from "src/interface";
+
+
 import styled from "styled-components";
+import Rating from "@mui/material/Rating";
+
 
 const Container = styled.div`
   background-color: white;
@@ -13,40 +21,58 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
+const ContainerTitle = styled.h4`
+  margin:2.5% 3% 2.5% 2% !important;
+  font-size:2rem;
+  @media (max-width: 767px) {
+    margin :3% 2.5% !important;
+    font-size : 1.2rem !important;
+  }
+`
+const ContentsWrapper = styled.div`
+  margin-bottom:1.5%;
+`
+const Context = styled.h6`
+  display:flex;
+  align-items: center;
+  margin: 0% 2% !important;
+  
+  @media (max-width: 767px) {
+    margin :0% 2% !important;
+    font-size : 0.7rem !important;
+  }
+`
+const StyledRating = styled(Rating)`
+  margin: 2.5% !important;
+  @media (max-width: 767px){
+    font-size: 0.8rem !important;
+    margin-top:2.3% !important;
+    margin-bottom:2.5% !important;
+  }
+`
+
+
+
 function BestReview() {
-  const bestReviewItem = [
-    {
-      context: "전문 PT강사들을 어디서나 만날수 있어요",
-      star: 5,
-    },
-    {
-      context: "야근이 많은 직장인인데, 새벽에도 이용해서 좋아요",
-      star: 4,
-    },
-    {
-      context: "자세 교정부터 세세한 일지까지 다 보내주세요 ",
-      star: 5,
-    },
-    {
-      context: "정원쌤 덕분에 제 삶이 바뀌었어요",
-      star: 5,
-    },
-    {
-      context: "내 운동 기록과 내용을 볼 수 있어 좋아요",
-      star: 4.5,
-    },
-  ];
+  const [bestReviewItems, setBestReviewItems] = useState<BestReviewData>();
+
+  useEffect(() => {
+    axios.get(`${api}/reviews?page=1&size=5`).then((response) => {
+      setBestReviewItems(response.data);
+    });
+  });
+
   return (
     <Container>
-      <h2 style={{margin:"3%"}}>서비스 후기</h2>
-      <div >
-        {bestReviewItem.map((item, index) => (
+      <ContainerTitle>서비스 후기</ContainerTitle>
+      <ContentsWrapper>
+        {bestReviewItems?.data.map((item, index) => (
           <Wrapper key={index}>
-            <h6 className="context" style={{margin:"3%", fontSize:"0.8rem"}}>{item.context}</h6>
-            <h6 className="star" style={{margin:"3%"}}>{item.star}</h6>
+            <Context>{item.content}</Context>
+            <StyledRating value={item.star} precision={0.5} readOnly />
           </Wrapper>
         ))}
-      </div>
+      </ContentsWrapper>
     </Container>
   );
 }

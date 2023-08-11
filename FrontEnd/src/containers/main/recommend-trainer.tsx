@@ -7,18 +7,65 @@ import Typography from "@mui/material/Typography";
 
 import styled from "styled-components";
 
+const Wrapper = styled.div`
+  width:100%;
+
+`
 const Container = styled.div`
-  background-color: white;
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.color.light};
   padding: 2%;
   border-radius: 10px;
-  margin-top: 3%;
-  margin-bottom: 3%;
 `;
+const ContainerTitle = styled.div`
+  /* font-family: 'jamsil3';
+  font-size: ${({ theme }) => theme.fontSize.md}; */
+  @media (max-width: 767px) {
+    max-height: 3rem;
+  }
 
-const Wrapper = styled.div`
+`
+const CardWrapper = styled.div`
   display: flex;
+  flex-direction:row;
+  /* flex-wrap: wrap; */
   align-items: center;
 `;
+
+const StyledCard = styled(Card)`
+  /* display:flex; */
+  /* max-width:30%; */
+  /* height: 140; */
+  max-height:3.5rem;
+  margin:5%;
+  @media (max-width: 767px) {
+    max-height: 3rem;
+  }
+  .typography{
+
+  }
+`;
+const StyledCardMedia = styled(CardMedia)`
+  display:flex !important;
+  background-color: blue !important;
+  /* @media (max-width: 767px) {
+    height: 100px;
+  } */
+`;
+const StyledCardContent = styled(CardContent)`
+  /* height: 140px;
+  @media (max-width: 767px) {
+    height: 100px;
+  } */
+`;
+const StyledCardActions = styled(CardActions)`
+  /* height: 140px;
+  @media (max-width: 767px) {
+    height: 100px;
+  } */
+`;
+
 
 interface TrainerInfoInterface {
   name: string;
@@ -26,26 +73,25 @@ interface TrainerInfoInterface {
 
 function TrainerCard(prop: TrainerInfoInterface) {
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 140 }}
+    <StyledCard sx={{ maxWidth: "100%" }}>
+      <StyledCardMedia
         image="/static/images/cards/contemplative-reptile.jpg"
         title="green iguana"
       />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+      <StyledCardContent>
+        <Typography gutterBottom variant="h6" component="div">
           {prop.name} 트레이너
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        {/* <Typography variant="body2" color="text.secondary">
           Lizards are a widespread group of squamate reptiles, with over 6,000
           species, ranging across all continents except Antarctica
-        </Typography>
-      </CardContent>
-      <CardActions>
+        </Typography> */}
+      </StyledCardContent>
+      {/* <CardActions>
         <Button size="small">Share</Button>
         <Button size="small">Learn More</Button>
-      </CardActions>
-    </Card>
+      </CardActions> */}
+    </StyledCard>
   );
 }
 
@@ -63,18 +109,25 @@ function RecommendTrainer() {
     {
       name: "임병국4",
     },
+    {
+      name: "임병국5",
+    },
   ];
   return (
-    <Container>
-      <h1>MD 추천 트레이너</h1>
-      <Wrapper>
-        {TrainerInfo.map((info, index) => (
-          <div key={index}>
-            <TrainerCard name={info.name}></TrainerCard>
-          </div>
-        ))}
-      </Wrapper>
-    </Container>
+    <Wrapper>
+      <Container>
+        <ContainerTitle>
+          <h2 style={{margin:"3%"}}>MD 추천 트레이너</h2>
+        </ContainerTitle>
+        <CardWrapper>
+          {TrainerInfo.map((info, index) => (
+            <div key={index}>
+              <TrainerCard name={info.name}></TrainerCard>
+            </div>
+          ))}
+        </CardWrapper>
+      </Container>
+    </Wrapper>
   );
 }
 

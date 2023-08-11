@@ -166,7 +166,7 @@ public class ExerciseLogService {
      */
 
     @Transactional
-    @Scheduled(cron = "0 */30 * * * *") // 30분마다 실행
+    @Scheduled(cron = "0 30 * * * *") // 30분마다 실행
     public void executeExerciseLogStatusChange() {
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
@@ -191,12 +191,6 @@ public class ExerciseLogService {
             if (start.isBefore(nowTime.minusHours(25))) {
                 e.setStatus(ExerciseLog.exerciseLogStaus.READ);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//                e.setStatus(ExerciseLog.exerciseLogStaus.READ);
-//            }
-
         }
 
     }

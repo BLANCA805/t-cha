@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { BestReviewData } from "src/interface";
+import { ReviewData } from "src/interface";
 
 import styled from "styled-components";
 import Rating from "@mui/material/Rating";
@@ -50,7 +50,7 @@ const StyledRating = styled(Rating)`
 `;
 
 function BestReview() {
-  const [bestReviewItems, setBestReviewItems] = useState<BestReviewData>();
+  const [bestReviewItems, setBestReviewItems] = useState<ReviewData>();
 
   useEffect(() => {
     axios.get(`${api}/reviews?page=1&size=5`).then((response) => {

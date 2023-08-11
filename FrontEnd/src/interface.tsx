@@ -165,7 +165,7 @@ export interface PtClassDataProps {
   trainerId: string;
 }
 
-export interface BestReviewData {
+export interface ReviewData {
   data: {
     id: number;
     content: string;
@@ -180,10 +180,34 @@ export interface BestReviewData {
   };
 }
 
+export interface ReviewDataProps {
+  data: {
+    id: number;
+    content: string;
+    star: number;
+    created_at: string;
+  };
+}
+
 export interface TrainerScheduleData {
   trainerId: string;
   startTime: string;
   startDate: string;
   liveId: number | null;
   classId: number;
+}
+
+export interface UserScheduleData {
+  trainerId: string;
+  classId: number;
+  liveId: number;
+  startDate: string;
+  startTime: string;
+}
+
+export interface SearchFormData {
+  keyword?: string;
+  date?: string;
+  fromTime?: string;
+  toTime?: string;
 }

@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <Main />,
       },
       {
-        path: "pt/:class_id",
+        path: "pt",
         element: <PtRoom />,
       },
       {

@@ -8,8 +8,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TrainerScheduleData } from "src/interface";
+import { GrayButton, TchaButton } from "@shared/button";
 
 const CalendarContainer = styled.div`
   background-color: white;
@@ -39,7 +40,7 @@ const Calendar = styled.div`
 `;
 const ScheduleInfo = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin-top: 5%;
   padding: 2%;
   /* height:10rem; */
@@ -48,10 +49,13 @@ const ScheduleInfo = styled.div`
 `;
 
 function TrainerSchedule() {
+  const now = dayjs();
   const [value, setValue] = useState<Dayjs | null>(dayjs());
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
   const selectedDate = value?.format("YYYY-MM-DD");
   const [items, setItems] = useState<TrainerScheduleData[]>([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -64,6 +68,10 @@ function TrainerSchedule() {
         console.log(error);
       });
   }, [trainer]);
+
+  const goToPtRoom = () => {
+    navigate("/pt");
+  };
 
   return (
     <Wrapper>
@@ -87,7 +95,23 @@ function TrainerSchedule() {
                 Class Id : {item.classId} Live Id : {item.liveId} Date :{" "}
                 {item.startDate} Time : {item.startTime}
                 Trainer ID : {item.trainerId}
+                <p>{item.startDate + item.startTime}</p>
               </div>
+              {now.isAfter(
+                dayjs(`${item.startDate} ${item.startTime}`).add(-5, "m")
+              ) &&
+                now.isBefore(
+                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
+                ) && (
+                  <div>
+                    <TchaButton
+                      onClick={goToPtRoom}
+                      style={{ width: "8rem", color: "white" }}
+                    >
+                      PT 입장하기
+                    </TchaButton>
+                  </div>
+                )}
             </ScheduleInfo>
           )
       )}

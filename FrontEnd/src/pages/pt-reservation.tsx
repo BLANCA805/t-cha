@@ -6,16 +6,17 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Box, Button, Modal } from "@mui/material";
+import { Button } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { api } from "@shared/common-data";
+import { PtClassDataProps } from "src/interface";
 
 const Wrapper = styled.div`
   display: flex;
@@ -50,10 +51,6 @@ const ReservationWrapper = styled.div`
   width: 60%;
   margin-bottom: 3%;
 `;
-const StyledAccordion = styled(Accordion)`
-  /* background-color: #e0e0e0 !important;  */
-  /* background-color: ${({ theme }) => theme.color.primary} !important;  */
-`;
 
 const RegisterWrapper = styled.div`
   width: 100%;
@@ -84,35 +81,52 @@ const style = {
 
 function PtReservation() {
   const trainer = useLocation().state;
-  const user = useSelector((state: RootState) => state.profile);
+  const user = useSelector((state: RootState) => state.auth.token);
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
-  const [expanded, setExpanded] = useState<string | false>(false);
-  const [ptClassData, setPtClassData] = useState();
+  const [ptClassData, setPtClassData] = useState<PtClassDataProps[]>([]);
+  const [selectedClassData, setSelectedClassData] =
+    useState<PtClassDataProps>();
 
   let date = selectedDate?.format("YY-MM-DD");
 
-  const handleDropdown =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const navigate = useNavigate();
 
-  // useEffect;
+  const form = {
+    userId: user,
+    ptClassId: selectedClassData?.classId,
+  };
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpenModal = () => setOpen(true);
-  const handleCloseModal = () => setOpen(false);
-
-  const makeReservation = () => {
+  useEffect(() => {
     axios
-      .post(`${api}/trainers/${trainer}`)
+      .get(`${api}/classes/${trainer}`)
       .then((response) => {
-        handleOpenModal();
-        console.log(response.data);
+        setPtClassData(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+  });
+
+  const reserveClass = () => {
+    axios
+      .patch(`${api}/classes`, form)
+      .then((response) => {
+        console.log(response.data);
+        navigate("/profile/schedule");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const selectClass = (data: PtClassDataProps) => {
+    console.log(data);
+    if (selectedClassData?.classId === data.classId) {
+      setSelectedClassData(undefined);
+    } else {
+      setSelectedClassData(data);
+    }
   };
 
   return (
@@ -137,27 +151,29 @@ function PtReservation() {
         </ReservationWrapper>
 
         <ReservationWrapper>
-          <StyledAccordion
-            expanded={expanded === "panel1"}
-            onChange={handleDropdown("panel1")}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1bh-content"
-              id="panel1bh-header"
-            >
-              <Typography sx={{ width: "63%", flexShrink: 0 }}>시간</Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                {" "}
-                시간을 선택하세요{" "}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Button variant="contained" style={{ margin: "0.4rem 0.5rem" }}>
-                <Typography variant="h5">ㅇㄴㅁㅇ</Typography>
-              </Button>
-            </AccordionDetails>
-          </StyledAccordion>
+          <div>
+            <Typography sx={{ width: "63%", flexShrink: 0 }}>시간</Typography>
+
+            {ptClassData?.map(
+              (data) =>
+                selectedDate?.format("YYYY-MM-DD") === data.startDate && (
+                  <Button
+                    variant={
+                      selectedClassData?.classId === data.classId
+                        ? "outlined"
+                        : "contained"
+                    }
+                    style={{ margin: "0.4rem 0.5rem" }}
+                    onClick={() => selectClass(data)}
+                    key={data.classId}
+                  >
+                    <Typography variant="h5">
+                      {data.startTime.slice(0, 5)}
+                    </Typography>
+                  </Button>
+                )
+            )}
+          </div>
 
           <RegisterWrapper>
             <div>
@@ -176,29 +192,12 @@ function PtReservation() {
           </RegisterWrapper>
 
           <RegisterWrapper>
-            <RegisterButton onClick={makeReservation} variant="contained">
+            <RegisterButton onClick={reserveClass} variant="contained">
               <Typography variant="h6">예약 및 결제하기</Typography>
             </RegisterButton>
           </RegisterWrapper>
         </ReservationWrapper>
       </ContentsWrapper>
-      <div>
-        <Modal
-          open={open}
-          onClose={handleCloseModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-          </Box>
-        </Modal>
-      </div>
     </Wrapper>
   );
 }

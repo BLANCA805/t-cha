@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import { api } from "@shared/common-data";
 import axios from "axios";
 
 import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Button } from "@mui/material";
 import { DateCalendar } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -18,14 +16,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import TransferList from "@shared/transfer-list";
 
-
-// import 
-
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* margin: 1% 1%; */
 `;
 
 const PageTitle = styled.div`
@@ -47,16 +41,11 @@ const ContentsWrapper = styled.div`
   justify-content: center;
   width: 100%;
   margin-top: 3%;
-  /* background-color: lightgray; */
 `;
 
 const ReservationWrapper = styled.div`
   width: 60%;
   margin-bottom: 3%;
-`;
-const StyledAccordion = styled(Accordion)`
-  /* background-color: #e0e0e0 !important;  */
-  /* background-color: ${({ theme }) => theme.color.primary} !important;  */
 `;
 
 const RegisterWrapper = styled.div`
@@ -70,16 +59,12 @@ const RegisterButton = styled(Button)`
   height: 3.3rem;
   width: 100%;
   background-color: #276e68 !important;
-  /* background-color: ${({ theme }) => theme.color.primary}!important; */
   border-radius: 5px !important;
 `;
-
-
 
 function CreateClasses() {
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
-  const [expanded, setExpanded] = useState<string | false>(false);
 
   const times = [
     "00:00",
@@ -134,8 +119,8 @@ function CreateClasses() {
 
   const trainerId = useSelector((state: RootState) => state.profile.trainerId);
 
-  const [startTimeList, setStartTimeList] = useState<string[]>([]); 
-  
+  const [startTimeList, setStartTimeList] = useState<string[]>([]);
+
   const date = selectedDate?.format("YYYY-MM-DD");
 
   const body = {
@@ -144,25 +129,24 @@ function CreateClasses() {
     startTimeList: startTimeList,
   };
 
-
   const createClass = () => {
     axios
       .post(`${api}/classes`, body)
       .then((response) => {
         console.log(response.data);
-        setStartTimeList([])
+        setStartTimeList([]);
       })
       .catch((error) => {
         console.log(error);
       });
   };
   const handleChangeList = (items: string[]) => {
-    setStartTimeList(items)
-  } 
+    setStartTimeList(items);
+  };
 
   const test = () => {
-    console.log(startTimeList)
-  }
+    console.log(startTimeList);
+  };
 
   return (
     <Wrapper>
@@ -187,14 +171,8 @@ function CreateClasses() {
         </ReservationWrapper>
 
         <ReservationWrapper>
+          <TransferList times={times} handleChangeList={handleChangeList} />
 
-          <TransferList 
-          times={times} 
-          handleChangeList = {handleChangeList}
-          />
-          
-
-              
           <RegisterWrapper>
             <RegisterButton variant="contained" onClick={createClass}>
               <Typography variant="h6">PT 일정 설정하기</Typography>

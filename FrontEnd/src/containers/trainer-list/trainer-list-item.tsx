@@ -8,6 +8,7 @@ import { api } from "@shared/common-data";
 import styled from "styled-components";
 
 import Avatar from "@mui/material/Avatar";
+import { TrainerListDataProps } from "src/interface";
 
 const Wrapper = styled.div`
   background-color: white;
@@ -31,23 +32,7 @@ const Container = styled.div`
   display: flex;
 `;
 
-interface trainerListItemProps {
-  data: {
-    id: string;
-    profileName: string;
-    profileImg: string;
-    introduction: string;
-    tags: string;
-    stars: number;
-    createdAt: string;
-    ptudentCount: number;
-    ptCount: number;
-    reviewCount: number;
-    revisitGrade: number;
-  };
-}
-
-function TrainerListItem(props: trainerListItemProps) {
+function TrainerListItem(props: TrainerListDataProps) {
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.profile);

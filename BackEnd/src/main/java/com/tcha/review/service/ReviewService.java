@@ -112,7 +112,7 @@ public class ReviewService {
         listOperations.leftPush(listKey,
                 String.valueOf(review.getStar()) + ":" + String.valueOf(1));
 
-        if (listOperations.size(listKey) >= 10) {
+        if (listOperations.size(listKey) >= 1) {
             Zset();
         }
 
@@ -120,7 +120,7 @@ public class ReviewService {
     }
 
 
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(fixedDelay = 60*60*1000)
     public void Zset() {
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();

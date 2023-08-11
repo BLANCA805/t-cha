@@ -92,20 +92,11 @@ function TrainerRegistration() {
   const [enteredTags, setEnteredTags] = useState("");
   const [tagsForView, setTagsForView] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [images, setImages] = useState<string[]>([]);
   const [imagesForView, setImagesForView] = useState<string[]>([]);
 
   const profileId = useSelector((state: RootState) => state.profile.profileId);
 
   const dispatch = useDispatch();
-
-  const registrationForm = {
-    introduction: introduction,
-    title: title,
-    content: content,
-    tags: enteredTags.slice(0, -1),
-    images: images,
-  };
 
   const handleIntroduction = (event: any) => {
     setIntroduction(event.target.value);
@@ -126,8 +117,16 @@ function TrainerRegistration() {
       setTag("");
     }
   };
+  const addTagToEnter = (event: any) => {
+    if (event.key === "Enter") {
+      setEnteredTags(enteredTags + tag + ",");
+      setTagsForView(tagsForView + "#" + tag + " ");
+      setTag("");
+    }
+  };
   const clearTag = () => {
     setEnteredTags("");
+    setTagsForView("");
   };
 
   const handleImage = (event: ChangeEvent<HTMLInputElement>) => {
@@ -149,8 +148,6 @@ function TrainerRegistration() {
     }
   };
 
-  //imageInput 커스터마이징 -useref로 input태그에 접근해서 클릭이벤트 연결,
-  //원래input은 안보이게 수정 (display:"none")
   const imageInput = React.useRef<HTMLInputElement>(null);
 
   const onClickImageUpload = () => {
@@ -172,23 +169,39 @@ function TrainerRegistration() {
 
   const navigate = useNavigate();
 
-  const Register = async (img: File[]) => {
-    await useImageUpload(img)
-      .then(() => {
-        axios
-          .post(`${api}/trainers/${profileId}`, registrationForm)
-          .then((response) => {
-            console.log(response.data);
-            dispatch(registTrainer({ trainerId: response.data.id }));
-            navigate("/profile");
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const Register = async () => {
+    const formData = new FormData();
+    for (let file of files) {
+      formData.append("images", file);
+    }
+    try {
+      const uploadResponse = await axios.post(
+        `${api}/upload/images`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const imageUrl = uploadResponse.data;
+      const registrationForm = {
+        introduction: introduction,
+        title: title,
+        content: content,
+        tags: enteredTags.slice(0, -1),
+        images: imageUrl,
+      };
+      const trainerRegistResponse = await axios.post(
+        `${api}/trainers/${profileId}`,
+        registrationForm
+      );
+      console.log(trainerRegistResponse.data);
+      dispatch(registTrainer({ trainerId: trainerRegistResponse.data.id }));
+      navigate("/profile");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const goToBack = () => {
@@ -217,6 +230,7 @@ function TrainerRegistration() {
               style={{ width: "30%" }}
               variant="outlined"
               onChange={handleTag}
+              onKeyDown={(enter) => addTagToEnter(enter)}
             />
             <TagWrapper>
               <TchaButton
@@ -303,7 +317,7 @@ function TrainerRegistration() {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
-              onClick={() => Register(files)}
+              onClick={Register}
             >
               등록하기
             </TchaButton>

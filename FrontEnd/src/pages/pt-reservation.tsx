@@ -17,6 +17,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { api } from "@shared/common-data";
 import { PtClassDataProps } from "src/interface";
+import { color } from "@mui/system";
 
 const Wrapper = styled.div`
   display: flex;
@@ -163,6 +164,7 @@ function PtReservation() {
                         ? "outlined"
                         : "contained"
                     }
+                    disabled={!!data?.liveId}
                     style={{ margin: "0.4rem 0.5rem" }}
                     onClick={() => selectClass(data)}
                     key={data.classId}

@@ -164,3 +164,26 @@ export interface PtClassDataProps {
   startTime: string;
   trainerId: string;
 }
+
+export interface BestReviewData {
+  data: {
+    id: number;
+    content: string;
+    star: number;
+    created_at: string;
+  }[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+export interface TrainerScheduleData {
+  trainerId: string;
+  startTime: string;
+  startDate: string;
+  liveId: number | null;
+  classId: number;
+}

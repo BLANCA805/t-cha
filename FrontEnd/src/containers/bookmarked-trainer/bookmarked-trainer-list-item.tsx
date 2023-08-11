@@ -71,7 +71,7 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
     axios
       .post(`${api}/bookmarks/${user}/${props.data.trainerId}`)
       .then((response) => {
-        console.log(response);
+        console.log(response.data);
         setIsBookmarked(true);
       })
       .catch((error) => {
@@ -80,10 +80,8 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
   };
   const deleteBookmark = () => {
     axios
-      .delete(`${api}/bookmarks/${props.data.id}`)
-      .then((response) => {
-        console.log(props.data.id);
-        console.log(response);
+      .delete(`${api}/bookmarks/${user}/${props.data.trainerId}`)
+      .then(() => {
         setIsBookmarked(false);
       })
       .catch((error) => {

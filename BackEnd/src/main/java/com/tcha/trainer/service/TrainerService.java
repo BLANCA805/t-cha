@@ -472,13 +472,30 @@ public class TrainerService {
     public Trainer deleteTrainer(String trainerId) {
         Trainer deletedTrainer = findVerifiedTrainer(trainerId);
 
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+
         deletedTrainer.setIntroduction(null);
         deletedTrainer.setTags(null);
         deletedTrainer.setTitle(null);
         deletedTrainer.setContent(null);
         deletedTrainer.setImages(null);
 
-        return deletedTrainer;
+        valueOperations.set("trainerCount", String.valueOf(Integer.parseInt(valueOperations.get("trainerCount"))-1));
+
+        Set<String> keys = redisTemplate.keys("*" + trainerId);
+
+        for( String k : keyMap.values()) {
+            ZSetOperations.remove(k, trainerId);
+        }
+
+        for (String s : keys) {
+            listOperations.getOperations().delete(s);
+            valueOperations.getOperations().delete(s);
+        }
+            return deletedTrainer;
 
     }
 

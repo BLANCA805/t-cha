@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { deleteProfile, logOut, postProfile } from "src/redux/slicers";
+import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 import Box from "@mui/material/Box";
@@ -54,9 +54,6 @@ function SideBar() {
           onKeyDown={toggleDrawer(false)}
         >
           <List>
-            {!profile.profileId && (
-              <button onClick={test}>프로필 생성하기</button>
-            )}
             {[
               ["profile", "마이페이지"],
               ["", "home"],
@@ -86,6 +83,7 @@ function SideBar() {
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
+          {!user.token && <button onClick={tester}>테스트 로그인</button>}
           <List>
             <Button onClick={handleAuthOpen}>로그인</Button>
             {[
@@ -130,13 +128,21 @@ function SideBar() {
     navigate("/");
   };
 
-  const test = () => {
-    const token = user.token;
+  const tester = () => {
     axios
-      .post(`${api}/userProfiles`, {
-        userId: token,
-        name: token.slice(0, 3),
-        profileImage: "이미지",
+      .post(`${api}/users?email=tester@gmail.com`)
+      .then((response) => {
+        const token = response.data.id;
+        dispatch(
+          logIn({
+            token: response.data.id,
+          })
+        );
+        return axios.post(`${api}/userProfiles`, {
+          userId: token,
+          name: token.slice(0, 3),
+          profileImage: "",
+        });
       })
       .then((response) => {
         if (response.data) {

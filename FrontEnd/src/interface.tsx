@@ -1,9 +1,49 @@
+import { Dayjs } from "dayjs";
+
 export interface userProfileData {
   createdAt: string;
   id: number;
   modifiedAt: string;
   name: string;
   profileImage: string;
+}
+
+export interface TrainerListData {
+  data: {
+    id: string;
+    profileName: string;
+    profileImg: string;
+    introduction: string;
+    tags: string;
+    stars: number;
+    createdAt: string;
+    ptudentCount: number;
+    ptCount: number;
+    reviewCount: number;
+    revisitGrade: number;
+  }[];
+  pageInfo: {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+  };
+}
+
+export interface TrainerListDataProps {
+  data: {
+    id: string;
+    profileName: string;
+    profileImg: string;
+    introduction: string;
+    tags: string;
+    stars: number;
+    createdAt: string;
+    ptudentCount: number;
+    ptCount: number;
+    reviewCount: number;
+    revisitGrade: number;
+  };
 }
 
 export interface TrainerProps {
@@ -101,4 +141,26 @@ export interface BookmarkedTrainerDataProps {
 export interface PtRoomData {
   profileId: number;
   liveId: number;
+}
+
+export interface DatePickerProps {
+  value: Dayjs;
+  setValue: Function;
+}
+
+export interface ScheduleListItemProps {
+  data: {
+    trName: string;
+    ptName: string;
+    ptDate: string;
+    ptStartTime: string;
+  };
+}
+
+export interface PtClassDataProps {
+  classId: number;
+  liveId: number | null;
+  startDate: string;
+  startTime: string;
+  trainerId: string;
 }

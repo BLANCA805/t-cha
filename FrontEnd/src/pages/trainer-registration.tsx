@@ -173,7 +173,7 @@ function TrainerRegistration() {
   const navigate = useNavigate();
 
   const Register = async (img: File[]) => {
-    await useImageUpload(img, setImages)
+    await useImageUpload(img)
       .then(() => {
         axios
           .post(`${api}/trainers/${profileId}`, registrationForm)

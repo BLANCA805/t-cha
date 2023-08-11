@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import axios from "axios";
 
-const OPENVIDU_SERVER_URL = "https://i9a805.p.ssafy.io:4443/";
+const OPENVIDU_SERVER_URL = "https://www.tcha.site:8443/";
 const OPENVIDU_SERVER_SECRET = "blanca05";
 
 export function getToken(liveId: string): Promise<any> {

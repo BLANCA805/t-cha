@@ -116,6 +116,11 @@ public class PtClassService {
         // 1. 수업 예약 신청이라면 (저장된 라이브 아이디 없음 = null)
         if (ptLiveId == null) {
             // 결제 로직
+            String trainerId = ptClass.getTrainer().getId();
+            String ptCountKey = "ptCount:" + trainerId;
+
+            String s = valueOperations.get(ptCountKey);
+            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
 
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
@@ -145,7 +150,7 @@ public class PtClassService {
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
-            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
             return ptClassMapper.classToClassResponseDto(ptClass);
         }
 

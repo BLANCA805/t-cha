@@ -1,4 +1,4 @@
-package com.tcha.utils.config;
+package com.tcha.test.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

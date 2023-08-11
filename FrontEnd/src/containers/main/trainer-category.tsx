@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 import Carousel from "react-material-ui-carousel";
 import { Paper } from "@mui/material";
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import useAxios from "src/hooks/use-axios";
 
 const Container = styled.div`
@@ -30,12 +31,24 @@ const Wrapper = styled.div`
 `;
 
 const GoToTrainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 12%;
 `
 
 const Column = styled.div`
   display:flex;
   flex-direction:column;
-  justify-content: center;
+  justify-content:center;
+  padding:0% 3%;
+  width: 50%;
+`;
+const ColumnSB = styled.div`
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:0% 3%;
   width: 50%;
 `;
 
@@ -68,12 +81,18 @@ function TrainerCategory() {
   return (
     <Container>
       <Wrapper>
-        <Column>
-          <h5 style={{fontSize:"1.1rem"}}>딱 맞는 트레이너를 찾는 가장 현명한 방법</h5>
-          <GoToTrainer onClick={goToLink}>
-            <h6 style={{fontSize:"0.8rem"}}>모든 트레이너 보러가기</h6>
-          </GoToTrainer>
-        </Column>
+        <ColumnSB>
+          <div style={{marginTop:"10%"}}>
+            <h5 style={{fontSize:"1rem", margin:"0% 0% 3% 0%"}}>딱 맞는 트레이너를 찾는</h5>
+            <h5 style={{fontSize:"1rem", margin:"0%"}}>가장 현명한 방법</h5>
+          </div>
+          <div >
+            <GoToTrainer onClick={goToLink}>
+              <h6 style={{fontSize:"0.8rem",margin:"0%"}}>모든 트레이너 보러가기</h6>
+              <ArrowForwardIosRoundedIcon style={{fontSize:"1.2rem",marginLeft:"3%"}} /> 
+            </GoToTrainer>
+          </div>
+        </ColumnSB>
         <Column>
           <Carousel>
             {items.map((item: { download_url: string }, index: number) => (

@@ -117,7 +117,7 @@ function RecommendTrainer() {
     <Wrapper>
       <Container>
         <ContainerTitle>
-          <h2>MD 추천 트레이너</h2>
+          <h2 style={{margin:"3%"}}>MD 추천 트레이너</h2>
         </ContainerTitle>
         <CardWrapper>
           {TrainerInfo.map((info, index) => (

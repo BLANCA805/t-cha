@@ -17,7 +17,6 @@ import com.tcha.utils.upload.service.S3Uploader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -195,11 +194,6 @@ public class ExerciseLogService {
 
     }
 
-    /**
-     * READ, WRITE해 대한 에러 핸들링 코드 작성
-     */
-
-
     //존재하는 트레이너인지 대한 유효성 검증
     @Transactional
     public Trainer findVerifiedTrainerById(String trainerId) {
@@ -237,16 +231,11 @@ public class ExerciseLogService {
         return exerciseLog;
     }
 
+    //트레이너 이름 찾기
     @Transactional
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
-        String result = "알수없음";
-        try {
-            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
-                    .getUserProfile().getName();
-        } catch (Exception e) {
-            return result;
-        }
-
+        return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
+                .getUserProfile().getName();
     }
 
 

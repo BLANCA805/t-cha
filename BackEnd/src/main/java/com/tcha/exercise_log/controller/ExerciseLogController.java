@@ -4,14 +4,8 @@ import com.tcha.exercise_log.dto.ExerciseLogDto;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.service.ExerciseLogService;
-
-import com.tcha.pt_live.repository.PtLiveRepository;
-import com.tcha.question.dto.QuestionDto;
-import com.tcha.question.entity.Question;
 import com.tcha.utils.pagination.MultiResponseDto;
-import com.tcha.utils.upload.service.S3Uploader;
 
-import java.io.IOException;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -30,9 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/exercise-logs")
@@ -75,8 +67,6 @@ public class ExerciseLogController {
         //운동일지 내용 업데이트
         ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
                 exerciseLog, patchRequest, exerciseLogId);
-
-//        ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(exerciseLog, patchRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -127,18 +117,4 @@ public class ExerciseLogController {
 
         return ResponseEntity.ok().body(response);
     }
-
-    /*
-            @GetMapping("/{user-profile-id}/{trainer-id}")
-    public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
-            @PathVariable("user-profile-id") @Positive Long userProfileID,
-            @PathVariable("trainer-id") String trainerId) {
-
-        BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
-                userProfileID, trainerId);
-
-        return ResponseEntity.ok().body(response);
-    }
-    */
-
 }

@@ -120,7 +120,7 @@ public class PtClassService {
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
-            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+            valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) + 1.0));
 
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
@@ -128,6 +128,7 @@ public class PtClassService {
                             .ptClassId(ptClass.getId())
                             .userProfile(user.getUserProfile())
                             .trainerId(ptClass.getTrainer().getId().toString())
+                            .status(PtLive.PtliveStaus.PROGRESS)
                             .build());
 
             // ptClass에 ptLive 아이디 추가해주기 (update)
@@ -150,7 +151,7 @@ public class PtClassService {
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
-            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
+            valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
             return ptClassMapper.classToClassResponseDto(ptClass);
         }
 
@@ -171,7 +172,7 @@ public class PtClassService {
             date = LocalDate.now();
         }
         List<PtClass> datetimeClassList = ptClassRepository.findClassByTime(date, fromTime, toTime);
-        
+
         return ptClassMapper.classListToClassResponseDtoList(datetimeClassList);
     }
 
@@ -199,19 +200,16 @@ public class PtClassService {
 
 
     /************** 상태 변경 로직 작성 ***************/
-
     /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
 
     @Transactional
-//    @Scheduled(cron = "* 0 * * * *") // 정각에 실행
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 * * * *") //정각에 실행
     public void executePtLiveStatusHourTerminable() {
         executePtLiveStatusChangeTerminable();
     }
 
     @Transactional
-//    @Scheduled(cron = "* 30 * * * *") // 30분에 실행
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "0 30 * * * *")// 30분에 실행
     public void executePtLiveStatusHalfHourTerminable() {
         executePtLiveStatusChangeTerminable();
     }
@@ -219,9 +217,8 @@ public class PtClassService {
 
     //진행 -> 종료가능 변경
     @Transactional
-//    @Scheduled(cron = "0 */30 * * * *") // 매시각 30분마다 실행
     public void executePtLiveStatusChangeTerminable() {
-        System.out.println("진행 -> 종료가능 메소드에 들어옴: " + LocalDateTime.now());
+        System.out.println("진행 -> 종료가능: " + LocalDateTime.now());
 
 
         //메소드 실행시각
@@ -257,18 +254,14 @@ public class PtClassService {
 
     }
 
-
-    //    @Transactional
-//    @Scheduled(cron = "* 10 * * * *") // 매번 n:10분에 실행
     @Transactional
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "0 10 * * * *") // 매번 n:10분에 실행
     public void executePtLiveStatusHourTermination() {
         executePtLiveStatusChangeTermination();
     }
 
     @Transactional
-//    @Scheduled(cron = "* 40 * * * *") // 매번 n:30분에 실행
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 40 * * * *") // 매번 n:40분에 실행
     public void executePtLiveStatusHalfHourTermination() {
         executePtLiveStatusChangeTermination();
     }
@@ -278,7 +271,7 @@ public class PtClassService {
     @Transactional
     public void executePtLiveStatusChangeTermination() {
 
-        System.out.println("종료가능 -> 종료 메소드에 들어옴: " + LocalDateTime.now());
+        System.out.println("종료가능 -> 종료: " + LocalDateTime.now());
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 

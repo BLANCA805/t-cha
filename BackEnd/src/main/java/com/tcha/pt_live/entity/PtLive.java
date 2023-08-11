@@ -1,7 +1,6 @@
 package com.tcha.pt_live.entity;
 
 
-import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.*;
@@ -42,6 +41,7 @@ public class PtLive extends Auditable {
     //상태 변경 -> 초기 생성값 progress(작성 가능)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private PtliveStaus status;
 
     public enum PtliveStaus {

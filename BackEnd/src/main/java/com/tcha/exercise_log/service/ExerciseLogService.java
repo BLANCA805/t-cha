@@ -17,7 +17,6 @@ import com.tcha.utils.upload.service.S3Uploader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -166,7 +165,7 @@ public class ExerciseLogService {
      */
 
     @Transactional
-    @Scheduled(cron = "0 */30 * * * *") // 30분마다 실행
+    @Scheduled(cron = "0 30 * * * *") // 30분마다 실행
     public void executeExerciseLogStatusChange() {
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
@@ -191,20 +190,9 @@ public class ExerciseLogService {
             if (start.isBefore(nowTime.minusHours(25))) {
                 e.setStatus(ExerciseLog.exerciseLogStaus.READ);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//                e.setStatus(ExerciseLog.exerciseLogStaus.READ);
-//            }
-
         }
 
     }
-
-    /**
-     * READ, WRITE해 대한 에러 핸들링 코드 작성
-     */
-
 
     //존재하는 트레이너인지 대한 유효성 검증
     @Transactional
@@ -243,16 +231,11 @@ public class ExerciseLogService {
         return exerciseLog;
     }
 
+    //트레이너 이름 찾기
     @Transactional
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
-        String result = "알수없음";
-        try {
-            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
-                    .getUserProfile().getName();
-        } catch (Exception e) {
-            return result;
-        }
-
+        return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
+                .getUserProfile().getName();
     }
 
 

@@ -25,6 +25,7 @@ public interface ExerciseLogMapper {
                 .videos(exerciseLog.getVideos())
                 .profileName(exerciseLog.getPtLive().getUserProfile().getName())
                 .trainerName(trainerName)
+                .status(exerciseLog.getStatus())
                 .build();
     }
 

@@ -45,6 +45,7 @@ public class PtLive extends Auditable {
     //상태 변경 -> 초기 생성값 progress(작성 가능)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @NotNull
     private PtliveStaus status;
 
     public enum PtliveStaus {

@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
@@ -105,6 +106,8 @@ public class PtClassService {
 
         // key : value를 가지는 redis 자료구조 불러오기(Pt 누적 횟수 업데이트를 위해)
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        // pt 누적 횟수별 정렬을 위해
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
 
         // ptClass 객체 가져오기 (유효성 검증 로직 추가)
 
@@ -121,13 +124,14 @@ public class PtClassService {
 
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+            ZSetOperations.add("PT", trainerId, Double.parseDouble(s) + 1.0);
 
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
                     PtLive.builder()
                             .ptClassId(ptClass.getId())
                             .userProfile(user.getUserProfile())
-                            .trainerId(ptClass.getTrainer().getId().toString())
+                            .trainerId(ptClass.getTrainer().getId())
                             .build());
 
             // ptClass에 ptLive 아이디 추가해주기 (update)
@@ -151,6 +155,8 @@ public class PtClassService {
 
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
+            ZSetOperations.add("PT", trainerId, Double.parseDouble(s) - 1.0);
+
             return ptClassMapper.classToClassResponseDto(ptClass);
         }
 

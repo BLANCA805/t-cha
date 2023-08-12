@@ -108,6 +108,7 @@ public class ReviewService {
 
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);
+        review.setPtLive(ptLive);
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();

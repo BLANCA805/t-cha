@@ -78,15 +78,9 @@ public class ExerciseLogController {
             @RequestParam(value = "page", defaultValue = "1") @Positive Integer page,
             @RequestParam(value = "size", defaultValue = "10") @Positive Integer size) {
 
-        Page<ExerciseLog> exerciseLogPage = exerciseLogService.findExerciseLogPages(page, size);
-        List<ExerciseLog> exerciseLogs = exerciseLogPage.getContent();
-        List<ExerciseLogDto.Response> responses = exerciseLogMapper.exerciseLogsToResponses(
-                exerciseLogs);
-
-        return new ResponseEntity<>(new MultiResponseDto<>(responses, exerciseLogPage),
+        return new ResponseEntity<>(exerciseLogService.findExerciseLogPages(page, size),
                 HttpStatus.OK);
     }
-
 
     //운동일지 1개 가져오기
     @GetMapping("/{exercise-log-id}")

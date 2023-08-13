@@ -59,11 +59,11 @@ function TrainerListItem(props: TrainerListDataProps) {
       <DataWrapper onClick={() => navigate(`info`, { state: trainer })}>
         <h2>{props.data.profileName}</h2>
         <KeywordWrapper>
-          {props.data.tags.split(",").map((tag, index) => (
+          {/* {props.data.tags.split(",").map((tag, index) => (
             <div style={{ marginLeft: "5px", marginRight: "5px" }} key={index}>
               <h4>#{tag}</h4>
             </div>
-          ))}
+          ))} */}
         </KeywordWrapper>
         <h4>등록 일자 : {props.data.createdAt}</h4>
         <Container>

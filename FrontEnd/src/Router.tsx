@@ -20,7 +20,7 @@ import UserInfoModify from "@/user-info-modify";
 import PaymentDetail from "@/payment-detail";
 import ReviewWrittenByUser from "@/review-written-by-user";
 import TrainerRegistration from "@/trainer-registration";
-import ExerciseLog from "@/exercise-log";
+import ExerciseLog from "@/write-exercise-log";
 
 import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";
@@ -30,10 +30,12 @@ import CreateClasses from "@user-trainer/create-classes";
 import PtudentList from "@user-trainer/ptudent-list";
 import PtReservation from "@/pt-reservation";
 import PtRoom from "@/pt-room";
+import ErrorPage from "@shared/error-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <ErrorPage />,
     element: <App />,
     children: [
       {
@@ -41,7 +43,7 @@ const router = createBrowserRouter([
         element: <Main />,
       },
       {
-        path: "pt/:class_id",
+        path: "pt",
         element: <PtRoom />,
       },
       {
@@ -109,10 +111,6 @@ const router = createBrowserRouter([
       {
         path: "profile/trainer_registration",
         element: <TrainerRegistration />,
-      },
-      {
-        path: "profile/exercise_log",
-        element: <ExerciseLog />,
       },
       {
         path: "trainer",

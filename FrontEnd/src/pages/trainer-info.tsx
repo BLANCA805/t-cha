@@ -70,7 +70,11 @@ const ProfileModify = styled.div`
 `;
 
 const ProfilePhotoimg = styled.img`
-  border-radius: 50%;
+  border-radius: 5%;
+  width: 20rem;
+  height: 20rem;
+  overflow: hidden;
+  object-fit: cover;
   background-color: gray;
 `;
 const UserId = styled.div`
@@ -185,27 +189,25 @@ function TrainerInfo() {
   }, [trainer]);
 
   const moveToModify = () => {
-    navigate("/profile/trainer_info_modify");
+    navigate("/profile/trainer_info_modify", { state: detail });
   };
 
   const moveToReservation = () => {
     navigate("/trainer/pt_reservation", { state: trainer });
   };
 
-  console.log(keywordTags);
-
   return (
     <Container>
       <Wrapper>
         <Profile>
           <ProfilePhoto>
-            <ProfilePhotoimg src="/logo192.png" />
+            <ProfilePhotoimg src={detail?.profileImg} />
           </ProfilePhoto>
           <Profileinfo>
             <UserId>{detail?.profileName}</UserId>
             <HashTagWrapper>
-              {keywordTags?.map((tag) => (
-                <TrainerHashtag key={tag}>#{tag}</TrainerHashtag>
+              {keywordTags?.map((tag, index) => (
+                <TrainerHashtag key={index}>#{tag}</TrainerHashtag>
               ))}
             </HashTagWrapper>
             <TrainerIntroduct>{detail?.title}</TrainerIntroduct>

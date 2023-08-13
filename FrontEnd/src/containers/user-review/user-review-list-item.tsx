@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { DefaultButton } from "@shared/button";
+import { ReviewDataProps } from "src/interface";
 
 const Container = styled.div`
   min-height: 10rem;
@@ -50,24 +51,7 @@ const UserProfileimg = styled.img`
 const NameWrapper = styled.div``;
 const DateRateWrapper = styled.div``;
 
-interface reviewImgProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-}
-
-interface UserReviewListItemProps {
-  data: {
-    id: number;
-    username: string;
-    date: string;
-    rate: string;
-    contents: string;
-  };
-}
-
-function UserReviewListItem(props: UserReviewListItemProps) {
+function UserReviewListItem(props: ReviewDataProps) {
   return (
     <Container>
       <Wrapper>
@@ -75,20 +59,20 @@ function UserReviewListItem(props: UserReviewListItemProps) {
           <UserProfileimg />
           <UserProfileTextData>
             <NameWrapper>
-              <b style={{ fontSize: "1.5rem" }}> {props.data.username}</b>
+              <b style={{ fontSize: "1.5rem" }}> {props.data.id}</b>
               <b style={{ fontSize: "1rem", marginLeft: "0.5rem" }}>트레이너</b>
             </NameWrapper>
 
             <DateRateWrapper>
               <b style={{ fontSize: "1rem", marginRight: "1rem" }}>
-                {props.data.rate}
+                {props.data.star}
               </b>
-              <b style={{ fontSize: "0.7rem" }}>{props.data.date}</b>
+              <b style={{ fontSize: "0.7rem" }}>{props.data.created_at}</b>
             </DateRateWrapper>
           </UserProfileTextData>
         </ProfileWrapper>
 
-        <ContentsWrapper>{props.data.contents}</ContentsWrapper>
+        <ContentsWrapper>{props.data.content}</ContentsWrapper>
 
         <ButtonWrapper>
           {/* 북마크 해제 버튼 클릭시 list에서 delete되는 로직 구현필요  */}

@@ -1,6 +1,7 @@
 package com.tcha.pt_class.service;
 
 import com.tcha.exercise_log.entity.ExerciseLog;
+import com.tcha.exercise_log.service.ExerciseLogService;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.mapper.PtClassMapper;
@@ -47,6 +48,7 @@ public class PtClassService {
     private final PtClassMapper ptClassMapper;
     private final UserProfileService userProfileService;
     private final RedisTemplate<String, String> redisTemplate;
+    private final ExerciseLogService exerciseLogService;
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
@@ -138,6 +140,9 @@ public class PtClassService {
             // ptClass에 ptLive 아이디 추가해주기 (update)
             ptClass.setPtLiveId(createdPtLive.getId());
 
+            /** 여기에 운동일지 생성하는 코드 넣어주세요*/
+            exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
+
             return ptClassMapper.classToClassResponseDto(ptClass, null);
         }
 
@@ -147,6 +152,9 @@ public class PtClassService {
 
         // 취소 요청을 보낸 유저가 예약한 유저와 일치하는지 확인
         if (user.getUserProfile().equals(ptLive.getUserProfile())) {
+            /** 운동일지 삭제하기 */
+            exerciseLogService.deleteExerciseLog(ptClass.getPtLiveId());
+
             ptClass.setPtLiveId(null);
             ptLive.setUserProfile(null);
 
@@ -156,7 +164,6 @@ public class PtClassService {
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) - 1.0);
-
             return ptClassMapper.classToClassResponseDto(ptClass, null);
         }
         throw new BusinessLogicException(ExceptionCode.PT_CLASS_RESERVATION_EXIST);
@@ -204,7 +211,6 @@ public class PtClassService {
 
     /************** 상태 변경 로직 작성 ***************/
     /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
-
     @Transactional
     @Scheduled(cron = "0 0 * * * *") //정각에 실행
     public void executePtLiveStatusHourTerminable() {

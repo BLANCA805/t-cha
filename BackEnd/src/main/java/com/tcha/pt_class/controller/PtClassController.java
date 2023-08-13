@@ -37,6 +37,10 @@ public class PtClassController {
             @RequestBody PtClassDto.Post postRequest) {
 
         List<PtClassDto.Response> classList = ptClassService.createPtClass(postRequest);
+        for (PtClassDto.Response test : classList) {
+            System.out.println(
+                    test.getClassId() + " " + test.getTrainerId() + " " + test.getStartDate());
+        }
 
         return new ResponseEntity<List<PtClassDto.Response>>(classList, HttpStatus.CREATED);
     }
@@ -56,7 +60,7 @@ public class PtClassController {
     /**
      * 유저가 자신의 모든 수업 조회, 추후 유저 도메인 쪽으로 이동
      */
-    @GetMapping("user/{user-profile-id}")
+    @GetMapping("/user/{user-profile-id}")
     public ResponseEntity<List<PtClassDto.Response>> getPtClassByUser(
             @PathVariable("user-profile-id") long userProfileId) {
 

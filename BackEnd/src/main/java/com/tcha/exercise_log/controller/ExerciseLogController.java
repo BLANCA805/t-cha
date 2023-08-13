@@ -4,14 +4,8 @@ import com.tcha.exercise_log.dto.ExerciseLogDto;
 import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.mapper.ExerciseLogMapper;
 import com.tcha.exercise_log.service.ExerciseLogService;
-
-import com.tcha.pt_live.repository.PtLiveRepository;
-import com.tcha.question.dto.QuestionDto;
-import com.tcha.question.entity.Question;
 import com.tcha.utils.pagination.MultiResponseDto;
-import com.tcha.utils.upload.service.S3Uploader;
 
-import java.io.IOException;
 import java.util.List;
 
 import jakarta.validation.Valid;
@@ -30,9 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/exercise-logs")
@@ -44,29 +36,30 @@ public class ExerciseLogController {
     private final ExerciseLogService exerciseLogService;
     private final ExerciseLogMapper exerciseLogMapper;
 
-    //운동일지 생성 -> 클라이언트에서 요청 X, 테스트용
-    @PostMapping("/{pt-live-id}")
-    public ResponseEntity postExerciseLog(
-            @PathVariable(value = "pt-live-id") @Positive Long ptLiveId,
-            @Valid @RequestBody ExerciseLogDto.Post postRequest
-    ) {
-        //이미 운동일지가 생성되어 있는지 체크, 에러(코드: 409) 없다면 아래의 코드들 실행
-        exerciseLogService.duplicateVerifiedByPtLiveId(ptLiveId);
-
-        //postRequest -> entity로 변경, 초기 상태: write
-        ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
-
-        //새로운 운동일지 생성
-        ExerciseLogDto.Response response = exerciseLogService.createExerciseLog(
-                exerciseLogToService, ptLiveId);
-
-        return new ResponseEntity(response, HttpStatus.CREATED);
-    }
+//    //운동일지 생성 -> 클라이언트에서 요청 X, 테스트용
+//    @PostMapping("/{pt-live-id}")
+//    public ResponseEntity postExerciseLog(
+//            @PathVariable(value = "pt-live-id") @Positive Long ptLiveId,
+//            @Valid @RequestBody ExerciseLogDto.Post postRequest
+//    ) {
+//        //이미 운동일지가 생성되어 있는지 체크, 에러(코드: 409) 없다면 아래의 코드들 실행
+//        exerciseLogService.duplicateVerifiedByPtLiveId(ptLiveId);
+//
+//        //postRequest -> entity로 변경, 초기 상태: write
+//        ExerciseLog exerciseLogToService = exerciseLogMapper.postToExerciseLog(postRequest);
+//
+//        //새로운 운동일지 생성
+//        ExerciseLogDto.Response response = exerciseLogService.createExerciseLog(
+//                exerciseLogToService, ptLiveId);
+//
+//        return new ResponseEntity(response, HttpStatus.CREATED);
+//    }
 
     //운동일지 수정하기
     @PatchMapping("/{exercise-log-id}")
-    public ResponseEntity patchExerciseLog(@PathVariable("exercise-log-id") @Positive Long exerciseLogId,
-                                           @Valid @RequestBody ExerciseLogDto.Patch patchRequest
+    public ResponseEntity patchExerciseLog(
+            @PathVariable("exercise-log-id") @Positive Long exerciseLogId,
+            @Valid @RequestBody ExerciseLogDto.Patch patchRequest
     ) {
 
         //존재하는 운동일지인지 체크
@@ -75,8 +68,6 @@ public class ExerciseLogController {
         //운동일지 내용 업데이트
         ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
                 exerciseLog, patchRequest, exerciseLogId);
-
-//        ExerciseLog exerciseLogToService = exerciseLogMapper.patchToExerciseLog(exerciseLog, patchRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -99,7 +90,8 @@ public class ExerciseLogController {
 
     //운동일지 1개 가져오기
     @GetMapping("/{exercise-log-id}")
-    public ResponseEntity getOneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+    public ResponseEntity getOneExerciseLog(
+            @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
 
         ExerciseLogDto.Response response = exerciseLogService.findExerciseLog(exerciseLogId);
         return new ResponseEntity(response, HttpStatus.OK);
@@ -107,38 +99,29 @@ public class ExerciseLogController {
 
     //pt live id로 운동일지 1개 가져오기 (혹시 라이브로 접근할 경우, 사용)
     @GetMapping("ptLive/{pt-live-id}")
-    public ResponseEntity getOneExerciseLogByLiveId(@PathVariable(value = "pt-live-id") @Positive Long exerciseLogId) {
-        ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(exerciseLogId);
+    public ResponseEntity getOneExerciseLogByLiveId(
+            @PathVariable(value = "pt-live-id") @Positive Long exerciseLogId) {
+        ExerciseLogDto.Response response = exerciseLogService.findExerciseLogByLiveId(
+                exerciseLogId);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
     //운동일지 삭제하기
     @DeleteMapping("/{exercise-log-id}")
-    public ResponseEntity deleteOneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+    public ResponseEntity deleteOneExerciseLog(
+            @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
         exerciseLogService.deleteExerciseLog(exerciseLogId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     //운동일지 작성 완료
     @PatchMapping("/done/{exercise-log-id}")
-    public ResponseEntity<ExerciseLogDto.Response> patchWriteDoneExerciseLog(@PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
-        ExerciseLogDto.Response response = exerciseLogService.patchWriteDoneExerciseLog(exerciseLogId);
+    public ResponseEntity<ExerciseLogDto.Response> patchWriteDoneExerciseLog(
+            @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+        ExerciseLogDto.Response response = exerciseLogService.patchWriteDoneExerciseLog(
+                exerciseLogId);
 
         return ResponseEntity.ok().body(response);
     }
-
-    /*
-            @GetMapping("/{user-profile-id}/{trainer-id}")
-    public ResponseEntity<BookmarkDto.Response> getFindBookmarkIdByUserProfileIdAndTrainerId(
-            @PathVariable("user-profile-id") @Positive Long userProfileID,
-            @PathVariable("trainer-id") String trainerId) {
-
-        BookmarkDto.Response response = bookmarkService.getFindBookmarkIdByUserProfileIdAndTrainerId(
-                userProfileID, trainerId);
-
-        return ResponseEntity.ok().body(response);
-    }
-    */
-
 }

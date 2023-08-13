@@ -17,7 +17,6 @@ import com.tcha.utils.upload.service.S3Uploader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -44,13 +43,13 @@ public class ExerciseLogService {
 
     //운동일지 저장
     @Transactional
-    public ExerciseLogDto.Response createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
+    public ExerciseLogDto.Response createExerciseLog(long ptLiveId) {
 
         //ptlive 찾기 (유효성 검증 완)
         PtLive ptLive = findVerifiedByPtLiveId(ptLiveId);
 
-        //ptlive set
-        exerciseLog.setPtLive(ptLive);
+//        //ptlive set
+//        exerciseLog.setPtLive(ptLive);
 
         //트레이너 id 찾기 => 운동일지 생성 시에는 무조건 트레이너 존재해야 함
         String trainerId = ptLive.getTrainerId();
@@ -59,7 +58,7 @@ public class ExerciseLogService {
         Trainer trainer = findVerifiedTrainerById(trainerId);
 
         //DB에 새로운 운동일지 생성
-        ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
+        ExerciseLog creatExerciseLog = exerciseLogRepository.save(new ExerciseLog());
 
         return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog,
                 trainer.getUserProfile().getName());
@@ -100,7 +99,7 @@ public class ExerciseLogService {
      */
     @Transactional
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog,
-                                                     ExerciseLogDto.Patch patchRequest, Long id) {
+            ExerciseLogDto.Patch patchRequest, Long id) {
 
         existExerciseLog.setTitle(patchRequest.getTitle());
         existExerciseLog.setContent(patchRequest.getContent());
@@ -159,21 +158,21 @@ public class ExerciseLogService {
     }
 
     /**
-     * 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기
-     * 배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준 1시간 지났으면 바로 read로 변경
+     * 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기 배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준
+     * 1시간 지났으면 바로 read로 변경
      *
-     * @Scheduled(fixedRate = 30000) //30 * 60 * 1000ms근데 이것만 작성하면 run 버튼을 누른 뒤로 30분마다 실행되는 것이라 시간을 정확히 통제할 수 없음
+     * @Scheduled(fixedRate = 30000) //30 * 60 * 1000ms근데 이것만 작성하면 run 버튼을 누른 뒤로 30분마다 실행되는 것이라 시간을
+     * 정확히 통제할 수 없음
      */
 
     @Transactional
-    @Scheduled(cron = "0 */30 * * * *") // 30분마다 실행
+    @Scheduled(cron = "0 30 * * * *") // 30분마다 실행
     public void executeExerciseLogStatusChange() {
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 
         // 운동일지 불러오기 (운동 시작 시간이 없으므로, r/w여부로 조회)
         List<ExerciseLog> list = exerciseLogRepository.findByStatus().get();
-
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (ExerciseLog e : list) {
@@ -186,25 +185,13 @@ public class ExerciseLogService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, (운동 시작시각 + 1) + 24 보다 이전이라면, R/W변경
             if (start.isBefore(nowTime.minusHours(25))) {
                 e.setStatus(ExerciseLog.exerciseLogStaus.READ);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//                e.setStatus(ExerciseLog.exerciseLogStaus.READ);
-//            }
-
         }
 
     }
-
-    /**
-     * READ, WRITE해 대한 에러 핸들링 코드 작성
-     */
-
 
     //존재하는 트레이너인지 대한 유효성 검증
     @Transactional
@@ -243,16 +230,11 @@ public class ExerciseLogService {
         return exerciseLog;
     }
 
+    //트레이너 이름 찾기
     @Transactional
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
-        String result = "알수없음";
-        try {
-            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
-                    .getUserProfile().getName();
-        } catch (Exception e) {
-            return result;
-        }
-
+        return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
+                .getUserProfile().getName();
     }
 
 

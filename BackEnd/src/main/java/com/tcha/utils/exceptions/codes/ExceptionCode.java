@@ -26,9 +26,9 @@ public enum ExceptionCode {
     PT_CLASS_TRAINER_MISMATCH(403, "요청 트레이너의 수업이 아닙니다."),
     PT_CLASS_RESERVATION_EXIST(406, "이미 예약된 수업입니다."),
 
-    TRAINER_EXISTS(409, "Trainer already exists");
+    TRAINER_EXISTS(409, "Trainer already exists"),
 
-
+    USER_NOT_RESERVED_PT_CLASS(404, "User has not reserved pt class");
 
     /* 참고용
     MEMBER_NOT_FOUND(404, "Member not found"),

@@ -13,6 +13,9 @@ public class ReviewDto {
     @Builder
     public static class Post {
 
+        private Long userId ;
+        private String trainerId;
+        private Long ptLiveId;
         private String content;
 
         private float star;

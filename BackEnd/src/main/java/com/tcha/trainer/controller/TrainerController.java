@@ -102,39 +102,49 @@ public class TrainerController {
     @GetMapping
     public ResponseEntity getNewTrainers(@RequestParam int page, @RequestParam int size) {
 
-        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByNewTrainers(page - 1, size);
-        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByNewTrainers(page - 1,
+                size);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
 
         return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
     }
+
     @GetMapping("/sorted-by-star")
     public ResponseEntity getAllTrainersByStar(@RequestParam int page, @RequestParam int size) {
 
-        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByStarTrainers(page - 1, size);
-        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByStarTrainers(
+                page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
 
         return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
     }
+
     @GetMapping("/sorted-by-pt")
     public ResponseEntity getAllTrainersByPt(@RequestParam int page, @RequestParam int size) {
 
-        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByPtTrainers(page - 1, size);
-        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
-
-        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
-    }    @GetMapping("/sorted-by-bookmark")
-    public ResponseEntity getAllTrainersByBookmark(@RequestParam int page, @RequestParam int size) {
-
-        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByBookmarkTrainers(page - 1, size);
-        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByPtTrainers(page - 1,
+                size);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
 
         return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
     }
+
+    @GetMapping("/sorted-by-bookmark")
+    public ResponseEntity getAllTrainersByBookmark(@RequestParam int page, @RequestParam int size) {
+
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByBookmarkTrainers(
+                page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
+
+        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+    }
+
     @GetMapping("/sorted-by-review")
     public ResponseEntity getAllTrainersByReview(@RequestParam int page, @RequestParam int size) {
 
-        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByReviewTrainers(page - 1, size);
-        PageInfo pageInfo = trainerService.getPageInfo(page-1,size);
+        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByReviewTrainers(
+                page - 1, size);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
 
         return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
     }
@@ -156,22 +166,20 @@ public class TrainerController {
      * 키워드(트레이너 이름 또는 태그)로 트레이너를 검색한다. 유저가 선택한 날짜와 시간에 수업 가능한 트레이너를 검색한다.
      */
     @GetMapping("/search")
-    public ResponseEntity<List<TrainerDto.ResponseList>> searchTrainer(
-            @RequestBody TrainerDto.Get getRequest) {
+    public ResponseEntity searchTrainer(
+            @RequestBody(required = false) TrainerDto.Get getRequest,
+            @RequestParam int page, @RequestParam int size) {
 
-//        // 검색 조건이 아무것도 없을 경우 전체 트레이너 반환
-//        String keyword = getRequest.getKeyword();
-//        LocalDate date = getRequest.getDate();
-//        LocalTime toTime = getRequest.getToTime();
-//        LocalTime fromTime = getRequest.getFromTime();
-//
-//        if (keyword == null && date == null && toTime == null && fromTime == null) {
-//
-//        }
+        List<TrainerDto.ResponseList> searchResult;
+        if (getRequest == null) { // 검색 조건이 아무것도 없을 경우 전체 트레이너 반환
+            searchResult = trainerService.findSortedByNewTrainers(page, size);
+        } else {
+            searchResult = trainerService.searchTrainers(getRequest);
+        }
 
-        List<TrainerDto.ResponseList> searchResult = trainerService.searchTrainers(getRequest);
+        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
 
-        return new ResponseEntity<List<TrainerDto.ResponseList>>(searchResult, HttpStatus.OK);
+        return new ResponseEntity(new MultiResponseDto<>(searchResult, pageInfo), HttpStatus.OK);
     }
 
 }

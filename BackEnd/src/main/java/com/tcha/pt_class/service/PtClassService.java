@@ -21,7 +21,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -68,7 +71,12 @@ public class PtClassService {
                     ptClassMapper.classPostDtoToClass(trainer, date, time)));
         }
 
-        return ptClassMapper.classListToClassResponseDtoList(classList);
+        List<PtClassDto.Response> response = new ArrayList<>();
+        for (PtClass pt : classList) {
+            response.add(ptClassMapper.classToClassResponseDto(pt, null));
+        }
+
+        return response;
     }
 
     public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
@@ -79,7 +87,17 @@ public class PtClassService {
 
         List<PtClass> trainerClassList = ptClassRepository.findClassByTrainer(trainer.getId());
 
-        return ptClassMapper.classListToClassResponseDtoList(trainerClassList);
+        List<PtClassDto.Response> response = new ArrayList<>();
+        for (PtClass pt : trainerClassList) {
+            Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
+            if (ptLive.isPresent()) {
+                response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus()));
+            } else {
+                response.add(ptClassMapper.classToClassResponseDto(pt, null));
+            }
+        }
+
+        return response;
     }
 
     public List<PtClassDto.Response> findPtClassByUser(long userProfileId) {
@@ -97,7 +115,31 @@ public class PtClassService {
                     () -> new BusinessLogicException(ExceptionCode.PT_CLASS_NOT_FOUND)));
         }
 
-        return ptClassMapper.classListToClassResponseDtoList(userClassList);
+        Collections.sort(userClassList, new Comparator<PtClass>() {
+            @Override
+            public int compare(PtClass ptClass1, PtClass ptClass2) {
+                int dateComparison = ptClass1.getStartDate().compareTo(ptClass2.getStartDate());
+
+                if (dateComparison != 0) {
+                    return dateComparison; // startDate가 다르면 그 기준으로 정렬
+                } else {
+                    return ptClass1.getStartTime()
+                            .compareTo(ptClass2.getStartTime()); // startTime으로 정렬
+                }
+            }
+        });
+
+        List<PtClassDto.Response> response = new ArrayList<>();
+        for (PtClass pt : userClassList) {
+            Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
+            if (ptLive.isPresent()) {
+                response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus()));
+            } else {
+                response.add(ptClassMapper.classToClassResponseDto(pt, null));
+            }
+        }
+
+        return response;
     }
 
     public PtClassDto.Response updatePtClass(PtClassDto.Patch patchRequest) {

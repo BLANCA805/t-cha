@@ -18,6 +18,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Fab from "@mui/material/Fab";
+import Avatar from '@mui/material/Avatar';
 
 import styled from "styled-components";
 
@@ -32,6 +33,33 @@ const SideBarContainer = styled.div`
   width:16rem;
   height:100vh;
 `;
+const StyledList = styled(List)`
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  
+`
+const ListItemStyled = styled(ListItem)`
+  border-bottom: 0.2px solid ${({ theme }) => theme.color.secondary} !important;
+  /* box-shadow: 0 -1px 0 ${({ theme }) => theme.color.primary} inset; */
+
+  &:last-child {
+    border-bottom: none; 
+  }
+`;
+
+const SideBarItemWrapper = styled.h6`
+  display:flex;
+  /* width:100%; */
+  font-size:1.4rem;
+  margin: 1.8rem 1.4rem;
+  cursor: pointer;
+`
+const LoginWrapper = styled.div`
+  display:flex;
+  align-items: center;
+`
 
 function DesktopSideBar() {
   const [open, setOpen] = useState(false);
@@ -50,14 +78,23 @@ function DesktopSideBar() {
 
       setOpen(open);
     };
+  
 
   function list() {
     if (user.token) {
       return (
-          <List>
+          <StyledList>
+            <div>
             {!profile.profileId && (
               <button onClick={test}>프로필 생성하기</button>
             )}
+            <SideBarItemWrapper style={{marginLeft:"1.6rem"}} onClick={() => navigate("profile")}>
+              <LoginWrapper style={{marginTop:"0.5rem", marginBottom:"0.5rem"}}>
+                <Avatar style={{marginRight:"0.8rem"}} src="/broken-image.jpg" />
+                <b style={{margin:"0%", fontSize:"1.5rem"}}>유저이름</b>
+                <b style={{marginLeft:"0.2rem", fontSize:"1.3rem"}}>님</b>
+              </LoginWrapper>
+            </SideBarItemWrapper>
             {[
               ["profile", "마이페이지"],
               ["", "home"],
@@ -66,34 +103,45 @@ function DesktopSideBar() {
               ["trainer", "트레이너"],
               ["customer_center", "고객센터"],
             ].map((data, index) => (
-              <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <Link to={data[0]}>
-                    <ListItemText primary={data[1]} />
-                  </Link>
-                </ListItemButton>
-              </ListItem>
+              <ListItemStyled key={index} disablePadding>
+                  <SideBarItemWrapper onClick={() => navigate(data[0])}>
+                    {data[1]}
+                  </SideBarItemWrapper>
+                {/* <ListItemButton> */}
+                  {/* <Link to={data[0]}> */}
+                  {/* </Link> */}
+                {/* </ListItemButton> */}
+              </ListItemStyled>
             ))}
-            <button onClick={LogOut}>로그아웃</button>
-          </List>
+            </div>
+            <SideBarItemWrapper onClick={LogOut} style={{color:"#E36E6E"}}>
+              로그아웃
+            </SideBarItemWrapper>
+            {/* <button onClick={LogOut}>로그아웃</button> */}
+          </StyledList>
       );
     } else {
       return (
 
           <List>
-            <Button onClick={handleAuthOpen}>로그인</Button>
+            <SideBarItemWrapper style={{marginLeft:"1.6rem"}} onClick={handleAuthOpen}>
+              <LoginWrapper style={{marginTop:"0.5rem", marginBottom:"0.5rem"}}>
+                <Avatar style={{marginRight:"0.8rem"}} src="/broken-image.jpg" />
+                로그인
+              </LoginWrapper>
+            </SideBarItemWrapper>
             {[
               ["", "홈"],
               ["trainer", "트레이너"],
               ["customer_center", "고객센터"],
             ].map((data, index) => (
-              <ListItem key={index} disablePadding>
+              <ListItemStyled key={index} disablePadding>
                 <ListItemButton>
-                  <Link to={data[0]}>
-                    <ListItemText primary={data[1]} />
-                  </Link>
+                  <SideBarItemWrapper onClick={() => navigate(data[0])}>
+                    {data[1]}
+                  </SideBarItemWrapper>
                 </ListItemButton>
-              </ListItem>
+              </ListItemStyled>
             ))}
           </List>
 

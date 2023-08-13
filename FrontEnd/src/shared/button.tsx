@@ -30,9 +30,22 @@ export const TchaButton = styled(Button)`
   align-items: center;
   height: 75%;
   width: 90%;
-  margin: 1% 2% !important;
+  margin: 1% 1% !important;
   background-color: #2e726c !important;
   /* background-color: ${({ theme }) => theme.color.primary}!important; */
+  border-radius: 5px !important;
+`;
+
+export const ReverseTchaButton = styled(Button)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75%;
+  width: 90%;
+  margin: 1% 1% !important;
+  color: #2e726c !important;
+  background-color: ${({ theme }) => theme.color.light}!important;
+  border: 2px solid #2e726c !important;
   border-radius: 5px !important;
 `;
 

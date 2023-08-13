@@ -106,6 +106,8 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   flex: 1;
+  display:flex;
+  justify-content: center;
 `;
 
 type MediaQueryProps = {
@@ -113,7 +115,7 @@ type MediaQueryProps = {
 };
 
 const Desktop: React.FC<MediaQueryProps> = ({ children }) => {
-  const isDesktop = useMediaQuery({ minWidth: 1224 });
+  const isDesktop = useMediaQuery({ minWidth: 768 });
   return isDesktop ? <>{children}</> : null;
 };
 

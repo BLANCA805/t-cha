@@ -208,6 +208,7 @@ public class TrainerService {
         List<TrainerDto.Rank> result = typedTuples.stream().map(TrainerDto.Rank::convertToRank)
                 .collect(
                         Collectors.toList());
+        System.out.println(result);
         List<String> idList = new ArrayList<>();
         List<Float> starList = new ArrayList<>();
         List<Double> reviewCountList = new ArrayList<>();
@@ -218,8 +219,9 @@ public class TrainerService {
             String reviewCountKey = "reviewCount:" + trainerId;
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
+            String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add((float) rank.getStar());
+            starList.add(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(reviewCountKey)));
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -274,8 +276,9 @@ public class TrainerService {
             String reviewCountKey = "reviewCount:" + trainerId;
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
+            String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add((float) rank.getStar());
+            starList.add(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(reviewCountKey)));
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -329,8 +332,9 @@ public class TrainerService {
             String reviewCountKey = "reviewCount:" + trainerId;
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
+            String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add((float) rank.getStar());
+            starList.add(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(reviewCountKey)));
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -384,8 +388,9 @@ public class TrainerService {
             String reviewCountKey = "reviewCount:" + trainerId;
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
+            String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add((float) rank.getStar());
+            starList.add(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(reviewCountKey)));
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -440,9 +445,9 @@ public class TrainerService {
             String reviewCountKey = "reviewCount:" + trainerId;
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
-
+            String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add((float) rank.getStar());
+            starList.add(Float.parseFloat(valueOperations.get(starKey))/Float.parseFloat(valueOperations.get(reviewCountKey)));
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -472,13 +477,30 @@ public class TrainerService {
     public Trainer deleteTrainer(String trainerId) {
         Trainer deletedTrainer = findVerifiedTrainer(trainerId);
 
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+        ListOperations<String, String> listOperations = redisTemplate.opsForList();
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+
+
         deletedTrainer.setIntroduction(null);
         deletedTrainer.setTags(null);
         deletedTrainer.setTitle(null);
         deletedTrainer.setContent(null);
         deletedTrainer.setImages(null);
 
-        return deletedTrainer;
+        valueOperations.set("trainerCount", String.valueOf(Integer.parseInt(valueOperations.get("trainerCount"))-1));
+
+        Set<String> keys = redisTemplate.keys("*" + trainerId);
+
+        for( String k : keyMap.values()) {
+            ZSetOperations.remove(k, trainerId);
+        }
+
+        for (String s : keys) {
+            listOperations.getOperations().delete(s);
+            valueOperations.getOperations().delete(s);
+        }
+            return deletedTrainer;
 
     }
 
@@ -573,8 +595,15 @@ public class TrainerService {
     public PageInfo getPageInfo(int page, int size){
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
         int num = Integer.parseInt(valueOperations.get("trainerCount"));
+        int pages = 0;
+        if (num%size == 0){
+            pages = num/size;
+        }
+        else{
+            pages = (num/size)+1;
 
-        return new PageInfo(page, size, num, num/size + 1);
+        }
+        return new PageInfo(page, size, num, pages);
     }
 }
 

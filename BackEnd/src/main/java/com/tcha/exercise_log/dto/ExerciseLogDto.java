@@ -2,6 +2,8 @@ package com.tcha.exercise_log.dto;
 
 
 import java.util.List;
+
+import com.tcha.exercise_log.entity.ExerciseLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,5 +61,6 @@ public class ExerciseLogDto {
         private String profileName;
 
         private String trainerName;
+        private ExerciseLog.exerciseLogStaus status;
     }
 }

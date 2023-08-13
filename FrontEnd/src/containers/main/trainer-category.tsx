@@ -13,7 +13,7 @@ const Container = styled.div`
   display:flex;
   background-color: white;
   padding: 2%;
-  height:15rem;
+  height:20rem;
   border-radius: 10px;
   margin-top: 3%;
   margin-bottom: 3%;
@@ -30,26 +30,24 @@ const Wrapper = styled.div`
   width:100%;
 `;
 
-const GoToTrainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 12%;
-`
 
 const Column = styled.div`
   display:flex;
   flex-direction:column;
   justify-content:center;
-  padding:0% 3%;
+  padding:1% 3% 0% 3%;
   width: 50%;
 `;
 const ColumnSB = styled.div`
   display:flex;
   flex-direction:column;
   justify-content:space-between;
-  padding:0% 3%;
+  padding:1% 2%;
   width: 50%;
+  @media (max-width: 767px) {
+    padding:1% 0%;
+    margin:0% 0% 0% 3%;
+  }
 `;
 
 const ImgTag = styled.img`
@@ -58,6 +56,42 @@ const ImgTag = styled.img`
   border-radius: 7px;
   object-fit: cover;
 `;
+const TextTitleWrapper = styled.div`
+  margin-top:3%;
+  @media (max-width: 767px) {
+    margin-top: 5%;
+  }
+`
+const StyledTextTitle = styled.h5`
+  font-size:2.4rem;
+  margin:1% 0% 4% 0%;
+  color:black;
+  @media (max-width: 767px) {
+    margin:5% 0% 3% 0%;
+    font-size:0.95rem;
+  }
+`
+const GoToTrainer = styled.h6`
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: 7% !important;
+  font-size:1.7rem !important;
+  cursor:pointer;
+  transition: transform 0.3s ease;
+  &:hover {
+    transform: scale(1.02); 
+  }
+
+  @media (max-width: 767px) {
+    font-size:0.8rem !important;
+    margin-bottom: 10% !important;
+  }
+  
+  
+`
+
 
 function TrainerCategory() {
   const [items, setItems] = useState<Array<any>>([]);
@@ -82,13 +116,13 @@ function TrainerCategory() {
     <Container>
       <Wrapper>
         <ColumnSB>
-          <div style={{marginTop:"10%"}}>
-            <h5 style={{fontSize:"1rem", margin:"0% 0% 3% 0%"}}>딱 맞는 트레이너를 찾는</h5>
-            <h5 style={{fontSize:"1rem", margin:"0%"}}>가장 현명한 방법</h5>
-          </div>
+          <TextTitleWrapper>
+            <StyledTextTitle>딱 맞는 트레이너를 찾는</StyledTextTitle>
+            <StyledTextTitle>가장 현명한 방법</StyledTextTitle>
+          </TextTitleWrapper>
           <div >
             <GoToTrainer onClick={goToLink}>
-              <h6 style={{fontSize:"0.8rem",margin:"0%"}}>모든 트레이너 보러가기</h6>
+              모든 트레이너 보러가기
               <ArrowForwardIosRoundedIcon style={{fontSize:"1.2rem",marginLeft:"3%"}} /> 
             </GoToTrainer>
           </div>

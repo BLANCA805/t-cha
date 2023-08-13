@@ -114,12 +114,12 @@ public class TrainerDto {
     public static class Rank {
 
         private String id;
-        private double star;
+        private double score;
 
         public static Rank convertToRank(ZSetOperations.TypedTuple<String> Tuple) {
             Rank result = Rank.builder()
                     .id(Tuple.getValue())
-                    .star(Tuple.getScore())
+                    .score(Tuple.getScore())
                     .build();
             return result;
         }
@@ -128,7 +128,7 @@ public class TrainerDto {
         public String toString() {
             return "Rank{" +
                     "id='" + id + '\'' +
-                    ", star=" + star +
+                    ", star=" + score +
                     '}';
         }
     }

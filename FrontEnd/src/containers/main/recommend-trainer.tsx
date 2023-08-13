@@ -18,14 +18,14 @@ const Container = styled.div`
   padding: 2%;
   border-radius: 10px;
 `;
-const ContainerTitle = styled.div`
-  /* font-family: 'jamsil3';
-  font-size: ${({ theme }) => theme.fontSize.md}; */
-  @media (max-width: 767px) {
-    max-height: 3rem;
-  }
+// const ContainerTitle = styled.div`
+//   /* font-family: 'jamsil3';
+//   font-size: ${({ theme }) => theme.fontSize.md}; */
+//   @media (max-width: 767px) {
+//     max-height: 3rem;
+//   }
+// `
 
-`
 const CardWrapper = styled.div`
   display: flex;
   flex-direction:row;
@@ -65,6 +65,28 @@ const StyledCardActions = styled(CardActions)`
     height: 100px;
   } */
 `;
+
+const ContainerTitle = styled.h4`
+  margin:2.5% 3% 2.5% 2% !important;
+  font-size:2rem;
+  @media (max-width: 767px) {
+    margin :3% 2.5% !important;
+    font-size : 1.2rem !important;
+  }
+`
+const ContentsWrapper = styled.div`
+  margin-bottom:1.5%;
+`
+const Context = styled.h6`
+  display:flex;
+  align-items: center;
+  margin: 0% 3% !important;
+  
+  @media (max-width: 767px) {
+    margin :0% 2% !important;
+    font-size : 0.7rem !important;
+  }
+`
 
 
 interface TrainerInfoInterface {
@@ -117,7 +139,7 @@ function RecommendTrainer() {
     <Wrapper>
       <Container>
         <ContainerTitle>
-          <h2 style={{margin:"3%"}}>MD 추천 트레이너</h2>
+          MD 추천 트레이너
         </ContainerTitle>
         <CardWrapper>
           {TrainerInfo.map((info, index) => (

@@ -34,14 +34,11 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
-    @PostMapping("/{user-profile-id}/trainers/{trainer-id}")
+    @PostMapping
     public ResponseEntity<Response> postReview(
-            @PathVariable(value = "user-profile-id") Long userProfileId,
-            @PathVariable(value = "trainer-id") String trainerId,
             @RequestBody Post postRequest) {
         Review reviewToService = reviewMapper.postToReview(postRequest);
-        Review reviewForResponse = reviewService.createReview(reviewToService, trainerId,
-                userProfileId);
+        Review reviewForResponse = reviewService.createReview(reviewToService);
         Response response = reviewMapper.reviewToResponse(reviewForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
@@ -90,6 +87,12 @@ public class ReviewController {
     @GetMapping("/{review-id}")
     public ResponseEntity<Response> getOneReview(@PathVariable(value = "review-id") Long id) {
         Review reviewForResponse = reviewService.findReview(id);
+        Response response = reviewMapper.reviewToResponse(reviewForResponse);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+    @GetMapping("/ptlive/{pt-live-id}")
+    public ResponseEntity<Response> getOneReviewByPtLiveId(@PathVariable(value = "ptlive-id") Long ptLiveId) {
+        Review reviewForResponse = reviewService.findReviewByPtLiveId(ptLiveId);
         Response response = reviewMapper.reviewToResponse(reviewForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }

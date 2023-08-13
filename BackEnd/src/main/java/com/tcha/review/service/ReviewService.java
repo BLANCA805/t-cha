@@ -1,11 +1,15 @@
 package com.tcha.review.service;
 
+import com.tcha.pt_live.entity.PtLive;
+import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.review.entity.Review;
 import com.tcha.review.repository.ReviewRepository;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +40,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserProfileRepository userProfileRepository;
     private final TrainerRepository trainerRepository;
+    private final PtLiveRepository ptLiveRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final String STAR_KEY = "star";
     private final String REVIEW_KEY = "review";
@@ -85,15 +90,25 @@ public class ReviewService {
         return reviewRepository.findReviewById(id);
     }
 
+    //트레이너 리뷰(ptLiveId) 1개 찾기
+    @Transactional(readOnly = true)
+    public Review findReviewByPtLiveId(Long ptLiveId) {
+        return reviewRepository.findAllByPtLiveId(ptLiveId);
+    }
+
     //트레이너 리뷰 저장
     @Transactional
-    public Review createReview(Review review, String trainerId, Long userProfileId) {
+    public Review createReview(Review review) {
 
-        UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
-        Trainer trainer = trainerRepository.findById(trainerId).get();
+        String trainerId = review.getTrainer().getId();
+
+        UserProfile userProfile = userProfileRepository.findById(review.getUserProfile().getId()).get();
+        Trainer trainer = trainerRepository.findById(review.getTrainer().getId()).get();
+        PtLive ptLive = findVerifiedByPtLiveId(review.getPtLive().getId());
 
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);
+        review.setPtLive(ptLive);
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
@@ -112,7 +127,7 @@ public class ReviewService {
         listOperations.leftPush(listKey,
                 String.valueOf(review.getStar()) + ":" + String.valueOf(1));
 
-        if (listOperations.size(listKey) >= 10) {
+        if (listOperations.size(listKey) >= 1) {
             Zset();
         }
 
@@ -120,7 +135,7 @@ public class ReviewService {
     }
 
 
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(fixedDelay = 60*60*1000)
     public void Zset() {
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
@@ -184,5 +199,13 @@ public class ReviewService {
 
     public void deleteReviewAll() {
         reviewRepository.deleteAll();
+    }
+
+    //존재하는 ptlive인지에 대한 검증
+    @Transactional
+    public PtLive findVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
+        return ptLive;
     }
 }

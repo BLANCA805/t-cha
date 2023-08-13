@@ -6,6 +6,7 @@ import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_class.mapper.PtClassMapper;
 import com.tcha.pt_class.repository.PtClassRepository;
 import com.tcha.pt_live.entity.PtLive;
+import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import com.tcha.pt_live.repository.PtLiveRepository;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
@@ -65,6 +66,13 @@ public class PtClassService {
                     ptClassMapper.classPostDtoToClass(trainer, date, time)));
         }
 
+        for (PtClass test : classList) {
+            System.out.println(
+                    ">> " + test.getId() + " " + test.getTrainer().getId() + " "
+                            + test.getStartDate());
+
+        }
+
         return ptClassMapper.classListToClassResponseDtoList(classList);
     }
 
@@ -107,7 +115,6 @@ public class PtClassService {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
         // ptClass 객체 가져오기 (유효성 검증 로직 추가)
-
         PtClass ptClass = ptClassRepository.findVerifiedClassById(patchRequest.getPtClassId())
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_CLASS_NOT_FOUND));
 
@@ -134,7 +141,7 @@ public class PtClassService {
             // ptClass에 ptLive 아이디 추가해주기 (update)
             ptClass.setPtLiveId(createdPtLive.getId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass);
+            return ptClassMapper.classToClassResponseDto(ptClass, PtliveStaus.PROGRESS);
         }
 
         // 2. 수업 예약 취소라면,
@@ -146,16 +153,17 @@ public class PtClassService {
             ptClass.setPtLiveId(null);
             ptLive.setUserProfile(null);
 
-
             String trainerId = ptLive.getTrainerId();
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
-            return ptClassMapper.classToClassResponseDto(ptClass);
+            return ptClassMapper.classToClassResponseDto(ptClass, null);
         }
 
-        return ptClassMapper.classToClassResponseDto(ptClass);
+        //pt라이브가 존재하는데 예약한 유저가 아닐 경우
+//        return ptClassMapper.classToClassResponseDto(ptClass, null);
+        throw new BusinessLogicException(ExceptionCode.USER_NOT_RESERVED_PT_CLASS);
     }
 
     public List<PtClassDto.Response> findPtClassByDatetime(PtClassDto.Get getRequest) {
@@ -195,9 +203,8 @@ public class PtClassService {
         // 수업 삭제(삭제 상태값 컬럼 변경)
         ptClass.setIsDel(1);
 
-        return ptClassMapper.classToClassResponseDto(ptClass);
+        return ptClassMapper.classToClassResponseDto(ptClass, null);
     }
-
 
     /************** 상태 변경 로직 작성 ***************/
     /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
@@ -220,13 +227,11 @@ public class PtClassService {
     public void executePtLiveStatusChangeTerminable() {
         System.out.println("진행 -> 종료가능: " + LocalDateTime.now());
 
-
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 
         // status로 pt라이브 불러오기 (Progress 가져오기)
         List<PtLive> list = ptLiveRepository.findAllByStatusProgerss().get();
-
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (PtLive pt : list) {
@@ -239,17 +244,10 @@ public class PtClassService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusHours(1))) {
                 pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//              pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
-//            }
-
         }
 
     }
@@ -278,7 +276,6 @@ public class PtClassService {
         // status로 pt라이브 불러오기 (Progress 가져오기)
         List<PtLive> list = ptLiveRepository.findAllByStatusTerminable().get();
 
-
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (PtLive pt : list) {
             //해당 운동 클래스 가져오기
@@ -290,17 +287,10 @@ public class PtClassService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusMinutes(70))) {
                 pt.setStatus(PtLive.PtliveStaus.TERMINATION);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//              pt.setStatus(PtLive.PtliveStaus.TERMINATION);
-//            }
-
         }
     }
 

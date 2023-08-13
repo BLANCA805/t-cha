@@ -3,6 +3,7 @@ package com.tcha.pt_class.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -61,6 +62,7 @@ public class PtClassDto {
         private Long liveId;
         private LocalDate startDate;
         private LocalTime startTime;
-
+        private PtliveStaus status;
+        private Long reveiwId;
     }
 }

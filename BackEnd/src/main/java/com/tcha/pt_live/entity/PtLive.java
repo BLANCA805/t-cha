@@ -1,6 +1,8 @@
 package com.tcha.pt_live.entity;
 
 
+import com.tcha.exercise_log.entity.ExerciseLog;
+import com.tcha.review.entity.Review;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.*;
@@ -35,9 +37,11 @@ public class PtLive extends Auditable {
     // 트레이너 객체만?
     // 트레이너의 이름이나 프로필 이미지만?
     @NotBlank
+    @Column(columnDefinition = "CHAR(36)")
     private String trainerId;
 
-
+    @OneToOne(mappedBy = "ptLive")
+    private Review review;
     //상태 변경 -> 초기 생성값 progress(작성 가능)
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

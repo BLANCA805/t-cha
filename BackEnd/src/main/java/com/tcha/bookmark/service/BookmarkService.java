@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -54,21 +55,28 @@ public class BookmarkService {
                 .trainer(trainer).build());
 
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         String bookmarkCountKey = "bookmarkCount:" + trainerId;
 
         String s = valueOperations.get(bookmarkCountKey);
         valueOperations.set(bookmarkCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+        ZSetOperations.add("bookmark", trainerId, Double.parseDouble(s) + 1.0);
+
         return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
     }
 
     //즐겨찾기에서 삭제, deleteById의 경우 내부 로직으로 null값에 대한 에러처리가 이뤄지고 있음
     public void deleteBookmark(Long id) {
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
+
         String trainerId = bookMarkRepository.findById(id).get().getTrainer().getId();
         String bookmarkCountKey = "bookmarkCount:" + trainerId;
 
         String s = valueOperations.get(bookmarkCountKey);
         valueOperations.set(bookmarkCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
+        ZSetOperations.add("bookmark", trainerId, Double.parseDouble(s) - 1.0);
+
         bookMarkRepository.deleteById(id);
     }
 

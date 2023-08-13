@@ -1,12 +1,10 @@
 import { api } from "@shared/common-data";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { BestReviewData } from "src/interface";
-
+import { ReviewData } from "src/interface";
 
 import styled from "styled-components";
 import Rating from "@mui/material/Rating";
-
 
 const Container = styled.div`
   background-color: white;
@@ -22,39 +20,37 @@ const Wrapper = styled.div`
 `;
 
 const ContainerTitle = styled.h4`
-  margin:2.5% 3% 2.5% 2% !important;
-  font-size:2rem;
+  margin: 2.5% 3% 2.5% 2% !important;
+  font-size: 2rem;
   @media (max-width: 767px) {
-    margin :3% 2.5% !important;
-    font-size : 1.2rem !important;
+    margin: 3% 2.5% !important;
+    font-size: 1.2rem !important;
   }
-`
+`;
 const ContentsWrapper = styled.div`
-  margin-bottom:1.5%;
-`
+  margin-bottom: 1.5%;
+`;
 const Context = styled.h6`
-  display:flex;
+  display: flex;
   align-items: center;
   margin: 0% 2% !important;
-  
+
   @media (max-width: 767px) {
-    margin :0% 2% !important;
-    font-size : 0.7rem !important;
+    margin: 0% 2% !important;
+    font-size: 0.7rem !important;
   }
-`
+`;
 const StyledRating = styled(Rating)`
   margin: 2.5% !important;
-  @media (max-width: 767px){
+  @media (max-width: 767px) {
     font-size: 0.8rem !important;
-    margin-top:2.3% !important;
-    margin-bottom:2.5% !important;
+    margin-top: 2.3% !important;
+    margin-bottom: 2.5% !important;
   }
-`
-
-
+`;
 
 function BestReview() {
-  const [bestReviewItems, setBestReviewItems] = useState<BestReviewData>();
+  const [bestReviewItems, setBestReviewItems] = useState<ReviewData>();
 
   useEffect(() => {
     axios.get(`${api}/reviews?page=1&size=5`).then((response) => {

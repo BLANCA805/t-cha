@@ -17,6 +17,7 @@ import com.tcha.utils.upload.service.S3Uploader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -43,11 +44,20 @@ public class ExerciseLogService {
 
     //운동일지 저장
     @Transactional
-    public ExerciseLogDto.Response createExerciseLog(long ptLiveId) {
+    public void createExerciseLog(long ptLiveId) {
 
         //ptlive 찾기 (유효성 검증 완)
         PtLive ptLive = findVerifiedByPtLiveId(ptLiveId);
 
+        ExerciseLog exerciseLog = new ExerciseLog().builder()
+                .title("")
+                .contents(new ArrayList<>())
+                .images(new ArrayList<>())
+                .videos(new ArrayList<>())
+                .status(ExerciseLog.exerciseLogStaus.WRITE)
+                .ptLive(ptLive)
+
+                .build();
 //        //ptlive set
 //        exerciseLog.setPtLive(ptLive);
 
@@ -58,10 +68,9 @@ public class ExerciseLogService {
         Trainer trainer = findVerifiedTrainerById(trainerId);
 
         //DB에 새로운 운동일지 생성
-        ExerciseLog creatExerciseLog = exerciseLogRepository.save(new ExerciseLog());
+        ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
 
-        return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog,
-                trainer.getUserProfile().getName());
+//        return;
     }
 
 
@@ -102,22 +111,31 @@ public class ExerciseLogService {
             ExerciseLogDto.Patch patchRequest, Long id) {
 
         existExerciseLog.setTitle(patchRequest.getTitle());
-        existExerciseLog.setContent(patchRequest.getContent());
+//        existExerciseLog.setContent(patchRequest.getContent());
 
         // 업데이트 전에 기존 데이터 먼저 삭제해야됨 -> s3의 기존 정보(이미지, 비디오) delete
         List<String> imgList = existExerciseLog.getImages();
-        List<String> videoList = existExerciseLog.getVideos();
+//        List<String> videoList = existExerciseLog.getVideos();
 
-        for (String s : imgList) {
-            s3Uploader.delete(s);
-        }
-        for (String s : videoList) {
-            s3Uploader.delete(s);
+        if(!imgList.isEmpty()) {
+            for (String s : imgList) {
+                s3Uploader.delete(s);
+            }
+//            for (String s : videoList) {
+//                s3Uploader.delete(s);
+//            }
         }
 
-        //새로운 이미지, 비디오 저장
-        existExerciseLog.setImages(patchRequest.getImages());
-        existExerciseLog.setVideos(patchRequest.getVideos());
+        List<String> content = new ArrayList<>();
+        List<String> image = new ArrayList<>();
+
+        for(ExerciseLogDto.Content c : patchRequest.getContent()) {
+            //새로운 이미지, 비디오 저장
+           content.add(c.getText());
+           image.add(c.getImage());
+        }
+        existExerciseLog.setContents(content);
+        existExerciseLog.setImages(image);
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(existExerciseLog),
                 findTrainerNameByExerciseLog(existExerciseLog));

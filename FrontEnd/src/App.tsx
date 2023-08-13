@@ -13,6 +13,7 @@ import MyFont3 from "./assets/fonts/jamsilOtfRegular3.otf";
 import MyFont4 from "./assets/fonts/jamsilOtfMedium4.otf";
 import MyFont5 from "./assets/fonts/jamsilOtfBold5.otf";
 import MyFont6 from "./assets/fonts/jamsilOtfExtraBold6.otf";
+import MobileBottomBar from "@shared/mobile-bottom-bar";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -101,6 +102,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.secondary}; 
 
   color: ${({ theme }) => theme.color.primary};
+  /* color: ${({ theme }) => theme.color.dark}; */
 `;
 
 const Container = styled.div`
@@ -145,6 +147,7 @@ function App() {
         </Desktop>
 
         <Mobile>
+          <MobileBottomBar/>
           <SideBar />
         </Mobile>
 

@@ -18,6 +18,8 @@ public interface BookmarkMapper {
                 .id(bookMark.getId())
                 .trainerName(bookMark.getTrainer().getUserProfile().getName())
                 .trainerId(bookMark.getTrainer().getId())
+                .images(bookMark.getTrainer().getImages())
+                .tags(bookMark.getTrainer().getTags())
                 .userProfileName(bookMark.getUserProfile().getName())
                 .build();
     }

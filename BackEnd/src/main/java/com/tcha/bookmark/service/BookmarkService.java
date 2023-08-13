@@ -59,7 +59,7 @@ public class BookmarkService {
         String bookmarkCountKey = "bookmarkCount:" + trainerId;
 
         String s = valueOperations.get(bookmarkCountKey);
-        valueOperations.set(bookmarkCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+        valueOperations.set(bookmarkCountKey, String.valueOf(Double.parseDouble(s) + 1.0));
         ZSetOperations.add("bookmark", trainerId, Double.parseDouble(s) + 1.0);
 
         return bookmarkMapper.bookMarkToBookMarkDtoResponse(bookmark);
@@ -74,14 +74,13 @@ public class BookmarkService {
         String bookmarkCountKey = "bookmarkCount:" + trainerId;
 
         String s = valueOperations.get(bookmarkCountKey);
-        valueOperations.set(bookmarkCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
+        valueOperations.set(bookmarkCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
         ZSetOperations.add("bookmark", trainerId, Double.parseDouble(s) - 1.0);
 
         bookMarkRepository.deleteById(id);
     }
 
-
-    //유저별 즐겨찾기 목록 확인
+    /***유저별 즐겨찾기 목록 확인*/
     public MultiResponseDto<BookmarkDto.Response> findAllUserIdBookMark(Integer page, Integer size,
             Long userProfileId) {
 

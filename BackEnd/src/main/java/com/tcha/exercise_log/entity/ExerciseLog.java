@@ -43,8 +43,12 @@ public class ExerciseLog extends Auditable {
     @OrderColumn
     private List<String> videos = new ArrayList<>();
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @ElementCollection
+    @OrderColumn
+    private List<String> contents = new ArrayList<>();
+
+//    @Column(columnDefinition = "TEXT", nullable = false)
+//    private String content;
 
     @OneToOne
     @JoinColumn(name = "LIVE_ID")

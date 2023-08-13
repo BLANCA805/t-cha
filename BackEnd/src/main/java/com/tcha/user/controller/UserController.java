@@ -1,9 +1,11 @@
 package com.tcha.user.controller;
 
+import com.tcha.trainer.service.TrainerService;
 import com.tcha.user.dto.UserDto;
 import com.tcha.user.entity.User;
 import com.tcha.user.mapper.UserMapper;
 import com.tcha.user.service.UserService;
+import com.tcha.user_profile.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final UserProfileService userProfileService;
+    private final TrainerService trainerService;
 
     @PostMapping
     public ResponseEntity postUser(@RequestParam String email) {
@@ -45,10 +49,13 @@ public class UserController {
     }
 
     //TODO 회원 상태 변경 로직
-    @DeleteMapping("/{user-id}")
-    public ResponseEntity deleteOneUser(@PathVariable("user-id") String userId) {
+    @DeleteMapping("/{user-id}/{user-profile-id}/{triner-id}")
+    public ResponseEntity deleteOneUser(@PathVariable("user-id") String userId,
+            @PathVariable("user-profile-id") Long userProfileId,
+            @PathVariable("trainer-id") String trinerId) {
         userService.deleteOneUser(userId);
-
+        userProfileService.deleteOneUserProfile(userProfileId);
+        trainerService.deleteTrainer(trinerId);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 

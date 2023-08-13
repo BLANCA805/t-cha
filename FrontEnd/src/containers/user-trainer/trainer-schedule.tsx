@@ -11,7 +11,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
 import { TrainerScheduleData } from "src/interface";
 import { GrayButton, TchaButton } from "@shared/button";
-import WriteExerciseLog from "@/write-exercise-log";
+import WriteExerciseLog from "@user-trainer/write-exercise-log";
 
 const CalendarContainer = styled.div`
   background-color: white;
@@ -88,9 +88,9 @@ function TrainerSchedule() {
         </LocalizationProvider>
       </Calendar>
       {items.map(
-        (item) =>
+        (item, index) =>
           item.startDate === selectedDate && (
-            <ScheduleInfo key={item.classId}>
+            <ScheduleInfo key={index}>
               <div>
                 Class Id : {item.classId} Live Id : {item.liveId} Date :{" "}
                 {item.startDate} Time : {item.startTime}

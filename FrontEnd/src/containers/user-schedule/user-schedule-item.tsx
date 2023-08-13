@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { DefaultButton } from "@shared/button";
 import { UserScheduleData } from "src/interface";
+import WriteReview from "../user-review/write-review";
 
 const Wrapper = styled.div`
   /* display:flex; */
@@ -59,26 +59,14 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
           </TrainerName>
         </PtInfoWrapper>
         <ButtonWrapper>
-          <DefaultButton> 리뷰쓰기 </DefaultButton>
+          <WriteReview
+            trainer={props.data.trainerId}
+            liveId={props.data.liveId}
+          />
         </ButtonWrapper>
       </DataWrapper>
     </Wrapper>
   );
 }
-
-// function UserScheduleListItem() {
-//   //No Axios 테스트용
-//     return (
-//     <Wrapper>
-//       <DataWrapper>
-//         <TimeWrapper> <h2>Time</h2></TimeWrapper>
-//         <PtInfoWrapper>
-//           PTINFO
-//         </PtInfoWrapper>
-
-//       </DataWrapper>
-//     </Wrapper>
-//       );
-//   }
 
 export default UserScheduleItem;

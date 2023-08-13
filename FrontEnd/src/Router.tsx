@@ -20,7 +20,7 @@ import UserInfoModify from "@/user-info-modify";
 import PaymentDetail from "@/payment-detail";
 import ReviewWrittenByUser from "@/review-written-by-user";
 import TrainerRegistration from "@/trainer-registration";
-import ExerciseLog from "@/write-exercise-log";
+import ExerciseLog from "@user-trainer/write-exercise-log";
 
 import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";

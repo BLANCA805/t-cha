@@ -84,6 +84,8 @@ function WriteExerciseLog(props: { liveId: number }) {
   const [contents, setContents] = useState<{ image: string; text: string }[]>([
     { image: "", text: "" },
   ]);
+  const [open, setOpen] = React.useState(false);
+  const [exerciseLogId, setExerciseLogId] = useState(0);
 
   useEffect(() => {
     axios
@@ -91,13 +93,13 @@ function WriteExerciseLog(props: { liveId: number }) {
       .then((response) => {
         setTitle(response.data.title);
         setContents(response.data.contents);
+        setExerciseLogId(response.data.id);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [liveId]);
+  }, [open, liveId]);
 
-  const [open, setOpen] = React.useState(false);
   const [files, setFiles] = useState<File[]>([]);
 
   const handleOpen = () => setOpen(true);
@@ -175,12 +177,19 @@ function WriteExerciseLog(props: { liveId: number }) {
   };
 
   const temp = () => {
-    axios.patch(`${api}`);
+    axios
+      .patch(`${api}/exercise-logs/${exerciseLogId}`)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const save = () => {
     axios
-      .patch(`${api}/exercise-logs`)
+      .patch(`${api}/exercise-logs/done/${exerciseLogId}`)
       .then((response) => {
         console.log(response.data);
       })
@@ -213,7 +222,7 @@ function WriteExerciseLog(props: { liveId: number }) {
           </FormDetailWrapper>
 
           {contents.map((content, index) => (
-            <Container>
+            <Container key={index}>
               <input
                 type="file"
                 accept="image/jpg,impge/png,image/jpeg,image/gif"
@@ -256,6 +265,7 @@ function WriteExerciseLog(props: { liveId: number }) {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
+              onClick={temp}
             >
               임시저장
             </GrayButton>
@@ -263,6 +273,7 @@ function WriteExerciseLog(props: { liveId: number }) {
               type="submit"
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
+              onClick={save}
             >
               작성완료
             </TchaButton>

@@ -7,6 +7,7 @@ import com.tcha.pt_live.entity.PtLive;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 

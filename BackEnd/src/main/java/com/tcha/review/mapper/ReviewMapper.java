@@ -1,5 +1,6 @@
 package com.tcha.review.mapper;
 
+import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.review.dto.ReviewDto;
 import com.tcha.review.dto.ReviewDto.Response;
@@ -35,11 +36,14 @@ public interface ReviewMapper {
 
     Review getToReview(ReviewDto.Get getRequest);
 
-    default ReviewDto.Response reviewToResponse(Review review) {
-        return ReviewDto.Response.builder()
+    default Response reviewToResponse(Review review, PtClass ptClass) {
+
+        return Response.builder()
                 .id(review.getId())
                 .content(review.getContent())
                 .star(review.getStar())
+                .startDate(ptClass.getStartDate())
+                .ptClassId(ptClass.getId())
                 .profileImg(review.getUserProfile().getProfileImage())
                 .profileName(review.getUserProfile().getName())
                 .trainerProfileImg(review.getTrainer().getUserProfile().getProfileImage())

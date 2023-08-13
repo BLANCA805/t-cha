@@ -110,6 +110,7 @@ function PtReservation() {
   });
 
   const reserveClass = () => {
+    console.log(form);
     axios
       .patch(`${api}/classes`, form)
       .then((response) => {

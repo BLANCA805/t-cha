@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from "react";
+import React, { useState, ChangeEvent, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -148,7 +148,7 @@ function TrainerRegistration() {
     }
   };
 
-  const imageInput = React.useRef<HTMLInputElement>(null);
+  const imageInput = useRef<HTMLInputElement>(null);
 
   const onClickImageUpload = () => {
     if (imageInput.current) {

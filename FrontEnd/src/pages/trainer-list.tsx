@@ -41,7 +41,7 @@ function TrainerList() {
   const searchTrainer = (body: any) => {
     console.log(body);
     axios
-      .get(`${api}/trainers/search`, body)
+      .get(`${api}/trainers/search`)
       .then((response) => {
         setItems(response.data);
       })

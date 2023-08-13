@@ -11,6 +11,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { Link, useNavigate } from "react-router-dom";
 import { TrainerScheduleData } from "src/interface";
 import { GrayButton, TchaButton } from "@shared/button";
+import WriteExerciseLog from "@/write-exercise-log";
 
 const CalendarContainer = styled.div`
   background-color: white;
@@ -43,7 +44,6 @@ const ScheduleInfo = styled.div`
   flex-direction: row;
   margin-top: 5%;
   padding: 2%;
-  /* height:10rem; */
   border-radius: 10px;
   background-color: #fff;
 `;
@@ -102,16 +102,19 @@ function TrainerSchedule() {
               ) &&
                 now.isBefore(
                   dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
-                ) && (
-                  <div>
-                    <TchaButton
-                      onClick={goToPtRoom}
-                      style={{ width: "8rem", color: "white" }}
-                    >
-                      PT 입장하기
-                    </TchaButton>
-                  </div>
+                ) &&
+                item.liveId && (
+                  <TchaButton
+                    onClick={goToPtRoom}
+                    style={{ width: "8rem", color: "white" }}
+                  >
+                    PT 입장하기
+                  </TchaButton>
                 )}
+              {item.liveId &&
+                now.isAfter(
+                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
+                ) && <WriteExerciseLog liveId={item.liveId} />}
             </ScheduleInfo>
           )
       )}

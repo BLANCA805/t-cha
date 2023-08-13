@@ -207,7 +207,6 @@ function UserInfoModify() {
               등록하기
             </TchaButton>
             <TchaButton
-              //원래 있던페이지로 돌아가는 Linkto 코드 필요
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
               onClick={goToBack}

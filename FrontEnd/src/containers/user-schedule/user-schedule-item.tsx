@@ -47,7 +47,6 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
     <Wrapper>
       <DataWrapper>
         <TimeWrapper>
-          {" "}
           <h3>Time: {props.data.startTime}</h3>
         </TimeWrapper>
         <PtInfoWrapper>

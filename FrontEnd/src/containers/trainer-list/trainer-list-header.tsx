@@ -44,9 +44,9 @@ function TrainerListHeader({ searchTrainer }: TrainerListHeaderProps) {
 
   const searchForm = {
     keyword: searchKeyword,
-    date: undefined,
-    fromTime: undefined,
-    toTime: undefined,
+    date: "",
+    fromTime: "",
+    toTime: "",
   };
 
   return (

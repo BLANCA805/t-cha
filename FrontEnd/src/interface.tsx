@@ -211,3 +211,11 @@ export interface SearchFormData {
   fromTime?: string;
   toTime?: string;
 }
+
+export interface LogData {
+  title: string;
+  contents: {
+    image: string;
+    text: string;
+  }[];
+}

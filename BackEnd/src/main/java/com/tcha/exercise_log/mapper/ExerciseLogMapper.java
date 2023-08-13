@@ -15,12 +15,12 @@ public interface ExerciseLogMapper {
     //운동일지 내용 업데이트: patchdto -> entity
     ExerciseLog patchToExerciseLog(ExerciseLogDto.Patch patchRequest);
 
-    default ExerciseLogDto.Response exerciseLogToResponse(ExerciseLog exerciseLog,
+    default Response exerciseLogToResponse(ExerciseLog exerciseLog,
                                                           String trainerName) {
-        return ExerciseLogDto.Response.builder()
+        return Response.builder()
                 .id(exerciseLog.getId())
                 .title(exerciseLog.getTitle())
-                .content(exerciseLog.getContent())
+                .contents(exerciseLog.getContents())
                 .images(exerciseLog.getImages())
                 .videos(exerciseLog.getVideos())
                 .profileName(exerciseLog.getPtLive().getUserProfile().getName())
@@ -30,15 +30,15 @@ public interface ExerciseLogMapper {
     }
 
     //운동일지 등록 postdto -> entity로 변경
-    default ExerciseLog postToExerciseLog(ExerciseLogDto.Post postRequest) {
-        return ExerciseLog.builder()
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .images(postRequest.getImages())
-                .videos(postRequest.getVideos())
-                .status(ExerciseLog.exerciseLogStaus.WRITE)
-                .build();
-    }
+//    default ExerciseLog postToExerciseLog(ExerciseLogDto.Post postRequest) {
+//        return ExerciseLog.builder()
+//                .title(postRequest.getTitle())
+//                .content(postRequest.getContent())
+//                .images(postRequest.getImages())
+//                .videos(postRequest.getVideos())
+//                .status(ExerciseLog.exerciseLogStaus.WRITE)
+//                .build();
+//    }
 
     List<Response> exerciseLogsToResponses(List<ExerciseLog> exerciseLogs);
 }

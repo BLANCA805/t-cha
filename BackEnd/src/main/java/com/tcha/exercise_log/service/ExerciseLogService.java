@@ -12,6 +12,7 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
+import com.tcha.utils.pagination.MultiResponseDto;
 import com.tcha.utils.upload.service.S3Uploader;
 
 import java.time.LocalDate;
@@ -76,11 +77,16 @@ public class ExerciseLogService {
 
     //Pagenation으로 운동 일지를 불러오기 (일단 에러 핸들링 X)
     @Transactional(readOnly = true)
-    public Page<ExerciseLog> findExerciseLogPages(int page, int size) {
+    public MultiResponseDto findExerciseLogPages(int page, int size) {
+        Page<ExerciseLog> exerciseLogPage = exerciseLogRepository.findAll(PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<ExerciseLog> exercises = exerciseLogPage.getContent();
+        List<ExerciseLogDto.Response> responses = new ArrayList<>();
 
-        return exerciseLogRepository.findAll(
+        for(ExerciseLog e : exercises) {
+            responses.add(exerciseLogMapper.exerciseLogToResponse(e,findTrainerNameByExerciseLog(e)));
+        }
+        return new MultiResponseDto<>(responses, exerciseLogPage);
 
-                PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
     //운동일지 1개 찾기(PK)

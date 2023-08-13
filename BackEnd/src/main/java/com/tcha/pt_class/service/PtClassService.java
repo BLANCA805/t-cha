@@ -123,9 +123,8 @@ public class PtClassService {
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
-            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) + 1.0));
+            valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) + 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) + 1.0);
-
 
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
@@ -139,7 +138,7 @@ public class PtClassService {
             // ptClass에 ptLive 아이디 추가해주기 (update)
             ptClass.setPtLiveId(createdPtLive.getId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass);
+            return ptClassMapper.classToClassResponseDto(ptClass, null);
         }
 
         // 2. 수업 예약 취소라면,
@@ -151,18 +150,16 @@ public class PtClassService {
             ptClass.setPtLiveId(null);
             ptLive.setUserProfile(null);
 
-
             String trainerId = ptLive.getTrainerId();
             String ptCountKey = "ptCount:" + trainerId;
 
             String s = valueOperations.get(ptCountKey);
-            valueOperations.set(ptCountKey,String.valueOf(Double.parseDouble(s) - 1.0));
+            valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) - 1.0);
 
-            return ptClassMapper.classToClassResponseDto(ptClass);
+            return ptClassMapper.classToClassResponseDto(ptClass, null);
         }
-
-        return ptClassMapper.classToClassResponseDto(ptClass);
+        throw new BusinessLogicException(ExceptionCode.PT_CLASS_RESERVATION_EXIST);
     }
 
     public List<PtClassDto.Response> findPtClassByDatetime(PtClassDto.Get getRequest) {
@@ -202,9 +199,8 @@ public class PtClassService {
         // 수업 삭제(삭제 상태값 컬럼 변경)
         ptClass.setIsDel(1);
 
-        return ptClassMapper.classToClassResponseDto(ptClass);
+        return ptClassMapper.classToClassResponseDto(ptClass, null);
     }
-
 
     /************** 상태 변경 로직 작성 ***************/
     /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
@@ -225,15 +221,11 @@ public class PtClassService {
     //진행 -> 종료가능 변경
     @Transactional
     public void executePtLiveStatusChangeTerminable() {
-        System.out.println("진행 -> 종료가능: " + LocalDateTime.now());
-
-
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 
         // status로 pt라이브 불러오기 (Progress 가져오기)
         List<PtLive> list = ptLiveRepository.findAllByStatusProgerss().get();
-
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (PtLive pt : list) {
@@ -246,16 +238,10 @@ public class PtClassService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusHours(1))) {
                 pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//              pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
-//            }
 
         }
 
@@ -277,14 +263,11 @@ public class PtClassService {
     //종료가능 -> 종료
     @Transactional
     public void executePtLiveStatusChangeTermination() {
-
-        System.out.println("종료가능 -> 종료: " + LocalDateTime.now());
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 
         // status로 pt라이브 불러오기 (Progress 가져오기)
         List<PtLive> list = ptLiveRepository.findAllByStatusTerminable().get();
-
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (PtLive pt : list) {
@@ -297,16 +280,10 @@ public class PtClassService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusMinutes(70))) {
                 pt.setStatus(PtLive.PtliveStaus.TERMINATION);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//              pt.setStatus(PtLive.PtliveStaus.TERMINATION);
-//            }
 
         }
     }

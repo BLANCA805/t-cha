@@ -36,7 +36,7 @@ const Profile = styled(ContainerSet)`
   flex-direction: row;
   background-color: #fff;
   height: 15rem;
-  border-radius: 10px;
+  border-radius: 1rem;
   width: 100%;
 `;
 
@@ -59,8 +59,7 @@ const ProfilePhoto = styled.div`
 const Profileinfo = styled.div`
   flex: 5;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-direction: row;
   padding: 5%;
   height: 100%;
   width: 100%;
@@ -74,33 +73,22 @@ const ProfileModify = styled.div`
 `;
 
 const ProfilePhotoimg = styled.img`
-  border-radius: 50%;
+  width: 12rem;
+  height: 12rem;
+  overflow: hidden;
+  object-fit: cover;
+  border-radius: 1rem;
   background-color: gray;
 `;
+
 const UserId = styled.div`
   flex: 5.5;
   display: flex;
-  align-items: end;
+  align-items: center;
   font-weight: bold;
   font-size: 4rem;
   margin-top: 1px;
   margin-bottom: 1px;
-`;
-const TrainerHashtag = styled.div`
-  flex: 2;
-  font-weight: 700;
-  align-items: center;
-  font-size: 1.5rem;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  /* background-color: pink; */
-`;
-const TrainerIntroduct = styled.div`
-  flex: 4;
-  font-size: 1rem;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  /* background-color: lightcyan; */
 `;
 
 const Usrow = styled.div`
@@ -158,29 +146,31 @@ function User() {
         </ProfileModify>
       </Profile>
       {!profile.trainerId && (
-        <Link to="trainer_registration">
-          <DefaultButton> 트레이너 등록하기 </DefaultButton>
-        </Link>
+        <Profile>
+          <Link to="trainer_registration">
+            <DefaultButton> 트레이너 회원으로 등록하기 </DefaultButton>
+          </Link>
+        </Profile>
       )}
       {profile.trainerId && <TrainerButtons />}
       <UserContainer>
         <Usrow>
           <Uscol>
-            <Link to="bookmarked_trainers">즐찾트레이너</Link>
+            <Link to="bookmarked_trainers">즐겨찾기 한 트레이너</Link>
           </Uscol>
           <Uscol>
-            <Link to="schedule">캘린더</Link>
+            <Link to="schedule">나의 스케줄</Link>
           </Uscol>
           <Uscol>
-            <Link to="review">내리뷰</Link>
+            <Link to="review">내가 작성한 리뷰</Link>
           </Uscol>
         </Usrow>
         <Usrow>
           <Uscol>
-            <Link to="payment_detail">결제정보</Link>
+            <Link to="payment_detail">결제 정보</Link>
           </Uscol>
           <Uscol>
-            <Link to="chat">채팅목록</Link>
+            <Link to="chat">채팅 목록</Link>
           </Uscol>
           <Uscol>
             <Link to="/customer_center">고객센터</Link>

@@ -15,6 +15,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import TransferList from "@shared/transfer-list";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
@@ -63,6 +64,7 @@ const RegisterButton = styled(Button)`
 `;
 
 function CreateClasses() {
+  const navigate = useNavigate();
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
 
@@ -134,7 +136,7 @@ function CreateClasses() {
       .post(`${api}/classes`, body)
       .then((response) => {
         console.log(response.data);
-        setStartTimeList([]);
+        navigate("/profile/trainer_schedule");
       })
       .catch((error) => {
         console.log(error);

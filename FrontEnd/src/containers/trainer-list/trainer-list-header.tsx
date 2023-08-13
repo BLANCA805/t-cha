@@ -9,6 +9,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 
 import styled from "styled-components";
+import { TchaButton } from "@shared/button";
+import { SearchFormData } from "src/interface";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   margin: 1%;
@@ -23,15 +26,47 @@ const ButtonContainer = styled.div`
   margin-bottom: 1%;
 `;
 
-function TrainerListHeader() {
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+interface TrainerListHeaderProps {
+  searchTrainer: (body: SearchFormData) => void;
+}
+
+function TrainerListHeader({ searchTrainer }: TrainerListHeaderProps) {
+  const [searchKeyword, setSearchkeyword] = useState("");
+
+  const handleSearchKeyword = (event: any) => {
+    setSearchkeyword(event.target.value);
+  };
+
+  const searchForm = {
+    keyword: searchKeyword,
+    date: "",
+    fromTime: "",
+    toTime: "",
+  };
+
   return (
     <Wrapper>
-      <TextField
-        id="outlined-basic"
-        label="키워드 검색"
-        variant="outlined"
-        style={{ width: "100%", marginBottom: "1%" }}
-      />
+      <SearchContainer>
+        <TextField
+          id="outlined-basic"
+          label="키워드 검색"
+          variant="outlined"
+          style={{ width: "100%", marginBottom: "1%" }}
+          value={searchKeyword}
+          onChange={handleSearchKeyword}
+        />
+        <TchaButton
+          onClick={() => searchTrainer(searchForm)}
+          style={{ width: "6rem", height: "3rem", color: "white" }}
+        >
+          검색하기
+        </TchaButton>
+      </SearchContainer>
       <ButtonContainer>
         <Button size="large" variant="outlined">
           정렬 조건 1

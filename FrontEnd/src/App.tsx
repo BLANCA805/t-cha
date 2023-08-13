@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigation } from "react-router-dom";
 import styled from "styled-components";
 
 import SideBar from "@shared/side-bar";
@@ -92,21 +92,20 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 const Wrapper = styled.div`
   display: flex;
   /* justify-content: center; */
-  width:100%;
+  width: 100%;
   height: 100%;
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.color.secondary}; 
+  background-color: ${({ theme }) => theme.color.secondary};
 
   color: ${({ theme }) => theme.color.primary};
   /* color: ${({ theme }) => theme.color.dark}; */
 `;
 
 const Container = styled.div`
-    flex:1;
+  flex: 1;
 `;
 
 type MediaQueryProps = {
@@ -116,18 +115,17 @@ type MediaQueryProps = {
 const Desktop: React.FC<MediaQueryProps> = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: 1224 });
   return isDesktop ? <>{children}</> : null;
-}
+};
 
 const Mobile: React.FC<MediaQueryProps> = ({ children }) => {
   const isMobile = useMediaQuery({ maxWidth: 767 });
   return isMobile ? <>{children}</> : null;
-}
+};
 
 function App() {
-  
   //모바일모드 시 브라우저 상하단 메뉴 때문에 실제로는 개발자도구보다 뷰포트 높이가 깎여서 소실됨
   //이러한 현상을 방지하는 코드
-  //이러면 app.js가 렌더링될 때 이 함수가 사용자의 뷰포트 높이를 계산해준다함 
+  //이러면 app.js가 렌더링될 때 이 함수가 사용자의 뷰포트 높이를 계산해준다함
   //모바일 100vh 필요한 곳에서 height: calc(var(--vh, 1vh) * 100); 사용하면 된다고 함
   // function setScreenSize() {
   //   let vh = window.innerHeight * 0.01;
@@ -136,28 +134,30 @@ function App() {
   // useEffect(() => {
   //   setScreenSize();
   // });
-
-    
+  const navigation = useNavigation();
   return (
     <>
-    <GlobalStyle />
-    <Wrapper>
-        <Desktop>
-          <DesktopSideBar/>
-        </Desktop>
+      <GlobalStyle />
+      <div className={navigation.state === "loading" ? "loading" : ""}>
+        <Wrapper>
+          <Desktop>
+            <DesktopSideBar />
+          </Desktop>
 
-        <Mobile>
-          <MobileBottomBar/>
-          <SideBar />
-        </Mobile>
+          <Mobile>
+            <SideBar />
+          </Mobile>
+          <Mobile>
+            <MobileBottomBar />
+            <SideBar />
+          </Mobile>
 
-        <Container>
-          <Outlet />
-        </Container>
-
-    </Wrapper>
-
-  </>
+          <Container>
+            <Outlet />
+          </Container>
+        </Wrapper>
+      </div>
+    </>
   );
 }
 

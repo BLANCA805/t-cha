@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { DefaultButton } from "@shared/button";
+import { UserScheduleData } from "src/interface";
 
 const Wrapper = styled.div`
   /* display:flex; */
@@ -41,30 +42,20 @@ const ButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-interface ScheduleListItemProps {
-  data: {
-    trName: string;
-    ptName: string;
-    ptDate: string;
-    ptStartTime: string;
-  };
-}
-
-function UserScheduleListItem(props: ScheduleListItemProps) {
+function UserScheduleItem(props: { data: UserScheduleData }) {
   return (
     <Wrapper>
       <DataWrapper>
         <TimeWrapper>
-          {" "}
-          <h3>Time: {props.data.ptStartTime}</h3>
+          <h3>Time: {props.data.startTime}</h3>
         </TimeWrapper>
         <PtInfoWrapper>
           <h2 style={{ marginTop: "2px", marginBottom: "2px" }}>
-            {props.data.ptName}
+            {props.data.startDate}
           </h2>
           <TrainerName>
             <b style={{ fontSize: "0.5rem" }}>트레이너</b>
-            <b style={{ fontSize: "1rem" }}> {props.data.trName}</b>
+            <b style={{ fontSize: "1rem" }}> {props.data.trainerId}</b>
           </TrainerName>
         </PtInfoWrapper>
         <ButtonWrapper>
@@ -90,4 +81,4 @@ function UserScheduleListItem(props: ScheduleListItemProps) {
 //       );
 //   }
 
-export default UserScheduleListItem;
+export default UserScheduleItem;

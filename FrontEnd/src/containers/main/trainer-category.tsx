@@ -13,11 +13,10 @@ const Container = styled.div`
   display:flex;
   background-color: white;
   padding: 2%;
-  height:20rem;
+  height:24rem;
   border-radius: 10px;
   margin-top: 3%;
   margin-bottom: 3%;
-
   @media (max-width: 767px) {
     height: 10rem;
   }
@@ -49,6 +48,11 @@ const ColumnSB = styled.div`
     margin:0% 0% 0% 3%;
   }
 `;
+const ImageWithText = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
 
 const ImgTag = styled.img`
   width: 100%;
@@ -56,6 +60,22 @@ const ImgTag = styled.img`
   border-radius: 7px;
   object-fit: cover;
 `;
+
+const ImgText = styled.h5`
+  position: absolute;
+  bottom: 7%;  
+  left: 5%;   
+  color: white;
+  font-size:1.5rem; 
+  margin: 0% 0%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  padding: 1%;
+  border-radius: 5px;
+  @media (max-width: 767px) {
+    font-size:0.5rem;
+  }
+`;
+
 const TextTitleWrapper = styled.div`
   margin-top:3%;
   @media (max-width: 767px) {
@@ -131,8 +151,11 @@ function TrainerCategory() {
           <Carousel>
             {items.map((item: { download_url: string }, index: number) => (
               <div key={index}>
-                <Paper style={{ width: "100%", aspectRatio:"3/2" }}>
-                  <ImgTag src={item.download_url} alt="" />
+                <Paper style={{ width: "100%", maxHeight:"21rem", aspectRatio:"3/2" }}>
+                  <ImageWithText>
+                    <ImgTag src={item.download_url} alt="" />
+                    {/* <ImgText>지금 바로 운동 가능한 트레이너를 찾는다면?</ImgText> */}
+                  </ImageWithText>
                 </Paper>
               </div>
             ))}

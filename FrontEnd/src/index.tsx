@@ -31,13 +31,6 @@ const fontSize = {
   lg: "1.5rem",
 };
 
-// const fontWeight = {
-//   regular: 400,
-//   medium: 500,
-//   bold: 700,
-//   bolder: 900,
-// };
-
 const theme = {
   color,
   windowSize,

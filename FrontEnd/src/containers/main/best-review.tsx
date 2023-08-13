@@ -20,8 +20,8 @@ const Wrapper = styled.div`
 `;
 
 const ContainerTitle = styled.h4`
-  margin: 2.5% 3% 2.5% 2% !important;
-  font-size: 2rem;
+  margin: 1% 3% 3% 2%  !important;
+  font-size: 2.3rem;
   @media (max-width: 767px) {
     margin: 3% 2.5% !important;
     font-size: 1.2rem !important;

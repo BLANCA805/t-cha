@@ -169,23 +169,23 @@ function MobileBottomBar() {
       {/* <React.Fragment> */}
         {/* {list()} */}
       {/* </React.Fragment> */}
-      <ButtomBarContents>
+      <ButtomBarContents onClick={() => navigate("profile/bookmarked_trainers")}>
         <StarRoundedIcon style={{fontSize:"4rem"}}/>
         즐겨찾기
       </ButtomBarContents>
-      <ButtomBarContents>
+      <ButtomBarContents onClick={() => navigate("trainer")}>
         <StarRoundedIcon style={{fontSize:"4rem"}}/>
         트레이너목록 
       </ButtomBarContents>
-      <ButtomBarContents>
+      <ButtomBarContents onClick={() => navigate("")}>
         <HomeRoundedIcon style={{fontSize:"4rem"}}/>
         홈으로
       </ButtomBarContents>
-      <ButtomBarContents>
+      <ButtomBarContents onClick={() => navigate("profile/schedule")}>
         <StarRoundedIcon style={{fontSize:"4rem"}}/>
         스케줄
       </ButtomBarContents>
-      <ButtomBarContents>
+      <ButtomBarContents onClick={() => navigate("profile")}>
         <StarRoundedIcon style={{fontSize:"4rem"}}/>
         마이페이지
       </ButtomBarContents >

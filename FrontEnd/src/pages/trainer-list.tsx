@@ -11,10 +11,14 @@ import { Pagination } from "@mui/material";
 import { SearchFormData, TrainerListData } from "src/interface";
 
 const Wrapper = styled.div`
-  margin: 1%;
-  padding: 3%;
+  display:flex;
+  flex-direction:column;
+  width:95%;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 1% 3%;
   border-radius: 5px;
-  background-color: white;
+  /* background-color: lightgrey; */
 `;
 
 function TrainerList() {

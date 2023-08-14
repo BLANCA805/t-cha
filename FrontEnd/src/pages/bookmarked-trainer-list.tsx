@@ -55,7 +55,9 @@ function BookmarkedTrainerList() {
 
       <ContentsWrapper>
         {items &&
-          items.data.map((item) => <BookmarkedTrainerListItem data={item} />)}
+          items.data.map((item, index) => (
+            <BookmarkedTrainerListItem key={index} data={item} />
+          ))}
       </ContentsWrapper>
       <Pagination
         count={items?.pageInfo.totalPages}

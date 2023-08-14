@@ -69,8 +69,8 @@ function TrainerSchedule() {
       });
   }, [trainer]);
 
-  const goToPtRoom = () => {
-    navigate("/pt");
+  const goToPtRoom = (liveId: number | null) => {
+    navigate("/pt", {state: liveId});
   };
 
   return (
@@ -105,7 +105,7 @@ function TrainerSchedule() {
                 ) &&
                 item.liveId && (
                   <TchaButton
-                    onClick={goToPtRoom}
+                    onClick={() => goToPtRoom(item.liveId)}
                     style={{ width: "8rem", color: "white" }}
                   >
                     PT 입장하기

@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import axios from "axios";
+
 
 import { api } from "@shared/common-data";
 import { TrainerDetailData } from "src/interface";
@@ -9,10 +11,11 @@ import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
 
 import ToggleButtons from "@shared/toggle-button";
-import { DefaultButton } from "@shared/button";
+import { TchaButton } from "@shared/button";
 
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 
 import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
@@ -21,115 +24,132 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 
 const Container = styled.div`
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  margin-top:2%;
-  /* justify-content: center; */
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  
-  border-radius: 5px;
-  height: 100vh;
+  width:96%;
+  min-height:100vh;
+  margin:1.25% 0%;
+  @media (max-width: 767px) {
+    margin: 2% 0%;
+  }
   /* background-color: lightpink; */
 `;
 
-const Wrapper = styled.div`
+const TabWrapper = styled.div`
   display:flex;
   flex-direction: column;
-  width:96%;
-  /* padding: 1% 3%; */
-  border-radius: 5px;
+  margin-top: 1%;
+  width:100%;
   background-color: ${({ theme }) => theme.color.light};
 `;
 
 const Profile = styled.div`
   display: flex;
   flex-direction: row;
-  /* height: 15rem; */
+  background-color: #fff;
+  min-height: 20rem;
   border-radius: 10px;
+  margin-bottom:0.5%;
   width: 100%;
+  @media (max-width: 767px) {
+    min-height:8rem;
+    border-radius: 5px;
+  }
 `;
 
 const ProfilePhoto = styled.div`
-  flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3%;
-  height: 80%;
-  width: 100%;
+  padding: 1%;
+  width: 30%;
+  aspect-ratio: 1/1;
   @media (max-width: 767px) {
-    
+    width: 27.5%;
   }
+`;
+const ProfilePhotoimg = styled.img`
+  width: 80%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  object-fit: cover;
+  border-radius: 1rem;
+  background-color: gray;
 `;
 
 const Profileinfo = styled.div`
-  flex: 5;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: 3%;
-  margin-bottom: 7%;
+  justify-content: center;
+  align-items: start;
   height: 100%;
   width: 100%;
+  margin-left:4%;
 `;
 
-const ProfileModify = styled.div`
-  flex: 4;
+const IdWrapper = styled.div`
   display: flex;
-  /* align-items: center; */
-  justify-content: center;
-`;
+  align-items: center;
+  width:100%;
+  @media (max-width: 767px) {
+    /* justify-content: center; */
+    margin-left:2%; 
+  }
+`
 
-const ProfilePhotoimg = styled.img`
-  border-radius: 5%;
-  width:80%;
-  height:auto;
-  aspect-ratio:1/1;
-  overflow: hidden;
-  object-fit: cover;
-  background-color: gray;
-  @media (max-width: 767px) {
-    
-  }
-`;
-const UserId = styled.h5`
-  flex: 5.5;
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  font-size: 4rem;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  @media (max-width: 767px) {
-    font-size : 2rem;
-  }
-`;
-const TrainerHashtag = styled.div`
-  flex: 2;
-  font-weight: 700;
-  align-items: center;
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  /* background-color: pink; */
-  @media (max-width: 767px) {
-    font-size : 1rem;
+const UserId = styled.h4`
+  display:flex;
+  font-size: 5.5rem;
+  margin:0%;
+  @media (max-width:767px) {
+    font-size:1.6rem;
   }
 `;
 
 const HashTagWrapper = styled.div`
   display: flex;
+  width:100%;
+  margin: 2% 0% 0% 0%;
   justify-content: start;
 `;
 
-const TrainerIntroduct = styled.div`
-  flex: 4;
-  font-size: 1rem;
-  margin-top: 1px;
-  margin-bottom: 1px;
-  /* background-color: lightcyan; */
+const ProfileModify = styled.div`
+  display: flex;
+  width:25%;
+  align-items: center;
+  justify-content: start;
+  padding-right:5%;
   @media (max-width: 767px) {
-    font-size : 0.75rem;
+    padding-right:2.5%;
+    justify-content: center;
+  }
+`;
+
+
+const StyledTextBig = styled.h5`
+  margin: 2.5% 0% 0% 3%;
+  font-size:3.4rem;
+  @media (max-width: 767px) {
+    font-size:1.2rem;
+    margin: 2% 0% 0% 3%;
+  }
+`;
+const StyledTextMid = styled.h5`
+  margin: 2% 5rem 2% 0%;
+  font-size:2rem;
+  @media (max-width: 767px) {
+    font-size:0.9rem !important; 
+    margin: 2% 5% 2% 0% !important;
+  }
+`;
+const StyledTextSmall = styled.h6`
+  margin: 2% 0%;
+  font-size:1.25rem;
+  /* color:#a8a8a8; */
+  @media (max-width: 767px) {
+    margin: 2.5% 0%;
+    font-size:0.6rem; 
   }
 `;
 
@@ -222,30 +242,45 @@ function TrainerInfo() {
     navigate("/trainer/pt_reservation", { state: trainer });
   };
 
+  const isDesktop = useMediaQuery({minWidth: 768});
+  const isMobile = useMediaQuery({maxWidth: 767});
+
   return (
     <Container>
-      <Wrapper>
-        <Profile>
-          <ProfilePhoto>
-            <ProfilePhotoimg src={detail?.profileImg} />
-          </ProfilePhoto>
-          <Profileinfo>
+      <Profile>
+        <ProfilePhoto>
+          <ProfilePhotoimg src={detail?.profileImg} />
+        </ProfilePhoto>
+        <Profileinfo>
+          <IdWrapper>
             <UserId>{detail?.profileName}</UserId>
-            <HashTagWrapper>
-              {keywordTags?.map((tag, index) => (
-                <TrainerHashtag key={index}>#{tag}</TrainerHashtag>
-              ))}
-            </HashTagWrapper>
-            <TrainerIntroduct>{detail?.title}</TrainerIntroduct>
-          </Profileinfo>
-          {trainer === user.trainerId && (
-            <ProfileModify>
-              <DefaultButton onClick={moveToModify}> 수정 </DefaultButton>
-            </ProfileModify>
-          )}
-        </Profile>
-      </Wrapper>
-      <Wrapper>
+            <StyledTextBig>트레이너</StyledTextBig>
+          </IdWrapper>
+          <HashTagWrapper>
+            {keywordTags?.map((tag, index) => (
+              <StyledTextMid key={index}>#{tag}</StyledTextMid>
+            ))}
+          </HashTagWrapper>
+          <StyledTextSmall>{detail?.introduction}</StyledTextSmall>
+        </Profileinfo>
+        {trainer === user.trainerId && (
+          <ProfileModify>  
+          {isDesktop &&
+            <TchaButton 
+              onClick = {() => moveToModify()} 
+              style={{width:"10rem", height:"5rem"}}> 
+              <StyledTextSmall style={{color:"white", fontSize:"1.7rem"}}>수정하기</StyledTextSmall>
+            </TchaButton>          
+          }
+          {isMobile && 
+            <SettingsRoundedIcon 
+            style={{fontSize:"2.7rem", color:"grey"}} 
+            onClick = {() => moveToModify()} />}
+        </ProfileModify>
+        )}
+      </Profile>
+
+      <TabWrapper>
         <ToggleButtons
           tabs={[
             { text: "트레이너 상세 정보", name: "detail" },
@@ -256,7 +291,7 @@ function TrainerInfo() {
         />
         {tab === "detail" && detail && <TrainerDetail data={detail} />}
         {tab === "review" && <TrainerReview trainer={trainer} />}
-      </Wrapper>
+      </TabWrapper>
       {trainer !== user.trainerId && (
         <BottomTab>
           <BookmarkWrapper>

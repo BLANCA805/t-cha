@@ -2,10 +2,12 @@ package com.tcha.trainer.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,6 +81,7 @@ public class TrainerDto {
         private List<String> images; // 포트폴리오 사진 리스트
         private String profileImg; // 유저 프로필 사진
         private String profileName; // 유저 이름
+        private List<Long> userProfileIdList;
     }
 
     /*
@@ -105,6 +108,8 @@ public class TrainerDto {
         private int ptCount; // 누적 PT 수
         private int revisitGrade; // 재방문율에 따른 등급 (0(일반), 1(브론즈), 2(실버), 3(골드))
         private int bookmarkCount; // 북마크 수
+        private List<Long> userProfileIdList;
+
     }
 
     @Getter

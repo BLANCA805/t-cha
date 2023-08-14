@@ -49,7 +49,7 @@ public class PtLive extends Auditable {
     private PtliveStaus status;
 
     public enum PtliveStaus {
-        PROGRESS("진행중"), TERMINABLE("종료가능"), TERMINATION("종료");
+        INACCESSIBLE("접근 불가"), ACCESSIBLE("진행중"), TERMINABLE("종료가능"), TERMINATION("종료");
         @Getter
         private String status;
 

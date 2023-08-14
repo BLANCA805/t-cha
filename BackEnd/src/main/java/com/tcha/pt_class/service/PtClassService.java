@@ -1,6 +1,5 @@
 package com.tcha.pt_class.service;
 
-import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.exercise_log.service.ExerciseLogService;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.entity.PtClass;
@@ -25,7 +24,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -280,7 +278,7 @@ public class PtClassService {
         LocalDateTime nowTime = LocalDateTime.now();
 
         // status로 pt라이브 불러오기 (Progress 가져오기)
-        List<PtLive> list = ptLiveRepository.findAllByStatusProgerss().get();
+        List<PtLive> list = ptLiveRepository.findAllByStatusProgress().get();
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (PtLive pt : list) {

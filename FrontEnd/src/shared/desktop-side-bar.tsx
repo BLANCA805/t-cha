@@ -30,7 +30,8 @@ const SideBarContainer = styled.div`
   left:0;
   background-color: ${({ theme }) => theme.color.light};
   opacity: 75%;
-  width:16rem;
+  min-width:16.5rem;
+
   height:100vh;
 `;
 const StyledList = styled(List)`

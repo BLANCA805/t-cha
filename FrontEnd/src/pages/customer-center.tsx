@@ -9,17 +9,30 @@ import Notice from "@customer-center/notice";
 import Inquiry from "@customer-center/inquiry";
 
 import ToggleButtons from "@shared/toggle-button";
-
+import { TitleWrapper, PageTitleText } from "@shared/page-title";
+import { TchaButton } from "@shared/button";
 import styled from "styled-components";
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width:97%;
+  margin-top:1%;
+`;
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   margin: 1%;
   padding: 3%;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.color.light};
 `;
+const ButtonWrapper = styled.div`
+  display:flex;
+  width:100%;
+  justify-content: center;
+`
 
 function CustomerCenter() {
   const [tab, setTab] = useState<string>("notice");
@@ -49,13 +62,16 @@ function CustomerCenter() {
 
   return (
     <Container>
-      <Wrapper>
-        <h3>고객센터</h3>
-        <hr />
-        <Link to={"write_notice"}>공지사항 작성</Link>
-        <hr />
-        <Link to={"write_inquiry"}>문의사항 작성</Link>
-      </Wrapper>
+      <TitleWrapper>
+        <PageTitleText>고객센터</PageTitleText>
+        <ButtonWrapper>
+          {/* <TchaButton>
+            <h5> 공지사항 작성</h5>
+          </TchaButton> */}
+          <Link to={"write_notice"}>공지사항 작성</Link>
+          <Link to={"write_inquiry"}>문의사항 작성</Link>
+        </ButtonWrapper>
+      </TitleWrapper>
       <Wrapper>
         <ToggleButtons
           tabs={[

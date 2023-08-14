@@ -3,8 +3,9 @@ import styled from "styled-components";
 
 export const TitleWrapper = styled.div`
     display:flex;
-    /* justify-content: center; */
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
     min-height:30%;
     margin-bottom:2%;
     border-radius: 0.5rem;

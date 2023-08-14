@@ -3,6 +3,7 @@ package com.tcha.trainer.service;
 
 import com.tcha.bookmark.entity.Bookmark;
 import com.tcha.bookmark.repository.BookmarkRepository;
+import com.tcha.bookmark.service.BookmarkService;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.service.PtClassService;
 import com.tcha.question.entity.Question;
@@ -62,6 +63,7 @@ public class TrainerService {
     private final UserService userService;
     private final UserProfileService userProfileService;
     private final BookmarkRepository bookmarkRepository;
+    private final BookmarkService bookmarkService;
 
     private final RedisTemplate<String, String> redisTemplate;
     private final String STAR_KEY = "star";
@@ -183,8 +185,9 @@ public class TrainerService {
 
         // 트레이너 유효성 검증 추가
         Trainer trainer = findVerifiedTrainer(trainerId);
-        List<Bookmark> bookmarkList = bookmarkRepository.findByTrainerId(trainer.getId());
-        return trainerMapper.trainerToResponseDto(trainer);
+        List<Long> userProfileIdList = findUserProfileIdByBookmark(trainer.getId());
+
+        return trainerMapper.trainerToResponseDto(trainer, userProfileIdList);
     }
 
     public Page<Trainer> findAllTrainers(int page, int size) {
@@ -235,6 +238,8 @@ public class TrainerService {
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx = 0; idx < result.size(); idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(t.getId());
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -246,6 +251,7 @@ public class TrainerService {
                     .bookmarkCount(Double.valueOf(bookmarkList.get(idx)).intValue())
                     .ptCount(Double.valueOf(PTList.get(idx)).intValue())
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -292,6 +298,7 @@ public class TrainerService {
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx = 0; idx < result.size(); idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(t.getId());
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -303,6 +310,7 @@ public class TrainerService {
                     .bookmarkCount(Double.valueOf(bookmarkList.get(idx)).intValue())
                     .ptCount(Double.valueOf(PTList.get(idx)).intValue())
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -349,6 +357,7 @@ public class TrainerService {
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx = 0; idx < result.size(); idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(t.getId());
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -360,6 +369,7 @@ public class TrainerService {
                     .bookmarkCount(Double.valueOf(bookmarkList.get(idx)).intValue())
                     .ptCount(Double.valueOf(PTList.get(idx)).intValue())
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -406,6 +416,8 @@ public class TrainerService {
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx = 0; idx < result.size(); idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(t.getId());
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -417,6 +429,7 @@ public class TrainerService {
                     .bookmarkCount(Double.valueOf(bookmarkList.get(idx)).intValue())
                     .ptCount(Double.valueOf(PTList.get(idx)).intValue())
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -463,6 +476,8 @@ public class TrainerService {
         List<TrainerDto.ResponseList> trainerList = new ArrayList<>();
         for (int idx = 0; idx < result.size(); idx++) {
             Trainer t = trainerRepository.findById(idList.get(idx)).get();
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(t.getId());
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -474,6 +489,7 @@ public class TrainerService {
                     .bookmarkCount(Double.valueOf(bookmarkList.get(idx)).intValue())
                     .ptCount(Double.valueOf(PTList.get(idx)).intValue())
                     .reviewCount(Double.valueOf(reviewCountList.get((idx))).intValue())
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -489,6 +505,11 @@ public class TrainerService {
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
         ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 
+        //트레이너 삭제시, 트레이너와 관련된 북마크 모두 삭제
+        List<Bookmark> bookmarkList = bookmarkRepository.findByTrainerId(trainerId);
+        for (Bookmark bookmark : bookmarkList) {
+            bookmarkRepository.deleteById(bookmark.getId());
+        }
 
         deletedTrainer.setIntroduction(null);
         deletedTrainer.setTags(null);
@@ -568,6 +589,8 @@ public class TrainerService {
             String bookmarkCountKey = "bookmarkCount:" + trainerId;
             String ptCountKey = "ptCount:" + trainerId;
 
+            List<Long> userProfileIdList = findUserProfileIdByBookmark(trainerId);
+
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -580,6 +603,7 @@ public class TrainerService {
                     .ptCount(Double.valueOf(valueOperations.get(ptCountKey)).intValue())
                     .reviewCount(Double.valueOf(valueOperations.get(reviewCountKey)).intValue())
                     .revisitGrade(0)
+                    .userProfileIdList(userProfileIdList)
                     .build();
 
             trainerList.add(trainer);
@@ -611,6 +635,18 @@ public class TrainerService {
 
         }
         return new PageInfo(page, size, num, pages);
+    }
+
+    //북마크된 유저프로필 아이디 출력하는 메소드
+    public List<Long> findUserProfileIdByBookmark(String trainerId) {
+        List<Bookmark> bookmarkList = bookmarkRepository.findByTrainerId(trainerId);
+
+        List<Long> userProfileIdList = new ArrayList<Long>();
+
+        for (Bookmark bookmark : bookmarkList) {
+            userProfileIdList.add(bookmark.getUserProfile().getId());
+        }
+        return userProfileIdList;
     }
 }
 

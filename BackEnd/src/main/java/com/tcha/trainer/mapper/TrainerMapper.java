@@ -4,9 +4,11 @@ import com.tcha.trainer.dto.TrainerDto;
 import com.tcha.trainer.dto.TrainerDto.Response;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.user_profile.entity.UserProfile;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -33,7 +35,7 @@ public interface TrainerMapper {
 
     Trainer patchToTrainer(TrainerDto.Patch patchRequest);
 
-    default TrainerDto.Response trainerToResponseDto(Trainer trainer) {
+    default TrainerDto.Response trainerToResponseDto(Trainer trainer, List<Long> userProfileIdList) {
 
         return TrainerDto.Response.builder()
                 .id(trainer.getId())
@@ -44,6 +46,7 @@ public interface TrainerMapper {
                 .images(trainer.getImages())
                 .profileImg(trainer.getUserProfile().getProfileImage())
                 .profileName(trainer.getUserProfile().getName())
+                .userProfileIdList(userProfileIdList)
                 .build();
     }
 

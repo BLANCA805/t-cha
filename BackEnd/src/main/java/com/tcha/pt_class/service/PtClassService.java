@@ -192,7 +192,7 @@ public class PtClassService {
             /** 여기에 운동일지 생성하는 코드 넣어주세요*/
             exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass, null);
+            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStaus.INACCESSIBLE);
         }
 
         // 2. 수업 예약 취소라면,

@@ -181,7 +181,7 @@ public class PtClassService {
                             .ptClassId(ptClass.getId())
                             .userProfile(user.getUserProfile())
                             .trainerId(ptClass.getTrainer().getId())
-                            .status(PtLive.PtliveStaus.PROGRESS)
+                            .status(PtLive.PtliveStaus.INACCESSIBLE)
                             .build());
 
             // ptClass에 ptLive 아이디 추가해주기 (update)
@@ -190,7 +190,7 @@ public class PtClassService {
             /** 여기에 운동일지 생성하는 코드 넣어주세요*/
             exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass, null);
+            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStaus.INACCESSIBLE);
         }
 
         // 2. 수업 예약 취소라면,
@@ -203,6 +203,7 @@ public class PtClassService {
             exerciseLogService.deleteExerciseLog(ptClass.getPtLiveId());
 
             ptClass.setPtLiveId(null);
+            ptLive.setStatus(null);
             ptLive.setUserProfile(null);
 
             String trainerId = ptLive.getTrainerId();
@@ -339,6 +340,48 @@ public class PtClassService {
             }
 
         }
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 55 * * * *") //55분에 실행
+    public void executePtLiveStatus55() {
+        executePtLiveStatusChangeAccessible();
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 25 * * * *")// 25분에 실행
+    public void executePtLiveStatus25() {
+        executePtLiveStatusChangeAccessible();
+    }
+
+
+    //접근불가 -> 진행 변경
+    @Transactional
+    public void executePtLiveStatusChangeAccessible() {
+        //메소드 실행시각
+        LocalDateTime nowTime = LocalDateTime.now();
+
+        // status로 pt라이브 불러오기 (Progress 가져오기)
+        List<PtLive> list = ptLiveRepository.findAllByStatusInaccessible().get();
+
+        //불러온 운동일지 상태 for문 돌면서 수정하기
+        for (PtLive pt : list) {
+            //해당 운동 클래스 가져오기
+            PtClass ptClass = ptClassRepository.findById(pt.getPtClassId()).get();
+
+            //해당 수업 시작 시간 가져오기
+            LocalTime startTime = ptClass.getStartTime();
+            LocalDate startDate = ptClass.getStartDate();
+
+            LocalDateTime start = LocalDateTime.of(startDate, startTime);
+
+            //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
+            if (start.isBefore(nowTime.minusHours(1))) {
+                pt.setStatus(PtLive.PtliveStaus.ACCESSIBLE);
+            }
+
+        }
+
     }
 
 

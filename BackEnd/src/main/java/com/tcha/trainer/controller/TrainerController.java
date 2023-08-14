@@ -8,9 +8,11 @@ import com.tcha.trainer.mapper.TrainerMapper;
 import com.tcha.trainer.service.TrainerService;
 import com.tcha.utils.pagination.MultiResponseDto;
 import com.tcha.utils.pagination.PageInfo;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -54,7 +56,7 @@ public class TrainerController {
         Trainer trainerForService = trainerMapper.trainerPostDtoToTrainer(userProfileId,
                 postRequest);
         Trainer trainerForResponse = trainerService.createTrainer(trainerForService);
-        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse, null);
 
         return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.CREATED);
     }
@@ -68,7 +70,9 @@ public class TrainerController {
             @RequestBody TrainerDto.Patch patchRequest) {
         Trainer trainerForService = trainerMapper.patchToTrainer(patchRequest);
         Trainer trainerForResponse = trainerService.updateTrainer(trainerId, trainerForService);
-        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse);
+
+        List<Long> userProfileIdList = trainerService.findUserProfileIdByBookmark(trainerId);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(trainerForResponse, userProfileIdList);
 
         return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.OK);
     }
@@ -157,7 +161,7 @@ public class TrainerController {
             @PathVariable("trainer-id") String trainerId) {
 
         Trainer deletedTrainer = trainerService.deleteTrainer(trainerId);
-        TrainerDto.Response response = trainerMapper.trainerToResponseDto(deletedTrainer);
+        TrainerDto.Response response = trainerMapper.trainerToResponseDto(deletedTrainer, null);
 
         return new ResponseEntity<TrainerDto.Response>(response, HttpStatus.OK);
     }

@@ -70,7 +70,26 @@ function TrainerSchedule() {
   }, [trainer]);
 
   const goToPtRoom = (liveId: number | null) => {
-    navigate("/pt", {state: liveId});
+    axios
+      .get(`${api}/lives/${liveId}`)
+      .then((response) => {
+        const liveData = response.data
+        
+        // 트레이너 입장 가능 여부 확인
+        if (liveData.trainerId === trainer) {
+          if (liveData.status === "PROGRESS") {
+            navigate("/pt", {state: liveData});
+          } else {
+            alert("입장 가능한 시간이 아닙니다");
+          }
+        } else {
+          alert("입장 권한이 없습니다")
+        }
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (

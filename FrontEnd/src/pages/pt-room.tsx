@@ -5,12 +5,11 @@ import { useLocation } from "react-router-dom";
 
 
 function PtRoom() {
-  const user = useSelector((state: RootState) => state.profile.profileId);
-  const liveId = useLocation().state
+  const userId = useSelector((state: RootState) => state.auth.token);
+  const liveData = useLocation().state
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
-    useOpenvidu(user, liveId);
+    useOpenvidu(userId, liveData.liveId);
 
-  console.log(liveId)
   return (
     <div>
       {publisher && (

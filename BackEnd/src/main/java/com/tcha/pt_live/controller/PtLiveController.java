@@ -1,6 +1,7 @@
 package com.tcha.pt_live.controller;
 
-import com.tcha.pt_live.dto.PtLiveDto;
+//import com.tcha.pt_live.dto.PtLiveDto;
+
 import com.tcha.pt_live.service.PtLiveService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

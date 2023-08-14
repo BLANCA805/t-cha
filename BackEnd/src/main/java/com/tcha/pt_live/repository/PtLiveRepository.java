@@ -13,6 +13,11 @@ public interface PtLiveRepository extends JpaRepository<PtLive, Long> {
 
     List<PtLive> findAllByUserProfile(UserProfile userProfile);
 
+    //findAllByStatusInaccessible
+    @Query("SELECT p FROM PtLive p WHERE p.status = 'INACCESSIBLE'")
+    Optional<List<PtLive>> findAllByStatusInaccessible();
+
+    //진행
     @Query("SELECT p FROM PtLive p WHERE p.status = 'PROGRESS'")
     Optional<List<PtLive>> findAllByStatusProgerss();
 

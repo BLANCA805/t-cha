@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { DefaultButton } from "@shared/button";
+import { DefaultButton, TchaButton } from "@shared/button";
 import { BookmarkedTrainerDataProps } from "src/interface";
 import axios from "axios";
 import { api } from "@shared/common-data";
@@ -78,16 +78,19 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
         console.log(error);
       });
   };
+
   const deleteBookmark = () => {
     axios
       .delete(`${api}/bookmarks/${user}/${props.data.trainerId}`)
-      .then(() => {
+      .then((response) => {
+        console.log(response);
         setIsBookmarked(false);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <Wrapper>
       <PhotoWrapper>

@@ -86,17 +86,17 @@ public class PtClassService {
                 () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
 
         List<PtClass> trainerClassList = ptClassRepository.findClassByTrainer(trainer.getId());
-
         List<PtClassDto.Response> response = new ArrayList<>();
+
+        //status 넣어주기
         for (PtClass pt : trainerClassList) {
-            Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
-            if (ptLive.isPresent()) {
+            if (pt.getPtLiveId() != null) {
+                Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
                 response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus()));
             } else {
                 response.add(ptClassMapper.classToClassResponseDto(pt, null));
             }
         }
-
         return response;
     }
 
@@ -138,6 +138,13 @@ public class PtClassService {
                 response.add(ptClassMapper.classToClassResponseDto(pt, null));
             }
         }
+        /**위의 코드는 에러날 수도 아니면 코드, 아래 코드로 바꿔야 될수도 내일 생각해보기*/
+//        if (pt.getPtLiveId() != null) {
+//            Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
+//            response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus()));
+//        } else {
+//            response.add(ptClassMapper.classToClassResponseDto(pt, null));
+//        }
 
         return response;
     }

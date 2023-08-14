@@ -12,6 +12,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 interface AuthProps {
   open: boolean;
@@ -70,23 +71,7 @@ const Auth = ({ open, onClose }: AuthProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const Sign = () => {
-    console.log(api)
-    axios
-      .post(`${api}/users?email=email@gmail.com`)
-      .then((response) => {
-        if (response.data) {
-          console.log(response.data);
-          dispatch(
-            logIn({
-              token: response.data.id,
-            })
-          );
-          onClose();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    window.open("https://www.tcha.site/api/oauth2/authorization/google");
   };
   return (
     <ModalWrapper

@@ -21,22 +21,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 
 const Container = styled.div`
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  margin-top:2%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 2%;
   /* justify-content: center; */
   align-items: center;
-  
+
   border-radius: 5px;
   height: 100vh;
   /* background-color: lightpink; */
 `;
 
 const Wrapper = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
-  width:96%;
+  width: 96%;
   /* padding: 1% 3%; */
   border-radius: 5px;
   background-color: ${({ theme }) => theme.color.light};
@@ -59,7 +59,6 @@ const ProfilePhoto = styled.div`
   height: 80%;
   width: 100%;
   @media (max-width: 767px) {
-    
   }
 `;
 
@@ -83,14 +82,13 @@ const ProfileModify = styled.div`
 
 const ProfilePhotoimg = styled.img`
   border-radius: 5%;
-  width:80%;
-  height:auto;
-  aspect-ratio:1/1;
+  width: 80%;
+  height: auto;
+  aspect-ratio: 1/1;
   overflow: hidden;
   object-fit: cover;
   background-color: gray;
   @media (max-width: 767px) {
-    
   }
 `;
 const UserId = styled.h5`
@@ -102,7 +100,7 @@ const UserId = styled.h5`
   margin-top: 1px;
   margin-bottom: 1px;
   @media (max-width: 767px) {
-    font-size : 2rem;
+    font-size: 2rem;
   }
 `;
 const TrainerHashtag = styled.div`
@@ -113,7 +111,7 @@ const TrainerHashtag = styled.div`
   margin-bottom: 0.5rem;
   /* background-color: pink; */
   @media (max-width: 767px) {
-    font-size : 1rem;
+    font-size: 1rem;
   }
 `;
 
@@ -129,7 +127,7 @@ const TrainerIntroduct = styled.div`
   margin-bottom: 1px;
   /* background-color: lightcyan; */
   @media (max-width: 767px) {
-    font-size : 0.75rem;
+    font-size: 0.75rem;
   }
 `;
 
@@ -144,7 +142,6 @@ const BottomTab = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
-  
 `;
 
 const BookmarkWrapper = styled.div`
@@ -236,7 +233,7 @@ function TrainerInfo() {
                 <TrainerHashtag key={index}>#{tag}</TrainerHashtag>
               ))}
             </HashTagWrapper>
-            <TrainerIntroduct>{detail?.title}</TrainerIntroduct>
+            <TrainerIntroduct>{detail?.introduction}</TrainerIntroduct>
           </Profileinfo>
           {trainer === user.trainerId && (
             <ProfileModify>
@@ -259,19 +256,21 @@ function TrainerInfo() {
       </Wrapper>
       {trainer !== user.trainerId && (
         <BottomTab>
-          <BookmarkWrapper>
-            {/* <BookmarkButton
+          {!!user.profileId && (
+            <BookmarkWrapper>
+              {/* <BookmarkButton
               onClick={toggleBookmarkIcon}
               backgroundImage={bookmarkIcon}
             ></BookmarkButton> */}
-            <BookmarkButton onClick={() => setBookmark(!bookmark)}>
-              {bookmark ? (
-                <StarRoundedIcon style={{ fontSize: "7em" }} />
-              ) : (
-                <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
-              )}
-            </BookmarkButton>
-          </BookmarkWrapper>
+              <BookmarkButton onClick={() => setBookmark(!bookmark)}>
+                {bookmark ? (
+                  <StarRoundedIcon style={{ fontSize: "7em" }} />
+                ) : (
+                  <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
+                )}
+              </BookmarkButton>
+            </BookmarkWrapper>
+          )}
           <RegisterWrapper>
             <RegisterButton onClick={moveToReservation} variant="contained">
               <Typography variant="h4">예약 및 결제하기</Typography>

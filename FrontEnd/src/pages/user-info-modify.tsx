@@ -6,6 +6,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { postProfile } from "src/redux/slicers";
 import { RootState } from "src/redux/store";
 
 import styled from "styled-components";
@@ -144,7 +145,8 @@ function UserInfoModify() {
         `${api}/userProfiles/${profileId}`,
         profileUpdateData
       );
-      console.log("Profile Update Response:", profileUpdateResponse.data); // 프로필 업데이트 응답 로그 출력
+      dispatch(postProfile(profileUpdateData));
+      console.log("Profile Update Response:", profileUpdateResponse.data);
       navigate("/profile");
     } catch (error) {
       console.log(error);
@@ -152,7 +154,7 @@ function UserInfoModify() {
   };
 
   const goToBack = () => {
-    // navigate("/profile");
+    navigate("/profile");
   };
 
   return (

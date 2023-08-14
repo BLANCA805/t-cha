@@ -7,6 +7,7 @@ const authInitialState = {
 const profileInitialState = {
   name: "",
   profileId: 0,
+  profileImage: "",
   trainerId: "",
 };
 
@@ -33,11 +34,13 @@ const profileSlice = createSlice({
     postProfile: (state, action) => {
       state.name = action.payload.name;
       state.profileId = action.payload.id;
+      state.profileImage = action.payload.profileImage;
     },
     deleteProfile: (state) => {
       state.name = "";
       state.profileId = 0;
       state.trainerId = "";
+      state.profileImage = "";
     },
     test: (state) => {},
   },

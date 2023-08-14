@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Outlet, useNavigation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -106,8 +105,13 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   flex: 1;
-  display:flex;
+  display: flex;
   justify-content: center;
+  z-index: 0;
+  @media (max-width: 767px) {
+    padding-bottom: 6.5rem;
+    overflow-y: auto;
+  }
 `;
 
 type MediaQueryProps = {
@@ -144,11 +148,9 @@ function App() {
         <Wrapper>
           <Desktop>
             <DesktopSideBar />
+            <SideBar />
           </Desktop>
 
-          <Mobile>
-            <SideBar />
-          </Mobile>
           <Mobile>
             <MobileBottomBar />
             <SideBar />

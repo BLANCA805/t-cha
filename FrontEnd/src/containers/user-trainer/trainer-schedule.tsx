@@ -49,7 +49,6 @@ const ScheduleInfo = styled.div`
 `;
 
 function TrainerSchedule() {
-  const now = dayjs();
   const [value, setValue] = useState<Dayjs | null>(dayjs());
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
   const selectedDate = value?.format("YYYY-MM-DD");
@@ -95,26 +94,16 @@ function TrainerSchedule() {
                 Class Id : {item.classId} Live Id : {item.liveId} Date :{" "}
                 {item.startDate} Time : {item.startTime}
                 Trainer ID : {item.trainerId}
-                <p>{item.startDate + item.startTime}</p>
               </div>
-              {now.isAfter(
-                dayjs(`${item.startDate} ${item.startTime}`).add(-5, "m")
-              ) &&
-                now.isBefore(
-                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
-                ) &&
-                item.liveId && (
-                  <TchaButton
-                    onClick={goToPtRoom}
-                    style={{ width: "8rem", color: "white" }}
-                  >
-                    PT 입장하기
-                  </TchaButton>
-                )}
-              {item.liveId &&
-                now.isAfter(
-                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
-                ) && <WriteExerciseLog liveId={item.liveId} />}
+              <TchaButton
+                onClick={goToPtRoom}
+                style={{ width: "8rem", color: "white" }}
+              >
+                PT 입장하기
+              </TchaButton>
+              {item.liveId && item.status !== "INACCESSABLE" && (
+                <WriteExerciseLog liveId={item.liveId} />
+              )}
             </ScheduleInfo>
           )
       )}

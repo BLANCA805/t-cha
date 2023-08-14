@@ -21,7 +21,7 @@ const CalendarContainer = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  width:96%;
+  width: 96%;
   flex-direction: column;
   height: 100vh;
   margin: 1% 1%;

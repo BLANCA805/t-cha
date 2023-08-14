@@ -11,8 +11,18 @@ const Wrapper = styled.div`
 
 const ContainerSet = styled.div`
   display: flex;
+  flex-direction: column;
   height: 50rem;
   background-color: #f0f0f0;
+`;
+
+const ImageSet = styled.div`
+  display: flex;
+`;
+
+const Image = styled.img`
+  width: 15rem;
+  height: 15rem;
 `;
 
 interface TrainerDetailDataProps {
@@ -23,7 +33,15 @@ const TrainerDetail: React.FC<TrainerDetailDataProps> = ({ data }) => {
   console.log(data);
   return (
     <Wrapper>
-      <ContainerSet>{data.content}</ContainerSet>
+      <ContainerSet>
+        <h1>{data.title}</h1>
+        <ImageSet>
+          {data.images.map((image) => (
+            <Image src={image} alt="" />
+          ))}
+        </ImageSet>
+        <h4>{data.content}</h4>
+      </ContainerSet>
     </Wrapper>
   );
 };

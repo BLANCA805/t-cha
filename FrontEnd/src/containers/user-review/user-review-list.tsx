@@ -7,30 +7,49 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import { api } from "@shared/common-data";
 import { ReviewData } from "src/interface";
+import { Pagination } from "@mui/material";
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 function UserReviewList() {
   const user = useSelector((state: RootState) => state.profile);
 
   const [items, setItems] = useState<ReviewData>();
+  const [page, setPage] = useState(1);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
 
   useEffect(() => {
     axios
-      .get(`${api}/reviews/user/${user.profileId}`)
+      .get(`${api}/reviews/user/${user.profileId}?page=${page}&size=10`)
       .then((response) => {
         console.log(response.data);
+        setItems(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, [page, user.profileId]);
 
   return (
     <Wrapper>
       {items?.data.map((item, index) => (
         <UserReviewListItem key={index} data={item} />
       ))}
+      <Pagination
+        count={items?.pageInfo.totalPages}
+        page={page}
+        onChange={handleChangePage}
+        color="standard"
+      />
     </Wrapper>
   );
 }

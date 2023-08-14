@@ -113,7 +113,12 @@ function TrainerRegistration() {
     setContent(event.target.value);
   };
   const handleTag = (event: any) => {
-    setTag(event.target.value);
+    const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+    if (regExp.test(event.target.value)) {
+      alert("특수문자는 입력할 수 없습니다");
+    } else {
+      setTag(event.target.value);
+    }
   };
   const addTag = () => {
     if (tag) {

@@ -23,10 +23,15 @@ import styled from "styled-components";
 
 const Sticky = styled.div`
   position: fixed;
+  z-index: 1;
   bottom: 0;
 `;
 
 function SideBar() {
+  const user = useSelector((state: RootState) => state.auth);
+  const profile = useSelector((state: RootState) => state.profile);
+
+  const dispatch = useDispatch<AppDispatch>();
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -116,11 +121,6 @@ function SideBar() {
   const handleAuthClose = () => {
     setAuthOpen(false);
   };
-
-  const user = useSelector((state: RootState) => state.auth);
-  const profile = useSelector((state: RootState) => state.profile);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   const LogOut = () => {
     dispatch(logOut());

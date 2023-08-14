@@ -116,8 +116,8 @@ public class ExerciseLogService {
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog,
             ExerciseLogDto.Patch patchRequest, Long id) {
 
-        existExerciseLog.setTitle(patchRequest.getTitle());
 //        existExerciseLog.setContent(patchRequest.getContent());
+        existExerciseLog.setTitle(patchRequest.getTitle());
 
         // 업데이트 전에 기존 데이터 먼저 삭제해야됨 -> s3의 기존 정보(이미지, 비디오) delete
         List<String> imgList = existExerciseLog.getImages();
@@ -170,15 +170,39 @@ public class ExerciseLogService {
     //작성 및 작성완료는 해당 일지를 확인할 수 있는 트레이너만 접근이 가능하도록 다른 도메인에서 정해져있을 것임
     //그리고 작성완료는 트레이너가 하므로, 트레이너 이름 정보 필요 없음
     @Transactional
-    public ExerciseLogDto.Response patchWriteDoneExerciseLog(long id) {
-        //기존 운동일지 가져오기
-        ExerciseLog exerciseLog = findVerifiedById(id);
+    public ExerciseLogDto.Response patchWriteDoneExerciseLog(ExerciseLog exerciseLog,ExerciseLogDto.Patch patchRequest) {
+
+        exerciseLog.setTitle(patchRequest.getTitle());
+
+        // 업데이트 전에 기존 데이터 먼저 삭제해야됨 -> s3의 기존 정보(이미지, 비디오) delete
+        List<String> imgList = exerciseLog.getImages();
+//        List<String> videoList = exerciseLog.getVideos();
+
+        if(!imgList.isEmpty()) {
+            for (String s : imgList) {
+                s3Uploader.delete(s);
+            }
+//            for (String s : videoList) {
+//                s3Uploader.delete(s);
+//            }
+        }
+
+        List<String> content = new ArrayList<>();
+        List<String> image = new ArrayList<>();
+
+        for(ExerciseLogDto.Content c : patchRequest.getContent()) {
+            //새로운 이미지, 비디오 저장
+            content.add(c.getText());
+            image.add(c.getImage());
+        }
+        exerciseLog.setContents(content);
+        exerciseLog.setImages(image);
 
         //운동일지 상태 읽기로 변경
         exerciseLog.setStatus(ExerciseLog.exerciseLogStaus.READ);
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(exerciseLog),
-                null);
+                findTrainerNameByExerciseLog(exerciseLog));
     }
 
     /**

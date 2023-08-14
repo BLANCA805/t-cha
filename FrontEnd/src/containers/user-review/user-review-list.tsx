@@ -41,9 +41,15 @@ function UserReviewList() {
 
   return (
     <Wrapper>
-      {items?.data.map((item, index) => (
-        <UserReviewListItem key={index} data={item} />
-      ))}
+      {items?.data[0] ? (
+        items.data.map((item, index) => (
+          <UserReviewListItem key={index} data={item} />
+        ))
+      ) : (
+        <div>
+          <p>아직 작성한 리뷰가 없습니다</p>
+        </div>
+      )}
       <Pagination
         count={items?.pageInfo.totalPages}
         page={page}

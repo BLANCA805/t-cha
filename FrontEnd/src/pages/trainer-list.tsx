@@ -48,9 +48,7 @@ function TrainerList() {
     console.log(page);
     console.log(body);
     axios
-      .get(`${api}/trainers/search?page=2&size=10`, {
-        data: JSON.stringify(body),
-      })
+      .get(`${api}/trainers/search?page=2&size=10`, body)
       .then((response) => {
         console.log(response.data);
         setItems(response.data);

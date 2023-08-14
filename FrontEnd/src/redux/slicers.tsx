@@ -34,13 +34,16 @@ const profileSlice = createSlice({
     postProfile: (state, action) => {
       state.name = action.payload.name;
       state.profileId = action.payload.id;
-      state.profileImage = action.payload.profileImage;
     },
     deleteProfile: (state) => {
       state.name = "";
       state.profileId = 0;
       state.trainerId = "";
       state.profileImage = "";
+    },
+    modifyProfile: (state, action) => {
+      state.name = action.payload.name;
+      state.profileImage = action.payload.profileImage;
     },
     test: (state) => {},
   },
@@ -52,7 +55,12 @@ const rootReducer = combineReducers({
 });
 
 export const { logIn, logOut } = authSlice.actions;
-export const { registTrainer, postProfile, deleteProfile, test } =
-  profileSlice.actions;
+export const {
+  registTrainer,
+  postProfile,
+  deleteProfile,
+  modifyProfile,
+  test,
+} = profileSlice.actions;
 
 export default rootReducer;

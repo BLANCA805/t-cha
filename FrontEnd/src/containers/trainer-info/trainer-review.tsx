@@ -90,33 +90,39 @@ const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
   return (
     <TotalWrapper>
       <ContainerSet>
-        {reviewData?.data.map((item, index) => (
-          <ReviewContainer key={index}>
-            <ProfileWrapper>
-              <UserProfileimg />
-              <UserProfileTextData>
-                <NameWrapper>
-                  <b style={{ fontSize: "1.5rem" }}> {item.id}</b>
-                  <b style={{ fontSize: "1rem", marginLeft: "0.5rem" }}>
-                    회원님
-                  </b>
-                </NameWrapper>
+        {reviewData?.data[0] ? (
+          reviewData.data.map((item, index) => (
+            <ReviewContainer key={index}>
+              <ProfileWrapper>
+                <UserProfileimg />
+                <UserProfileTextData>
+                  <NameWrapper>
+                    <b style={{ fontSize: "1.5rem" }}> {item.id}</b>
+                    <b style={{ fontSize: "1rem", marginLeft: "0.5rem" }}>
+                      회원님
+                    </b>
+                  </NameWrapper>
 
-                <DateRateWrapper>
-                  <Rating value={item.star} precision={0.5} readOnly />
-                  <b style={{ fontSize: "1rem", marginRight: "1rem" }}>
-                    {item.star}
-                  </b>
-                  <b style={{ fontSize: "0.7rem" }}>
-                    작성자 : {item.profileName}
-                  </b>
-                </DateRateWrapper>
-              </UserProfileTextData>
-            </ProfileWrapper>
+                  <DateRateWrapper>
+                    <Rating value={item.star} precision={0.5} readOnly />
+                    <b style={{ fontSize: "1rem", marginRight: "1rem" }}>
+                      {item.star}
+                    </b>
+                    <b style={{ fontSize: "0.7rem" }}>
+                      작성자 : {item.profileName}
+                    </b>
+                  </DateRateWrapper>
+                </UserProfileTextData>
+              </ProfileWrapper>
 
-            <ContentsWrapper>{item.content}</ContentsWrapper>
-          </ReviewContainer>
-        ))}
+              <ContentsWrapper>{item.content}</ContentsWrapper>
+            </ReviewContainer>
+          ))
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <p>아직 작성된 리뷰가 없습니다</p>
+          </div>
+        )}
       </ContainerSet>
 
       <Pagination

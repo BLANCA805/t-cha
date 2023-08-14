@@ -17,6 +17,7 @@ const CalendarContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  padding-top: 5%;
 `;
 
 const Wrapper = styled.div`
@@ -35,9 +36,11 @@ const PageTitle = styled.div`
   font-size: 2rem;
   margin: 1% 0%;
 `;
+
 const Calendar = styled.div`
   margin-top: 3%;
 `;
+
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -83,9 +86,13 @@ function UserSchedule() {
         </LocalizationProvider>
       </Calendar>
       <ScheduleInfo>
-        {items.map((item) => (
-          <UserScheduleItem data={item} />
-        ))}
+        {items[0] ? (
+          items.map((item) => <UserScheduleItem data={item} />)
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <p>해당 날짜에 예약이 없습니다</p>
+          </div>
+        )}
       </ScheduleInfo>
     </Wrapper>
   );

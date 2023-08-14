@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { deleteProfile, logOut, postProfile } from "src/redux/slicers";
+import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 import Box from "@mui/material/Box";
@@ -78,6 +78,35 @@ function DesktopSideBar() {
 
       setOpen(open);
     };
+
+  const tester = () => {
+    axios
+      .post(`${api}/users?email=tester@gmail.com`)
+      .then((response) => {
+        const token = response.data.id;
+        dispatch(
+          logIn({
+            token: response.data.id,
+          })
+        );
+        return axios.post(`${api}/userProfiles`, {
+          userId: token,
+          name: token.slice(0, 3),
+          profileImage: "",
+        });
+      })
+      .then((response) => {
+        if (response.data) {
+          dispatch(
+            postProfile({ name: response.data.name, id: response.data.id })
+          );
+          console.log(response.data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   function list() {
     if (user.token) {
@@ -159,6 +188,7 @@ function DesktopSideBar() {
               </ListItemButton>
             </ListItemStyled>
           ))}
+          <button onClick={tester}>테스터로 로그인하기</button>
         </List>
       );
     }

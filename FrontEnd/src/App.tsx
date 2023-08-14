@@ -148,12 +148,10 @@ function App() {
         <Wrapper>
           <Desktop>
             <DesktopSideBar />
-            <SideBar />
           </Desktop>
 
           <Mobile>
             <MobileBottomBar />
-            <SideBar />
           </Mobile>
 
           <Container>

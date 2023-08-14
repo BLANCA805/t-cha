@@ -20,8 +20,8 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width:97%;
-  margin:3%;
+  width: 97%;
+  margin: 3%;
 `;
 
 const ContainerSet = styled.div`
@@ -47,7 +47,7 @@ const TrRegister = styled(ContainerSet)`
   height: 10rem;
   border-radius: 1rem;
   width: 100%;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const UserContainer = styled(ContainerSet)`
@@ -117,12 +117,12 @@ const Uscol = styled.div`
   background-color: white;
   margin: 3px;
   border-radius: 10px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const StyledText = styled.h5`
   margin: 2% 0%;
-  font-size:2rem;
+  font-size: 2rem;
 `;
 
 function User() {
@@ -157,37 +157,37 @@ function User() {
         </Profileinfo>
         <ProfileModify>
           <Link to="info_modify">
-            <DefaultButton> 수정하기 </DefaultButton>
+            <DefaultButton>수정하기</DefaultButton>
           </Link>
         </ProfileModify>
       </Profile>
       {!profile.trainerId && (
-        <TrRegister onClick = {() => navigate("trainer_registration")}>
-            <StyledText> 트레이너 회원으로 등록하기 </StyledText>
+        <TrRegister onClick={() => navigate("trainer_registration")}>
+          <StyledText> 트레이너 회원으로 등록하기 </StyledText>
         </TrRegister>
       )}
       {profile.trainerId && <TrainerButtons />}
       <UserContainer>
         <Usrow>
-          <Uscol onClick = {() => navigate("bookmarked_trainers")}>
+          <Uscol onClick={() => navigate("bookmarked_trainers")}>
             <StyledText> 즐겨찾는 트레이너 </StyledText>
             {/* <Link to="bookmarked_trainers">즐겨찾기 한 트레이너</Link> */}
           </Uscol>
-          <Uscol onClick = {() => navigate("schedule")}>
+          <Uscol onClick={() => navigate("schedule")}>
             <StyledText>나의 스케줄</StyledText>
           </Uscol>
-          <Uscol onClick = {() => navigate("review")}>
+          <Uscol onClick={() => navigate("review")}>
             <StyledText>내가 작성한 리뷰</StyledText>
           </Uscol>
         </Usrow>
         <Usrow>
-          <Uscol onClick = {() => navigate("payment_detail")}>
+          <Uscol onClick={() => navigate("payment_detail")}>
             <StyledText>결제 정보</StyledText>
           </Uscol>
-          <Uscol onClick = {() => navigate("chat")}>
+          <Uscol onClick={() => navigate("chat")}>
             <StyledText>채팅 목록</StyledText>
           </Uscol>
-          <Uscol onClick = {() => navigate("/customer_center")}>
+          <Uscol onClick={() => navigate("/customer_center")}>
             <StyledText>고객센터</StyledText>
           </Uscol>
         </Usrow>

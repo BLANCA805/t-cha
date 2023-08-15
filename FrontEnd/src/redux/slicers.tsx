@@ -1,12 +1,14 @@
 import { createSlice, combineReducers } from "@reduxjs/toolkit";
 
 const authInitialState = {
+  isLogined: false,
   token: "",
 };
 
 const profileInitialState = {
   name: "",
   profileId: 0,
+  isTrainer: false,
   trainerId: "",
 };
 
@@ -15,9 +17,11 @@ const authSlice = createSlice({
   initialState: authInitialState,
   reducers: {
     logIn: (state, action) => {
+      state.isLogined = true;
       state.token = action.payload.token;
     },
     logOut: (state) => {
+      state.isLogined = false;
       state.token = "";
     },
   },
@@ -28,6 +32,7 @@ const profileSlice = createSlice({
   initialState: profileInitialState,
   reducers: {
     registTrainer: (state, action) => {
+      state.isTrainer = true;
       state.trainerId = action.payload.trainerId;
     },
     postProfile: (state, action) => {
@@ -37,9 +42,11 @@ const profileSlice = createSlice({
     deleteProfile: (state) => {
       state.name = "";
       state.profileId = 0;
-      state.trainerId = "";
+      state.isTrainer = false;
     },
-    test: (state) => {},
+    test: (state) => {
+      state.isTrainer = false;
+    },
   },
 });
 

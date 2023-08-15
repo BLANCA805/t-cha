@@ -4,6 +4,7 @@ import com.tcha.bookmark.dto.BookmarkDto;
 import com.tcha.bookmark.entity.Bookmark;
 import org.mapstruct.Mapper;
 
+import java.awt.print.Book;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -17,7 +18,7 @@ public interface BookmarkMapper {
         return BookmarkDto.Response.builder()
                 .id(bookMark.getId())
                 .trainerName(bookMark.getTrainer().getUserProfile().getName())
-                .trainerId(bookMark.getTrainer().getId())
+                .trainerId(bookMark.getTrainer().getId().toString())
                 .userProfileName(bookMark.getUserProfile().getName())
                 .build();
     }

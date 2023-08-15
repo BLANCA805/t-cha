@@ -7,9 +7,8 @@ import UserReviewList from "src/containers/user-review/user-review-list";
 const Wrapper=styled.div`
   display:flex;
   flex-direction: column;
-  width:100%;
-  height:100vh;
   margin: 3%;
+  height:100vh;
 `;
 
  

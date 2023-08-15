@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
-import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
+import { logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
+
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
@@ -29,8 +29,6 @@ const Sticky = styled.div`
 function SideBar() {
   const [open, setOpen] = useState(false);
 
-  const navigate = useNavigate();
-
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -45,7 +43,7 @@ function SideBar() {
     };
 
   function list() {
-    if (user.token) {
+    if (user.isLogined) {
       return (
         <Box
           sx={{ auto: 250 }}
@@ -54,13 +52,14 @@ function SideBar() {
           onKeyDown={toggleDrawer(false)}
         >
           <List>
+            <button onClick={test}>test</button>
             {[
               ["profile", "마이페이지"],
               ["", "home"],
               ["profile/schedule", "내 캘린더"],
               ["profile/chat", "채팅 목록"],
               ["trainer", "트레이너"],
-              ["customer_center", "고객센터"],
+              ["customer-center", "고객센터"],
             ].map((data, index) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton>
@@ -83,7 +82,6 @@ function SideBar() {
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
-          {!user.token && <button onClick={tester}>테스트 로그인</button>}
           <List>
             <Button onClick={handleAuthOpen}>로그인</Button>
             {[
@@ -118,31 +116,19 @@ function SideBar() {
   };
 
   const user = useSelector((state: RootState) => state.auth);
-  const profile = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const LogOut = () => {
     dispatch(logOut());
-    dispatch(deleteProfile());
-    navigate("/");
   };
 
-  const tester = () => {
+  const test = () => {
+    const token = user.token;
     axios
-      .post(`${api}/users?email=tester@gmail.com`)
-      .then((response) => {
-        const token = response.data.id;
-        dispatch(
-          logIn({
-            token: response.data.id,
-          })
-        );
-        return axios.post(`${api}/userProfiles`, {
-          userId: token,
-          name: token.slice(0, 3),
-          profileImage: "",
-        });
+      .post(`http://70.12.245.39:8080/userProfiles/${token}`, {
+        name: "임병국",
+        profileImage: "이미지",
       })
       .then((response) => {
         if (response.data) {

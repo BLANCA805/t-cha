@@ -1,7 +1,5 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "src/redux/store";
 
 const ContainerSet = styled.div`
   display: flex;
@@ -31,19 +29,18 @@ const TrRow = styled.div`
 `;
 
 function TrainerButtons() {
-  const trainerId = useSelector((state: RootState) => state.profile.trainerId);
   return (
     <TrainerContainer>
       <TrRow>
-        <Link to="/trainer/info" state={trainerId}>
-          트레이너 상세 페이지
+        <Link to="trainer_info_modify">
+          트레이너 정보 수정 (트레이너 상세 페이지)
         </Link>
       </TrRow>
       <TrRow>
         <Link to="trainer_schedule">트레이너 스케줄 관리, 일정</Link>
       </TrRow>
       <TrRow>
-        <Link to="trainer_ptudent_list">내 회원 리스트</Link>
+        <Link to="trainer_ptudent">내 회원 리스트</Link>
       </TrRow>
     </TrainerContainer>
   );

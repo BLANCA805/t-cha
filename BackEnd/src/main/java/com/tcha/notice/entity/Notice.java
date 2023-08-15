@@ -26,7 +26,7 @@ public class Notice extends Auditable {
     @Column(length = 200, nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 2000, nullable = false)
     private String content;
 
     public enum NoticeEmerStatus {

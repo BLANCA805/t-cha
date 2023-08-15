@@ -113,9 +113,6 @@ function DesktopSideBar() {
       return (
         <StyledList>
           <div>
-            {!profile.profileId && (
-              <button onClick={test}>프로필 생성하기</button>
-            )}
             <SideBarItemWrapper
               style={{ marginLeft: "1.6rem" }}
               onClick={() => navigate("profile")}
@@ -143,9 +140,7 @@ function DesktopSideBar() {
             ].map((data, index) => (
               <ListItemStyled key={index} disablePadding>
                 <ListItemButton onClick={() => navigate(data[0])}>
-                  <SideBarItemWrapper >
-                    {data[1]}
-                  </SideBarItemWrapper>
+                  <SideBarItemWrapper>{data[1]}</SideBarItemWrapper>
                 </ListItemButton>
                 {/* <ListItemButton> */}
                 {/* <Link to={data[0]}> */}
@@ -162,29 +157,34 @@ function DesktopSideBar() {
       );
     } else {
       return (
-
-          <List>
-            <SideBarItemWrapper style={{marginLeft:"1.6rem"}} onClick={handleAuthOpen}>
-              <LoginWrapper style={{marginTop:"0.5rem", marginBottom:"0.5rem"}}>
-                <Avatar style={{marginRight:"0.8rem"}} src="/broken-image.jpg" />
-                로그인
-              </LoginWrapper>
-            </SideBarItemWrapper>
-            {[
-              ["", "홈"],
-              ["trainer", "트레이너"],
-              ["customer_center", "고객센터"],
-            ].map((data, index) => (
-              <ListItemStyled key={index} disablePadding>
-                <ListItemButton onClick={() => navigate(data[0])}>
-                  <SideBarItemWrapper >
-                    {data[1]}
-                  </SideBarItemWrapper>
-                </ListItemButton>
-              </ListItemStyled>
-            ))}
-          </List>
-
+        <List>
+          <button onClick={tester}>테스터로 로그인하기</button>
+          <SideBarItemWrapper
+            style={{ marginLeft: "1.6rem" }}
+            onClick={handleAuthOpen}
+          >
+            <LoginWrapper
+              style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
+            >
+              <Avatar
+                style={{ marginRight: "0.8rem" }}
+                src="/broken-image.jpg"
+              />
+              로그인
+            </LoginWrapper>
+          </SideBarItemWrapper>
+          {[
+            ["", "홈"],
+            ["trainer", "트레이너"],
+            ["customer_center", "고객센터"],
+          ].map((data, index) => (
+            <ListItemStyled key={index} disablePadding>
+              <ListItemButton onClick={() => navigate(data[0])}>
+                <SideBarItemWrapper>{data[1]}</SideBarItemWrapper>
+              </ListItemButton>
+            </ListItemStyled>
+          ))}
+        </List>
       );
     }
   }

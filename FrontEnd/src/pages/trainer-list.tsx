@@ -8,13 +8,17 @@ import TrainerListItem from "@trainer-list/trainer-list-item";
 
 import styled from "styled-components";
 import { Pagination } from "@mui/material";
-import { TrainerListData } from "src/interface";
+import { SearchFormData, TrainerListData } from "src/interface";
 
 const Wrapper = styled.div`
-  margin: 1%;
-  padding: 3%;
+  display:flex;
+  flex-direction:column;
+  width:95%;
+  /* justify-content: center; */
+  align-items: center;
+  padding: 1% 3%;
   border-radius: 5px;
-  background-color: white;
+  /* background-color: lightgrey; */
 `;
 
 function TrainerList() {
@@ -36,11 +40,23 @@ function TrainerList() {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [page]);
+
+  const searchTrainer = (body: any) => {
+    console.log(body);
+    axios
+      .get(`${api}/trainers/search`)
+      .then((response) => {
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Wrapper>
-      <TrainerListHeader />
+      <TrainerListHeader searchTrainer={searchTrainer} />
       {items?.data.map((item, index) => (
         <TrainerListItem data={item} key={index} />
       ))}

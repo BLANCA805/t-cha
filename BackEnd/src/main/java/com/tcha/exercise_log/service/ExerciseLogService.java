@@ -12,12 +12,13 @@ import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
+import com.tcha.utils.pagination.MultiResponseDto;
 import com.tcha.utils.upload.service.S3Uploader;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -44,13 +45,22 @@ public class ExerciseLogService {
 
     //운동일지 저장
     @Transactional
-    public ExerciseLogDto.Response createExerciseLog(ExerciseLog exerciseLog, long ptLiveId) {
+    public void createExerciseLog(long ptLiveId) {
 
         //ptlive 찾기 (유효성 검증 완)
         PtLive ptLive = findVerifiedByPtLiveId(ptLiveId);
 
-        //ptlive set
-        exerciseLog.setPtLive(ptLive);
+        ExerciseLog exerciseLog = new ExerciseLog().builder()
+                .title("")
+                .contents(new ArrayList<>())
+                .images(new ArrayList<>())
+                .videos(new ArrayList<>())
+                .status(ExerciseLog.exerciseLogStaus.WRITE)
+                .ptLive(ptLive)
+
+                .build();
+//        //ptlive set
+//        exerciseLog.setPtLive(ptLive);
 
         //트레이너 id 찾기 => 운동일지 생성 시에는 무조건 트레이너 존재해야 함
         String trainerId = ptLive.getTrainerId();
@@ -61,18 +71,22 @@ public class ExerciseLogService {
         //DB에 새로운 운동일지 생성
         ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
 
-        return exerciseLogMapper.exerciseLogToResponse(creatExerciseLog,
-                trainer.getUserProfile().getName());
+//        return;
     }
 
 
     //Pagenation으로 운동 일지를 불러오기 (일단 에러 핸들링 X)
     @Transactional(readOnly = true)
-    public Page<ExerciseLog> findExerciseLogPages(int page, int size) {
+    public MultiResponseDto findExerciseLogPages(int page, int size) {
+        Page<ExerciseLog> exerciseLogPage = exerciseLogRepository.findAll(PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<ExerciseLog> exercises = exerciseLogPage.getContent();
+        List<ExerciseLogDto.Response> responses = new ArrayList<>();
 
-        return exerciseLogRepository.findAll(
+        for(ExerciseLog e : exercises) {
+            responses.add(exerciseLogMapper.exerciseLogToResponse(e,findTrainerNameByExerciseLog(e)));
+        }
+        return new MultiResponseDto<>(responses, exerciseLogPage);
 
-                PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
     //운동일지 1개 찾기(PK)
@@ -100,25 +114,34 @@ public class ExerciseLogService {
      */
     @Transactional
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog,
-                                                     ExerciseLogDto.Patch patchRequest, Long id) {
+            ExerciseLogDto.Patch patchRequest, Long id) {
 
         existExerciseLog.setTitle(patchRequest.getTitle());
-        existExerciseLog.setContent(patchRequest.getContent());
+//        existExerciseLog.setContent(patchRequest.getContent());
 
         // 업데이트 전에 기존 데이터 먼저 삭제해야됨 -> s3의 기존 정보(이미지, 비디오) delete
         List<String> imgList = existExerciseLog.getImages();
-        List<String> videoList = existExerciseLog.getVideos();
+//        List<String> videoList = existExerciseLog.getVideos();
 
-        for (String s : imgList) {
-            s3Uploader.delete(s);
-        }
-        for (String s : videoList) {
-            s3Uploader.delete(s);
+        if(!imgList.isEmpty()) {
+            for (String s : imgList) {
+                s3Uploader.delete(s);
+            }
+//            for (String s : videoList) {
+//                s3Uploader.delete(s);
+//            }
         }
 
-        //새로운 이미지, 비디오 저장
-        existExerciseLog.setImages(patchRequest.getImages());
-        existExerciseLog.setVideos(patchRequest.getVideos());
+        List<String> content = new ArrayList<>();
+        List<String> image = new ArrayList<>();
+
+        for(ExerciseLogDto.Content c : patchRequest.getContent()) {
+            //새로운 이미지, 비디오 저장
+           content.add(c.getText());
+           image.add(c.getImage());
+        }
+        existExerciseLog.setContents(content);
+        existExerciseLog.setImages(image);
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(existExerciseLog),
                 findTrainerNameByExerciseLog(existExerciseLog));
@@ -159,21 +182,21 @@ public class ExerciseLogService {
     }
 
     /**
-     * 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기
-     * 배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준 1시간 지났으면 바로 read로 변경
+     * 운동 시작 후, 클래스 아이디로 운동 시작 시간을 찾아서 => 배치 돌리기 배치 돌리는 시간 기준: 30분마다 한번씩 진행 시작시간과 비교해가지고 -> 시작시간 기준
+     * 1시간 지났으면 바로 read로 변경
      *
-     * @Scheduled(fixedRate = 30000) //30 * 60 * 1000ms근데 이것만 작성하면 run 버튼을 누른 뒤로 30분마다 실행되는 것이라 시간을 정확히 통제할 수 없음
+     * @Scheduled(fixedRate = 30000) //30 * 60 * 1000ms근데 이것만 작성하면 run 버튼을 누른 뒤로 30분마다 실행되는 것이라 시간을
+     * 정확히 통제할 수 없음
      */
 
     @Transactional
-    @Scheduled(cron = "0 */30 * * * *") // 30분마다 실행
+    @Scheduled(cron = "0 30 * * * *") // 30분마다 실행
     public void executeExerciseLogStatusChange() {
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
 
         // 운동일지 불러오기 (운동 시작 시간이 없으므로, r/w여부로 조회)
         List<ExerciseLog> list = exerciseLogRepository.findByStatus().get();
-
 
         //불러온 운동일지 상태 for문 돌면서 수정하기
         for (ExerciseLog e : list) {
@@ -186,25 +209,13 @@ public class ExerciseLogService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-
             //운동 시간 확인, (운동 시작시각 + 1) + 24 보다 이전이라면, R/W변경
             if (start.isBefore(nowTime.minusHours(25))) {
                 e.setStatus(ExerciseLog.exerciseLogStaus.READ);
             }
-
-//            //테스트 코드: 3분 지나면 READ로 변경
-//            if (start.isBefore(nowTime.minusMinutes(3))) {
-//                e.setStatus(ExerciseLog.exerciseLogStaus.READ);
-//            }
-
         }
 
     }
-
-    /**
-     * READ, WRITE해 대한 에러 핸들링 코드 작성
-     */
-
 
     //존재하는 트레이너인지 대한 유효성 검증
     @Transactional
@@ -243,16 +254,11 @@ public class ExerciseLogService {
         return exerciseLog;
     }
 
+    //트레이너 이름 찾기
     @Transactional
     public String findTrainerNameByExerciseLog(ExerciseLog exerciseLog) {
-        String result = "알수없음";
-        try {
-            return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
-                    .getUserProfile().getName();
-        } catch (Exception e) {
-            return result;
-        }
-
+        return trainerRepository.findById(exerciseLog.getPtLive().getTrainerId()).get()
+                .getUserProfile().getName();
     }
 
 

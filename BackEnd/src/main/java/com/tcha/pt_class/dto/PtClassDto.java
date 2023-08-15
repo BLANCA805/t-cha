@@ -3,11 +3,14 @@ package com.tcha.pt_class.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -59,5 +62,7 @@ public class PtClassDto {
         private Long liveId;
         private LocalDate startDate;
         private LocalTime startTime;
+        private PtliveStaus status;
+        private Long reveiwId;
     }
 }

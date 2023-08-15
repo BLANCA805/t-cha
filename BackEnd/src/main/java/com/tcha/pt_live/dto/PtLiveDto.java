@@ -1,5 +1,6 @@
 package com.tcha.pt_live.dto;
 
+import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;

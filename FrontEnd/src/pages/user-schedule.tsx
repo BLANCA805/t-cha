@@ -9,6 +9,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
+import { UserScheduleData } from "src/interface";
 
 const CalendarContainer = styled.div`
   background-color: white;
@@ -20,6 +21,7 @@ const CalendarContainer = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
+  width:96%;
   flex-direction: column;
   height: 100vh;
   margin: 1% 1%;
@@ -47,21 +49,23 @@ const ScheduleInfo = styled.div`
 `;
 
 function UserSchedule() {
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [date, setDate] = useState<Dayjs | null>(dayjs());
   const user = useSelector((state: RootState) => state.profile.profileId);
+  const [items, setItems] = useState<UserScheduleData[]>([]);
 
   useEffect(() => {
     axios
       .get(`${api}/classes/user/${user}`)
       .then((response) => {
         console.log(response.data);
+        setItems(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, [user]);
 
-  const selectedDate = value?.format("YYYY-MM-DD");
+  const selectedDate = date?.format("YYYY-MM-DD");
 
   console.log(selectedDate);
 
@@ -72,13 +76,17 @@ function UserSchedule() {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <CalendarContainer>
             <DateCalendar
-              value={value}
-              onChange={(selected: Dayjs | null) => setValue(selected)}
+              value={date}
+              onChange={(selected: Dayjs | null) => setDate(selected)}
             />
           </CalendarContainer>
         </LocalizationProvider>
       </Calendar>
-      <ScheduleInfo>{/* <UserScheduleItem /> */}</ScheduleInfo>
+      <ScheduleInfo>
+        {items.map((item) => (
+          <UserScheduleItem data={item} />
+        ))}
+      </ScheduleInfo>
     </Wrapper>
   );
 }

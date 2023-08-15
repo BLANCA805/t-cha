@@ -56,8 +56,6 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS)// 세션 정책 : 세션을 생성하지 않도록 설정 => JWT 사용 환경에선 세션을 사용하지 않음(SecurityContext 정보를 얻을 때 Session 을 사용하지 않음)
                 .and()
-//                .requiresChannel((requiresChannel) -> requiresChannel.requestMatchers(
-//                        "/oauth2/authorization/google").requiresSecure())
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
@@ -69,9 +67,64 @@ public class SecurityConfiguration {
                 .apply(new CustomFilterConfigurer()) // 커스텀 필터 추가
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-//                                .requestMatchers( HttpMethod.POST, "/users").permitAll()
-//                                .requestMatchers( "/users/**").hasAnyRole("USER")
-//                                .requestMatchers( "/userProfiles/**").hasAnyRole("USER")
+//                                //Answer
+//                                .requestMatchers(HttpMethod.POST, "/answers").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE, "/answers/**").hasRole("ADMIN")
+//                                //Bookmark
+//                                .requestMatchers(HttpMethod.POST, "/bookmarks/**").hasRole("USER")
+//                                .requestMatchers(HttpMethod.DELETE, "/bookmarks/*").hasRole("USER")
+//                                .requestMatchers(HttpMethod.DELETE, "/bookmarks/**").hasRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/bookmarks/*").hasRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/bookmarks/**").hasRole("USER")
+//                                //ExerciseLog
+//                                .requestMatchers(HttpMethod.POST, "/exercise-logs/*").hasRole("TRAINER")
+//                                .requestMatchers(HttpMethod.PATCH, "/exercise-logs/*").hasRole("TRAINER")
+//                                .requestMatchers(HttpMethod.GET, "/exercise-logs/*").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/exercise-logs").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/exercise-logs/ptLive/*").hasRole("TRAINER")
+//                                //Guide
+//                                .requestMatchers(HttpMethod.POST, "/guides").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.GET, "/guides/*").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/guides/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.PATCH, "/guides/*").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.DELETE, "/guides/*").hasRole("ADMIN")
+//                                //Notice
+//                                .requestMatchers(HttpMethod.POST, "/notices").hasRole("ADMIN")
+//                                .requestMatchers(HttpMethod.GET, "/notices/*").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/notices/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.PATCH, "/notices/*").hasAnyRole("ADMIN")
+//                                .requestMatchers(HttpMethod.DELETE, "/notices/*").hasAnyRole("ADMIN")
+//                                //Class
+//                                .requestMatchers(HttpMethod.POST, "/classes").hasRole("TRAINER")
+//                                .requestMatchers(HttpMethod.GET, "/classes/user/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/classes/**").hasAnyRole("TRAINER")
+//                                .requestMatchers(HttpMethod.PATCH, "/classes").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.DELETE, "/classes/*").hasAnyRole("TRAINER")
+//                                //Live
+//                                //Question
+//                                .requestMatchers(HttpMethod.POST, "/questions").hasRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/questions/*").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/questions").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE, "/questions/*").hasAnyRole("USER")
+//                                //Review
+//                                .requestMatchers(HttpMethod.POST, "/reviews/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/reviews/**").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAnyRole("USER")
+//                                //Trainer
+//                                .requestMatchers(HttpMethod.POST, "/trainers/**").hasRole("USER")
+//                                .requestMatchers(HttpMethod.PATCH, "/trainers/**").hasRole("TRAINER")
+//                                .requestMatchers(HttpMethod.GET, "/trainers/**").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE, "/trainers/**").hasRole("TRAINER")
+//                                //User
+//                                .requestMatchers(HttpMethod.GET, "/users").permitAll()
+//                                .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("USER")
+//                                //UserProfile
+//                                .requestMatchers(HttpMethod.POST, "/userProfiles").permitAll()
+//                                .requestMatchers(HttpMethod.PATCH, "/userProfiles/**").hasAnyRole("USER")
+//                                .requestMatchers(HttpMethod.GET, "/userProfiles/**").permitAll()
+//                                .requestMatchers(HttpMethod.DELETE, "/userProfiles/**").hasAnyRole("USER")
                                 .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2.successHandler(

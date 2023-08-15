@@ -1,11 +1,21 @@
 package com.tcha.review.service;
 
+import com.tcha.pt_class.entity.PtClass;
+import com.tcha.pt_class.repository.PtClassRepository;
+import com.tcha.pt_live.entity.PtLive;
+import com.tcha.pt_live.repository.PtLiveRepository;
+import com.tcha.review.dto.ReviewDto;
+import com.tcha.review.dto.ReviewDto.Response;
 import com.tcha.review.entity.Review;
+import com.tcha.review.mapper.ReviewMapper;
 import com.tcha.review.repository.ReviewRepository;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
+import com.tcha.utils.pagination.MultiResponseDto;
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +36,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +47,11 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserProfileRepository userProfileRepository;
     private final TrainerRepository trainerRepository;
+    private final PtLiveRepository ptLiveRepository;
+    private final PtClassRepository ptClassRepository;
+
+    private final ReviewMapper reviewMapper;
+
     private final RedisTemplate<String, String> redisTemplate;
     private final String STAR_KEY = "star";
     private final String REVIEW_KEY = "review";
@@ -52,30 +68,47 @@ public class ReviewService {
 
     //Pagenation으로 트레이너 리뷰을 불러옴
     @Transactional(readOnly = true)
-    public Page<Review> findReviewPages(int page, int size) {
+    public MultiResponseDto findReviewPages(int page, int size) {
+        Page<Review> reviewPage = reviewRepository.findAll(PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = new ArrayList<>();
+        for(Review r : reviews) {
+            PtLive ptLive = ptLiveRepository.findById(r.getPtLive().getId()).get();
+            PtClass ptClass = ptClassRepository.findVerifiedClassById(ptLive.getPtClassId()).get();
 
-        return reviewRepository.findAll(
+            responses.add(reviewMapper.reviewToResponse(r,ptClass));
+        }
 
-                PageRequest.of(page - 1, size, Sort.by("id").descending()));
+
+        return new MultiResponseDto<>(responses, reviewPage);
     }
 
     //Pagenation으로 트레이너(해당 트레이너) 리뷰을 불러옴
     @Transactional(readOnly = true)
-    public Page<Review> findReviewPagesByTrainerId(String trainerId, int page, int size) {
-
-
-        return reviewRepository.findAllByTrainerId(
-
-                trainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+    public MultiResponseDto findReviewPagesByTrainerId(String trainerId, int page, int size) {
+        Page<Review> reviewPage =reviewRepository.findAllByTrainerId(trainerId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = new ArrayList<>();
+        for(Review r : reviews) {
+            PtLive ptLive = ptLiveRepository.findById(r.getPtLive().getId()).get();
+            PtClass ptClass = ptClassRepository.findVerifiedClassById(ptLive.getPtClassId()).get();
+            responses.add(reviewMapper.reviewToResponse(r,ptClass));
+        }
+        return new MultiResponseDto<>(responses, reviewPage);
     }
 
     //Pagenation으로 트레이너(해당 유저) 리뷰을 불러옴
     @Transactional(readOnly = true)
-    public Page<Review> findReviewPagesByUserProfileId(Long userProfileId, int page, int size) {
-
-        return reviewRepository.findAllByUserProfileId(
-
-                userProfileId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+    public MultiResponseDto findReviewPagesByUserProfileId(Long userProfileId, int page, int size) {
+        Page<Review> reviewPage = reviewRepository.findAllByUserProfileId(userProfileId, PageRequest.of(page - 1, size, Sort.by("id").descending()));
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = new ArrayList<>();
+        for(Review r : reviews) {
+            PtLive ptLive = ptLiveRepository.findById(r.getPtLive().getId()).get();
+            PtClass ptClass = ptClassRepository.findVerifiedClassById(ptLive.getPtClassId()).get();
+            responses.add(reviewMapper.reviewToResponse(r,ptClass));
+        }
+        return new MultiResponseDto<>(responses, reviewPage);
     }
 
 
@@ -85,15 +118,26 @@ public class ReviewService {
         return reviewRepository.findReviewById(id);
     }
 
+    //트레이너 리뷰(ptLiveId) 1개 찾기
+    @Transactional(readOnly = true)
+    public Review findReviewByPtLiveId(Long ptLiveId) {
+        return reviewRepository.findAllByPtLiveId(ptLiveId);
+    }
+
     //트레이너 리뷰 저장
     @Transactional
-    public Review createReview(Review review, String trainerId, Long userProfileId) {
+    public ReviewDto.Response createReview(Review review) {
 
-        UserProfile userProfile = userProfileRepository.findById(userProfileId).get();
-        Trainer trainer = trainerRepository.findById(trainerId).get();
+        String trainerId = review.getTrainer().getId();
+
+        UserProfile userProfile = userProfileRepository.findById(review.getUserProfile().getId()).get();
+        Trainer trainer = trainerRepository.findById(review.getTrainer().getId()).get();
+        PtLive ptLive = findVerifiedByPtLiveId(review.getPtLive().getId());
+        PtClass ptClass = ptClassRepository.findVerifiedClassById(ptLive.getPtClassId()).get();
 
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);
+        review.setPtLive(ptLive);
 
         ZSetOperations<String, String> ZSetOperations = redisTemplate.opsForZSet();
         ListOperations<String, String> listOperations = redisTemplate.opsForList();
@@ -116,7 +160,11 @@ public class ReviewService {
             Zset();
         }
 
-        return reviewRepository.save(review);
+        Review savedReview = reviewRepository.save(review);
+
+        ReviewDto.Response response = reviewMapper.reviewToResponse(savedReview,ptClass);
+
+        return response;
     }
 
 
@@ -184,5 +232,13 @@ public class ReviewService {
 
     public void deleteReviewAll() {
         reviewRepository.deleteAll();
+    }
+
+    //존재하는 ptlive인지에 대한 검증
+    @Transactional
+    public PtLive findVerifiedByPtLiveId(Long ptLiveId) throws BusinessLogicException {
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
+        return ptLive;
     }
 }

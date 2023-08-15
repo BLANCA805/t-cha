@@ -3,6 +3,7 @@ package com.tcha.pt_class.mapper;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
+import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import com.tcha.trainer.entity.Trainer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,13 +24,14 @@ public interface PtClassMapper {
                 .build();
     }
 
-    default PtClassDto.Response classToClassResponseDto(PtClass ptClass) {
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status) {
         return PtClassDto.Response.builder()
                 .trainerId(ptClass.getTrainer().getId().toString())
                 .classId(ptClass.getId())
                 .liveId(ptClass.getPtLiveId())
                 .startDate(ptClass.getStartDate())
                 .startTime(ptClass.getStartTime())
+                .status(status)
                 .build();
     }
 }

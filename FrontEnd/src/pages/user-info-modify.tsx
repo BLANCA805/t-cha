@@ -6,7 +6,6 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useImageUpload } from "src/hooks/use-image";
 import { RootState } from "src/redux/store";
 
 import styled from "styled-components";
@@ -56,11 +55,6 @@ const InputCustomButton = styled(TchaButton)`
   margin: 0% !important;
 `;
 
-const TagWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
 const ImageWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -79,19 +73,20 @@ const Image = styled.img`
 `;
 
 function UserInfoModify() {
+  const profileId = useSelector((state: RootState) => state.profile.profileId);
   const [name, setName] = useState("");
   const [file, setFile] = useState<File[]>([]);
-  const [image, setImage] = useState<string[]>([]);
   const [imageForView, setImageForView] = useState<string>("");
 
-  const profileId = useSelector((state: RootState) => state.profile.profileId);
+  useEffect(() => {
+    axios.get(`${api}/userProfiles/${profileId}`).then((response) => {
+      setName(response.data.name);
+      setImageForView(response.data.profileImage);
+      console.log(response.data);
+    });
+  }, [profileId]);
 
   const dispatch = useDispatch();
-
-  const infoForm = {
-    name: name,
-    profileImage: image[0],
-  };
 
   const handleName = (event: any) => {
     setName(event.target.value);
@@ -126,24 +121,6 @@ function UserInfoModify() {
   };
 
   const navigate = useNavigate();
-
-  // const Modify = async (img: File[]) => {
-  //   await useImageUpload(img)
-  //     .then(() => {
-  //       axios
-  //         .patch(`${api}/userProfiles/${profileId}`, infoForm)
-  //         .then((response) => {
-  //           console.log(response.data);
-  //           navigate("/profile");
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const Modify = async () => {
     const formData = new FormData();
@@ -180,7 +157,7 @@ function UserInfoModify() {
 
   return (
     <Wrapper>
-      <SmallTitleWrapper>트레이너 등록하기</SmallTitleWrapper>
+      <SmallTitleWrapper>내 정보 수정하기</SmallTitleWrapper>
       <Container>
         <Form>
           <FormDetailWrapper>
@@ -230,7 +207,6 @@ function UserInfoModify() {
               등록하기
             </TchaButton>
             <TchaButton
-              //원래 있던페이지로 돌아가는 Linkto 코드 필요
               style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
               onClick={goToBack}

@@ -2,6 +2,8 @@ package com.tcha.exercise_log.dto;
 
 
 import java.util.List;
+
+import com.tcha.exercise_log.entity.ExerciseLog;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +21,27 @@ public class ExerciseLogDto {
 
         private String content;
 
-        private List<String> images;
+//        private List<String> images;
+//
+//        private List<String> videos;
 
-        private List<String> videos;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @Builder
+    public static class Content {
+
+//        private String title;
+
+        private String text;
+        private String image;
+//        private String video;
+
+
+//        private List<String> images;
+//
+//        private List<String> videos;
 
     }
 
@@ -32,11 +52,11 @@ public class ExerciseLogDto {
 
         private String title;
 
-        private String content;
+        private List<Content> content;
 
-        private List<String> images;
-
-        private List<String> videos;
+//        private List<String> images;
+//
+//        private List<String> videos;
 
     }
 
@@ -50,14 +70,17 @@ public class ExerciseLogDto {
 
         private String title;
 
-        private String content;
+        private List<String> contents;
 
         private List<String> images;
-
+//
         private List<String> videos;
 
         private String profileName;
 
         private String trainerName;
+
+
+        private ExerciseLog.exerciseLogStaus status;
     }
 }

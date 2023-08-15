@@ -115,9 +115,10 @@ public class OAuth2UserSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         return UriComponentsBuilder // 별도 설정이 없을 경우 uri 기본 port 값은 80
                 .newInstance()
-                .scheme("http")
-                .host("localhost")
-                .path("/receive-token.html")
+                .scheme("https")
+                .host("www.tcha.site")
+                .port(443)
+                .path("/get_token")
                 .queryParams(queryParams)
                 .build()
                 .toUri();

@@ -16,8 +16,9 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 3%;
+  width:100%;
   height: 100vh;
+  margin: 3%;
 `;
 
 const ContentsWrapper = styled.div``;
@@ -54,7 +55,9 @@ function BookmarkedTrainerList() {
 
       <ContentsWrapper>
         {items &&
-          items.data.map((item) => <BookmarkedTrainerListItem data={item} />)}
+          items.data.map((item, index) => (
+            <BookmarkedTrainerListItem key={index} data={item} />
+          ))}
       </ContentsWrapper>
       <Pagination
         count={items?.pageInfo.totalPages}

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { type RootState } from "../redux/store";
-import { api } from "@shared/common-data";
 import { Session, OpenVidu, StreamManager } from "openvidu-browser";
 
 import axios from "axios";
@@ -9,54 +8,28 @@ import axios from "axios";
 const OPENVIDU_SERVER_URL = "https://www.tcha.site:8443/";
 const OPENVIDU_SERVER_SECRET = "blanca05";
 
+
 export interface PtLiveData {
-  liveId: number;
-  ptudentId: string; // 회원(유저) 아이디
-  trainerId: string; // 트레이너 아이디
-  status: string; // pt 라이브 상태 (진행 중, 종료 가능, 종료)
+  ptClassId: number;
+  ptLiveId: number;
+  status: string;
+  trainerId: string;
+  trainerName: string;
+  trainerProfileImage: string;
+  userId: string;
+  userName: string;
+  userProfileImage: string;
 }
 
-// 예약 성공 시 라이브 생성 (patchPtClass)
-export function createPtLive(ptLiveId: number) {
-  const OV = new OpenVidu();
-  const ptLive = OV.initSession();
-
-  
-
-  console.log("createPtLive : " + ptLive.sessionId)
-
-  return ptLive;
+// 생성된 오픈비두 라이브에 대한 토큰 발급(트레이너, 유저 각각 따로)
+export function getToken(ptLive: PtLiveData): Promise<any> {
+  return enterPtLive(ptLive.ptLiveId).then((liveId) => createToken(liveId));
 }
 
-// 라이브 입장 (pt 라이브 아이디를 통해)
-export function EnterPtLive(ptLiveId: number) {
-
-  // 현재 로그인한 유저의 프로필 아이디 가져오기 (jwt token으로 수정하기)
-  const profileId = useSelector((state: RootState) => state.profile.profileId);
-  const [ptLive, setPtLiveData] = useState<PtLiveData>();
-
-  // 라이브 방 정보
-  const ptLiveInfo = () => {
-    axios
-      .get(`${api}/lives/${ptLiveId}`)
-      .then((response) => {
-        setPtLiveData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-}
-
-export function getToken(liveId: string): Promise<any> {
-  return createSession(liveId).then((liveId) => createToken(liveId));
-}
-
-function createSession(liveId: string): Promise<any> {
-  const data = JSON.stringify({ customSessionId: liveId });
+function enterPtLive(liveId: number): Promise<any> {
   return new Promise((resolve, reject) => {
     axios
-      .post(OPENVIDU_SERVER_URL + "openvidu/api/sessions", data, {
+      .post(OPENVIDU_SERVER_URL + "openvidu/api/sessions", String(liveId), {
         headers: {
           Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
           "Content-Type": "application/json",
@@ -83,8 +56,16 @@ function createSession(liveId: string): Promise<any> {
 }
 
 function createToken(liveId: string): Promise<any> {
+  const userId = useSelector((state: RootState) => state.auth.token);
+  const userName = useSelector((state: RootState) => state.profile.name);
+  const userProfileImage = useSelector((state: RootState) => state.profile.profileId); // 사진으로 바꾸기
+
   return new Promise((resolve, reject) => {
-    const data = {};
+    const data = {
+      id: userId,
+      name: userName,
+      profileImage: userProfileImage,
+    };
     axios
       .post(
         OPENVIDU_SERVER_URL + "openvidu/api/sessions/" + liveId + "/connection", data, {
@@ -102,8 +83,7 @@ function createToken(liveId: string): Promise<any> {
   });
 }
 
-export const useOpenvidu = (profileId: number, liveId: number) => {
-  const [subscribers, setSubscribers] = useState<any[]>([]);
+export const useOpenvidu = (userId: string, liveId: number) => {
   const [publisher, setPublisher] = useState<any>();
   const [session, setSession] = useState<any>();
 
@@ -113,15 +93,13 @@ export const useOpenvidu = (profileId: number, liveId: number) => {
     }
     setSession(null);
     setPublisher(null);
-    setSubscribers([]);
   }, [session]);
 
   useEffect(() => {
-    const openVidu = new OpenVidu();
-    const session = openVidu.initSession();
+    const OV = new OpenVidu();
+    const session = OV.initSession();
 
-    session.on("streamCreated", (event) => {
-      const subscriber = session.subscribe(event.stream, "");
+    session.on("streamCreated", (event: any) => {
       const data = JSON.parse(event.stream.connection.data);
       setSubscribers((prev) => {
         return [
@@ -155,12 +133,12 @@ export const useOpenvidu = (profileId: number, liveId: number) => {
             audio: true,
             video: true,
           });
-          const devices = await openVidu.getDevices();
+          const devices = await OV.getDevices();
           const videoDevices = devices.filter(
             (device) => device.kind === "videoinput"
           );
 
-          const publisher = openVidu.initPublisher("", {
+          const publisher = OV.initPublisher("", {
             audioSource: undefined,
             videoSource: videoDevices[0].deviceId,
             publishAudio: true,
@@ -190,7 +168,6 @@ export const useOpenvidu = (profileId: number, liveId: number) => {
       }
       setSession(null);
       setPublisher(null);
-      setSubscribers([]);
     };
   }, [liveId, profileId]);
 

@@ -135,6 +135,7 @@ public class ReviewService {
         PtLive ptLive = findVerifiedByPtLiveId(review.getPtLive().getId());
         PtClass ptClass = ptClassRepository.findVerifiedClassById(ptLive.getPtClassId()).get();
 
+
         review.setTrainer(trainer);
         review.setUserProfile(userProfile);
         review.setPtLive(ptLive);
@@ -161,6 +162,8 @@ public class ReviewService {
         }
 
         Review savedReview = reviewRepository.save(review);
+        ptLive.setReview(savedReview);
+
 
         ReviewDto.Response response = reviewMapper.reviewToResponse(savedReview,ptClass);
 

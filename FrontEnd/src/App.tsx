@@ -15,6 +15,7 @@ import MyFont6 from "./assets/fonts/jamsilOtfExtraBold6.otf";
 import MobileBottomBar from "@shared/mobile-bottom-bar";
 
 const GlobalStyle = createGlobalStyle`
+
   @font-face {
     font-family: 'jamsil1'; 
     src: url(${MyFont1}) format('opentype'); 
@@ -95,10 +96,16 @@ const Wrapper = styled.div`
   display: flex;
   /* justify-content: center; */
   width: 100%;
+  min-width:1660px;
   height: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.color.secondary};
-
+  /* background-color: #e0e0e0; */
+  /* background-color: #5e5e5e; */
+  /* background: radial-gradient( #11a39c, #2a4d43); */
+  @media (max-width: 767px) {
+    min-width: 0px;
+  }
   color: ${({ theme }) => theme.color.primary};
   /* color: ${({ theme }) => theme.color.dark}; */
 `;
@@ -107,9 +114,9 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
-  z-index: 0;
+  z-index:0;
   @media (max-width: 767px) {
-    padding-bottom: 6.5rem;
+    padding-bottom:6.5rem;
     overflow-y: auto;
   }
 `;
@@ -148,6 +155,7 @@ function App() {
         <Wrapper>
           <Desktop>
             <DesktopSideBar />
+            <SideBar />
           </Desktop>
 
           <Mobile>

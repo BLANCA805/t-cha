@@ -6,10 +6,14 @@ import com.tcha.pt_live.dto.PtLiveDto;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.pt_live.mapper.PtLiveMapper;
 import com.tcha.pt_live.repository.PtLiveRepository;
+import com.tcha.trainer.entity.Trainer;
+import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user.entity.User;
 import com.tcha.user.repository.UserRepository;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.user_profile.repository.UserProfileRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,10 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class PtLiveService {
 
-//    private final PtLiveRepository ptLiveRepository;
-//    private final UserProfileRepository userProfileRepository;
-//    private final PtClassRepository ptClassRepository;
-//    private final PtLiveMapper ptLiveMapper;
+    private final PtLiveRepository ptLiveRepository;
+    private final PtLiveMapper ptLiveMapper;
+    private final UserProfileRepository userProfileRepository;
+    private final TrainerRepository trainerRepository;
+
+    //    private final PtClassRepository ptClassRepository;
 //    private final UserRepository userRepository;
 //
 //
@@ -62,14 +68,19 @@ public class PtLiveService {
 //
 //        return true;
 //    }
-//
-//    public PtLiveDto.Response findOnePtLive(long ptLiveId) {
-//
-//        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow();
-//
-//        return ptLiveMapper.ptLiveToResponseDto(ptLive);
-//    }
-//
+
+    public PtLiveDto.Response findOnePtLive(long ptLiveId) {
+
+        // 라이브 객체 가져오기
+        PtLive ptLive = ptLiveRepository.findById(ptLiveId).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.PT_LIVE_NOT_FOUND));
+
+        Trainer trainer = trainerRepository.findById(ptLive.getTrainerId()).orElseThrow(
+                () -> new BusinessLogicException(ExceptionCode.TRAINER_NOT_FOUND));
+
+        return ptLiveMapper.ptLiveToResponseDto(ptLive, trainer, ptLive.getUserProfile());
+    }
+
 //    public void deletePtLive(long ptLiveId) {
 //
 //        ptLiveRepository.deleteById(ptLiveId);

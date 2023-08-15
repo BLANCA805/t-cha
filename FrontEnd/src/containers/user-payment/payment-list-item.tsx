@@ -25,6 +25,7 @@ const TopContainer = styled.div`
   width:100%;
   flex-direction: row;
   justify-content: space-between ;
+  border-bottom: 0.5px solid lightgrey;
   /* margin-left:5%;
   margin-right:5%; */
   align-items:center;

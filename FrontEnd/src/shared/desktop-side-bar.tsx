@@ -142,9 +142,11 @@ function DesktopSideBar() {
               ["customer_center", "고객센터"],
             ].map((data, index) => (
               <ListItemStyled key={index} disablePadding>
-                <SideBarItemWrapper onClick={() => navigate(data[0])}>
-                  {data[1]}
-                </SideBarItemWrapper>
+                <ListItemButton onClick={() => navigate(data[0])}>
+                  <SideBarItemWrapper >
+                    {data[1]}
+                  </SideBarItemWrapper>
+                </ListItemButton>
                 {/* <ListItemButton> */}
                 {/* <Link to={data[0]}> */}
                 {/* </Link> */}
@@ -160,36 +162,29 @@ function DesktopSideBar() {
       );
     } else {
       return (
-        <List>
-          <SideBarItemWrapper
-            style={{ marginLeft: "1.6rem" }}
-            onClick={handleAuthOpen}
-          >
-            <LoginWrapper
-              style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
-            >
-              <Avatar
-                style={{ marginRight: "0.8rem" }}
-                src="/broken-image.jpg"
-              />
-              로그인
-            </LoginWrapper>
-          </SideBarItemWrapper>
-          {[
-            ["", "홈"],
-            ["trainer", "트레이너"],
-            ["customer_center", "고객센터"],
-          ].map((data, index) => (
-            <ListItemStyled key={index} disablePadding>
-              <ListItemButton>
-                <SideBarItemWrapper onClick={() => navigate(data[0])}>
-                  {data[1]}
-                </SideBarItemWrapper>
-              </ListItemButton>
-            </ListItemStyled>
-          ))}
-          <button onClick={tester}>테스터로 로그인하기</button>
-        </List>
+
+          <List>
+            <SideBarItemWrapper style={{marginLeft:"1.6rem"}} onClick={handleAuthOpen}>
+              <LoginWrapper style={{marginTop:"0.5rem", marginBottom:"0.5rem"}}>
+                <Avatar style={{marginRight:"0.8rem"}} src="/broken-image.jpg" />
+                로그인
+              </LoginWrapper>
+            </SideBarItemWrapper>
+            {[
+              ["", "홈"],
+              ["trainer", "트레이너"],
+              ["customer_center", "고객센터"],
+            ].map((data, index) => (
+              <ListItemStyled key={index} disablePadding>
+                <ListItemButton onClick={() => navigate(data[0])}>
+                  <SideBarItemWrapper >
+                    {data[1]}
+                  </SideBarItemWrapper>
+                </ListItemButton>
+              </ListItemStyled>
+            ))}
+          </List>
+
       );
     }
   }

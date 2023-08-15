@@ -1,5 +1,7 @@
 package com.tcha.pt_live.controller;
 
+//import com.tcha.pt_live.dto.PtLiveDto;
+
 import com.tcha.pt_live.dto.PtLiveDto;
 import com.tcha.pt_live.service.PtLiveService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class PtLiveController {
 
-//    private final PtLiveService ptLiveService;
-//
+    private final PtLiveService ptLiveService;
+
 //    /*
 //    유저가 PT 수업 예약
 //    결제 성공 시 live room 생성
@@ -51,19 +53,19 @@ public class PtLiveController {
 //
 //        return ResponseEntity.ok().body(null);
 //    }
-//
-//    /*
-//    pt live id를 통해 라이브 정보 조회
-//     */
-//    @GetMapping("/{pt-live-id}")
-//    public ResponseEntity<PtLiveDto.Response> getOnePtLive(
-//            @PathVariable("pt-live-id") long ptLiveId) {
-//
-//        PtLiveDto.Response ptLive = ptLiveService.findOnePtLive(ptLiveId);
-//
-//        return ResponseEntity.ok().body(ptLive);
-//    }
-//
+
+    /*
+    pt live id를 통해 라이브 정보 조회
+     */
+    @GetMapping("/{pt-live-id}")
+    public ResponseEntity<PtLiveDto.Response> getOnePtLive(
+            @PathVariable("pt-live-id") long ptLiveId) {
+
+        PtLiveDto.Response ptLive = ptLiveService.findOnePtLive(ptLiveId);
+
+        return ResponseEntity.ok().body(ptLive);
+    }
+
 //    /*
 //    pt live id를 통해 등록된 pt 라이브 삭제
 //     */

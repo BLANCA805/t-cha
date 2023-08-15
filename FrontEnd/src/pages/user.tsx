@@ -4,125 +4,196 @@ import { useDispatch, useSelector } from "react-redux";
 import { type RootState } from "../redux/store";
 import { registTrainer, test } from "src/redux/slicers";
 
-import { DefaultButton } from "@shared/button";
-// import ReverseButton from "@shared/reversebutton";
 import TrainerButtons from "@user-trainer/trainer-buttons";
 
-// import Button from "@mui/material/Button";
 
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import { TchaButton } from "@shared/button";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { api } from "@shared/common-data";
 import { userProfileData } from "src/interface";
+import BookmarkTrIcon from "src/shared/icons/BookmarkTrIcon.png";
+import CalenderIcon from "src/shared/icons/CalenderIcon.png";
+import ChattingIcon from "src/shared/icons/ChattingIcon.png";
+import MyPaymentIcon from "src/shared/icons/MyPaymentIcon.png";
+import MyReviewIcon from "src/shared/icons/MyReviewIcon.png";
+import NoticeIcon from "src/shared/icons/NoticeIcon.png";
+import { useMediaQuery } from "react-responsive";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 97%;
-  margin: 3%;
+  width:96%;
+  height:100vh;
+  margin:1.25% 0%;
+  @media (max-width: 767px) {
+    margin: 2% 0%;
+  }
+  /* min-width:1520px; */
 `;
 
-const ContainerSet = styled.div`
+const Profile = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+  height: 20rem;
+  border-radius: 10px;
+  margin-bottom:0.5%;
+  width: 100%;
+  @media (max-width: 767px) {
+    height:8rem;
+    border-radius: 5px;
+  }
+`;
+const TrRegister = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-bottom: 3%;
-`;
-
-const Profile = styled(ContainerSet)`
-  display: flex;
-  flex-direction: row;
-  background-color: #fff;
-  height: 25rem;
-  border-radius: 1rem;
-  width: 100%;
-`;
-const TrRegister = styled(ContainerSet)`
-  display: flex;
-  flex-direction: row;
+  margin: 2% 0%;
   background-color: #fff;
   height: 10rem;
-  border-radius: 1rem;
+  border-radius: 10px;
   width: 100%;
-  cursor: pointer;
-`;
-
-const UserContainer = styled(ContainerSet)`
-  display: flex;
-  flex-direction: column;
-  height: 35rem;
+  cursor:pointer;
+  @media (max-width: 767px) {
+   border-radius: 5px;
+   height:5rem; 
+  }
 `;
 
 const ProfilePhoto = styled.div`
-  flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5%;
-  height: 100%;
-  width: 100%;
+  padding: 1%;
+  width: 30%;
+  aspect-ratio: 1/1;
+  @media (max-width: 767px) {
+    width: 27.5%;
+  }
 `;
-
-const Profileinfo = styled.div`
-  flex: 5;
-  display: flex;
-  flex-direction: row;
-  padding: 5%;
-  height: 100%;
-  width: 100%;
-`;
-
-const ProfileModify = styled.div`
-  flex: 4;
-  display: flex;
-  /* align-items: center; */
-  justify-content: center;
-`;
-
 const ProfilePhotoimg = styled.img`
-  width: 12rem;
-  height: 12rem;
+  width: 80%;
+  aspect-ratio: 1/1;
   overflow: hidden;
   object-fit: cover;
   border-radius: 1rem;
   background-color: gray;
 `;
 
-const UserId = styled.div`
-  flex: 5.5;
+const Profileinfo = styled.div`
   display: flex;
   align-items: center;
-  font-weight: bold;
-  font-size: 4rem;
-  margin-top: 1px;
-  margin-bottom: 1px;
+  margin-left:4%;
+  height: 100%;
+  width: 100%;
+  @media (max-width: 767px) {
+    /* justify-content: center; */
+    margin-left:2%; 
+  }
 `;
 
+const UserId = styled.h4`
+  display:flex;
+  font-size: 6rem;
+  @media (max-width:767px) {
+    font-size:1.6rem;
+  }
+`;
+
+const ProfileModify = styled.div`
+  display: flex;
+  width:25%;
+  align-items: center;
+  justify-content: start;
+  padding-right:5%;
+  @media (max-width: 767px) {
+    padding-right:2.5%;
+    justify-content: center;
+  }
+`;
+
+
+const UserContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width:100%;
+  /* height: 35rem; */
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
+
+
 const Usrow = styled.div`
+  width:100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  flex: 6;
-  width: 100%;
 `;
 
 const Uscol = styled.div`
-  flex: 3;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  width:33%;
+  aspect-ratio: 1/1;
+  margin: 0.3%;
   background-color: white;
-  margin: 3px;
   border-radius: 10px;
-  cursor: pointer;
+  cursor:pointer;
+  @media (max-width: 767px) {
+    border-radius: 4px;
+    margin:1%;
+    &:first-child{
+      margin-left:0%;
+    }
+    &:last-child{
+      margin-right:0%;
+    }
+  }
+`;
+const IconWrapper = styled.div`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:75%;
+  aspect-ratio: 1/1;
+  /* background-color: pink; */
+`
+const Iconimg = styled.img`
+  width: 70%;
+  aspect-ratio: 1/1;
+  object-fit: contain;
+  /* background-color: #a8a8a8; */
 `;
 
-const StyledText = styled.h5`
+const StyledTextBig = styled.h5`
   margin: 2% 0%;
-  font-size: 2rem;
+  font-size:2.8rem;
+  @media (max-width: 767px) {
+    font-size:1.3rem; 
+  }
+`;
+const StyledTextMid = styled.h5`
+  margin: 2% 0%;
+  font-size:2rem;
+  @media (max-width: 767px) {
+    font-size:0.9rem !important; 
+    margin-left: 4% !important;
+  }
+`;
+const StyledTextSmall = styled.h6`
+  margin: 2% 0%;
+  font-size:1.25rem;
+  /* color:#a8a8a8; */
+  @media (max-width: 767px) {
+    font-size:0.8rem; 
+  }
 `;
 
 function User() {
@@ -141,6 +212,8 @@ function User() {
       });
   }, [profile.profileId]);
 
+  const isDesktop = useMediaQuery({minWidth: 768});
+  const isMobile = useMediaQuery({maxWidth: 767});
   return (
     <Wrapper>
       <Profile>
@@ -154,44 +227,76 @@ function User() {
         </ProfilePhoto>
         <Profileinfo>
           <UserId>{userData?.name}</UserId>
+          {/* <UserId>변정원</UserId> */}
+          <StyledTextMid style={{fontSize:"3rem", marginLeft:"4%", marginTop:"6%"}}>님, 안녕하세요!</StyledTextMid>
         </Profileinfo>
-        <ProfileModify>
-          <Link to="info_modify">
-            <DefaultButton>수정하기</DefaultButton>
-          </Link>
+        <ProfileModify>  
+          {isDesktop &&
+            <TchaButton 
+              onClick = {() => navigate("info_modify")} 
+              style={{width:"10rem", height:"5rem"}}> 
+              <StyledTextSmall style={{color:"white", fontSize:"1.7rem"}}>수정하기</StyledTextSmall>
+            </TchaButton>          
+          }
+          {isMobile && <SettingsRoundedIcon style={{fontSize:"2.7rem", color:"grey"}}/>}
         </ProfileModify>
       </Profile>
       {!profile.trainerId && (
-        <TrRegister onClick={() => navigate("trainer_registration")}>
-          <StyledText> 트레이너 회원으로 등록하기 </StyledText>
+        // <TchaButton 
+        //   onClick = {() => navigate("trainer_registration")}
+        //   style={{margin:"2% 0%", padding:"0%", width:"100%", height:"10rem"}}>
+        //     <StyledTextBig style={{color:"white",fontSize:"2.5rem"}}> 트레이너 회원으로 등록하기 </StyledTextBig>
+        // </TchaButton>
+        <TrRegister onClick = {() => navigate("trainer_registration")}>
+            <StyledTextBig> 트레이너 회원으로 등록하기 </StyledTextBig>
         </TrRegister>
       )}
       {profile.trainerId && <TrainerButtons />}
-      <UserContainer>
-        <Usrow>
-          <Uscol onClick={() => navigate("bookmarked_trainers")}>
-            <StyledText> 즐겨찾는 트레이너 </StyledText>
-            {/* <Link to="bookmarked_trainers">즐겨찾기 한 트레이너</Link> */}
-          </Uscol>
-          <Uscol onClick={() => navigate("schedule")}>
-            <StyledText>나의 스케줄</StyledText>
-          </Uscol>
-          <Uscol onClick={() => navigate("review")}>
-            <StyledText>내가 작성한 리뷰</StyledText>
-          </Uscol>
-        </Usrow>
-        <Usrow>
-          <Uscol onClick={() => navigate("payment_detail")}>
-            <StyledText>결제 정보</StyledText>
-          </Uscol>
-          <Uscol onClick={() => navigate("chat")}>
-            <StyledText>채팅 목록</StyledText>
-          </Uscol>
-          <Uscol onClick={() => navigate("/customer_center")}>
-            <StyledText>고객센터</StyledText>
-          </Uscol>
-        </Usrow>
-      </UserContainer>
+        <UserContainer>
+          <Usrow>
+            <Uscol onClick = {() => navigate("bookmarked_trainers")}>
+              <IconWrapper>
+                <Iconimg src={BookmarkTrIcon}/>
+              </IconWrapper>
+              <StyledTextSmall>즐찾트레이너</StyledTextSmall>
+              {/* <Link to="bookmarked_trainers">즐겨찾기 한 트레이너</Link> */}
+            </Uscol>
+            <Uscol onClick = {() => navigate("schedule")}>
+              <IconWrapper>
+                <Iconimg src={CalenderIcon} style={{marginTop:"5%"}}/>
+              </IconWrapper>
+              <StyledTextSmall>스케줄</StyledTextSmall>
+            </Uscol>
+            <Uscol onClick = {() => navigate("review")}>
+              <IconWrapper>
+                <Iconimg src={MyReviewIcon} style={{marginTop:"6%"}}/>
+              </IconWrapper>
+              <StyledTextSmall>My리뷰</StyledTextSmall>
+            </Uscol>
+          </Usrow>
+          <Usrow>
+            <Uscol onClick = {() => navigate("payment_detail")}>
+              <IconWrapper>
+                <Iconimg src={MyPaymentIcon} style={{marginTop:"3%"}}/>
+              </IconWrapper>
+              <StyledTextSmall>결제정보</StyledTextSmall>
+            </Uscol>
+            <Uscol onClick = {() => navigate("chat")}>
+              <IconWrapper>
+                <Iconimg src={ChattingIcon}/>
+              </IconWrapper>
+              <StyledTextSmall>채팅목록</StyledTextSmall>
+            </Uscol>
+            <Uscol onClick = {() => navigate("/customer_center")}>
+              <IconWrapper>
+                <Iconimg src={NoticeIcon} style={{marginTop:"5%"}}/>
+              </IconWrapper>
+              <StyledTextSmall>고객센터</StyledTextSmall>
+            </Uscol>
+          </Usrow>
+        </UserContainer>
+
+      
     </Wrapper>
   );
 }

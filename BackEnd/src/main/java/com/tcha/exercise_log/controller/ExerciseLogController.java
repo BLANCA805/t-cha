@@ -112,9 +112,14 @@ public class ExerciseLogController {
     //운동일지 작성 완료
     @PatchMapping("/done/{exercise-log-id}")
     public ResponseEntity<ExerciseLogDto.Response> patchWriteDoneExerciseLog(
-            @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId) {
+            @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId,
+                @Valid @RequestBody ExerciseLogDto.Patch patchRequest
+    ) {
+        //존재하는 운동일지인지 체크
+        ExerciseLog exerciseLog = exerciseLogService.findVerifiedById(exerciseLogId);
+
         ExerciseLogDto.Response response = exerciseLogService.patchWriteDoneExerciseLog(
-                exerciseLogId);
+                exerciseLog,patchRequest);
 
         return ResponseEntity.ok().body(response);
     }

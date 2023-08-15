@@ -30,9 +30,11 @@ const Container = styled.div`
   padding: 2%;
   border-radius: 10px;
   overflow:hidden;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
     min-height:10rem;
     border-radius: 7px;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 

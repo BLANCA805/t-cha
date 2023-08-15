@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { type RootState } from "../redux/store";
 import { registTrainer, test } from "src/redux/slicers";
 
-import TrainerButtons from "@user-trainer/trainer-buttons";
 
+import TrainerButtons from "@user-trainer/trainer-buttons";
 
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { TchaButton } from "@shared/button";
@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { api } from "@shared/common-data";
 import { userProfileData } from "src/interface";
+import Asset3 from "src/shared/icons/Asset3.png"
 import BookmarkTrIcon from "src/shared/icons/BookmarkTrIcon.png";
 import CalenderIcon from "src/shared/icons/CalenderIcon.png";
 import ChattingIcon from "src/shared/icons/ChattingIcon.png";
@@ -42,6 +43,7 @@ const Profile = styled.div`
   height: 20rem;
   border-radius: 10px;
   margin-bottom:0.5%;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   @media (max-width: 767px) {
     height:8rem;
@@ -57,7 +59,8 @@ const TrRegister = styled.div`
   height: 10rem;
   border-radius: 10px;
   width: 100%;
-  cursor:pointer;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  cursor: url(${Asset3}), pointer;
   @media (max-width: 767px) {
    border-radius: 5px;
    height:5rem; 
@@ -144,8 +147,9 @@ const Uscol = styled.div`
   aspect-ratio: 1/1;
   margin: 0.3%;
   background-color: white;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  cursor:pointer;
+  cursor: url(${Asset3}), pointer;
   @media (max-width: 767px) {
     border-radius: 4px;
     margin:1%;
@@ -238,7 +242,7 @@ function User() {
               <StyledTextSmall style={{color:"white", fontSize:"1.7rem"}}>수정하기</StyledTextSmall>
             </TchaButton>          
           }
-          {isMobile && <SettingsRoundedIcon style={{fontSize:"2.7rem", color:"grey"}}/>}
+          {isMobile && <SettingsRoundedIcon onClick = {() => navigate("info_modify")} style={{fontSize:"2.7rem", color:"grey"}}/>}
         </ProfileModify>
       </Profile>
       {!profile.trainerId && (
@@ -267,7 +271,7 @@ function User() {
               </IconWrapper>
               <StyledTextSmall>스케줄</StyledTextSmall>
             </Uscol>
-            <Uscol onClick = {() => navigate("review")}>
+            <Uscol onClick = {() => navigate("/profile/review")}>
               <IconWrapper>
                 <Iconimg src={MyReviewIcon} style={{marginTop:"6%"}}/>
               </IconWrapper>

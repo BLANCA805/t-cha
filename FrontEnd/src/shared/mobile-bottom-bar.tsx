@@ -19,6 +19,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Fab from "@mui/material/Fab";
 
+import Logo from "src/shared/icons/LOGO.png"
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
@@ -28,12 +29,12 @@ const BottomBarContainer = styled.div`
   display: flex;
   flex-direction: row;
   position: fixed;
-  justify-content: center;
+  justify-content: space-around;
   bottom: 0;
   left: 0;
   background-color: ${({ theme }) => theme.color.light};
   width: 100%;
-  height: 6rem;
+  height: 5.5rem;
   box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.03);
   z-index: 1;
 `;
@@ -44,10 +45,44 @@ const ButtomBarContents = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
-  width: 6rem;
+  width: 15%;
+  color:#acacac;
   /* background-color: pink; */
   margin: 0rem 0.2rem;
 `;
+
+const ButtomBarHome = styled.div`
+  position: relative;
+  bottom: 7%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:5.75rem;
+  height:5.75rem;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  /* background-color: pink; */
+  background: linear-gradient(30deg, #0bd8ce, #2a4d43);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2) !important;
+  overflow-y: display;
+  z-index: 2;
+`
+const ButtomBarIconImage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:90%;
+  aspect-ratio: 1/1;  
+`
+const ButtomBarHomeImage = styled(ButtomBarIconImage)`
+  background-color: #fff;
+  border-radius: 50%;
+`
+const ButtomBarHomeImg = styled.img`
+  width:65%;
+  margin-right:5%;
+  object-fit: contain;
+`
 
 function MobileBottomBar() {
   const navigate = useNavigate();
@@ -88,10 +123,13 @@ function MobileBottomBar() {
         <StarRoundedIcon style={{ fontSize: "4rem" }} />
         트레이너목록
       </ButtomBarContents>
-      <ButtomBarContents onClick={() => navigate("")}>
-        <HomeRoundedIcon style={{ fontSize: "4rem" }} />
-        홈으로
-      </ButtomBarContents>
+      <ButtomBarHome onClick={() => navigate("")}>
+        <ButtomBarHomeImage>
+          <ButtomBarHomeImg src={Logo}></ButtomBarHomeImg>
+        </ButtomBarHomeImage>
+        {/* <HomeRoundedIcon style={{ fontSize: "4rem" }} /> */}
+        {/* 홈으로 */}
+      </ButtomBarHome>
       <ButtomBarContents onClick={() => navigate("profile/schedule")}>
         <StarRoundedIcon style={{ fontSize: "4rem" }} />
         스케줄

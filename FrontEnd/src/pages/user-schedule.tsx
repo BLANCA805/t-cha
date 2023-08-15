@@ -11,13 +11,17 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { UserScheduleData } from "src/interface";
 
+import { TitleWrapper, PageTitleText } from "@shared/page-title";
+
 const CalendarContainer = styled.div`
   background-color: white;
   border-radius: 10px;
   width: 100%;
+  height:30rem;
   display: flex;
   align-items: center;
-  padding-top: 5%;
+  /* padding: 1% 0%; */
+
 `;
 
 const Wrapper = styled.div`
@@ -25,7 +29,7 @@ const Wrapper = styled.div`
   width: 96%;
   flex-direction: column;
   height: 100vh;
-  margin: 1% 1%;
+  margin: 1% 1% 0% 1%;
 `;
 
 const PageTitle = styled.div`
@@ -38,13 +42,13 @@ const PageTitle = styled.div`
 `;
 
 const Calendar = styled.div`
-  margin-top: 3%;
+  height:100%;
 `;
 
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 5%;
+  margin-top: 1%;
   padding: 2%;
   /* height:10rem; */
   border-radius: 10px;
@@ -74,13 +78,21 @@ function UserSchedule() {
 
   return (
     <Wrapper>
-      <PageTitle>내 캘린더</PageTitle>
+      <TitleWrapper>
+        <PageTitleText>내 캘린더</PageTitleText>
+      </TitleWrapper>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <CalendarContainer>
             <DateCalendar
               value={date}
               onChange={(selected: Dayjs | null) => setDate(selected)}
+              sx={{
+                "& .MuiDataGrid-root": {
+                  height: "400px",
+                  width: "400px",
+                },
+              }}
             />
           </CalendarContainer>
         </LocalizationProvider>

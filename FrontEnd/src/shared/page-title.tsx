@@ -6,11 +6,15 @@ export const TitleWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    height:23rem;
+    height:18rem;
+    width: 100%;
     margin-bottom:2%;
     border-radius: 0.5rem;
     background-color: ${({ theme }) => theme.color.light}; 
-    /* opacity:75%; */
+
+    @media (max-width: 767px) {
+      height:7rem;
+    }
 `;
 
 export const ColorTitleWrapper = styled.div`
@@ -46,12 +50,17 @@ export const PageTitleText=styled.h5`
   margin:0%;
   padding-left:4rem;
   font-size:4rem;
-  font-weight: bolder;
+  @media (max-width: 767px) {
+    font-size:1.9rem;
+    padding-left:2rem;
+  }
 `;
 
-export const SmallPageTitleText=styled.div`
+export const SmallPageTitleText=styled.h6`
   color: ${({ theme }) => theme.color.dark};
-  padding-left:4rem;
-  font-size:3rem;
-  font-weight: bolder;
+  margin:0%;
+  font-size:2rem;
+  @media (max-width: 767px) {
+    font-size:1rem;
+  }
 `;

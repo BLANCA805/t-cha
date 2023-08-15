@@ -230,10 +230,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            if (valueOperations.get(reviewCountKey) != "0") {
-                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
-            } else {
+            if (valueOperations.get(reviewCountKey).equals("0")) {
                 starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
 
             }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
@@ -295,10 +295,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            if (valueOperations.get(reviewCountKey) != "0") {
-                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
-            } else {
+            if (valueOperations.get(reviewCountKey).equals("0")) {
                 starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
 
             }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
@@ -359,10 +359,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            if (valueOperations.get(reviewCountKey) != "0") {
-                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
-            } else {
+            if (valueOperations.get(reviewCountKey).equals("0")) {
                 starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
 
             }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
@@ -423,10 +423,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            if (valueOperations.get(reviewCountKey) != "0") {
-                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
-            } else {
+            if (valueOperations.get(reviewCountKey).equals("0")) {
                 starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
 
             }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
@@ -488,10 +488,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            if (valueOperations.get(reviewCountKey) != "0") {
-                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
-            } else {
+            if (valueOperations.get(reviewCountKey).equals("0")) {
                 starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
 
             }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));

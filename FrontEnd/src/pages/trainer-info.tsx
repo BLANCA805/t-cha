@@ -164,7 +164,6 @@ const BottomTab = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
-  
 `;
 
 const BookmarkWrapper = styled.div`
@@ -294,19 +293,21 @@ function TrainerInfo() {
       </TabWrapper>
       {trainer !== user.trainerId && (
         <BottomTab>
-          <BookmarkWrapper>
-            {/* <BookmarkButton
+          {!!user.profileId && (
+            <BookmarkWrapper>
+              {/* <BookmarkButton
               onClick={toggleBookmarkIcon}
               backgroundImage={bookmarkIcon}
             ></BookmarkButton> */}
-            <BookmarkButton onClick={() => setBookmark(!bookmark)}>
-              {bookmark ? (
-                <StarRoundedIcon style={{ fontSize: "7em" }} />
-              ) : (
-                <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
-              )}
-            </BookmarkButton>
-          </BookmarkWrapper>
+              <BookmarkButton onClick={() => setBookmark(!bookmark)}>
+                {bookmark ? (
+                  <StarRoundedIcon style={{ fontSize: "7em" }} />
+                ) : (
+                  <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
+                )}
+              </BookmarkButton>
+            </BookmarkWrapper>
+          )}
           <RegisterWrapper>
             <RegisterButton onClick={moveToReservation} variant="contained">
               <Typography variant="h4">예약 및 결제하기</Typography>

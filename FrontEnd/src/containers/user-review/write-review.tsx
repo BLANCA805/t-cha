@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 
 import styled from "styled-components";
 import { RootState } from "src/redux/store";
+import { UserScheduleData } from "src/interface";
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,7 +30,11 @@ const SubmitButton = styled.div`
   margin: 5% 0%;
 `;
 
-function WriteReview(props: { trainer: string; liveId: number }) {
+function WriteReview(props: {
+  trainer: string;
+  liveId: number;
+  setItem: React.Dispatch<React.SetStateAction<UserScheduleData>>;
+}) {
   const user = useSelector((state: RootState) => state.profile.profileId);
   const trainer = props.trainer;
   const liveId = props.liveId;
@@ -53,9 +58,11 @@ function WriteReview(props: { trainer: string; liveId: number }) {
       star: rating,
     };
     axios
-      .patch(`${api}/reviews`, form)
+      .post(`${api}/reviews`, form)
       .then((response) => {
         console.log(response.data);
+        props.setItem((prev) => (prev.reviewId = response.data.id));
+        handleClose();
       })
       .catch((error) => {
         console.log(error);
@@ -92,7 +99,7 @@ function WriteReview(props: { trainer: string; liveId: number }) {
           />
 
           <Typography component="legend">
-            한번 작성한 리뷰는 수정이 불가합니다
+            한번 작성한 리뷰는 수정이 불가하오니 신중하게 작성해 주시기 바랍니다
           </Typography>
 
           <SubmitButton>

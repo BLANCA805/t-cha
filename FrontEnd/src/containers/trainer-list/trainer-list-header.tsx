@@ -12,12 +12,12 @@ import { SmDateTimePicker } from "@shared/date-time-picker";
 import styled from "styled-components";
 import { TchaButton, ReverseTchaButton } from "@shared/button";
 import { SearchFormData } from "src/interface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
-  width:100%;
+  width: 100%;
   margin: 1% 0%;
   padding: 1%;
   border-radius: 5px;
@@ -28,15 +28,15 @@ const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width:100%;
+  width: 100%;
 `;
 
 const TextFieldWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left:1%;
-  width:100%;
+  margin-left: 1%;
+  width: 100%;
 `;
 
 const ButtonContainer = styled.div`
@@ -48,42 +48,61 @@ const ButtonContainer = styled.div`
 
 const AccordionContainer = styled.div`
   display: flex;
-  width:100%;
+  width: 100%;
   margin: 1%;
-`
+`;
 const StyledAccordion = styled(Accordion)`
-  width:80%;
+  width: 80%;
   @media (max-width: 767px) {
-    max-width:20rem !important;
+    max-width: 20rem !important;
   }
-`
+`;
 const StyledText = styled.h6`
-  margin:0.75% 1%;
+  margin: 0.75% 1%;
   @media (max-width: 767px) {
     /* font-size:0.5rem; */
   }
-`
+`;
 
 interface TrainerListHeaderProps {
   searchTrainer: (body: SearchFormData) => void;
+  sortTrainer: (condition: string) => void;
 }
 
-function TrainerListHeader({ searchTrainer }: TrainerListHeaderProps) {
+function TrainerListHeader({
+  searchTrainer,
+  sortTrainer,
+}: TrainerListHeaderProps) {
   const [searchKeyword, setSearchkeyword] = useState("");
 
   const handleSearchKeyword = (event: any) => {
     setSearchkeyword(event.target.value);
   };
 
+  const [sortCondition, setSortCondition] = useState("");
+
+  const handleSortCondition = (condition: string) => {
+    setSortCondition(condition);
+  };
+
+  useEffect(() => {
+    sortTrainer(sortCondition);
+  }, [sortCondition]);
+
   const searchForm = {
     keyword: searchKeyword,
-    date: "",
-    fromTime: "",
-    toTime: "",
   };
 
   const isDesktop = useMediaQuery({ minWidth: 768 });
   const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const sortButtons = [
+    { value: "", text: "최근 등록 순" },
+    { value: "/sorted-by-star", text: "별점 높은 순" },
+    { value: "/sorted-by-pt", text: "PT 누적 횟수 순" },
+    { value: "/sorted-by-bookmark", text: "즐겨찾기 많은 순" },
+    { value: "/sorted-by-review", text: "리뷰 많은 순" },
+  ];
 
   return (
     <Wrapper>
@@ -93,34 +112,70 @@ function TrainerListHeader({ searchTrainer }: TrainerListHeaderProps) {
             id="outlined-basic"
             label="트레이너 이름 또는 키워드를 검색하세요"
             variant="outlined"
-            style={{ width: "100%"}}
+            style={{ width: "100%" }}
             value={searchKeyword}
             onChange={handleSearchKeyword}
           />
         </TextFieldWrapper>
         <TchaButton
           onClick={() => searchTrainer(searchForm)}
-          style={{ maxWidth: "8rem", width:"30%", height: "3.5rem", color: "white" }}
+          style={{
+            maxWidth: "8rem",
+            width: "30%",
+            height: "3.5rem",
+            color: "white",
+          }}
         >
           <StyledText>검색하기</StyledText>
         </TchaButton>
       </SearchContainer>
       <ButtonContainer>
-        <ReverseTchaButton style={{width:"20%"}}>
-          <StyledText>정렬 조건1</StyledText>
-        </ReverseTchaButton>
-        <ReverseTchaButton style={{width:"20%"}}>
-          <StyledText>정렬 조건2</StyledText>
-        </ReverseTchaButton>
-        <ReverseTchaButton style={{width:"20%"}}>
-          <StyledText>정렬 조건3</StyledText>
-        </ReverseTchaButton>
-        <ReverseTchaButton style={{width:"20%"}}>
-          <StyledText>정렬 조건4</StyledText>
-        </ReverseTchaButton>
-        <ReverseTchaButton style={{width:"20%"}}>
-          <StyledText>정렬 조건5</StyledText>
-        </ReverseTchaButton>
+        {sortButtons.map((button) => {
+          const ButtonComponent =
+            sortCondition === button.value ? TchaButton : ReverseTchaButton;
+
+          return (
+            <ButtonComponent
+              key={button.value}
+              onClick={() => handleSortCondition(button.value)}
+              style={{ width: "20%", color: "white" }}
+            >
+              <StyledText>{button.text}</StyledText>
+            </ButtonComponent>
+          );
+        })}
+        {/* <ButtonComponent
+          value=""
+          onClick={() => handleSortCondition("")}
+          style={{ width: "20%" }}
+        >
+          <StyledText>최근 등록 순</StyledText>
+        </ButtonComponent>
+        <ButtonComponent
+          value="/sorted-by-star"
+          onClick={() => handleSortCondition("/sorted-by-star")}
+          style={{ width: "20%" }}
+        >
+          <StyledText>별점 높은 순</StyledText>
+        </ButtonComponent>
+        <ButtonComponent
+          onClick={() => handleSortCondition("/sorted-by-pt")}
+          style={{ width: "20%" }}
+        >
+          <StyledText>PT 누적 횟수 순</StyledText>
+        </ButtonComponent>
+        <ButtonComponent
+          onClick={() => handleSortCondition("/sorted-by-bookmark")}
+          style={{ width: "20%" }}
+        >
+          <StyledText>즐겨찾기 많은 순</StyledText>
+        </ButtonComponent>
+        <ButtonComponent
+          onClick={() => handleSortCondition("/sorted-by-review")}
+          style={{ width: "20%" }}
+        >
+          <StyledText>리뷰 많은 순</StyledText>
+        </ButtonComponent> */}
       </ButtonContainer>
       <AccordionContainer>
         <StyledAccordion>

@@ -11,6 +11,12 @@ const profileInitialState = {
   trainerId: "",
 };
 
+const ptLiveInitialState = {
+  ov: null, // openvidu 객체
+  userOpenViduToken: null,
+  sessionId: null,
+};
+
 const authSlice = createSlice({
   name: "auth",
   initialState: authInitialState,
@@ -49,9 +55,26 @@ const profileSlice = createSlice({
   },
 });
 
+const ptLiveSlice = createSlice({
+  name: "ptLive",
+  initialState: ptLiveInitialState,
+  reducers: {
+    setOV: (state, action) => {
+      state.ov = action.payload.ov;
+    },
+    setOpenViduToken: (state, action) => {
+      state.userOpenViduToken = action.payload;
+    },
+    setSessionId: (state, action) => {
+      state.sessionId = action.payload;
+    }
+  },
+});
+
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
   profile: profileSlice.reducer,
+  ptLive: ptLiveSlice.reducer,
 });
 
 export const { logIn, logOut } = authSlice.actions;
@@ -62,5 +85,10 @@ export const {
   modifyProfile,
   test,
 } = profileSlice.actions;
+export const {
+  setOV,
+  setOpenViduToken,
+  setSessionId,
+} = ptLiveSlice.actions;
 
 export default rootReducer;

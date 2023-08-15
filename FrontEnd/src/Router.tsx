@@ -10,29 +10,32 @@ import ChatList from "@/chat-list";
 import ChatRoom from "@/chat-room";
 
 import CustomerCenter from "@/customer-center";
-import Inquiry from "@customer-center/inquiry";
-import Notice from "@customer-center/notice";
+import WriteInquiry from "@customer-center/write-inquiry";
+import WriteNotice from "@customer-center/write-notice";
 
 import User from "@/user";
-import BookMarkedTrainerList from "@/bookmarked-trainer-list";
+import BookmarkedTrainerList from "@/bookmarked-trainer-list";
 import UserSchedule from "@/user-schedule";
 import UserInfoModify from "@/user-info-modify";
 import PaymentDetail from "@/payment-detail";
 import ReviewWrittenByUser from "@/review-written-by-user";
 import TrainerRegistration from "@/trainer-registration";
-import ExerciseLog from "@/exercise-log";
+import ExerciseLog from "@user-trainer/write-exercise-log";
 
 import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";
-import TrainerDetail from "@trainer-info/trainer-detail";
-import TrainerReview from "@trainer-info/trainer-review";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 import TrainerSchedule from "@user-trainer/trainer-schedule";
-import TrainerPtudent from "@/trainer/member-list";
+import CreateClasses from "@user-trainer/create-classes";
+import PtudentList from "@user-trainer/ptudent-list";
+import PtReservation from "@/pt-reservation";
+import PtRoom from "@/pt-room";
+import ErrorPage from "@shared/error-page";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    errorElement: <ErrorPage />,
     element: <App />,
     children: [
       {
@@ -40,18 +43,20 @@ const router = createBrowserRouter([
         element: <Main />,
       },
       {
+        path: "pt",
+        element: <PtRoom />,
+      },
+      {
         path: "customer_center",
         element: <CustomerCenter />,
-        children: [
-          {
-            path: "notice",
-            element: <Notice />,
-          },
-          {
-            path: "inquiry",
-            element: <Inquiry />,
-          },
-        ],
+      },
+      {
+        path: "customer_center/write_inquiry",
+        element: <WriteInquiry />,
+      },
+      {
+        path: "customer_center/write_notice",
+        element: <WriteNotice />,
       },
       {
         path: "profile",
@@ -66,12 +71,16 @@ const router = createBrowserRouter([
         element: <TrainerSchedule />,
       },
       {
-        path: "profile/trainer_ptudent",
-        element: <TrainerPtudent />,
+        path: "profile/trainer_schedule/create_classes",
+        element: <CreateClasses />,
+      },
+      {
+        path: "profile/trainer_ptudent_list",
+        element: <PtudentList />,
       },
       {
         path: "profile/bookmarked_trainers",
-        element: <BookMarkedTrainerList />,
+        element: <BookmarkedTrainerList />,
       },
       {
         path: "profile/schedule",
@@ -104,16 +113,16 @@ const router = createBrowserRouter([
         element: <TrainerRegistration />,
       },
       {
-        path: "profile/exercise_log",
-        element: <ExerciseLog />,
-      },
-      {
         path: "trainer",
         element: <TrainerList />,
       },
       {
         path: "trainer/info",
         element: <TrainerInfo />,
+      },
+      {
+        path: "trainer/pt_reservation",
+        element: <PtReservation />,
       },
     ],
   },

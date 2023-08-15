@@ -12,6 +12,7 @@
       "@user/*": ["src/containers/user/*"],
       "@user-trainer/*": ["src/containers/user-trainer/*"]
     },
+    "typeRoots": ["./@types", "./node_modules/@types"],
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext", "ES6"],
     "allowJs": true,
@@ -28,5 +29,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tsconfig.paths.json", "craco.config.js"]
+  "include": ["src", "tsconfig.paths.json", "craco.config.js","declarations.d.ts"],
 }

@@ -1,10 +1,16 @@
+import { api } from "@shared/common-data";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { ReviewData } from "src/interface";
+
 import styled from "styled-components";
+import Rating from "@mui/material/Rating";
 
 const Container = styled.div`
   background-color: white;
   padding: 2%;
   border-radius: 10px;
-  margin-top: 3%;
+  /* margin-top: 3%; */
   margin-bottom: 3%;
 `;
 
@@ -13,40 +19,56 @@ const Wrapper = styled.div`
   justify-content: space-between;
 `;
 
+const ContainerTitle = styled.h4`
+  margin: 1% 3% 3% 2%  !important;
+  font-size: 2.3rem;
+  @media (max-width: 767px) {
+    margin: 3% 2.5% !important;
+    font-size: 1.2rem !important;
+  }
+`;
+const ContentsWrapper = styled.div`
+  margin-bottom: 1.5%;
+`;
+const Context = styled.h6`
+  display: flex;
+  align-items: center;
+  margin: 0% 2% !important;
+
+  @media (max-width: 767px) {
+    margin: 0% 2% !important;
+    font-size: 0.7rem !important;
+  }
+`;
+const StyledRating = styled(Rating)`
+  margin: 2.5% !important;
+  @media (max-width: 767px) {
+    font-size: 0.8rem !important;
+    margin-top: 2.3% !important;
+    margin-bottom: 2.5% !important;
+  }
+`;
+
 function BestReview() {
-  const bestReviewItem = [
-    {
-      context: "정말 좋아요1",
-      star: 5,
-    },
-    {
-      context: "정말 좋아요2",
-      star: 4,
-    },
-    {
-      context: "정말 좋아요3",
-      star: 5,
-    },
-    {
-      context: "정말 좋아요4",
-      star: 4.5,
-    },
-    {
-      context: "정말 좋아요5",
-      star: 3.5,
-    },
-  ];
+  const [bestReviewItems, setBestReviewItems] = useState<ReviewData>();
+
+  useEffect(() => {
+    axios.get(`${api}/reviews?page=1&size=5`).then((response) => {
+      setBestReviewItems(response.data);
+    });
+  });
+
   return (
     <Container>
-      <h4>서비스 후기</h4>
-      <div>
-        {bestReviewItem.map((item, index) => (
+      <ContainerTitle>서비스 후기</ContainerTitle>
+      <ContentsWrapper>
+        {bestReviewItems?.data.map((item, index) => (
           <Wrapper key={index}>
-            <h5>{item.context}</h5>
-            <h5>{item.star}</h5>
+            <Context>{item.content}</Context>
+            <StyledRating value={item.star} precision={0.5} readOnly />
           </Wrapper>
         ))}
-      </div>
+      </ContentsWrapper>
     </Container>
   );
 }

@@ -2,10 +2,10 @@ package com.tcha.pt_class.controller;
 
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.service.PtClassService;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,70 +27,83 @@ public class PtClassController {
 
     private final PtClassService ptClassService;
 
-    /*
-    트레이너가 pt 수업 생성(오픈)
-    여러 개의 수업을 한 번에 오픈 -> list로 수업 시작 시간 받아오기
+    /**
+     * 트레이너가 pt 수업 생성(오픈), 여러 개의 수업을 한 번에 오픈 -> list로 수업 시작 시간 받아오기
+     *
+     * @return 생성한 pt 수업 정보
      */
-    @PostMapping("/{trainer-id}")
-    public ResponseEntity<PtClassDto.Response> postPtClass(
-            @PathVariable("trainer-id") String trainerId,
-            @RequestBody List<LocalDateTime> startTimeList) {
+    @PostMapping()
+    public ResponseEntity<List<PtClassDto.Response>> postPtClass(
+            @RequestBody PtClassDto.Post postRequest) {
 
-        log.debug("[PtClassController] postPtClass 접근 확인 ::: trainerId = {}, startTimeList = {}",
-                trainerId, startTimeList);
+        List<PtClassDto.Response> classList = ptClassService.createPtClass(postRequest);
+        for (PtClassDto.Response test : classList) {
+            System.out.println(
+                    test.getClassId() + " " + test.getTrainerId() + " " + test.getStartDate());
+        }
 
-        ptClassService.createPtClass(trainerId, startTimeList); // 리턴 값(프론트에 전달할 값) 추가
-
-        return ResponseEntity.ok().body(null);
+        return new ResponseEntity<List<PtClassDto.Response>>(classList, HttpStatus.CREATED);
     }
 
-    /*
-    pt 수업 정보 수정
+    /**
+     * 트레이너의 모든 수업 조회
      */
-    @PatchMapping("/{trainer-id}")
-    public ResponseEntity<PtClassDto.Response> patchPtClass(
-            @PathVariable("trainer-id") String trainerId,
+    @GetMapping("/{trainer-id}")
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassByTrainer(
+            @PathVariable("trainer-id") String trainerId) {
+
+        List<PtClassDto.Response> trainerClassList = ptClassService.findPtClassByTrainer(trainerId);
+
+        return new ResponseEntity<List<PtClassDto.Response>>(trainerClassList, HttpStatus.OK);
+    }
+
+    /**
+     * 유저가 자신의 모든 수업 조회, 추후 유저 도메인 쪽으로 이동
+     */
+    @GetMapping("/user/{user-profile-id}")
+    public ResponseEntity<List<PtClassDto.Response>> getPtClassByUser(
+            @PathVariable("user-profile-id") long userProfileId) {
+
+        List<PtClassDto.Response> userClassList = ptClassService.findPtClassByUser(userProfileId);
+
+        return new ResponseEntity<List<PtClassDto.Response>>(userClassList, HttpStatus.OK);
+    }
+
+    /**
+     * 유저가 pt 수업 예약 or 예약 취소
+     */
+    @PatchMapping()
+    public ResponseEntity<PtClassDto.Response> reservePtClass(
             @RequestBody PtClassDto.Patch patchRequest) {
 
-        ptClassService.updatePtClass(trainerId, patchRequest);
+        PtClassDto.Response ptClass = ptClassService.updatePtClass(patchRequest);
 
-        return ResponseEntity.ok().body(null);
+        return new ResponseEntity<PtClassDto.Response>(ptClass, HttpStatus.OK);
     }
 
-    /*
-    pt 수업 id를 통해 수업 정보 조회
+//    /**
+//     * 날짜 및 시간을 통해 수업 정보 조회
+//     */
+//    @GetMapping()
+//    public ResponseEntity<List<PtClassDto.Response>> getPtClassByDatetime(
+//            @RequestBody PtClassDto.Get getRequest) {
+//
+//        List<PtClassDto.Response> datetimeClassList =
+//                ptClassService.findPtClassByDatetime(getRequest);
+//
+//        return ResponseEntity.ok().body(datetimeClassList);
+//    }
+
+    /**
+     * 트레이너가 pt 수업 삭제
      */
-    @GetMapping("/{pt-class-id}")
-    public ResponseEntity<PtClassDto.Response> getOnePtClass(
-            @PathVariable("pt-class-id") String ptClassId) {
+    @DeleteMapping("/{pt-class-id}")
+    public ResponseEntity<PtClassDto.Response> deletePtClass(
+            @PathVariable("pt-class-id") long classId, @RequestParam String trainerId) {
 
-        PtClassDto.Response ptClass = ptClassService.findOnePtClass(ptClassId);
+        PtClassDto.Response ptClass = ptClassService.deletePtClass(classId, trainerId);
 
-        return ResponseEntity.ok().body(ptClass);
+        return new ResponseEntity<PtClassDto.Response>(ptClass, HttpStatus.OK);
     }
 
-    /*
-    등록된 모든 pt 수업 조회
-     */
-    @GetMapping
-    public ResponseEntity<List<PtClassDto.Response>> getAllPtClasses() {
-
-        List<PtClassDto.Response> ptClassList = ptClassService.findAllPtClasses();
-
-        return ResponseEntity.ok().body(ptClassList);
-    }
-
-    /*
-    pt 수업 id를 통해 등록된 pt 수업 삭제
-     */
-    @DeleteMapping("{trainer-id}")
-    public ResponseEntity<?> deletePtClass(
-            @PathVariable("trainer-id") String trainerId,
-            @RequestParam long ptClassId) {
-
-        ptClassService.deletePtClass(trainerId, ptClassId);
-
-        return ResponseEntity.ok().body(null);
-    }
-    
 }

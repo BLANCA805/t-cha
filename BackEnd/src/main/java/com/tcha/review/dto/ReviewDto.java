@@ -1,6 +1,7 @@
 package com.tcha.review.dto;
 
 import com.tcha.user_profile.entity.UserProfile;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +14,9 @@ public class ReviewDto {
     @Builder
     public static class Post {
 
+        private Long userId ;
+        private String trainerId;
+        private Long ptLiveId;
         private String content;
 
         private float star;
@@ -37,6 +41,10 @@ public class ReviewDto {
         private String content;
 
         private float star;
+
+        private Long ptClassId;
+
+        private LocalDate startDate;
 
         private String profileImg; // 유저 프로필 사진
 

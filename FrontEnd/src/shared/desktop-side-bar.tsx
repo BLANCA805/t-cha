@@ -211,27 +211,6 @@ function DesktopSideBar() {
     navigate("/");
   };
 
-  const test = () => {
-    const token = user.token;
-    axios
-      .post(`${api}/userProfiles`, {
-        userId: token,
-        name: token.slice(0, 3),
-        profileImage: "이미지",
-      })
-      .then((response) => {
-        if (response.data) {
-          dispatch(
-            postProfile({ name: response.data.name, id: response.data.id })
-          );
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   return (
     <SideBarContainer>
       <React.Fragment>{list()}</React.Fragment>

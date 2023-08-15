@@ -72,17 +72,17 @@ function TrainerSchedule() {
     axios
       .get(`${api}/lives/${liveId}`)
       .then((response) => {
-        const liveData = response.data
-        
+        const liveData = response.data;
+
         // 트레이너 입장 가능 여부 확인
         if (liveData.trainerId === trainer) {
           if (liveData.status === "PROGRESS") {
-            navigate("/pt", {state: liveData});
+            navigate("/pt", { state: liveData });
           } else {
             alert("입장 가능한 시간이 아닙니다");
           }
         } else {
-          alert("입장 권한이 없습니다")
+          alert("입장 권한이 없습니다");
         }
       })
 
@@ -114,26 +114,15 @@ function TrainerSchedule() {
                 {item.startDate} Time : {item.startTime}
                 Trainer ID : {item.trainerId}
               </div>
-              {now.isAfter(
-                dayjs(`${item.startDate} ${item.startTime}`).add(-5, "m")
-              ) &&
-                now.isBefore(
-                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
-                ) &&
-                item.liveId && (
-                  <TchaButton
-                    onClick={() => goToPtRoom(item.liveId)}
-                    style={{ width: "8rem", color: "white" }}
-                  >
-                    PT 입장하기
-                  </TchaButton>
-				{item.liveId && item.status !== "INACCESSABLE" && (
+              <TchaButton
+                onClick={() => goToPtRoom(item.liveId)}
+                style={{ width: "8rem", color: "white" }}
+              >
+                PT 입장하기
+              </TchaButton>
+              {item.liveId && item.status !== "INACCESSABLE" && (
                 <WriteExerciseLog liveId={item.liveId} />
-                )}
-              {item.liveId &&
-                now.isAfter(
-                  dayjs(`${item.startDate} ${item.startTime}`).add(60, "m")
-                ) && <WriteExerciseLog liveId={item.liveId} />}
+              )}
             </ScheduleInfo>
           )
       )}

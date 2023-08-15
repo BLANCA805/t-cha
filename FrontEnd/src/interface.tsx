@@ -226,3 +226,8 @@ export interface LogData {
     text: string;
   }[];
 }
+
+export interface TrainerListHeaderProps {
+  searchTrainer: (body: SearchFormData) => void;
+  sortTrainer: (condition: string) => void;
+}

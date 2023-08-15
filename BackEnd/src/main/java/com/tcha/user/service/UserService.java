@@ -2,12 +2,10 @@ package com.tcha.user.service;
 
 import static com.tcha.user.entity.User.UserStatus.USER_QUIT;
 
-import com.tcha.auth.utils.CustomAuthorityUtils;
 import com.tcha.user.entity.User;
 import com.tcha.user.repository.UserRepository;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final CustomAuthorityUtils authorityUtils;
 
     public User createUser(User user) {
+
         User savedUser = userRepository.save(user);
         return savedUser;
     }
@@ -31,10 +29,9 @@ public class UserService {
     public User testUser(String email) {
 
         User user = new User();
-        List<String> authorities = authorityUtils.createRoles(email);
 
         user.setEmail(email);
-        user.setRoles(authorities);
+        user.getRoles().add("USER");
 
         User savedUser = userRepository.save(user);
 

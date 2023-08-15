@@ -66,9 +66,7 @@ dependencies {
     //H2
     runtimeOnly 'com.h2database:h2'
     //Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.1.2'
-    implementation 'io.lettuce:lettuce-core:6.2.4.RELEASE'
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //Spring Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -88,12 +86,6 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     //java -> XML
     implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
-
-    // QueryDsl
-//    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//    annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
-//    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') { //tasks.named('A') : `:A라는 task 가 실행된 후~`라는 의미
@@ -136,23 +128,3 @@ bootJar {
         into 'static/docs'     // ?
     }
 }
-
-// QueryDsl 빌드 옵션
-//def querydslDir = "$buildDir/generated/querydsl"
-//
-//sourceSets {
-//    main.java.srcDirs += [querydslDir]
-//}
-//
-//compileJava {
-//    options.compilerArgs << '-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated'
-//}
-//
-//tasks.withType(JavaCompile) {
-//    options.generatedSourceOutputDirectory = file(querydslDir)
-//}
-//
-//clean {
-//    // clean 실행 시 생성된 QClass 삭제
-//    delete file(querydslDir)
-//}

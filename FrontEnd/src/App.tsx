@@ -96,7 +96,7 @@ const Wrapper = styled.div`
   display: flex;
   /* justify-content: center; */
   width: 100%;
-  min-width:1660px;
+  min-width: 1660px;
   height: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.color.secondary};
@@ -114,9 +114,9 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   justify-content: center;
-  z-index:0;
+  z-index: 0;
   @media (max-width: 767px) {
-    padding-bottom:6.5rem;
+    padding-bottom: 6.5rem;
     overflow-y: auto;
   }
 `;
@@ -155,7 +155,6 @@ function App() {
         <Wrapper>
           <Desktop>
             <DesktopSideBar />
-            <SideBar />
           </Desktop>
 
           <Mobile>

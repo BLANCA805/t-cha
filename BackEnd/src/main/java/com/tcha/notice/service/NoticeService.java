@@ -1,9 +1,12 @@
 package com.tcha.notice.service;
 
+import com.tcha.guide.entity.Guide;
 import com.tcha.notice.entity.Notice;
 import com.tcha.notice.entity.Notice.NoticeEmerStatus;
 import com.tcha.notice.mapper.NoticeMapper;
 import com.tcha.notice.repository.NoticeRepository;
+import com.tcha.utils.exceptions.business.BusinessLogicException;
+import com.tcha.utils.exceptions.codes.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,12 +33,6 @@ public class NoticeService {
                 PageRequest.of(page - 1, size, Sort.by("id").descending()));
     }
 
-    //공지사항 1개 찾기
-    @Transactional(readOnly = true)
-    public Notice findNotice(Long id) {
-        return noticeRepository.findById(id).get();
-    }
-
     //공지사항 저장
     @Transactional
     public Notice createNotice(Notice notice) {
@@ -46,7 +43,7 @@ public class NoticeService {
     // 공지사항 제목, 내용 수정 (생성일자?)
     @Transactional
     public Notice updateNotice(Notice notice, long id) {
-        Notice findNotice = findNotice(id);
+        Notice findNotice = findVerifiedNoticeById(id);
 
         findNotice.setTitle(notice.getTitle());
         findNotice.setContent(notice.getContent());
@@ -58,8 +55,21 @@ public class NoticeService {
     //공지사항 삭제
     @Transactional
     public void deleteNotice(Long id) {
-        Notice findNotice = findNotice(id);
+        Notice findNotice = findVerifiedNoticeById(id);
         noticeRepository.delete(findNotice);
     }
 
+    //존재하는 공지사항인지에 대한 유효성 검증 -> id로 진행
+    @Transactional(readOnly = true)
+    public Notice findVerifiedNoticeById(Long noticeId) {
+        Notice notice = noticeRepository.findById(noticeId).orElseThrow(() -> new BusinessLogicException(ExceptionCode.NOTICE_NOT_FOUND));
+
+        return notice;
+    }
+
+//    //공지사항 1개 찾기
+//    @Transactional(readOnly = true)
+//    public Notice findNotice(Long id) {
+//        return findVerifiedNoticeById(id);
+//    }
 }

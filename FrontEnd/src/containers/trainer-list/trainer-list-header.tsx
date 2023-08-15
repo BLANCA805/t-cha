@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import { SmDateTimePicker } from "@shared/date-time-picker";
 import styled from "styled-components";
 import { TchaButton, ReverseTchaButton } from "@shared/button";
-import { SearchFormData } from "src/interface";
+import { SearchFormData, TrainerListHeaderProps } from "src/interface";
 import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
@@ -63,11 +63,6 @@ const StyledText = styled.h6`
     /* font-size:0.5rem; */
   }
 `;
-
-interface TrainerListHeaderProps {
-  searchTrainer: (body: SearchFormData) => void;
-  sortTrainer: (condition: string) => void;
-}
 
 function TrainerListHeader({
   searchTrainer,
@@ -144,38 +139,6 @@ function TrainerListHeader({
             </ButtonComponent>
           );
         })}
-        {/* <ButtonComponent
-          value=""
-          onClick={() => handleSortCondition("")}
-          style={{ width: "20%" }}
-        >
-          <StyledText>최근 등록 순</StyledText>
-        </ButtonComponent>
-        <ButtonComponent
-          value="/sorted-by-star"
-          onClick={() => handleSortCondition("/sorted-by-star")}
-          style={{ width: "20%" }}
-        >
-          <StyledText>별점 높은 순</StyledText>
-        </ButtonComponent>
-        <ButtonComponent
-          onClick={() => handleSortCondition("/sorted-by-pt")}
-          style={{ width: "20%" }}
-        >
-          <StyledText>PT 누적 횟수 순</StyledText>
-        </ButtonComponent>
-        <ButtonComponent
-          onClick={() => handleSortCondition("/sorted-by-bookmark")}
-          style={{ width: "20%" }}
-        >
-          <StyledText>즐겨찾기 많은 순</StyledText>
-        </ButtonComponent>
-        <ButtonComponent
-          onClick={() => handleSortCondition("/sorted-by-review")}
-          style={{ width: "20%" }}
-        >
-          <StyledText>리뷰 많은 순</StyledText>
-        </ButtonComponent> */}
       </ButtonContainer>
       <AccordionContainer>
         <StyledAccordion>

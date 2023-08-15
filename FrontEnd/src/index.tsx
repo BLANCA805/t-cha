@@ -11,8 +11,8 @@ import { persistStore } from "redux-persist";
 import { ThemeProvider } from "styled-components";
 
 const color = {
-  primary: "#6E7783",
-  secondary: "#D8E6E7",
+  primary: "#285943",
+  secondary: "#D7FFF1",
   light: "#fffdfb",
   dark: "#24272b",
 };

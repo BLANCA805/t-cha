@@ -5,7 +5,6 @@ import com.tcha.bookmark.entity.Bookmark;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.question.entity.Question;
 import com.tcha.review.entity.Review;
-import com.tcha.trainer.entity.Trainer;
 import com.tcha.user.entity.User;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.Column;
@@ -34,15 +33,12 @@ public class UserProfile extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "USER_PROFILE_ID")
+    @Column(name = "USER_PROFILE_ID")
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-
-    @OneToOne(mappedBy = "userProfile")
-    private Trainer trainer;
 
     @OneToMany(mappedBy = "userProfile")
     private List<Bookmark> bookmarks = new ArrayList<>();

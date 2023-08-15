@@ -7,18 +7,14 @@ import Carousel from "react-material-ui-carousel";
 import styled from "styled-components";
 
 const Container = styled.div`
+  margin-top: 3%;
   margin-bottom: 3%;
-  width:100%;
 `;
 
 const ImgTag = styled.img`
   width: 100%;
   height: 20rem;
   object-fit: cover;
-  @media (max-width: 767px) {
-    height: 13rem;
-  }
-
 `;
 
 function Slide() {

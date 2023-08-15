@@ -1,12 +1,10 @@
 package com.tcha.review.entity;
 
 
-import com.tcha.pt_live.entity.PtLive;
 import com.tcha.trainer.entity.Trainer;
 import com.tcha.user_profile.entity.UserProfile;
 import com.tcha.utils.audit.Auditable;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,24 +26,23 @@ public class Review extends Auditable {
 
     @ManyToOne
     @JoinColumn(name = "TRAINER_ID")
-    @NotNull
     private Trainer trainer;
 
     @ManyToOne
     @JoinColumn(name = "USER_PROFILE_ID")
-    @NotNull
     private UserProfile userProfile;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(length = 2000, nullable = false)
     private String content;
 
     @Column(nullable = false)
     private float star;
 
+    /*
+    TODO
     @OneToOne
     @JoinColumn(name = "LIVE_ID")
-    @NotNull
     private PtLive ptLive;
-
+     */
 }
 

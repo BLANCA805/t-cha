@@ -30,7 +30,7 @@ public class Question extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "QUESTION_ID")
+    @Column(name = "QUESTION_ID")
     private Long id;
 
     @ManyToOne

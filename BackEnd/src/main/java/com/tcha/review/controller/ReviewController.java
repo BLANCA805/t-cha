@@ -34,13 +34,15 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMapper reviewMapper;
 
-    @PostMapping
+    @PostMapping("/{user-profile-id}/trainers/{trainer-id}")
     public ResponseEntity<Response> postReview(
+            @PathVariable(value = "user-profile-id") Long userProfileId,
+            @PathVariable(value = "trainer-id") String trainerId,
             @RequestBody Post postRequest) {
         Review reviewToService = reviewMapper.postToReview(postRequest);
-//        Review reviewForResponse = reviewService.createReview(reviewToService);
-//        Response response = reviewMapper.reviewToResponse(reviewForResponse);
-        Response response = reviewService.createReview(reviewToService);
+        Review reviewForResponse = reviewService.createReview(reviewToService, trainerId,
+                userProfileId);
+        Response response = reviewMapper.reviewToResponse(reviewForResponse);
 
         return new ResponseEntity(response, HttpStatus.CREATED);
     }
@@ -50,11 +52,11 @@ public class ReviewController {
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-//        Page<Review> reviewPage = reviewService.findReviewPages(page, size);
-//        List<Review> reviews = reviewPage.getContent();
-//        List<Response> responses = reviewService.findReviewPages(page-1, size);
+        Page<Review> reviewPage = reviewService.findReviewPages(page, size);
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
 
-        return new ResponseEntity<>(reviewService.findReviewPages(page, size), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage), HttpStatus.OK);
     }
 
     @GetMapping("/trainer/{trainer-id}")
@@ -63,11 +65,11 @@ public class ReviewController {
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-//        Page<Review> reviewPage = reviewService.findReviewPagesByTrainerId(trainerID, page, size);
-//        List<Review> reviews = reviewPage.getContent();
-//        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
+        Page<Review> reviewPage = reviewService.findReviewPagesByTrainerId(trainerID, page, size);
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
 
-        return new ResponseEntity<>(reviewService.findReviewPagesByTrainerId(trainerID,page, size), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage), HttpStatus.OK);
     }
 
     @GetMapping("/user/{user-profile-id}")
@@ -76,28 +78,19 @@ public class ReviewController {
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
-//        Page<Review> reviewPage = reviewService.findReviewPagesByUserProfileId(userProfileID, page,
-//                size);
-//        List<Review> reviews = reviewPage.getContent();
-//        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
+        Page<Review> reviewPage = reviewService.findReviewPagesByUserProfileId(userProfileID, page,
+                size);
+        List<Review> reviews = reviewPage.getContent();
+        List<Response> responses = reviewMapper.reviewsToResponses(reviews);
 
-        return new ResponseEntity<>(reviewService.findReviewPagesByUserProfileId(userProfileID,page, size), HttpStatus.OK);
+        return new ResponseEntity<>(new MultiResponseDto<>(responses, reviewPage), HttpStatus.OK);
     }
 
 
     @GetMapping("/{review-id}")
     public ResponseEntity<Response> getOneReview(@PathVariable(value = "review-id") Long id) {
         Review reviewForResponse = reviewService.findReview(id);
-//        Response response = reviewMapper.reviewToResponse(reviewForResponse);
-        Response response = reviewService.createReview(reviewForResponse);
-
-        return new ResponseEntity(response, HttpStatus.OK);
-    }
-    @GetMapping("/ptlive/{pt-live-id}")
-    public ResponseEntity<Response> getOneReviewByPtLiveId(@PathVariable(value = "ptlive-id") Long ptLiveId) {
-        Review reviewForResponse = reviewService.findReviewByPtLiveId(ptLiveId);
-//        Response response = reviewMapper.reviewToResponse(reviewForResponse);
-        Response response = reviewService.createReview(reviewForResponse);
+        Response response = reviewMapper.reviewToResponse(reviewForResponse);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

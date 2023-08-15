@@ -4,10 +4,7 @@ import com.tcha.user.entity.User.UserStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 public class UserDto {
 
@@ -26,19 +23,6 @@ public class UserDto {
         private LocalDateTime createdAt;
 
         private LocalDateTime modifiedAt;
-
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    public static class LoginResponseDto {
-
-        private String userId;
-        private Long userProfileId;
-        private String trainerId;
-        private String name;
-        private String userProfileImage;
 
     }
 }

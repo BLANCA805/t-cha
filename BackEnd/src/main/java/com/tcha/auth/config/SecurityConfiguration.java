@@ -59,77 +59,19 @@ public class SecurityConfiguration {
                 .formLogin().disable()
                 .httpBasic().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(
-                        new UserAuthenticationEntryPoint()) // 인증서 예외 발생 시 거치는 핸들러(401 Unauthorized)
-                .accessDeniedHandler(
-                        new UserAccessDeniedHandler()) // 인증서는 정상이지만, 올바르지 않은 권한으로 요청 시 거치는 핸들러(403 Forbidden)
+                .authenticationEntryPoint(new UserAuthenticationEntryPoint()) // 인증서 예외 발생 시 거치는 핸들러(401 Unauthorized)
+                .accessDeniedHandler(new UserAccessDeniedHandler()) // 인증서는 정상이지만, 올바르지 않은 권한으로 요청 시 거치는 핸들러(403 Forbidden)
                 .and()
                 .apply(new CustomFilterConfigurer()) // 커스텀 필터 추가
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-//                                //Answer
-//                                .requestMatchers(HttpMethod.POST, "/answers").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE, "/answers/**").hasRole("ADMIN")
-//                                //Bookmark
-//                                .requestMatchers(HttpMethod.POST, "/bookmarks/**").hasRole("USER")
-//                                .requestMatchers(HttpMethod.DELETE, "/bookmarks/*").hasRole("USER")
-//                                .requestMatchers(HttpMethod.DELETE, "/bookmarks/**").hasRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/bookmarks/*").hasRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/bookmarks/**").hasRole("USER")
-//                                //ExerciseLog
-//                                .requestMatchers(HttpMethod.POST, "/exercise-logs/*").hasRole("TRAINER")
-//                                .requestMatchers(HttpMethod.PATCH, "/exercise-logs/*").hasRole("TRAINER")
-//                                .requestMatchers(HttpMethod.GET, "/exercise-logs/*").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/exercise-logs").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/exercise-logs/ptLive/*").hasRole("TRAINER")
-//                                //Guide
-//                                .requestMatchers(HttpMethod.POST, "/guides").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/guides/*").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/guides/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.PATCH, "/guides/*").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.DELETE, "/guides/*").hasRole("ADMIN")
-//                                //Notice
-//                                .requestMatchers(HttpMethod.POST, "/notices").hasRole("ADMIN")
-//                                .requestMatchers(HttpMethod.GET, "/notices/*").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/notices/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.PATCH, "/notices/*").hasAnyRole("ADMIN")
-//                                .requestMatchers(HttpMethod.DELETE, "/notices/*").hasAnyRole("ADMIN")
-//                                //Class
-//                                .requestMatchers(HttpMethod.POST, "/classes").hasRole("TRAINER")
-//                                .requestMatchers(HttpMethod.GET, "/classes/user/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/classes/**").hasAnyRole("TRAINER")
-//                                .requestMatchers(HttpMethod.PATCH, "/classes").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.DELETE, "/classes/*").hasAnyRole("TRAINER")
-//                                //Live
-//                                //Question
-//                                .requestMatchers(HttpMethod.POST, "/questions").hasRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/questions/*").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/questions").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE, "/questions/*").hasAnyRole("USER")
-//                                //Review
-//                                .requestMatchers(HttpMethod.POST, "/reviews/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/reviews/**").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE, "/reviews/**").hasAnyRole("USER")
-//                                //Trainer
-//                                .requestMatchers(HttpMethod.POST, "/trainers/**").hasRole("USER")
-//                                .requestMatchers(HttpMethod.PATCH, "/trainers/**").hasRole("TRAINER")
-//                                .requestMatchers(HttpMethod.GET, "/trainers/**").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE, "/trainers/**").hasRole("TRAINER")
-//                                //User
-//                                .requestMatchers(HttpMethod.GET, "/users").permitAll()
-//                                .requestMatchers(HttpMethod.GET, "/users/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("USER")
-//                                //UserProfile
-//                                .requestMatchers(HttpMethod.POST, "/userProfiles").permitAll()
-//                                .requestMatchers(HttpMethod.PATCH, "/userProfiles/**").hasAnyRole("USER")
-//                                .requestMatchers(HttpMethod.GET, "/userProfiles/**").permitAll()
-//                                .requestMatchers(HttpMethod.DELETE, "/userProfiles/**").hasAnyRole("USER")
+//                                .requestMatchers( HttpMethod.POST, "/users").permitAll()
+//                                .requestMatchers( "/users/**").hasAnyRole("USER")
+//                                .requestMatchers( "/userProfiles/**").hasAnyRole("USER")
                                 .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2 -> oauth2.successHandler(
-                        new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, userService,
-                                userProfileService)))
+                        new OAuth2UserSuccessHandler(jwtTokenizer, authorityUtils, userService, userProfileService)))
                 .headers().frameOptions().disable();// H2 콘솔 사용을 위해 X-Frame-Options 비활성화
         return http.build();
     }
@@ -154,29 +96,21 @@ public class SecurityConfiguration {
 
         @Override
         public void configure(HttpSecurity builder) throws Exception {
-            AuthenticationManager authenticationManager = builder.getSharedObject(
-                    AuthenticationManager.class); //AuthenticationManager 객체를 얻음
+            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class); //AuthenticationManager 객체를 얻음
 
             //Authentication
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(
-                    authenticationManager, jwtTokenizer,
-                    userService); // JwtAuthenticationFilter 에 AuthenticationManager 와 JwtTokenizer 를 DI
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, userService); // JwtAuthenticationFilter 에 AuthenticationManager 와 JwtTokenizer 를 DI
             jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login"); // default URL : "/login"
-            jwtAuthenticationFilter.setAuthenticationSuccessHandler(
-                    new UserAuthenticationSuccessHandler()); // 인증 성공 시 실행할 핸들러 추가
-            jwtAuthenticationFilter.setAuthenticationFailureHandler(
-                    new UserAuthenticationFailureHandler()); // 인증 실패 시 실행할 핸들러 추가
+            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new UserAuthenticationSuccessHandler()); // 인증 성공 시 실행할 핸들러 추가
+            jwtAuthenticationFilter.setAuthenticationFailureHandler(new UserAuthenticationFailureHandler()); // 인증 실패 시 실행할 핸들러 추가
 
             //Verification
-            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer,
-                    authorityUtils);
+            JwtVerificationFilter jwtVerificationFilter = new JwtVerificationFilter(jwtTokenizer, authorityUtils);
 
             builder
                     .addFilter(jwtAuthenticationFilter)
-                    .addFilterAfter(jwtVerificationFilter,
-                            JwtAuthenticationFilter.class) // JwtAuthenticationFilter 뒤에 jwtVerificationFilter 위치
-                    .addFilterAfter(jwtVerificationFilter,
-                            OAuth2LoginAuthenticationFilter.class); //
+                    .addFilterAfter(jwtVerificationFilter, JwtAuthenticationFilter.class) // JwtAuthenticationFilter 뒤에 jwtVerificationFilter 위치
+                    .addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class); //
 //            builder.addFilterAfter(jwtVerificationFilter, OAuth2LoginAuthenticationFilter.class);
         }
     }

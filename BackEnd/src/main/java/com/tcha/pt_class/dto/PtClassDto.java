@@ -63,6 +63,6 @@ public class PtClassDto {
         private LocalDate startDate;
         private LocalTime startTime;
         private PtliveStaus status;
-        private Long reveiwId;
+        private Long reviewId;
     }
 }

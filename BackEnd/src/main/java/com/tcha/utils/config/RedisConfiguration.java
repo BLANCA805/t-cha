@@ -24,8 +24,8 @@ public class RedisConfiguration {
     @Value("${spring.data.redis.host}")
     private String host;
 
-//    @Value("${spring.data.redis.password}")
-//    private String password;
+    @Value("${spring.data.redis.password}")
+    private String password;
 
 
     // Redis 저장소와 연결

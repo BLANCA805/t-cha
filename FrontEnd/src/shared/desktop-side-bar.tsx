@@ -105,9 +105,11 @@ function DesktopSideBar() {
               ["customer_center", "고객센터"],
             ].map((data, index) => (
               <ListItemStyled key={index} disablePadding>
-                  <SideBarItemWrapper onClick={() => navigate(data[0])}>
+                <ListItemButton onClick={() => navigate(data[0])}>
+                  <SideBarItemWrapper >
                     {data[1]}
                   </SideBarItemWrapper>
+                </ListItemButton>
                 {/* <ListItemButton> */}
                   {/* <Link to={data[0]}> */}
                   {/* </Link> */}
@@ -137,8 +139,8 @@ function DesktopSideBar() {
               ["customer_center", "고객센터"],
             ].map((data, index) => (
               <ListItemStyled key={index} disablePadding>
-                <ListItemButton>
-                  <SideBarItemWrapper onClick={() => navigate(data[0])}>
+                <ListItemButton onClick={() => navigate(data[0])}>
+                  <SideBarItemWrapper >
                     {data[1]}
                   </SideBarItemWrapper>
                 </ListItemButton>

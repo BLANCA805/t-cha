@@ -5,14 +5,34 @@ import { TrainerDetailData } from "src/interface";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  margin: 1%;
-  padding: 3% 0%;
+  max-width:100%;
+  height:85vh;
+  padding: 3% 4%;
+  @media (max-width: 767px) {
+    height:63vh;
+  }
 `;
 
 const ContainerSet = styled.div`
-  display: flex;
-  height: 50rem;
+  /* display: flex; */
+  width:100%;
   background-color: #f0f0f0;
+`;
+
+const StyledTextBig = styled.h5`
+  margin: 3% 0%;
+  font-size:3.4rem;
+  @media (max-width: 767px) {
+    font-size:1.2rem;
+  }
+`;
+
+const StyledTextSmall = styled.h6`
+  margin: 0.3% 0%;
+  font-size:1.5rem;
+  @media (max-width: 767px) {
+    font-size:0.6rem; 
+  }
 `;
 
 interface TrainerDetailDataProps {
@@ -23,7 +43,14 @@ const TrainerDetail: React.FC<TrainerDetailDataProps> = ({ data }) => {
   console.log(data);
   return (
     <Wrapper>
-      <ContainerSet>{data.content}</ContainerSet>
+      <ContainerSet>
+        <StyledTextBig>
+          {data.title}
+        </StyledTextBig>
+        <StyledTextSmall>
+          {data.content}
+        </StyledTextSmall>
+      </ContainerSet>
     </Wrapper>
   );
 };

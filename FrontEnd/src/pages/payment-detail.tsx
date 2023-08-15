@@ -1,5 +1,5 @@
 
-import { TitleWrapper, PageTitleText } from "@shared/page-title";
+import { ColorTitleWrapper,TitleWrapper, PageTitleText } from "@shared/page-title";
 import PaymentList from "src/containers/user-payment/payment-list";
 
 import styled from "styled-components";
@@ -8,8 +8,8 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display:flex;
   flex-direction: column;
-  width:100%;
-  margin: 3%;
+  width:97%;
+  margin: 1.5% 0%;
   height:100vh;
 `;
 

@@ -24,7 +24,7 @@ public interface PtClassMapper {
                 .build();
     }
 
-    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status) {
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status, long reviewId) {
         return PtClassDto.Response.builder()
                 .trainerId(ptClass.getTrainer().getId().toString())
                 .classId(ptClass.getId())
@@ -32,6 +32,7 @@ public interface PtClassMapper {
                 .startDate(ptClass.getStartDate())
                 .startTime(ptClass.getStartTime())
                 .status(status)
+                .reviewId(reviewId)
                 .build();
     }
 }

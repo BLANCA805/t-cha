@@ -23,6 +23,7 @@ import styled from "styled-components";
 
 const Sticky = styled.div`
   position: fixed;
+  z-index:1;
   bottom: 0;
 `;
 

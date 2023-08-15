@@ -33,10 +33,10 @@ const BottomBarContainer = styled.div`
   bottom:0;
   left:0;
   background-color: ${({ theme }) => theme.color.light};
-  opacity: 75%;
   width:100%;
   height:6rem;
   box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.03);
+  z-index:1;
 `;
 
 const ButtomBarContents = styled.div`

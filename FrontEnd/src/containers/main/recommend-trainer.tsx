@@ -74,11 +74,18 @@ const CardWrapper = styled.div`
   justify-content: space-evenly;
   align-items: center;
   /* background-color: grey; */
-  @media (max-width: 767px) {
+  @media (max-width: 1730px) {
     flex-wrap:nowrap;
+    justify-content: start;
     overflow-x:auto;
     overflow-y:visible;
   }
+  /* @media (max-width: 767px) {
+    flex-wrap:nowrap;
+    justify-content: start;
+    overflow-x:auto;
+    overflow-y:visible;
+  } */
 `;
 
 const StyledCard = styled(Card)`

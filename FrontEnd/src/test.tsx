@@ -1,4 +1,4 @@
-import { createPtLive, useOpenvidu } from "./hooks/use-openvidu";
+// import {useOpenvidu } from "./hooks/use-openvidu";
 import { useSelector } from "react-redux";
 import { type RootState } from "./redux/store";
 
@@ -8,7 +8,7 @@ const Test = () => {
   // const { publisher, onChangeCameraStatus, onChangeMicStatus } =
   //   useOpenvidu(profileId, 1);
 
-  const ptLiveId = createPtLive(1).sessionId;
+  // const ptLiveId = createPtLive(1).sessionId;
 
   return (
     <div>
@@ -27,7 +27,6 @@ const Test = () => {
           <button onClick={() => onChangeMicStatus}>마이크 조절</button>
         </div>
       )} */}
-      {ptLiveId}
     </div>
   );
 };

@@ -230,7 +230,12 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+            if (valueOperations.get(reviewCountKey).equals("0")) {
+                starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+
+            }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -290,7 +295,12 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+            if (valueOperations.get(reviewCountKey).equals("0")) {
+                starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+
+            }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -349,7 +359,12 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+            if (valueOperations.get(reviewCountKey).equals("0")) {
+                starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+
+            }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -408,7 +423,12 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+            if (valueOperations.get(reviewCountKey).equals("0")) {
+                starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+
+            }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));
@@ -468,7 +488,12 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
             String starKey = "star:" + trainerId;
             idList.add(trainerId);
-            starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+            if (valueOperations.get(reviewCountKey).equals("0")) {
+                starList.add(0f);
+            } else {
+                starList.add(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)));
+
+            }
             reviewCountList.add(Double.parseDouble(valueOperations.get(reviewCountKey)));
             bookmarkList.add(Double.parseDouble(valueOperations.get(bookmarkCountKey)));
             PTList.add(Double.parseDouble(valueOperations.get(ptCountKey)));

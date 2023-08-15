@@ -100,8 +100,6 @@ function WriteExerciseLog(props: { liveId: number }) {
       });
   }, [open, liveId]);
 
-  const [files, setFiles] = useState<File[]>([]);
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -177,8 +175,15 @@ function WriteExerciseLog(props: { liveId: number }) {
   };
 
   const temp = () => {
+    console.log({
+      title: title,
+      contents: contents,
+    });
     axios
-      .patch(`${api}/exercise-logs/${exerciseLogId}`)
+      .patch(`${api}/exercise-logs/${exerciseLogId}`, {
+        title: title,
+        contents: contents,
+      })
       .then((response) => {
         console.log(response.data);
       })

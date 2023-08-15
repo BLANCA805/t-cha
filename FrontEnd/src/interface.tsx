@@ -10,17 +10,18 @@ export interface userProfileData {
 
 export interface TrainerListData {
   data: {
-    id: string;
-    profileName: string;
-    profileImg: string;
-    introduction: string;
-    tags: string;
-    stars: number;
+    bookmarkCount: number;
     createdAt: string;
-    ptudentCount: number;
+    id: string;
+    introduction: string;
+    profileImg: string;
+    profileName: string;
     ptCount: number;
     reviewCount: number;
     revisitGrade: number;
+    stars: number;
+    tags: string;
+    userProfileIdList: Array<number>;
   }[];
   pageInfo: {
     page: number;
@@ -32,17 +33,18 @@ export interface TrainerListData {
 
 export interface TrainerListDataProps {
   data: {
-    id: string;
-    profileName: string;
-    profileImg: string;
-    introduction: string;
-    tags: string;
-    stars: number;
+    bookmarkCount: number;
     createdAt: string;
-    ptudentCount: number;
+    id: string;
+    introduction: string;
+    profileImg: string;
+    profileName: string;
     ptCount: number;
     reviewCount: number;
     revisitGrade: number;
+    stars: number;
+    tags: string;
+    userProfileIdList: Array<number>;
   };
 }
 
@@ -53,12 +55,13 @@ export interface TrainerProps {
 export interface TrainerDetailData {
   content: string;
   id: string;
-  images: null;
+  images: Array<string>;
   introduction: string;
   profileImg: string;
   profileName: string;
   tags: string;
   title: string;
+  userProfileIdList: Array<number>;
 }
 
 export interface TrainerReviewData {
@@ -193,8 +196,10 @@ export interface TrainerScheduleData {
   trainerId: string;
   startTime: string;
   startDate: string;
-  liveId: number | null;
+  liveId: number;
   classId: number;
+  status: string;
+  reviewId: number;
 }
 
 export interface UserScheduleData {
@@ -203,6 +208,8 @@ export interface UserScheduleData {
   liveId: number;
   startDate: string;
   startTime: string;
+  reviewId: number;
+  status: string;
 }
 
 export interface SearchFormData {

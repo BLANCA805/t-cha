@@ -20,17 +20,19 @@ import UserInfoModify from "@/user-info-modify";
 import PaymentDetail from "@/payment-detail";
 import ReviewWrittenByUser from "@/review-written-by-user";
 import TrainerRegistration from "@/trainer-registration";
-import ExerciseLog from "@user-trainer/write-exercise-log";
 
 import TrainerList from "@/trainer-list";
 import TrainerInfo from "@/trainer-info";
 import TrainerInfoModify from "@user-trainer/trainer-info-modify";
 import TrainerSchedule from "@user-trainer/trainer-schedule";
 import CreateClasses from "@user-trainer/create-classes";
-import PtudentList from "@user-trainer/ptudent-list";
 import PtReservation from "@/pt-reservation";
 import PtRoom from "@/pt-room";
 import ErrorPage from "@shared/error-page";
+import GetToken from "./get-token";
+
+import CheckLogined from "@shared/check-logined";
+import Login from "@/login";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +43,6 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Main />,
-      },
-      {
-        path: "pt",
-        element: <PtRoom />,
       },
       {
         path: "customer_center",
@@ -60,43 +58,39 @@ const router = createBrowserRouter([
       },
       {
         path: "profile",
-        element: <User />,
+        element: <CheckLogined component={<User />} />,
       },
       {
         path: "profile/trainer_info_modify",
-        element: <TrainerInfoModify />,
+        element: <CheckLogined component={<TrainerInfoModify />} />,
       },
       {
         path: "profile/trainer_schedule",
-        element: <TrainerSchedule />,
+        element: <CheckLogined component={<TrainerSchedule />} />,
       },
       {
         path: "profile/trainer_schedule/create_classes",
-        element: <CreateClasses />,
-      },
-      {
-        path: "profile/trainer_ptudent_list",
-        element: <PtudentList />,
+        element: <CheckLogined component={<CreateClasses />} />,
       },
       {
         path: "profile/bookmarked_trainers",
-        element: <BookmarkedTrainerList />,
+        element: <CheckLogined component={<BookmarkedTrainerList />} />,
       },
       {
         path: "profile/schedule",
-        element: <UserSchedule />,
+        element: <CheckLogined component={<UserSchedule />} />,
       },
       {
         path: "profile/info_modify",
-        element: <UserInfoModify />,
+        element: <CheckLogined component={<UserInfoModify />} />,
       },
       {
         path: "profile/payment_detail",
-        element: <PaymentDetail />,
+        element: <CheckLogined component={<PaymentDetail />} />,
       },
       {
         path: "profile/review",
-        element: <ReviewWrittenByUser />,
+        element: <CheckLogined component={<ReviewWrittenByUser />} />,
       },
       {
         path: "profile/chat",
@@ -110,7 +104,7 @@ const router = createBrowserRouter([
       },
       {
         path: "profile/trainer_registration",
-        element: <TrainerRegistration />,
+        element: <CheckLogined component={<TrainerRegistration />} />,
       },
       {
         path: "trainer",
@@ -122,13 +116,25 @@ const router = createBrowserRouter([
       },
       {
         path: "trainer/pt_reservation",
-        element: <PtReservation />,
+        element: <CheckLogined component={<PtReservation />} />,
       },
     ],
   },
   {
+    path: "login",
+    element: <Login />,
+  },
+  {
     path: "test",
     element: <Test />,
+  },
+  {
+    path: "/get_token",
+    element: <GetToken />,
+  },
+  {
+    path: "pt",
+    element: <PtRoom />,
   },
 ]);
 

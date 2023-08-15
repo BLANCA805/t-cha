@@ -20,7 +20,7 @@ import { useImageUpload } from "src/hooks/use-image";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  /* width:100%; */
+  width: 100%;
   height: 100vh;
   margin: 1%;
   justify-content: start;
@@ -46,7 +46,7 @@ const Form = styled.div`
 const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
   /* align-items: center; */
   margin-bottom: 1rem;
 `;
@@ -68,15 +68,22 @@ const TagWrapper = styled.div`
 `;
 
 const ImageWrapper = styled.div`
+  display: flex;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  min-height: 20%;
+  min-height: 12rem;
+  border: 0.1rem;
+  border-style: solid;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  border-color: #bdbcba;
 `;
 
 const Image = styled.img`
-  width: 17%;
-  height: 17%;
+  width: 10rem;
+  height: 10rem;
   overflow: hidden;
   margin: 1%;
   &:hover {
@@ -108,7 +115,13 @@ function TrainerRegistration() {
     setContent(event.target.value);
   };
   const handleTag = (event: any) => {
-    setTag(event.target.value);
+    const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
+
+    if (regExp.test(event.target.value)) {
+      alert("특수문자는 입력할 수 없습니다");
+    } else {
+      setTag(event.target.value);
+    }
   };
   const addTag = () => {
     if (tag) {
@@ -227,14 +240,18 @@ function TrainerRegistration() {
             <TextField
               value={tag}
               label="태그를 입력해주세요"
-              style={{ width: "30%" }}
+              style={{ width: "30%", paddingRight: "0.5rem" }}
               variant="outlined"
               onChange={handleTag}
               onKeyDown={(enter) => addTagToEnter(enter)}
             />
             <TagWrapper>
               <TchaButton
-                style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+                style={{
+                  width: "7rem",
+                  height: "3rem",
+                  fontSize: "1rem",
+                }}
                 variant="contained"
                 onClick={addTag}
               >
@@ -248,6 +265,9 @@ function TrainerRegistration() {
                 비우기
               </TchaButton>
             </TagWrapper>
+          </FormDetailWrapper>
+
+          <FormDetailWrapper>
             <TextField
               disabled
               value={tagsForView.slice(0, -1)}
@@ -285,7 +305,7 @@ function TrainerRegistration() {
               }}
               variant="contained"
             >
-              사진등록
+              사진 선택
             </InputCustomButton>
           </FormDetailWrapper>
 

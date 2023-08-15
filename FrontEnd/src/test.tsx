@@ -1,13 +1,18 @@
-import React from "react";
-import { useOpenvidu } from "./hooks/use-openvidu";
+// import {useOpenvidu } from "./hooks/use-openvidu";
+import { useSelector } from "react-redux";
+import { type RootState } from "./redux/store";
+
 
 const Test = () => {
-  const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
-    useOpenvidu(1, 1);
+  // const profileId = useSelector((state: RootState) => state.profile.profileId);
+  // const { publisher, onChangeCameraStatus, onChangeMicStatus } =
+  //   useOpenvidu(profileId, 1);
+
+  // const ptLiveId = createPtLive(1).sessionId;
 
   return (
     <div>
-      {publisher && (
+      {/* {publisher && (
         <div>
           <video
             ref={(videoRef) => {
@@ -21,7 +26,7 @@ const Test = () => {
           <button onClick={() => onChangeCameraStatus}>화면 조절</button>
           <button onClick={() => onChangeMicStatus}>마이크 조절</button>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

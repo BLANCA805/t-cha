@@ -56,6 +56,7 @@ const SubmitButton = styled.div`
   justify-content: center;
   align-items: center;
   margin: 5% 0%;
+  padding-bottom: 6.5rem;
 `;
 
 const InputCustomButton = styled(TchaButton)`

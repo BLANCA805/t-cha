@@ -48,6 +48,18 @@ const ScheduleInfo = styled.div`
   background-color: #fff;
 `;
 
+export interface PtLiveData {
+  ptClassId: number;
+  ptLiveId: number;
+  status: string;
+  trainerId: string;
+  trainerName: string;
+  trainerProfileImage: string;
+  userId: string;
+  userName: string;
+  userProfileImage: string;
+}
+
 function TrainerSchedule() {
   const [value, setValue] = useState<Dayjs | null>(dayjs());
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
@@ -76,11 +88,12 @@ function TrainerSchedule() {
 
         // 트레이너 입장 가능 여부 확인
         if (liveData.trainerId === trainer) {
-          if (liveData.status === "PROGRESS") {
-            navigate("/pt", { state: liveData });
-          } else {
-            alert("입장 가능한 시간이 아닙니다");
-          }
+          // if (liveData.status === "PROGRESS") {
+          //   navigate("/pt", { state: liveData });
+          // } else {
+          //   alert("입장 가능한 시간이 아닙니다");
+          // }
+          navigate("/pt", { state: liveData });
         } else {
           alert("입장 권한이 없습니다");
         }

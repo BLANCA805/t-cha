@@ -1,4 +1,4 @@
-# TEAM
+# 1. TEAM
 ### 팀 소개
 <table>
   <tr>
@@ -157,7 +157,7 @@
 </div>
 </details>
 
-# SERVICE
+# 2. SERVICE
 ### 서비스 개요
 
 | 팀명 | BLANCA |
@@ -246,4 +246,16 @@
 - Redis
 - Redux
 
-# PROJECT
+# 3. PROJECT
+### 기술 스택
+
+
+### API 명세서
+- [노션 링크](https://www.notion.so/API-5e5c6f1b60fe40b99b7660ab2b037ed2)
+
+
+### ERD
+
+
+### Design(피그마)
+![피그마](https://github.com/hso8706/open-pjt-db/assets/103169947/bd09a5ae-1911-4222-ab54-e938d830c832)

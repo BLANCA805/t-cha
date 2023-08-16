@@ -1,17 +1,15 @@
 import { useDispatch } from "react-redux";
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { AppDispatch } from "./redux/store";
 import { getUserData, logIn } from "./redux/slicers";
 import axios from "axios";
 import { api } from "@shared/common-data";
+import { Navigate } from "react-router-dom";
 
-function GetToken() {
-  const [authParams, setAuthParams] = useSearchParams();
-  const access = authParams.get("access_token");
-  const refresh = authParams.get("refresh_token");
-  const email = authParams.get("email");
-
+const TesterLogin = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const access = "tester";
+  const refresh = "tester";
+  const email = "tcha_tester@gmail.com";
 
   dispatch(
     logIn({
@@ -25,13 +23,13 @@ function GetToken() {
     .get(`${api}/users?email=${email}`)
     .then((response) => {
       dispatch(getUserData(response.data));
-      console.log("User Data를 성공적으로 받아왔습니다!");
+      console.log("테스터로 성공적으로 로그인 했습니다!");
     })
     .catch((error) => {
       console.log(error);
     });
 
   return <Navigate to="/" />;
-}
+};
 
-export default GetToken;
+export default TesterLogin;

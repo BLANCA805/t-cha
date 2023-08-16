@@ -18,6 +18,8 @@ const color = {
   light: "#fffdfb",
   dark: "#24272b",
   tcha:"#125B51",
+  tchamid:"#0a8d85",
+  tchalight:"#1BA693",
 
 };
 

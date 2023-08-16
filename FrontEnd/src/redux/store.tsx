@@ -7,7 +7,7 @@ import rootReducer from "./slicers";
 const persistConfig = {
   key: "root",
   storage: storageSession,
-  whitelist: ["auth", "profile"],
+  whitelist: ["auth", "profile", "ptLive"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

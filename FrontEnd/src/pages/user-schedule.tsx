@@ -10,46 +10,83 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { UserScheduleData } from "src/interface";
-
+import Calendar from 'react-calendar';
 import { TitleWrapper, PageTitleText } from "@shared/page-title";
 
 
 const Wrapper = styled.div`
   display: flex;
-  width: 96%;
+  width:96%;
   flex-direction: column;
   height: 100vh;
-  margin: 1% 1% 0% 1%;
+  margin: 1% 0% ;
+  
 `;
 
-const CalendarContainer = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  width: 100%;
-  height:20rem;
+const ContentsWrapper = styled.div`
+  display:flex;
+  width:100%;
+  @media (max-width: 767px) {
+    flex-direction: column;
+  }
+
+`
+
+const CalendarWrapper = styled.div`
   display: flex;
-  align-items: center;
-  /* padding: 1% 0%; */
+  justify-content: center;
+  /* align-items: center; */
+  margin-right:2%;
+  width: 40%;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+    width:100%;
+    max-width:100%;
+    margin-right:0%;
+    justify-content: center;
   }
 `;
 
-const Calendar = styled.div`
-
+const CalendarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #ebebeb;
+  border-radius: 10px;
+  width: 20rem;
+  height:21rem;
+  margin-top:5%;
+  /* padding: 1% 0%; */
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); */
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    margin-top:3%;
+    background-color: ${({ theme }) => theme.color.light};
+    align-items: center;
+    justify-content: center;
+    width:90%;
+    height:90%;
+  }
 `;
+
+
 
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 1%;
-  padding: 2%;
-  /* height:10rem; */
+  align-items: center;
+  width: 70%;
+  min-height: 40rem;
+  padding: 1% 0%;
   border-radius: 10px;
-  background-color: #fff;
+  background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
+    width: 100%;
+    padding:2% 0%;
+    min-height: 40%;
+    margin-top: 3%;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 `;
@@ -80,31 +117,27 @@ function UserSchedule() {
       <TitleWrapper>
         <PageTitleText>내 캘린더</PageTitleText>
       </TitleWrapper>
-      <Calendar>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <CalendarContainer>
-            <DateCalendar
-              value={date}
-              onChange={(selected: Dayjs | null) => setDate(selected)}
-              sx={{
-                "& .MuiDataGrid-root": {
-                  height: "400px",
-                  width: "400px",
-                },
-              }}
-            />
-          </CalendarContainer>
-        </LocalizationProvider>
-      </Calendar>
-      <ScheduleInfo>
-        {items[0] ? (
-          items.map((item) => <UserScheduleItem data={item} />)
-        ) : (
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <p>해당 날짜에 예약이 없습니다</p>
-          </div>
-        )}
-      </ScheduleInfo>
+      <ContentsWrapper>
+        <CalendarWrapper>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <CalendarContainer>
+              <DateCalendar
+                value={date}
+                onChange={(selected: Dayjs | null) => setDate(selected)}
+              />
+            </CalendarContainer>
+          </LocalizationProvider>
+        </CalendarWrapper>
+        <ScheduleInfo>
+          {items[0] ? (
+            items.map((item) => <UserScheduleItem data={item} />)
+          ) : (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <p>해당 날짜에 예약이 없습니다</p>
+            </div>
+          )}
+        </ScheduleInfo>
+      </ContentsWrapper>
     </Wrapper>
   );
 }

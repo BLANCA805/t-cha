@@ -11,7 +11,7 @@
     <td align="center"><b>최해미</b></td>
   </tr>
   <tr>
-    <td align="center"><b>BLANCA</b></td>
+    <td align="center" vertical-align="middle"><b>BLANCA</b></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/241ee0f5-a09d-4a68-a6e1-267f9e96a40d" width="100px;" alt=""/></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/cd3d4ad3-9568-46f0-b7d5-7bd27155b7a9" width="100px;" alt=""/></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/e52d2465-eb3e-4885-9ef1-1f2452c0e2a7" width="100px;" alt=""/><br /></td>
@@ -24,9 +24,9 @@
     <td align="center"><b>👑 Backend</b></td>
     <td align="center"><b>Backend</b></td>
     <td align="center"><b>Frontend</b></td>
+    <td align="center"><b>Frontend</b></td>
     <td align="center"><b>Backend</b></td>
-    <td align="center"><b>Frontend</b></td>
-    <td align="center"><b>Frontend</b></td>
+    <td align="center"><b>Backend</b></td>
   </tr>
 </table>
 
@@ -247,15 +247,48 @@
 - Redux
 
 # 3. PROJECT
+### Design(피그마)
+<details>
+<summary>Design(피그마)</summary>
+<div markdown="1">
+
+![피그마](https://github.com/hso8706/Useful/assets/103169947/935a03c9-3cf4-445d-999f-0fca6c9d52b3)
+
+</div>
+</details>
+
+
 ### 기술 스택
 
 
 ### API 명세서
-- [노션 링크](https://www.notion.so/API-5e5c6f1b60fe40b99b7660ab2b037ed2)
+<details>
+<summary>API 명세서</summary>
+<div markdown="1">
 
+[api 명세서 노션 링크](https://www.notion.so/API-5e5c6f1b60fe40b99b7660ab2b037ed2)
+
+
+</div>
+</details>
 
 ### ERD
+<details>
+<summary>ERD</summary>
+<div markdown="1">
+
+![진짜 찐 마지막 최종 ERD](https://github.com/hso8706/Useful/assets/103169947/648baa7e-970e-46b5-98cf-2024e953aa48)
+
+</div>
+</details>
 
 
-### Design(피그마)
-![피그마](https://github.com/hso8706/open-pjt-db/assets/103169947/bd09a5ae-1911-4222-ab54-e938d830c832)
+### 서비스 아키텍쳐
+<details>
+<summary>서비스 아키텍쳐</summary>
+<div markdown="1">
+
+![Web App Reference Architecture](https://github.com/hso8706/Useful/assets/103169947/d0ca0c82-fb17-4165-a72f-f5cfc4162f40)
+
+</div>
+</details>

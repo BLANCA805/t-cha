@@ -1,9 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import { useLocation } from "react-router-dom";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { OpenVidu, Publisher, Session } from "openvidu-browser";
-import { setOV, setOpenViduToken, setSessionId } from "src/redux/slicers";
+import {
+  clearItems,
+  setOV,
+  setOpenViduToken,
+  setSessionId,
+} from "src/redux/slicers";
 import axios from "axios";
 import { PtLiveData } from "@user-trainer/trainer-schedule";
 
@@ -22,22 +27,41 @@ function PtRoom() {
   );
 
   const ptLiveData: PtLiveData = useLocation().state;
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [publisher, setPublisher] = useState<Publisher | null>(null);
   const dispatch = useDispatch();
+
+  const test = () => {
+    dispatch(clearItems());
+  };
+
+  const check = () => {
+    axios
+      .get(OPENVIDU_SERVER_URL + "openvidu/api/sessions/", {
+        headers: {
+          Authorization:
+            "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
 
   // openvidu 설정, 최초 입장 시 한 번만
   useEffect(() => {
     const ov = new OpenVidu();
     dispatch(setOV({ ov }));
-    enterSession(ptLiveData.ptLiveId);
+    // enterSession(ptLiveData.ptLiveId);
+    enterSession(231231232);
   }, []);
 
   // session 입장
   const enterSession = (ptLiveId: number) => {
     const OV = new OpenVidu();
-    const data = JSON.stringify({ customSessionId: ptLiveId });
+    const session = OV.initSession();
+    const data = JSON.stringify({ customSessionId: String(ptLiveId) });
     // 이미 존재하는 session인지 확인
-    // console.log(ptLiveId);
     axios
       .get(OPENVIDU_SERVER_URL + "openvidu/api/sessions/" + ptLiveId, {
         headers: {
@@ -51,72 +75,78 @@ function PtRoom() {
           // 이미 존재하는 세션
           if (userOpenViduToken !== null) {
             // 현재 로그인한 유저가 이미 입장했던 세션(토큰이 존재)이라면 connect 하고 함수 종료
-            response.data.connect(userOpenViduToken);
+            session.connect(userOpenViduToken).then(async () => {
+              await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+              });
+              const devices = await OV.getDevices();
+              const videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
+
+              const publisher = OV.initPublisher("", {
+                audioSource: undefined,
+                videoSource: videoDevices[0].deviceId,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: false,
+              });
+
+              setPublisher(publisher);
+              session.publish(publisher);
+            });
             return;
           }
           createConnection(ptLiveId);
+          return;
         }
-        // else if (response.status === 404) {
-        //   // 존재하지 않는 세션
-        //   console.log("존재하지 않는 세션, 새로 생성하기");
-        //   createSession(ptLiveId);
-        //   createConnection(ptLiveId);
-        // }
-        // const session: Session = response.data;
-        // if (userOpenViduToken !== null) {
-        //   session.connect(userOpenViduToken).then(async () => {
-        //     await navigator.mediaDevices.getUserMedia({
-        //       audio: true,
-        //       video: true,
-        //     });
-        //     const newPublisher = await OV.initPublisher("", {
-        //       audioSource: undefined,
-        //       videoSource: undefined,
-        //       publishAudio: true,
-        //       publishVideo: true,
-        //       resolution: "640x480",
-        //       frameRate: 30,
-        //       insertMode: "APPEND",
-        //       mirror: true,
-        //     });
-        //     session.publish(newPublisher);
-        //   });
-        // }
       })
-      .catch((error) => {
-        if (error.response.status === 404) {
+      .catch(async (error) => {
+        if (error.response && error.response.status === 404) {
           console.log("존재하지 않는 세션, 새로 생성하기");
           createSession(ptLiveId);
           createConnection(ptLiveId);
-          const session: Session = error.response.data;
           if (userOpenViduToken !== null) {
             session.connect(userOpenViduToken).then(async () => {
               await navigator.mediaDevices.getUserMedia({
                 audio: true,
                 video: true,
               });
-              const newPublisher = await OV.initPublisher("", {
+              const devices = await OV.getDevices();
+              const videoDevices = devices.filter(
+                (device) => device.kind === "videoinput"
+              );
+
+              const newPublisher = OV.initPublisher("", {
                 audioSource: undefined,
-                videoSource: undefined,
+                videoSource: videoDevices[0].deviceId,
                 publishAudio: true,
                 publishVideo: true,
                 resolution: "640x480",
                 frameRate: 30,
                 insertMode: "APPEND",
-                mirror: true,
+                mirror: false,
               });
+
+              setPublisher(newPublisher);
               session.publish(newPublisher);
             });
           }
+        } else {
+          console.log(error);
         }
       });
   };
 
   // session 생성
   function createSession(ptLiveId: number) {
-    const data = JSON.stringify({ customSessionId: ptLiveId });
+    const data = JSON.stringify({ customSessionId: String(ptLiveId) });
     axios
-      .post(OPENVIDU_SERVER_URL + "openvidu/api/sessions/", data, {
+      .post(OPENVIDU_SERVER_URL + "openvidu/api/sessions", data, {
         headers: {
           Authorization:
             "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
@@ -126,6 +156,9 @@ function PtRoom() {
       .then((response) => {
         dispatch(setSessionId(response.data.id));
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("createSession 에러 발생", error);
       });
   }
 
@@ -142,7 +175,7 @@ function PtRoom() {
           "openvidu/api/sessions/" +
           ptLiveId +
           "/connection",
-        data,
+        {},
         {
           headers: {
             Authorization:
@@ -153,6 +186,7 @@ function PtRoom() {
       )
       .then((response) => {
         const token = response.data.token;
+        console.log(token);
         dispatch(setOpenViduToken(token));
       })
       .catch((error) => console.log(error));
@@ -160,9 +194,18 @@ function PtRoom() {
 
   return (
     <div>
+      <button onClick={test}>테스트용 버튼</button>
+      <button onClick={check}>확인하기</button>
       {/* {streamManager && ( */}
       <div>
-        <video autoPlay ref={videoRef}></video>
+        <video
+          autoPlay
+          ref={(videoRef) => {
+            if (videoRef && publisher) {
+              videoRef.srcObject = publisher?.stream.getMediaStream();
+            }
+          }}
+        ></video>
         {/* <button onClick={() => onChangeCameraStatus}>화면 조절</button>
           <button onClick={() => onChangeMicStatus}>마이크 조절</button> */}
       </div>

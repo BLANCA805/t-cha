@@ -82,6 +82,11 @@ const ptLiveSlice = createSlice({
     setSessionId: (state, action) => {
       state.sessionId = action.payload;
     },
+    clearItems: (state) => {
+      state.ov = null;
+      state.sessionId = null;
+      state.userOpenViduToken = null;
+    },
   },
 });
 
@@ -94,6 +99,7 @@ const rootReducer = combineReducers({
 export const { logIn, logOut } = authSlice.actions;
 export const { getUserData, registTrainer, deleteProfile, modifyProfile } =
   profileSlice.actions;
-export const { setOV, setOpenViduToken, setSessionId } = ptLiveSlice.actions;
+export const { setOV, setOpenViduToken, setSessionId, clearItems } =
+  ptLiveSlice.actions;
 
 export default rootReducer;

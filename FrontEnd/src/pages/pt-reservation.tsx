@@ -82,7 +82,7 @@ const style = {
 
 function PtReservation() {
   const trainer = useLocation().state;
-  const user = useSelector((state: RootState) => state.auth.token);
+  const user = useSelector((state: RootState) => state.profile.id);
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [ptClassData, setPtClassData] = useState<PtClassDataProps[]>([]);

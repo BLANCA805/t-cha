@@ -1,7 +1,6 @@
 import { Outlet, useNavigation } from "react-router-dom";
 import styled from "styled-components";
 
-import SideBar from "@shared/side-bar";
 import DesktopSideBar from "@shared/desktop-side-bar";
 import Test from "./test";
 import { useMediaQuery } from "react-responsive";
@@ -12,9 +11,9 @@ import MyFont3 from "./assets/fonts/jamsilOtfRegular3.otf";
 import MyFont4 from "./assets/fonts/jamsilOtfMedium4.otf";
 import MyFont5 from "./assets/fonts/jamsilOtfBold5.otf";
 import MyFont6 from "./assets/fonts/jamsilOtfExtraBold6.otf";
-import Asset3 from "./shared/icons/Asset3.png"
-import Asset4 from "./shared/icons/Asset4.png"
-import Asset5 from "./shared/icons/Asset5.png"
+import Asset3 from "./shared/icons/Asset3.png";
+import Asset4 from "./shared/icons/Asset4.png";
+import Asset5 from "./shared/icons/Asset5.png";
 import MobileBottomBar from "@shared/mobile-bottom-bar";
 
 const GlobalStyle = createGlobalStyle`

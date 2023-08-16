@@ -12,6 +12,7 @@ import com.tcha.trainer.repository.TrainerRepository;
 import com.tcha.user.entity.User;
 import com.tcha.user.repository.UserRepository;
 import com.tcha.user_profile.entity.UserProfile;
+import com.tcha.user_profile.repository.UserProfileRepository;
 import com.tcha.user_profile.service.UserProfileService;
 import com.tcha.utils.exceptions.business.BusinessLogicException;
 import com.tcha.utils.exceptions.codes.ExceptionCode;
@@ -50,6 +51,7 @@ public class PtClassService {
     private final UserProfileService userProfileService;
     private final RedisTemplate<String, String> redisTemplate;
     private final ExerciseLogService exerciseLogService;
+    private final UserProfileRepository userProfileRepository;
 
     public List<PtClassDto.Response> createPtClass(PtClassDto.Post postRequest) {
 
@@ -73,12 +75,13 @@ public class PtClassService {
 
         List<PtClassDto.Response> response = new ArrayList<>();
         for (PtClass pt : classList) {
-            response.add(ptClassMapper.classToClassResponseDto(pt, null, 0));
+            response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
         }
 
         return response;
     }
 
+    //트레이너의 PTclass 찾기
     public List<PtClassDto.Response> findPtClassByTrainer(String trainerId) {
 
         // 요청을 보낸 트레이너가 유효한 트레이너인지 확인
@@ -90,22 +93,32 @@ public class PtClassService {
 
         //status 넣어주기
         for (PtClass pt : trainerClassList) {
+            //예약이 되어 있는 상태
             if (pt.getPtLiveId() != null) {
                 Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
+                PtLive.PtliveStaus status = ptLive.get().getStatus();
+                UserProfile userProfile = ptLive.get().getUserProfile();
+
                 if (ptLive.get().getReview() != null) {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus(),
-                            ptLive.get().getReview().getId()));
-                } else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus(),
-                            0));
+                    //리뷰 아이디 존재 -> 값 넣어주기
+                    Long reviewId = ptLive.get().getReview().getId();
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile));
+
                 }
-            } else {
-                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0));
+                //리뷰아이디 존재하지 않는 상태
+                else {
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile));
+                }
+            }
+            //예약이 존재하지 않는 상태
+            else {
+                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
             }
         }
         return response;
     }
 
+    //유저의 PTclass 찾기
     public List<PtClassDto.Response> findPtClassByUser(long userProfileId) {
 
         // 유저 유효성 검사 (추가하기)
@@ -138,16 +151,25 @@ public class PtClassService {
         List<PtClassDto.Response> response = new ArrayList<>();
         for (PtClass pt : userClassList) {
             Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
+            PtLive.PtliveStaus status = ptLive.get().getStatus();
+
+            //예약된 수업이 존재하는 경우
             if (ptLive.isPresent()) {
+                //리뷰 작성 후
                 if (ptLive.get().getReview() != null) {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus(),
-                            ptLive.get().getReview().getId()));
-                } else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, ptLive.get().getStatus(),
-                            0));
+                    //리뷰 아이디 존재 -> 값 넣어주기
+                    Long reviewId = ptLive.get().getReview().getId();
+
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile));
                 }
-            } else {
-                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0));
+                //리뷰 작성전
+                else {
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile));
+                }
+            }
+            //예약한 수업이 존재하지 않는 경우
+            else {
+                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
             }
         }
         /**위의 코드는 에러날 수도 아니면 코드, 아래 코드로 바꿔야 될수도 내일 생각해보기*/
@@ -205,7 +227,7 @@ public class PtClassService {
             /** 여기에 운동일지 생성하는 코드 넣어주세요*/
             exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStaus.INACCESSIBLE, 0);
+            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStaus.INACCESSIBLE, 0, user.getUserProfile());
         }
 
         // 2. 수업 예약 취소라면,
@@ -227,7 +249,7 @@ public class PtClassService {
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) - 1.0);
-            return ptClassMapper.classToClassResponseDto(ptClass, null, 0);
+            return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null);
         }
         throw new BusinessLogicException(ExceptionCode.PT_CLASS_RESERVATION_EXIST);
     }
@@ -269,7 +291,7 @@ public class PtClassService {
         // 수업 삭제(삭제 상태값 컬럼 변경)
         ptClass.setIsDel(1);
 
-        return ptClassMapper.classToClassResponseDto(ptClass, null, 0);
+        return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null);
     }
 
     /************** 상태 변경 로직 작성 ***************/

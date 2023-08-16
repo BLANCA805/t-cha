@@ -13,10 +13,10 @@ public interface ExerciseLogMapper {
 
 
     //운동일지 내용 업데이트: patchdto -> entity
-    ExerciseLog patchToExerciseLog(ExerciseLogDto.Patch patchRequest);
+//    ExerciseLog patchToExerciseLog(ExerciseLogDto.Patch patchRequest);
 
     default Response exerciseLogToResponse(ExerciseLog exerciseLog,
-                                                          String trainerName) {
+                                           String trainerName) {
         return Response.builder()
                 .id(exerciseLog.getId())
                 .title(exerciseLog.getTitle())

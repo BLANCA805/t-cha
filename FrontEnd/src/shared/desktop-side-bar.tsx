@@ -5,7 +5,7 @@ import axios from "axios";
 
 import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
+import { deleteProfile, logOut } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
 import Box from "@mui/material/Box";
@@ -21,7 +21,7 @@ import Fab from "@mui/material/Fab";
 import Avatar from "@mui/material/Avatar";
 
 import styled from "styled-components";
-import Asset3 from "src/shared/icons/Asset3.png"
+import Asset3 from "src/shared/icons/Asset3.png";
 
 const SideBarContainer = styled.div`
   display: flex;
@@ -58,11 +58,11 @@ const ListItembuttonStyled = styled(ListItemButton)`
   &:hover {
     cursor: url(${Asset3}), pointer !important;
   }
-`
+`;
 
 const SideBarItemWrapper = styled.div`
   display: flex;
-  width:100%;
+  width: 100%;
   font-size: 1.4rem;
   margin: 1.8rem 1.4rem;
   &:hover {
@@ -73,63 +73,21 @@ const SideBarItemWrapper = styled.div`
 
 const StyledText = styled.h6`
   font-size: 1.4rem;
-  margin:0%;
-  
-`
+  margin: 0%;
+`;
 const LoginWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
 
 function DesktopSideBar() {
-  const [open, setOpen] = useState(false);
-
   const navigate = useNavigate();
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setOpen(open);
-    };
-
-  const tester = () => {
-    axios
-      .post(`${api}/users?email=tester@gmail.com`)
-      .then((response) => {
-        const token = response.data.id;
-        dispatch(
-          logIn({
-            token: response.data.id,
-          })
-        );
-        return axios.post(`${api}/userProfiles`, {
-          userId: token,
-          name: token.slice(0, 3),
-          profileImage: "",
-        });
-      })
-      .then((response) => {
-        if (response.data) {
-          dispatch(
-            postProfile({ name: response.data.name, id: response.data.id })
-          );
-          console.log(response.data);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const user = useSelector((state: RootState) => state.auth);
+  const profile = useSelector((state: RootState) => state.profile);
 
   function list() {
-    if (user.token) {
+    if (user.accessToken) {
       return (
         <StyledList>
           <div>
@@ -164,10 +122,6 @@ function DesktopSideBar() {
                     <StyledText>{data[1]}</StyledText>
                   </SideBarItemWrapper>
                 </ListItembuttonStyled>
-                {/* <ListItemButton> */}
-                {/* <Link to={data[0]}> */}
-                {/* </Link> */}
-                {/* </ListItemButton> */}
               </ListItemStyled>
             ))}
           </div>
@@ -179,7 +133,6 @@ function DesktopSideBar() {
     } else {
       return (
         <List>
-          <button onClick={tester}>테스터로 로그인하기</button>
           <SideBarItemWrapper
             style={{ marginLeft: "1.6rem" }}
             onClick={handleAuthOpen}
@@ -215,16 +168,12 @@ function DesktopSideBar() {
   const [authOpen, setAuthOpen] = useState(false);
 
   const handleAuthOpen = () => {
-    toggleDrawer(false);
     setAuthOpen(true);
   };
 
   const handleAuthClose = () => {
     setAuthOpen(false);
   };
-
-  const user = useSelector((state: RootState) => state.auth);
-  const profile = useSelector((state: RootState) => state.profile);
 
   const dispatch = useDispatch<AppDispatch>();
 

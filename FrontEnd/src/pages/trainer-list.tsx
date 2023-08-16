@@ -23,7 +23,8 @@ const Wrapper = styled.div`
 `;
 
 function TrainerList() {
-  const sortProps = useLocation().state;
+  let sortProps = useLocation().state;
+  sortProps = sortProps ? sortProps : "";
   const [items, setItems] = useState<TrainerListData>();
   const [page, setPage] = useState(1);
   const handleChangePage = (
@@ -86,7 +87,7 @@ function TrainerList() {
         page={page}
         onChange={handleChangePage}
         color="standard"
-        style={{marginTop:"5%"}}
+        style={{ marginTop: "5%" }}
       />
     </Wrapper>
   );

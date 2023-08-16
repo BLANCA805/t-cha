@@ -33,6 +33,8 @@ import GetToken from "./get-token";
 
 import CheckLogined from "@shared/check-logined";
 import Login from "@/login";
+import TesterLogin from "./tester-login";
+import TesterLogin2 from "./tester-login2";
 
 const router = createBrowserRouter([
   {
@@ -135,6 +137,14 @@ const router = createBrowserRouter([
   {
     path: "pt",
     element: <PtRoom />,
+  },
+  {
+    path: "변정원은귀엽습니다",
+    element: <TesterLogin />,
+  },
+  {
+    path: "변정원은귀엽습니다2",
+    element: <TesterLogin2 />,
   },
 ]);
 

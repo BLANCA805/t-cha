@@ -43,9 +43,9 @@ const profileSlice = createSlice({
   reducers: {
     getUserData: (state, action) => {
       state.name = action.payload.name;
-      state.id = action.payload.id;
-      state.profileId = action.payload.profileId;
-      state.profileImage = action.payload.profileImage;
+      state.id = action.payload.userId;
+      state.profileId = action.payload.userProfileId;
+      state.profileImage = action.payload.userProfileImage;
       state.trainerId = action.payload.trainerId;
     },
     registTrainer: (state, action) => {
@@ -59,8 +59,12 @@ const profileSlice = createSlice({
       state.profileImage = "";
     },
     modifyProfile: (state, action) => {
-      state.name = action.payload.name;
-      state.profileImage = action.payload.profileImage;
+      if (action.payload.profileImage) {
+        state.name = action.payload.name;
+        state.profileImage = action.payload.profileImage;
+      } else {
+        state.name = action.payload.name;
+      }
     },
   },
 });

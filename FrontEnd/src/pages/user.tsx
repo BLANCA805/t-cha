@@ -253,16 +253,7 @@ function User() {
           )}
         </ProfileModify>
       </Profile>
-      {!profile.trainerId && (
-        // <TchaButton
-        //   onClick = {() => navigate("trainer_registration")}
-        //   style={{margin:"2% 0%", padding:"0%", width:"100%", height:"10rem"}}>
-        //     <StyledTextBig style={{color:"white",fontSize:"2.5rem"}}> 트레이너 회원으로 등록하기 </StyledTextBig>
-        // </TchaButton>
-        <TrRegister onClick={() => navigate("trainer_registration")}>
-          <StyledTextBig> 트레이너 회원으로 등록하기 </StyledTextBig>
-        </TrRegister>
-      )}
+
       {profile.trainerId && <TrainerButtons />}
       <UserContainer>
         <Usrow>
@@ -307,6 +298,11 @@ function User() {
           </Uscol>
         </Usrow>
       </UserContainer>
+      {!profile.trainerId && (
+        <TrRegister onClick={() => navigate("trainer_registration")}>
+          <StyledTextBig> 트레이너 회원으로 등록하기 </StyledTextBig>
+        </TrRegister>
+      )}
     </Wrapper>
   );
 }

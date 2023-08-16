@@ -55,35 +55,60 @@ function PtRoom() {
             return;
           }
           createConnection(ptLiveId);
-        } else if (response.status === 404) {
-          // 존재하지 않는 세션
+        }
+        // else if (response.status === 404) {
+        //   // 존재하지 않는 세션
+        //   console.log("존재하지 않는 세션, 새로 생성하기");
+        //   createSession(ptLiveId);
+        //   createConnection(ptLiveId);
+        // }
+        // const session: Session = response.data;
+        // if (userOpenViduToken !== null) {
+        //   session.connect(userOpenViduToken).then(async () => {
+        //     await navigator.mediaDevices.getUserMedia({
+        //       audio: true,
+        //       video: true,
+        //     });
+        //     const newPublisher = await OV.initPublisher("", {
+        //       audioSource: undefined,
+        //       videoSource: undefined,
+        //       publishAudio: true,
+        //       publishVideo: true,
+        //       resolution: "640x480",
+        //       frameRate: 30,
+        //       insertMode: "APPEND",
+        //       mirror: true,
+        //     });
+        //     session.publish(newPublisher);
+        //   });
+        // }
+      })
+      .catch((error) => {
+        if (error.response.status === 404) {
           console.log("존재하지 않는 세션, 새로 생성하기");
           createSession(ptLiveId);
           createConnection(ptLiveId);
-        }
-        const session: Session = response.data;
-        if (userOpenViduToken !== null) {
-          session.connect(userOpenViduToken).then(async () => {
-            await navigator.mediaDevices.getUserMedia({
-              audio: true,
-              video: true,
+          const session: Session = error.response.data;
+          if (userOpenViduToken !== null) {
+            session.connect(userOpenViduToken).then(async () => {
+              await navigator.mediaDevices.getUserMedia({
+                audio: true,
+                video: true,
+              });
+              const newPublisher = await OV.initPublisher("", {
+                audioSource: undefined,
+                videoSource: undefined,
+                publishAudio: true,
+                publishVideo: true,
+                resolution: "640x480",
+                frameRate: 30,
+                insertMode: "APPEND",
+                mirror: true,
+              });
+              session.publish(newPublisher);
             });
-            const newPublisher = await OV.initPublisher("", {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: "640x480",
-              frameRate: 30,
-              insertMode: "APPEND",
-              mirror: true,
-            });
-            session.publish(newPublisher);
-          });
+          }
         }
-      })
-      .catch((error) => {
-        console.log(error);
       });
   };
 

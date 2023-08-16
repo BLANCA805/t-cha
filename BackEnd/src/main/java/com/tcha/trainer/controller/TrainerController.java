@@ -168,15 +168,16 @@ public class TrainerController {
 
     /**
      * 키워드(트레이너 이름 또는 태그)로 트레이너를 검색한다. 유저가 선택한 날짜와 시간에 수업 가능한 트레이너를 검색한다.
+     * 프론트에서 get요청 body에 데이터를 전달할 수 없음. 아예 막혀있음. 그래서 get으로 요청받으면 getRequest가 항상 null
      */
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseEntity searchTrainer(
             @RequestBody(required = false) TrainerDto.Get getRequest,
             @RequestParam int page, @RequestParam int size) {
 
         List<TrainerDto.ResponseList> searchResult;
         if (getRequest == null) { // 검색 조건이 아무것도 없을 경우 전체 트레이너 반환
-            searchResult = trainerService.findSortedByNewTrainers(page, size);
+            searchResult = trainerService.findSortedByNewTrainers(page - 1, size);
         } else {
             searchResult = trainerService.searchTrainers(getRequest);
         }
@@ -185,5 +186,16 @@ public class TrainerController {
 
         return new ResponseEntity(new MultiResponseDto<>(searchResult, pageInfo), HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity getNewTrainers(@RequestParam int page, @RequestParam int size) {
+//
+//        List<TrainerDto.ResponseList> trainerList = trainerService.findSortedByNewTrainers(page - 1,
+//                size);
+//        PageInfo pageInfo = trainerService.getPageInfo(page - 1, size);
+//
+//        return new ResponseEntity(new MultiResponseDto<>(trainerList, pageInfo), HttpStatus.OK);
+//    }
+
 
 }

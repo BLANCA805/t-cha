@@ -615,7 +615,10 @@ public class TrainerService {
             String ptCountKey = "ptCount:" + trainerId;
 
             List<Long> userProfileIdList = findUserProfileIdByBookmark(trainerId);
-
+            float star = 0f;
+            if (!valueOperations.get(reviewCountKey).equals("0")) {
+                star = Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey));
+            }
             TrainerDto.ResponseList trainer = TrainerDto.ResponseList.builder()
                     .id(t.getId())
                     .introduction(t.getIntroduction())
@@ -623,7 +626,7 @@ public class TrainerService {
                     .createdAt(t.getCreatedAt().toLocalDate())
                     .profileName(t.getUserProfile().getName())
                     .profileImg(t.getUserProfile().getProfileImage())
-                    .stars(Float.parseFloat(valueOperations.get(starKey)) / Float.parseFloat(valueOperations.get(reviewCountKey)))
+                    .stars(star)
                     .bookmarkCount(Double.valueOf(valueOperations.get(bookmarkCountKey)).intValue())
                     .ptCount(Double.valueOf(valueOperations.get(ptCountKey)).intValue())
                     .reviewCount(Double.valueOf(valueOperations.get(reviewCountKey)).intValue())

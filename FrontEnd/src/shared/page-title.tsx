@@ -11,9 +11,11 @@ export const TitleWrapper = styled.div`
     margin-bottom:2%;
     border-radius: 0.5rem;
     background-color: ${({ theme }) => theme.color.light}; 
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 
     @media (max-width: 767px) {
       height:7rem;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
     }
 `;
 

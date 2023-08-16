@@ -13,16 +13,6 @@ import { UserScheduleData } from "src/interface";
 
 import { TitleWrapper, PageTitleText } from "@shared/page-title";
 
-const CalendarContainer = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  width: 100%;
-  height:30rem;
-  display: flex;
-  align-items: center;
-  /* padding: 1% 0%; */
-
-`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,17 +22,22 @@ const Wrapper = styled.div`
   margin: 1% 1% 0% 1%;
 `;
 
-const PageTitle = styled.div`
+const CalendarContainer = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  width: 100%;
+  height:20rem;
   display: flex;
-  height: 10%;
   align-items: center;
-  padding-left: 2%;
-  font-size: 2rem;
-  margin: 1% 0%;
+  /* padding: 1% 0%; */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Calendar = styled.div`
-  height:100%;
+
 `;
 
 const ScheduleInfo = styled.div`
@@ -53,6 +48,10 @@ const ScheduleInfo = styled.div`
   /* height:10rem; */
   border-radius: 10px;
   background-color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 function UserSchedule() {

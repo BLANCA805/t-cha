@@ -230,4 +230,10 @@ export interface LogData {
 export interface TrainerListHeaderProps {
   searchTrainer: (body: SearchFormData) => void;
   sortTrainer: (condition: string) => void;
+  sortProps: string;
+}
+
+export interface TrainerCategoryData {
+  image: string;
+  text: string;
 }

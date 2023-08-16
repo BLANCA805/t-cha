@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect, useRef } from "react";
+import React, { useState, ChangeEvent, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -8,14 +8,11 @@ import { type RootState } from "../redux/store";
 
 import { registTrainer } from "src/redux/slicers";
 
-import { TchaButton, GrayButton } from "@shared/button";
+import { TchaButton } from "@shared/button";
 import { SmallTitleWrapper } from "@shared/page-title";
 
 import TextField from "@mui/material/TextField";
-import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
-import { error } from "console";
-import { useImageUpload } from "src/hooks/use-image";
 
 const Wrapper = styled.div`
   display: flex;
@@ -116,6 +113,7 @@ function TrainerRegistration() {
     setContent(event.target.value);
   };
   const handleTag = (event: any) => {
+    // eslint-disable-next-line
     const regExp = /[ \{\}\[\]\/?.,;:|\)*~`!^\-_+┼<>@\#$%&\'\"\\\(\=]/gi;
 
     if (regExp.test(event.target.value)) {

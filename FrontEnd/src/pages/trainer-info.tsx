@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import axios from "axios";
 
-
 import { api } from "@shared/common-data";
 import { TrainerDetailData } from "src/interface";
 
@@ -15,7 +14,7 @@ import { TchaButton } from "@shared/button";
 
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
-import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 
 import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
@@ -27,9 +26,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width:96%;
-  min-height:100vh;
-  margin:1.25% 0%;
+  width: 96%;
+  min-height: 100vh;
+  margin: 1.25% 0%;
   @media (max-width: 767px) {
     margin: 2% 0%;
   }
@@ -37,10 +36,10 @@ const Container = styled.div`
 `;
 
 const TabWrapper = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: column;
   margin-top: 1%;
-  width:100%;
+  width: 100%;
   background-color: ${({ theme }) => theme.color.light};
 `;
 
@@ -50,10 +49,10 @@ const Profile = styled.div`
   background-color: #fff;
   min-height: 20rem;
   border-radius: 10px;
-  margin-bottom:0.5%;
+  margin-bottom: 0.5%;
   width: 100%;
   @media (max-width: 767px) {
-    min-height:8rem;
+    min-height: 8rem;
     border-radius: 5px;
   }
 `;
@@ -85,71 +84,70 @@ const Profileinfo = styled.div`
   align-items: start;
   height: 100%;
   width: 100%;
-  margin-left:4%;
+  margin-left: 4%;
 `;
 
 const IdWrapper = styled.div`
   display: flex;
   align-items: center;
-  width:100%;
+  width: 100%;
   @media (max-width: 767px) {
     /* justify-content: center; */
-    margin-left:2%; 
+    margin-left: 2%;
   }
-`
+`;
 
 const UserId = styled.h4`
-  display:flex;
+  display: flex;
   font-size: 5.5rem;
-  margin:0%;
-  @media (max-width:767px) {
-    font-size:1.6rem;
+  margin: 0%;
+  @media (max-width: 767px) {
+    font-size: 1.6rem;
   }
 `;
 
 const HashTagWrapper = styled.div`
   display: flex;
-  width:100%;
+  width: 100%;
   margin: 2% 0% 0% 0%;
   justify-content: start;
 `;
 
 const ProfileModify = styled.div`
   display: flex;
-  width:25%;
+  width: 25%;
   align-items: center;
   justify-content: start;
-  padding-right:5%;
+  padding-right: 5%;
   @media (max-width: 767px) {
-    padding-right:2.5%;
+    padding-right: 2.5%;
     justify-content: center;
   }
 `;
 
-
 const StyledTextBig = styled.h5`
   margin: 2.5% 0% 0% 3%;
-  font-size:3.4rem;
+  font-size: 3.4rem;
   @media (max-width: 767px) {
-    font-size:1.2rem;
+    font-size: 1.2rem;
     margin: 2% 0% 0% 3%;
   }
 `;
 const StyledTextMid = styled.h5`
   margin: 2% 5rem 2% 0%;
-  font-size:2rem;
+  font-size: 2rem;
   @media (max-width: 767px) {
-    font-size:0.9rem !important; 
+    font-size: 0.9rem !important;
     margin: 2% 5% 2% 0% !important;
   }
 `;
 const StyledTextSmall = styled.h6`
   margin: 2% 0%;
-  font-size:1.25rem;
+  font-size: 1.25rem;
   /* color:#a8a8a8; */
   @media (max-width: 767px) {
     margin: 2.5% 0%;
-    font-size:0.6rem; 
+    font-size: 0.6rem;
   }
 `;
 
@@ -215,18 +213,20 @@ function TrainerInfo() {
 
   const keywordTags = detail?.tags.split(",");
 
-  //즐겨찾기 버튼 상태변경 -> 아이콘버전
-  const [bookmark, setBookmark] = useState(false);
-
   const clickTab = (name: string) => {
     setTab(name); // 새로운 탭 클릭 시, 상태 변경
   };
+
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     axios
       .get(`${api}/trainers/${trainer}`)
       .then((response) => {
         getDetail(response.data);
+        setIsBookmarked(
+          response.data.userProfileIdList.includes(user.profileId)
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -241,8 +241,32 @@ function TrainerInfo() {
     navigate("/trainer/pt_reservation", { state: trainer });
   };
 
-  const isDesktop = useMediaQuery({minWidth: 768});
-  const isMobile = useMediaQuery({maxWidth: 767});
+  const isDesktop = useMediaQuery({ minWidth: 768 });
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+
+  const bookmark = () => {
+    axios
+      .post(`${api}/bookmarks/${user.profileId}/${trainer}`)
+      .then(() => {
+        console.log(trainer, "북마크 등록");
+        setIsBookmarked(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const cancleBookmark = () => {
+    axios
+      .delete(`${api}/bookmarks/${user.profileId}/${trainer}`)
+      .then(() => {
+        console.log(trainer, "북마크 해제");
+        setIsBookmarked(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <Container>
@@ -263,19 +287,24 @@ function TrainerInfo() {
           <StyledTextSmall>{detail?.introduction}</StyledTextSmall>
         </Profileinfo>
         {trainer === user.trainerId && (
-          <ProfileModify>  
-          {isDesktop &&
-            <TchaButton 
-              onClick = {() => moveToModify()} 
-              style={{width:"10rem", height:"5rem"}}> 
-              <StyledTextSmall style={{color:"white", fontSize:"1.7rem"}}>수정하기</StyledTextSmall>
-            </TchaButton>          
-          }
-          {isMobile && 
-            <SettingsRoundedIcon 
-            style={{fontSize:"2.7rem", color:"grey"}} 
-            onClick = {() => moveToModify()} />}
-        </ProfileModify>
+          <ProfileModify>
+            {isDesktop && (
+              <TchaButton
+                onClick={() => moveToModify()}
+                style={{ width: "10rem", height: "5rem" }}
+              >
+                <StyledTextSmall style={{ color: "white", fontSize: "1.7rem" }}>
+                  수정하기
+                </StyledTextSmall>
+              </TchaButton>
+            )}
+            {isMobile && (
+              <SettingsRoundedIcon
+                style={{ fontSize: "2.7rem", color: "grey" }}
+                onClick={() => moveToModify()}
+              />
+            )}
+          </ProfileModify>
         )}
       </Profile>
 
@@ -299,13 +328,18 @@ function TrainerInfo() {
               onClick={toggleBookmarkIcon}
               backgroundImage={bookmarkIcon}
             ></BookmarkButton> */}
-              <BookmarkButton onClick={() => setBookmark(!bookmark)}>
-                {bookmark ? (
-                  <StarRoundedIcon style={{ fontSize: "7em" }} />
-                ) : (
-                  <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
-                )}
-              </BookmarkButton>
+
+              {isBookmarked ? (
+                <StarRoundedIcon
+                  onClick={cancleBookmark}
+                  style={{ fontSize: "7em" }}
+                />
+              ) : (
+                <StarOutlineRoundedIcon
+                  onClick={bookmark}
+                  style={{ fontSize: "7em" }}
+                />
+              )}
             </BookmarkWrapper>
           )}
           <RegisterWrapper>

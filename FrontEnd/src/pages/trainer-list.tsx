@@ -8,8 +8,8 @@ import TrainerListItem from "@trainer-list/trainer-list-item";
 
 import styled from "styled-components";
 import { Pagination } from "@mui/material";
-import { SearchFormData, TrainerListData } from "src/interface";
-import { error } from "console";
+import { TrainerListData } from "src/interface";
+import { useLocation } from "react-router-dom";
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,6 +23,7 @@ const Wrapper = styled.div`
 `;
 
 function TrainerList() {
+  const sortProps = useLocation().state;
   const [items, setItems] = useState<TrainerListData>();
   const [page, setPage] = useState(1);
   const handleChangePage = (
@@ -48,7 +49,7 @@ function TrainerList() {
     console.log(page);
     console.log(body);
     axios
-      .get(`${api}/trainers/search?page=2&size=10`)
+      .get(`${api}/trainers/search?page=1&size=5`)
       .then((response) => {
         console.log(response.data);
         setItems(response.data);
@@ -75,6 +76,7 @@ function TrainerList() {
       <TrainerListHeader
         searchTrainer={searchTrainer}
         sortTrainer={sortTrainer}
+        sortProps={sortProps}
       />
       {items?.data.map((item, index) => (
         <TrainerListItem data={item} key={index} />

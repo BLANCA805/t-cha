@@ -67,6 +67,7 @@ const StyledText = styled.h6`
 function TrainerListHeader({
   searchTrainer,
   sortTrainer,
+  sortProps,
 }: TrainerListHeaderProps) {
   const [searchKeyword, setSearchkeyword] = useState("");
 
@@ -74,7 +75,7 @@ function TrainerListHeader({
     setSearchkeyword(event.target.value);
   };
 
-  const [sortCondition, setSortCondition] = useState("");
+  const [sortCondition, setSortCondition] = useState(sortProps);
 
   const handleSortCondition = (condition: string) => {
     setSortCondition(condition);

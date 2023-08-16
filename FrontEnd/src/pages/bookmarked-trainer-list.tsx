@@ -23,6 +23,11 @@ const Wrapper = styled.div`
 
 const ContentsWrapper = styled.div``;
 
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 function BookmarkedTrainerList() {
   const user = useSelector((state: RootState) => state.profile);
 
@@ -54,18 +59,24 @@ function BookmarkedTrainerList() {
       </TitleWrapper>
 
       <ContentsWrapper>
-        {items &&
+        {items?.data[0] ? (
           items.data.map((item, index) => (
             <BookmarkedTrainerListItem key={index} data={item} />
-          ))}
+          ))
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <p>즐겨찾기 한 트레이너가 없습니다</p>
+          </div>
+        )}
       </ContentsWrapper>
-      <Pagination
-        count={items?.pageInfo.totalPages}
-        page={page}
-        onChange={handleChangePage}
-        color="standard"
-        style={{ alignSelf: "center" }}
-      />
+      <PaginationWrapper>
+        <Pagination
+          count={items?.pageInfo.totalPages}
+          page={page}
+          onChange={handleChangePage}
+          color="standard"
+        />
+      </PaginationWrapper>
     </Wrapper>
   );
 }

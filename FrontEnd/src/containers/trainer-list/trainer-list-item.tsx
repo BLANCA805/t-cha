@@ -13,6 +13,7 @@ import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import { TrainerListDataProps } from "src/interface";
 import { TchaButton } from "@shared/button";
 import { Rating } from "@mui/material";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -132,11 +133,29 @@ function TrainerListItem(props: TrainerListDataProps) {
   const user = useSelector((state: RootState) => state.profile);
   const trainer = props.data.id;
 
+  const bookmarkedUser = props.data.userProfileIdList;
+  const [isBookmarked, setIsBookmarked] = useState(
+    bookmarkedUser.includes(user.profileId)
+  );
+
   const bookmark = () => {
     axios
       .post(`${api}/bookmarks/${user.profileId}/${trainer}`)
       .then((response) => {
-        console.log(response.data);
+        console.log(trainer, "북마크 등록");
+        setIsBookmarked(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const cancleBookmark = () => {
+    axios
+      .delete(`${api}/bookmarks/${user.profileId}/${trainer}`)
+      .then((response) => {
+        console.log(trainer, "북마크 해제");
+        setIsBookmarked(false);
       })
       .catch((error) => {
         console.log(error);
@@ -181,8 +200,16 @@ function TrainerListItem(props: TrainerListDataProps) {
         </Container>
       </DataWrapper>
       <ButtonWrapper>
-        {!!user.profileId && (
-          <StyledStarOutlineRoundedIcon onClick={bookmark} />
+        {isBookmarked ? (
+          <StarRoundedIcon
+            onClick={cancleBookmark}
+            style={{ fontSize: "5rem" }}
+          />
+        ) : (
+          <StyledStarOutlineRoundedIcon
+            onClick={bookmark}
+            style={{ fontSize: "5rem" }}
+          />
         )}
         {/* <TchaButton onClick={bookmark} style={{width:"70%"}}>
           <ButtonTextH5>즐겨찾기 등록</ButtonTextH5>

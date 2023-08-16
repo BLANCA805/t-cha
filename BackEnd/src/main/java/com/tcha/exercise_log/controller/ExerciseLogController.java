@@ -67,7 +67,7 @@ public class ExerciseLogController {
 
         //운동일지 내용 업데이트
         ExerciseLogDto.Response response = exerciseLogService.updateExerciseLog(
-                exerciseLog, patchRequest, exerciseLogId);
+                exerciseLog, patchRequest);
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
@@ -113,13 +113,13 @@ public class ExerciseLogController {
     @PatchMapping("/done/{exercise-log-id}")
     public ResponseEntity<ExerciseLogDto.Response> patchWriteDoneExerciseLog(
             @PathVariable(value = "exercise-log-id") @Positive Long exerciseLogId,
-                @Valid @RequestBody ExerciseLogDto.Patch patchRequest
+            @Valid @RequestBody ExerciseLogDto.Patch patchRequest
     ) {
         //존재하는 운동일지인지 체크
         ExerciseLog exerciseLog = exerciseLogService.findVerifiedById(exerciseLogId);
 
         ExerciseLogDto.Response response = exerciseLogService.patchWriteDoneExerciseLog(
-                exerciseLog,patchRequest);
+                exerciseLog, patchRequest);
 
         return ResponseEntity.ok().body(response);
     }

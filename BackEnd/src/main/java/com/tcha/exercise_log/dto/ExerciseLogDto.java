@@ -12,37 +12,27 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class ExerciseLogDto {
 
-    @Getter
-    @AllArgsConstructor
-    @Builder
-    public static class Post {
-
-        private String title;
-
-        private String content;
-
-//        private List<String> images;
+//    @Getter
+//    @AllArgsConstructor
+//    @Builder
+//    public static class Post {
 //
-//        private List<String> videos;
-
-    }
+//        private String title;
+//
+//        private String content;
+//
+////        private List<String> images;
+////
+////        private List<String> videos;
+//
+//    }
 
     @Getter
     @AllArgsConstructor
     @Builder
     public static class Content {
-
-//        private String title;
-
         private String text;
         private String image;
-//        private String video;
-
-
-//        private List<String> images;
-//
-//        private List<String> videos;
-
     }
 
     @Getter
@@ -52,7 +42,7 @@ public class ExerciseLogDto {
 
         private String title;
 
-        private List<Content> content;
+        private List<Content> contents;
 
 //        private List<String> images;
 //
@@ -73,7 +63,7 @@ public class ExerciseLogDto {
         private List<String> contents;
 
         private List<String> images;
-//
+        //
         private List<String> videos;
 
         private String profileName;

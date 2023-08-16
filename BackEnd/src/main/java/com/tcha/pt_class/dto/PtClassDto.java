@@ -64,5 +64,11 @@ public class PtClassDto {
         private LocalTime startTime;
         private PtliveStaus status;
         private Long reviewId;
+        private String trainerName;
+        private String trainerImage;
+        private String userName;
+        private String userImage;
+        private String introduction;
+
     }
 }

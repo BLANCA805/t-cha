@@ -86,34 +86,36 @@ export function checkSession(ptLiveId: number): Promise<any> {
 
 export function connectSession(userOpenViduToken: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    const OV = new OpenVidu();
-    const session = OV.initSession();
 
-    session.connect(userOpenViduToken).then(async () => {
-      await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
+      const OV = new OpenVidu();
+      const session = OV.initSession();
+  
+      session.connect(userOpenViduToken).then(async () => {
+        await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        const devices = await OV.getDevices();
+        const videoDevices = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
+  
+        const publisher = OV.initPublisher("", {
+          audioSource: undefined,
+          videoSource: videoDevices[0].deviceId,
+          publishAudio: true,
+          publishVideo: true,
+          resolution: "640x480",
+          frameRate: 30,
+          insertMode: "APPEND",
+          mirror: false,
+        });
+  
+        session.publish(publisher);
+        resolve({ publisher: publisher, session: session });
       });
-      const devices = await OV.getDevices();
-      const videoDevices = devices.filter(
-        (device) => device.kind === "videoinput"
-      );
+    })
 
-      const publisher = OV.initPublisher("", {
-        audioSource: undefined,
-        videoSource: videoDevices[0].deviceId,
-        publishAudio: true,
-        publishVideo: true,
-        resolution: "640x480",
-        frameRate: 30,
-        insertMode: "APPEND",
-        mirror: false,
-      });
-
-      session.publish(publisher);
-      resolve({ publisher: publisher, session: session });
-    });
-  });
 }
 
 // export function EnterPtLive(userId: string, ptLiveId: number) {

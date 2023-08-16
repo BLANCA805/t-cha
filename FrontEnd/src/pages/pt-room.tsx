@@ -22,6 +22,7 @@ const OPENVIDU_SERVER_URL = "https://www.tcha.site:8443/";
 const OPENVIDU_SERVER_SECRET = "blanca05";
 
 function PtRoom() {
+  // const videoRef = useRef<HTMLVideoElement>(null)
   const userId = useSelector((state: RootState) => state.profile.id);
   const userName = useSelector((state: RootState) => state.profile.name);
   const userProfileImage = useSelector(
@@ -33,40 +34,38 @@ function PtRoom() {
   const [session, setSession] = useState<Session | null>(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    checkSession(2).then((response) => {
-      if (response === "exist") {
-        createToken(2).then((response) => {
+  checkSession(3).then((response) => {
+    if (response === "exist") {
+      createToken(3).then((response) => {
+        console.log("토큰 생성 완료");
+        dispatch(setOpenViduToken(response));
+      });
+    } else if (response === "none") {
+      createSession(3).then((response) => {
+        console.log("세션 생성 완료");
+        dispatch(setSessionId(response));
+        createToken(3).then((response) => {
           console.log("토큰 생성 완료");
           dispatch(setOpenViduToken(response));
-          connectSession(response).then((response) => {
-            setPublisher(response.publisher);
-            setSession(response.session);
-          });
         });
-      } else if (response === "none") {
-        createSession(2).then((response) => {
-          console.log("세션 생성 완료");
-          dispatch(setSessionId(response));
-          createToken(2).then((response) => {
-            console.log("토큰 생성 완료");
-            dispatch(setOpenViduToken(response));
-            connectSession(response).then((response) => {
-              setPublisher(response.publisher);
-              setSession(response.session);
-            });
-          });
-        });
-      }
-    });
-  }, []);
+      });
+    }
+  });
 
+  
   const userOpenViduToken = useSelector(
     (state: RootState) => state.ptLive.userOpenViduToken
-  );
+    );
+    
+  useEffect(() => {
+    connectSession(userOpenViduToken).then((response) => {
+      setPublisher(response.publisher)
+      setSession(response.session)
+    })
+  })  
 
   const test = () => {
-    dispatch(clearItems());
+    console.log(publisher)
   };
 
   const check = () => {
@@ -90,8 +89,8 @@ function PtRoom() {
         <video
           autoPlay
           ref={(videoRef) => {
-            if (videoRef && publisher) {
-              videoRef.srcObject = publisher?.stream.getMediaStream();
+            if (videoRef && publisher && publisher.stream) {
+              videoRef.srcObject = publisher.stream.getMediaStream();
             }
           }}
         ></video>

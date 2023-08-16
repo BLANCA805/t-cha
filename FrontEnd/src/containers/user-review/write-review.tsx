@@ -58,6 +58,7 @@ const StyledButton = styled(GreenTchaButton)`
   }
 `
 function WriteReview(props: {
+  trainerName:string;
   trainer: string;
   liveId: number;
   setItem: React.Dispatch<React.SetStateAction<UserScheduleData>>;
@@ -65,11 +66,14 @@ function WriteReview(props: {
   const user = useSelector((state: RootState) => state.profile.profileId);
   const trainer = props.trainer;
   const liveId = props.liveId;
+  const trainerName = props.trainerName;
   const [content, setContent] = useState<string>("");
   const [rating, setRating] = useState<number | null>(0);
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setOpen(true)
+    console.log("props:", props)};
   const handleClose = () => setOpen(false);
 
   const handleContent = (event: ChangeEvent<HTMLInputElement>) => {
@@ -108,7 +112,7 @@ function WriteReview(props: {
         aria-describedby="keep-mounted-modal-description"
       >
         <Wrapper>
-          
+          {trainerName}
           <StyledTextH6>별점 입력하기</StyledTextH6>
           <Rating
             name="simple-controlled"

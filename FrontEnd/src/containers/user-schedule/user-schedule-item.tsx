@@ -135,6 +135,7 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
           )}
           {item.status === "TERMINATION" && !item.reviewId && (
             <WriteReview
+              trainerName = {item.trainerName}
               trainer={item.trainerId}
               liveId={item.liveId}
               setItem={setItem}

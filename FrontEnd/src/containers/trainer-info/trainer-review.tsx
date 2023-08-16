@@ -11,7 +11,8 @@ const TotalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 3% 0%;
+  width:100%;
+  margin:0%;
 `;
 const ContainerSet = styled.div`
   display: flex;
@@ -27,8 +28,9 @@ const ReviewContainer = styled.div`
   height: 100%;
   /* min-height:10rem; */
   padding: 3%;
-  border-radius: 10px;
-  background-color: #f3f3f3;
+  /* border-radius: 10px; */
+  background-color: ${({ theme }) => theme.color.light};
+  border-bottom: 1px solid lightgray;
   margin-bottom: 1%;
 `;
 

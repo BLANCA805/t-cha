@@ -130,7 +130,7 @@ function UserSchedule() {
         </CalendarWrapper>
         <ScheduleInfo>
           {items[0] ? (
-            items.map((item) => <UserScheduleItem data={item} />)
+            items.map((item, index) => <UserScheduleItem data={item} key={index}/>)
           ) : (
             <div style={{ display: "flex", justifyContent: "center" }}>
               <p>해당 날짜에 예약이 없습니다</p>

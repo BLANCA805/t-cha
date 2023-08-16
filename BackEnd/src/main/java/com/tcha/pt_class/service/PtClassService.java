@@ -395,8 +395,15 @@ public class PtClassService {
     //접근불가 -> 진행 변경
     @Transactional
     public void executePtLiveStatusChangeAccessible() {
+//        System.out.println("시각: " + LocalDateTime.now());
         //메소드 실행시각
         LocalDateTime nowTime = LocalDateTime.now();
+
+//        LocalDateTime start = LocalDateTime.now().plusMinutes(5);
+//        System.out.println("PT시작: " + start);
+//
+//        System.out.println(">> " + start.isBefore(nowTime.minusMinutes(5)));
+//        System.out.println("?? " + start.isAfter(nowTime.minusMinutes(5)));
 
         // status로 pt라이브 불러오기 (Progress 가져오기)
         List<PtLive> list = ptLiveRepository.findAllByStatusInaccessible().get();
@@ -412,8 +419,8 @@ public class PtClassService {
 
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
-            //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
-            if (start.isBefore(nowTime.minusMinutes(5))) {
+//            운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
+            if (start.isAfter(nowTime.minusMinutes(5))) {
                 pt.setStatus(PtLive.PtliveStaus.ACCESSIBLE);
             }
 

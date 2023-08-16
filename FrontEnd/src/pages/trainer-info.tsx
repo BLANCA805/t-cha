@@ -11,7 +11,7 @@ import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
 
 import ToggleButtons from "@shared/toggle-button";
-import { TchaButton } from "@shared/button";
+import { TchaButton, TchaStarFilled, TchaStarOutlined,TchaButtonText } from "@shared/button";
 
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
@@ -33,6 +33,7 @@ const Container = styled.div`
   @media (max-width: 767px) {
     margin: 2% 0%;
   }
+
   /* background-color: lightpink; */
 `;
 
@@ -42,6 +43,7 @@ const TabWrapper = styled.div`
   margin-top: 1%;
   width:100%;
   background-color: ${({ theme }) => theme.color.light};
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Profile = styled.div`
@@ -52,6 +54,8 @@ const Profile = styled.div`
   border-radius: 10px;
   margin-bottom:0.5%;
   width: 100%;
+  color:${({ theme }) => theme.color.dark};
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
     min-height:8rem;
     border-radius: 5px;
@@ -65,6 +69,7 @@ const ProfilePhoto = styled.div`
   padding: 1%;
   width: 30%;
   aspect-ratio: 1/1;
+  
   @media (max-width: 767px) {
     width: 27.5%;
   }
@@ -76,6 +81,7 @@ const ProfilePhotoimg = styled.img`
   object-fit: cover;
   border-radius: 1rem;
   background-color: gray;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Profileinfo = styled.div`
@@ -92,10 +98,7 @@ const IdWrapper = styled.div`
   display: flex;
   align-items: center;
   width:100%;
-  @media (max-width: 767px) {
-    /* justify-content: center; */
-    margin-left:2%; 
-  }
+
 `
 
 const UserId = styled.h4`
@@ -110,7 +113,7 @@ const UserId = styled.h4`
 const HashTagWrapper = styled.div`
   display: flex;
   width:100%;
-  margin: 2% 0% 0% 0%;
+  margin: 1% 0% 0% 0%;
   justify-content: start;
 `;
 
@@ -159,11 +162,21 @@ const BottomTab = styled.div`
   justify-content: center;
   position: sticky;
   bottom: 0;
-  /* min-height:4rem; */
-  min-height: 9rem;
+  height: 9rem;
   width: 100%;
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
+  @media (max-width: 767px) {
+    height:5rem;
+  }
+`;
+
+const ButtonText = styled.h5`
+  font-size: 2.5rem;
+  margin: 0%;
+  @media (max-width: 767px) {
+    font-size: 1.3rem;
+  }
 `;
 
 const BookmarkWrapper = styled.div`
@@ -188,20 +201,28 @@ const BookmarkButton = styled.div`
   justify-content: center;
   height: 75%;
   aspect-ratio: 1/1;
-  margin-left: 20%;
+  margin-left: 13%;
   color: #276e68 !important;
   /* background-color: lightgrey; */
+  @media (max-width: 767px) {
+    margin-left: 24%;
+  }
 `;
 
-const RegisterButton = styled(Button)`
+const RegisterButton = styled(TchaButton)`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 75%;
-  width: 90%;
+  height: 80%;
+  width: 95%;
   background-color: #276e68 !important;
   /* background-color: ${({ theme }) => theme.color.primary}!important; */
   border-radius: 10px !important;
+  @media (max-width: 767px) {
+    height: 75%;
+    width:90%;
+    border-radius: 5px !important;
+  }
 `;
 
 function TrainerInfo() {
@@ -301,16 +322,16 @@ function TrainerInfo() {
             ></BookmarkButton> */}
               <BookmarkButton onClick={() => setBookmark(!bookmark)}>
                 {bookmark ? (
-                  <StarRoundedIcon style={{ fontSize: "7em" }} />
+                  <TchaStarFilled style={{ fontSize: "7em" }} />
                 ) : (
-                  <StarOutlineRoundedIcon style={{ fontSize: "7em" }} />
+                  <TchaStarOutlined style={{ fontSize: "7em" }} />
                 )}
               </BookmarkButton>
             </BookmarkWrapper>
           )}
           <RegisterWrapper>
             <RegisterButton onClick={moveToReservation} variant="contained">
-              <Typography variant="h4">예약 및 결제하기</Typography>
+              <ButtonText>예약 및 결제하기</ButtonText>
             </RegisterButton>
           </RegisterWrapper>
         </BottomTab>

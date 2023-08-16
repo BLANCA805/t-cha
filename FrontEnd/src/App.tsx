@@ -12,6 +12,9 @@ import MyFont3 from "./assets/fonts/jamsilOtfRegular3.otf";
 import MyFont4 from "./assets/fonts/jamsilOtfMedium4.otf";
 import MyFont5 from "./assets/fonts/jamsilOtfBold5.otf";
 import MyFont6 from "./assets/fonts/jamsilOtfExtraBold6.otf";
+import Asset3 from "./shared/icons/Asset3.png"
+import Asset4 from "./shared/icons/Asset4.png"
+import Asset5 from "./shared/icons/Asset5.png"
 import MobileBottomBar from "@shared/mobile-bottom-bar";
 
 const GlobalStyle = createGlobalStyle`
@@ -41,13 +44,24 @@ const GlobalStyle = createGlobalStyle`
     src: url(${MyFont6}) format('opentype'); 
   }
  
+  
   body {
+    
+    cursor: url(${Asset5}), auto ;
+    /* cursor: url(${Asset4}), pointer; */
+
     font-family: "jamsil1";
     font-size:1rem;
     @media (max-width: 767px) {
       font-size:0.5rem;
     }
   }
+  
+  [style*="cursor:pointer;"],
+  a, button, input[type="button"], input[type="submit"] {
+  cursor: url(${Asset3}), pointer !important;
+  }
+  
   h1{
     font-family:"jamsil6";
     font-size:2rem;

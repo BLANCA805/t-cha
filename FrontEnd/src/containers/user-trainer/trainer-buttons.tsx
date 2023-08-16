@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
-
+import Asset3 from "src/shared/icons/Asset3.png"
 
 const ContainerSet = styled.div`
   display: flex;
@@ -30,7 +30,7 @@ const TrRow = styled.div`
   background-color: white;
   border-radius: 10px;
   margin: 0.3% 0%;
-  cursor:pointer;
+  cursor: url(${Asset3}), pointer;
   &:first-child{
     margin-top:0%;
   }

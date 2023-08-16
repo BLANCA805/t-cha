@@ -7,59 +7,122 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 
+import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
+
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content:space-between;
+  width:48%;
   height: 15rem;
+  /* opacity:75%; */
+  color:#303030;
   background-color: ${({ theme }) => theme.color.light};
-  border-radius: 10px;
-  margin-bottom: 1%;
+  border-radius: 15px 15px 0px 15px;
+  margin: 1%;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    width:100%;
+    height:8rem;
+    margin:1% 0%;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const PhotoWrapper = styled.div`
-  flex: 3.5;
   display: flex;
   height: 100%;
-  width: 100%;
+  max-width: 40%;
+  aspect-ratio: 1/1;
   justify-content: center;
   align-items: center;
-`;
-
-const ImgWrapper = styled.div`
-  display: flex;
-  aspect-ratio: 1/1;
-  height: 80%;
 `;
 
 const TRimg = styled.img`
-  border-radius: 50%;
-  height: 100%;
-  width: 100%;
+  height: 70%;
+  aspect-ratio: 1/1;
+  border-radius: 25%;
   background-color: lightgray;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+
+  }
 `;
 
 const DataWrapper = styled.div`
-  flex: 5.5;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 2%;
-`;
-
-const BookmarkWrapper = styled.div`
-  flex: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items:start;
+  width:100%;
+  height:100%;
+  @media (max-width: 767px) {
+    align-items:center;
+    margin-right:0%;
+  }
 `;
 
 const NameWrapper = styled.div`
-  margin-bottom: 1rem;
-  margin-left: 3%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width:100%;
+  margin-left: 5%;
 `;
+
+const BookmarkWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  
+  margin-top: 2%;
+  min-width:15%;
+`;
+
 
 const KeywordWrapper = styled.div`
   margin-left: 3%;
+`;
+
+const StyledStarFilled = styled(StarRoundedIcon)`
+  color: ${({ theme }) => theme.color.tcha};
+  font-size:5rem !important;
+  &:hover {
+    color: #11a39c;
+  }
+  @media (max-width: 767px) {
+    font-size:3rem !important;
+    margin-right:16%;
+  }
+`
+const StyledStarOutlined = styled(StarOutlineRoundedIcon)`
+  color: ${({ theme }) => theme.color.tcha};
+  font-size:5rem !important;
+  &:hover {
+    color: #11a39c;
+  }
+  @media (max-width: 767px) {
+    font-size:3rem !important;
+    margin-right:16%;
+  }
+`
+
+const NameTextH5 = styled.h4`
+  font-size: 3rem;
+  margin: 0%;
+  @media (max-width: 767px) {
+    font-size: 1.8rem;
+  }
+`;
+const TRTextH6 = styled.h5`
+  font-size: 2rem;
+  margin: 4% 0% 0% 4%;
+  
+  @media (max-width: 767px) {
+    font-size: 1.2rem;
+  }
 `;
 
 function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
@@ -94,14 +157,12 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
   return (
     <Wrapper>
       <PhotoWrapper>
-        <ImgWrapper>
-          <TRimg />
-        </ImgWrapper>
+        <TRimg />
       </PhotoWrapper>
       <DataWrapper>
         <NameWrapper>
-          <b style={{ fontSize: "3rem" }}> {props.data.trainerName}</b>
-          <b style={{ fontSize: "2rem", marginLeft: "1rem" }}>트레이너</b>
+          <NameTextH5> {props.data.trainerName}</NameTextH5>
+          <TRTextH6>트레이너</TRTextH6>
         </NameWrapper>
         <KeywordWrapper>
           {/* {props.keywordTags.map((tag, index) => (
@@ -111,10 +172,10 @@ function BookmarkedTrainerListItem(props: BookmarkedTrainerDataProps) {
       </DataWrapper>
       <BookmarkWrapper>
         {isBookmarked && (
-          <DefaultButton onClick={deleteBookmark}>북마크해제</DefaultButton>
+          <StyledStarFilled onClick={deleteBookmark}>북마크해제</StyledStarFilled>
         )}
         {!isBookmarked && (
-          <DefaultButton onClick={reBookmark}>북마크설정</DefaultButton>
+          <StyledStarOutlined onClick={reBookmark}>북마크설정</StyledStarOutlined>
         )}
       </BookmarkWrapper>
     </Wrapper>

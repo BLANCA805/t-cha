@@ -84,6 +84,7 @@ function TrainerList() {
         page={page}
         onChange={handleChangePage}
         color="standard"
+        style={{marginTop:"5%"}}
       />
     </Wrapper>
   );

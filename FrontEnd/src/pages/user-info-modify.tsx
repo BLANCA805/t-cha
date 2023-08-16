@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import { TchaButton } from "@shared/button";
 import { api } from "@shared/common-data";
-import { SmallTitleWrapper } from "@shared/page-title";
+import { TitleWrapper, PageTitleText } from "@shared/page-title";
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,36 +12,43 @@ import { RootState } from "src/redux/store";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
-  display: flex;
+  /* display: flex; */
   flex-direction: column;
-  /* width:100%; */
-  height: 100vh;
+  width:98%;
+  height:100%;
+  /* height: 100vh; */
   margin: 1%;
   justify-content: start;
   align-content: center;
 `;
 const Container = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   /* width:60%; */
+  max-width:100%;
+  min-height:50%;
   padding: 1%;
+  
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
 `;
 
 const Form = styled.div`
   display: flex;
-  flex-direction: column;
-  background-color: ${({ theme }) => theme.color.light};
-  width: 90%;
+  background-color: lightblue;
+  /* background-color: ${({ theme }) => theme.color.light}; */
+  width: 100%;
+  height:98%;
 `;
 
 const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
   /* align-items: center; */
+  width:100%;
   margin-bottom: 1rem;
 `;
 
@@ -57,15 +64,18 @@ const InputCustomButton = styled(TchaButton)`
 `;
 
 const ImageWrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  /* height: 90%; */
+  height:15rem;
+  width: 90%;
+  aspect-ratio : 1/1 ;
+  background-color: grey;
   overflow: hidden;
   min-height: 20%;
 `;
 
 const Image = styled.img`
-  width: 17%;
-  height: 17%;
+  height: 80%;
+  aspect-ratio : 1/1 ;
   overflow: hidden;
   margin: 1%;
   &:hover {
@@ -159,14 +169,15 @@ function UserInfoModify() {
 
   return (
     <Wrapper>
-      <SmallTitleWrapper>내 정보 수정하기</SmallTitleWrapper>
+      <TitleWrapper>
+        <PageTitleText>내 정보 수정하기</PageTitleText>
+        </TitleWrapper>
       <Container>
-        <Form>
           <FormDetailWrapper>
             <TextField
               value={name}
               label="이름"
-              style={{ width: "30%" }}
+              style={{ width: "60%" }}
               variant="outlined"
               onChange={handleName}
             />
@@ -216,7 +227,6 @@ function UserInfoModify() {
               작성취소
             </TchaButton>
           </SubmitButton>
-        </Form>
       </Container>
     </Wrapper>
   );

@@ -12,7 +12,7 @@ const OPENVIDU_SERVER_SECRET = "blanca05";
 
 function PtRoom() {
   // 현재 로그인한 유저 정보
-  const userId = useSelector((state: RootState) => state.auth.token);
+  const userId = useSelector((state: RootState) => state.profile.id);
   const userName = useSelector((state: RootState) => state.profile.name);
   const userProfileImage = useSelector(
     (state: RootState) => state.profile.profileImage

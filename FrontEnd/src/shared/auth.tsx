@@ -68,8 +68,6 @@ const Text = styled.div`
 `;
 
 const Auth = ({ open, onClose }: AuthProps) => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const Sign = () => {
     window.open("https://www.tcha.site/api/oauth2/authorization/google");
   };

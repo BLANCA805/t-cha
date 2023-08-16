@@ -1,11 +1,14 @@
 import { createSlice, combineReducers } from "@reduxjs/toolkit";
 
 const authInitialState = {
-  token: "",
+  accessToken: "",
+  refreshToken: "",
+  email: "",
 };
 
 const profileInitialState = {
   name: "",
+  id: "",
   profileId: 0,
   profileImage: "",
   trainerId: "",
@@ -22,10 +25,14 @@ const authSlice = createSlice({
   initialState: authInitialState,
   reducers: {
     logIn: (state, action) => {
-      state.token = action.payload.token;
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+      state.email = action.payload.email;
     },
     logOut: (state) => {
-      state.token = "";
+      state.accessToken = "";
+      state.refreshToken = "";
+      state.email = "";
     },
   },
 });
@@ -34,15 +41,19 @@ const profileSlice = createSlice({
   name: "profile",
   initialState: profileInitialState,
   reducers: {
+    getUserData: (state, action) => {
+      state.name = action.payload.name;
+      state.id = action.payload.id;
+      state.profileId = action.payload.profileId;
+      state.profileImage = action.payload.profileImage;
+      state.trainerId = action.payload.trainerId;
+    },
     registTrainer: (state, action) => {
       state.trainerId = action.payload.trainerId;
     },
-    postProfile: (state, action) => {
-      state.name = action.payload.name;
-      state.profileId = action.payload.id;
-    },
     deleteProfile: (state) => {
       state.name = "";
+      state.id = "";
       state.profileId = 0;
       state.trainerId = "";
       state.profileImage = "";
@@ -51,7 +62,6 @@ const profileSlice = createSlice({
       state.name = action.payload.name;
       state.profileImage = action.payload.profileImage;
     },
-    test: (state) => {},
   },
 });
 
@@ -67,7 +77,7 @@ const ptLiveSlice = createSlice({
     },
     setSessionId: (state, action) => {
       state.sessionId = action.payload;
-    }
+    },
   },
 });
 
@@ -78,17 +88,8 @@ const rootReducer = combineReducers({
 });
 
 export const { logIn, logOut } = authSlice.actions;
-export const {
-  registTrainer,
-  postProfile,
-  deleteProfile,
-  modifyProfile,
-  test,
-} = profileSlice.actions;
-export const {
-  setOV,
-  setOpenViduToken,
-  setSessionId,
-} = ptLiveSlice.actions;
+export const { getUserData, registTrainer, deleteProfile, modifyProfile } =
+  profileSlice.actions;
+export const { setOV, setOpenViduToken, setSessionId } = ptLiveSlice.actions;
 
 export default rootReducer;

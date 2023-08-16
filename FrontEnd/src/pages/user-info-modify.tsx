@@ -1,5 +1,5 @@
 import TextField from "@mui/material/TextField";
-import { TchaButton } from "@shared/button";
+import { GreenTchaButton, TchaButton, TchaButtonText, TchaButtonTextH6 } from "@shared/button";
 import { api } from "@shared/common-data";
 import { TitleWrapper, PageTitleText } from "@shared/page-title";
 import axios from "axios";
@@ -8,6 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { modifyProfile } from "src/redux/slicers";
 import { RootState } from "src/redux/store";
+import { Avatar } from "@mui/material";
+import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
+import DefaultImg from "src/shared/icons/LogoSmall.png";
+import Asset3 from "src/shared/icons/Asset3.png"
 
 import styled from "styled-components";
 
@@ -28,66 +32,132 @@ const Container = styled.div`
   align-items: center;
   /* width:60%; */
   max-width:100%;
-  min-height:50%;
-  padding: 1%;
-  
+  /* min-height:50%; */
+  padding: 3%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
-`;
-
-const Form = styled.div`
-  display: flex;
-  background-color: lightblue;
-  /* background-color: ${({ theme }) => theme.color.light}; */
-  width: 100%;
-  height:98%;
 `;
 
 const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  /* align-items: center; */
+  align-items: center;
   width:100%;
   margin-bottom: 1rem;
+  @media (max-width: 767px) {
+    margin-bottom: 2rem;
+  }
 `;
+
+
+const ImageChangeWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+const ImageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:relative;
+  height: 20rem;
+  width: 20rem;
+  border-radius: 25%;
+  background-color: #f1f1f1;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 5% 0%;
+  @media (max-width: 767px) {
+    height: 10rem;
+    width: 10rem;
+  }
+`;
+
+const Image = styled.img`
+  width:100%; 
+  height:100%;
+  /* width: 150% !important; */
+  /* height: 150% !important; */
+  object-fit: cover;
+  aspect-ratio : 1/1 ;
+  margin-right:5%;
+  
+  &:hover {
+    cursor: url(${Asset3}), pointer;
+    opacity: 50%;
+  }
+`;
+
+const StyledAddPhotoIcon = styled(AddAPhotoRoundedIcon)`
+  font-size: 3.5rem !important;
+  color: ${({ theme }) => theme.color.tchalight};
+  @media (max-width: 767px) {
+    font-size:2rem !important;
+  }
+`
+const InputCustomButton = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:30%;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  bottom: 0%;
+  right: 0%;
+  margin: 0%;
+  overflow: visible;
+  background-color: ${({ theme }) => theme.color.light};
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.05s ease-in-out;
+  &:hover ${StyledAddPhotoIcon}{
+      color: #2e726c !important;
+  }
+  &:hover{
+    transform: scale(1.05);
+  }
+  &:active{
+    transform: scale(0.9);
+  }
+  @media (max-width: 767px) {
+    width:35%;
+  }
+`;
+
+
+
+const StyledTextField = styled(TextField)`
+  width: 95%;
+  background-color: ${({ theme }) => theme.color.light};
+  margin-top:5% !important;
+`
 
 const SubmitButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5% 0%;
-`;
-
-const InputCustomButton = styled(TchaButton)`
-  margin: 0% !important;
-`;
-
-const ImageWrapper = styled.div`
-  /* height: 90%; */
-  height:15rem;
-  width: 90%;
-  aspect-ratio : 1/1 ;
-  background-color: grey;
-  overflow: hidden;
-  min-height: 20%;
-`;
-
-const Image = styled.img`
-  height: 80%;
-  aspect-ratio : 1/1 ;
-  overflow: hidden;
-  margin: 1%;
-  &:hover {
-    opacity: 50%;
+  width:45%;
+  margin: 2% 0%;
+  @media (max-width: 767px) {
+    width:80%;
   }
 `;
+
+const StyledTchaButton = styled(GreenTchaButton)`
+  margin:0% 1% !important;
+  height:3rem;
+  width:30%;
+  @media (max-width: 767px) {
+    margin:0% 3% !important;
+    width:45%;
+  }
+` 
 
 function UserInfoModify() {
   const profileId = useSelector((state: RootState) => state.profile.profileId);
   const [name, setName] = useState("");
   const [file, setFile] = useState<File[]>([]);
-  const [imageForView, setImageForView] = useState<string>("");
+  const [imageForView, setImageForView] = useState<string>(DefaultImg);
 
   useEffect(() => {
     axios.get(`${api}/userProfiles/${profileId}`).then((response) => {
@@ -128,8 +198,14 @@ function UserInfoModify() {
 
   const deleteImage = () => {
     setFile([]);
-    setImageForView("");
+    setImageForView(DefaultImg);
   };
+
+  const IfDefault = () => {
+    if(imageForView !== DefaultImg){
+      deleteImage();
+    }
+  }
 
   const navigate = useNavigate();
 
@@ -174,58 +250,46 @@ function UserInfoModify() {
         </TitleWrapper>
       <Container>
           <FormDetailWrapper>
-            <TextField
+            <ImageChangeWrapper>
+              <ImageWrapper>
+                <Image src={imageForView} onClick={() => IfDefault()} />
+                <input
+                  type="file"
+                  accept="image/jpg,impge/png,image/jpeg,image/gif"
+                  name="profile_img"
+                  onChange={handleImage}
+                  style={{ display: "none" }}
+                  ref={imageInput}
+                ></input>
+                <InputCustomButton onClick={onClickImageUpload}>
+                  <StyledAddPhotoIcon/>
+                </InputCustomButton>
+              </ImageWrapper>
+
+            <StyledTextField
               value={name}
               label="이름"
-              style={{ width: "60%" }}
               variant="outlined"
               onChange={handleName}
             />
+            </ImageChangeWrapper>
           </FormDetailWrapper>
 
-          <FormDetailWrapper>
-            <input
-              type="file"
-              accept="image/jpg,impge/png,image/jpeg,image/gif"
-              name="profile_img"
-              onChange={handleImage}
-              style={{ display: "none" }}
-              ref={imageInput}
-            ></input>
-            <InputCustomButton
-              onClick={onClickImageUpload}
-              style={{
-                width: "7rem",
-                height: "3rem",
-                marginLeft: "0%",
-                fontSize: "1rem",
-              }}
-              variant="contained"
-            >
-              프로필 이미지
-            </InputCustomButton>
-          </FormDetailWrapper>
-
-          <ImageWrapper>
-            <Image src={imageForView} onClick={() => deleteImage()} />
-          </ImageWrapper>
-
+        
           <SubmitButton>
-            <TchaButton
+            <StyledTchaButton
               type="submit"
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
               variant="contained"
               onClick={Modify}
             >
-              등록하기
-            </TchaButton>
-            <TchaButton
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+              <TchaButtonTextH6 style={{fontSize:"1.2rem"}}>등록하기</TchaButtonTextH6>
+            </StyledTchaButton>
+            <StyledTchaButton
               variant="contained"
               onClick={goToBack}
             >
-              작성취소
-            </TchaButton>
+              <TchaButtonTextH6 style={{fontSize:"1.2rem"}}>작성취소</TchaButtonTextH6>
+            </StyledTchaButton>
           </SubmitButton>
       </Container>
     </Wrapper>

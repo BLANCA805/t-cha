@@ -8,19 +8,7 @@ import { AppDispatch, type RootState } from "src/redux/store";
 import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Fab from "@mui/material/Fab";
-
 import Logo from "src/shared/icons/LOGO.png"
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
 import styled from "styled-components";
@@ -110,9 +98,6 @@ function MobileBottomBar() {
 
   return (
     <BottomBarContainer>
-      {/* <React.Fragment> */}
-      {/* {list()} */}
-      {/* </React.Fragment> */}
       <ButtomBarContents
         onClick={() => navigate("profile/bookmarked_trainers")}
       >

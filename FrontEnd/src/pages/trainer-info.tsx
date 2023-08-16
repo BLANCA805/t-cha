@@ -97,7 +97,7 @@ const IdWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-
+`
 
 const UserId = styled.h4`
   display: flex;
@@ -342,6 +342,7 @@ function TrainerInfo() {
       </TabWrapper>
       {trainer !== user.trainerId && (
         <BottomTab>
+          <BookmarkWrapper>
               {isBookmarked ? (
                 <TchaStarFilled
                   onClick={cancleBookmark}
@@ -354,7 +355,6 @@ function TrainerInfo() {
                 />
               )}
             </BookmarkWrapper>
-          )}
           <RegisterWrapper>
             <RegisterButton onClick={moveToReservation} variant="contained">
               <ButtonText>예약 및 결제하기</ButtonText>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { api } from "@shared/common-data";
@@ -63,10 +63,36 @@ const RegisterButton = styled(Button)`
   border-radius: 5px !important;
 `;
 
+interface CreatedData {
+  date: string;
+  time: string;
+}
+
 function CreateClasses() {
+  const trainerId = useSelector((state: RootState) => state.profile.trainerId);
   const navigate = useNavigate();
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
+  const [created, setCreated] = useState<CreatedData[]>([]);
+
+  const [startTimeList, setStartTimeList] = useState<string[]>([]);
+
+  const date = selectedDate?.format("YYYY-MM-DD");
+
+  useEffect(() => {
+    axios.get(`${api}/classes/${trainerId}`).then((response) => {
+      console.log(response.data);
+      for (let i in response.data) {
+        setCreated([
+          ...created,
+          {
+            date: response.data[i].startDate,
+            time: response.data[i].startTime,
+          },
+        ]);
+      }
+    });
+  }, []);
 
   const times = [
     "00:00",
@@ -119,11 +145,13 @@ function CreateClasses() {
     "23:30",
   ];
 
-  const trainerId = useSelector((state: RootState) => state.profile.trainerId);
-
-  const [startTimeList, setStartTimeList] = useState<string[]>([]);
-
-  const date = selectedDate?.format("YYYY-MM-DD");
+  const filteredTimes = times.filter((time) => {
+    const [hours, minutes] = time.split(":");
+    const timeToCheck = dayjs()
+      .set("hour", parseInt(hours))
+      .set("minute", parseInt(minutes));
+    return timeToCheck.isAfter(dayjs());
+  });
 
   const body = {
     trainerId: trainerId,
@@ -147,12 +175,12 @@ function CreateClasses() {
   };
 
   const test = () => {
-    console.log(startTimeList);
+    console.log(created);
   };
 
   return (
     <Wrapper>
-      <button onClick={test}>테스트</button>
+      <button onClick={test}>Test</button>
       <PageTitle>PT 일정 설정하기</PageTitle>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -171,16 +199,25 @@ function CreateClasses() {
             </AccordionSummary>
           </Accordion>
         </ReservationWrapper>
+        {selectedDate?.isAfter(dayjs().subtract(1, "day")) && (
+          <ReservationWrapper>
+            <TransferList
+              times={
+                dayjs().format("YYYY-MM-DD") === date ? filteredTimes : times
+              }
+              handleChangeList={handleChangeList}
+            />
 
-        <ReservationWrapper>
-          <TransferList times={times} handleChangeList={handleChangeList} />
-
-          <RegisterWrapper>
-            <RegisterButton variant="contained" onClick={createClass}>
-              <Typography variant="h6">PT 일정 설정하기</Typography>
-            </RegisterButton>
-          </RegisterWrapper>
-        </ReservationWrapper>
+            <RegisterWrapper>
+              <RegisterButton variant="contained" onClick={createClass}>
+                <Typography variant="h6">PT 일정 설정하기</Typography>
+              </RegisterButton>
+            </RegisterWrapper>
+          </ReservationWrapper>
+        )}
+        {!selectedDate?.isAfter(dayjs().subtract(1, "day")) && (
+          <p>지난 날짜는 선택할 수 없습니다</p>
+        )}
       </ContentsWrapper>
     </Wrapper>
   );

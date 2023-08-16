@@ -13,8 +13,8 @@ import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import { TrainerListDataProps } from "src/interface";
 import { TchaButton, TchaStarFilled } from "@shared/button";
 import { Rating } from "@mui/material";
+import { useState } from "react";
 import Asset3 from "src/shared/icons/Asset3.png"
-
 
 const Wrapper = styled.div`
   display: flex;
@@ -162,11 +162,29 @@ function TrainerListItem(props: TrainerListDataProps) {
   const user = useSelector((state: RootState) => state.profile);
   const trainer = props.data.id;
 
+  const bookmarkedUser = props.data.userProfileIdList;
+  const [isBookmarked, setIsBookmarked] = useState(
+    bookmarkedUser.includes(user.profileId)
+  );
+
   const bookmark = () => {
     axios
       .post(`${api}/bookmarks/${user.profileId}/${trainer}`)
       .then((response) => {
-        console.log(response.data);
+        console.log(trainer, "북마크 등록");
+        setIsBookmarked(true);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const cancleBookmark = () => {
+    axios
+      .delete(`${api}/bookmarks/${user.profileId}/${trainer}`)
+      .then((response) => {
+        console.log(trainer, "북마크 해제");
+        setIsBookmarked(false);
       })
       .catch((error) => {
         console.log(error);
@@ -190,12 +208,6 @@ function TrainerListItem(props: TrainerListDataProps) {
           <TRTextH5>트레이너</TRTextH5>
           <TchaStar/>
           <TRTextH5 style={{marginLeft:"0%"}}>{props.data.stars}</TRTextH5>
-          {/* <Rating
-            name="read-only"
-            value={props.data.stars}
-            readOnly
-            size="small"
-          /> */}
         </NameWrapper>
         <KeywordWrapper>
           {tags.map((tag, index) => (
@@ -213,22 +225,18 @@ function TrainerListItem(props: TrainerListDataProps) {
         </Container>
       </DataWrapper>
       <ButtonWrapper>
-        {!!user.profileId && (
-          <StyledStarOutlined onClick={bookmark} />
-        )}
-        {/* <TchaButton onClick={bookmark} style={{width:"70%"}}>
-          <ButtonTextH5>즐겨찾기 등록</ButtonTextH5>
-        </TchaButton> */}
-      </ButtonWrapper>
-
-      {/* 별 Toggle 북마크 로직 완성되면 아래 쓰면 됨  */}
-      {/* <BookmarkWrapper onClick={() => setBookmark(!bookmark)}>
-        {bookmark ? (
-          <StarRoundedIcon style={{ fontSize: "2.5em" }} />
+        {isBookmarked ? (
+          <StyledStarFilled
+            onClick={cancleBookmark}
+            style={{ fontSize: "5rem" }}
+          />
         ) : (
-          <StarOutlineRoundedIcon style={{ fontSize: "2.5em" }} />
+          <StyledStarOutlined
+            onClick={bookmark}
+            style={{ fontSize: "5rem" }}
+          />
         )}
-      </BookmarkWrapper> */}
+      </ButtonWrapper>
     </Wrapper>
   );
 }

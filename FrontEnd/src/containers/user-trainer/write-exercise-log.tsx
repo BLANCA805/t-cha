@@ -84,20 +84,23 @@ function WriteExerciseLog(props: { liveId: number }) {
   const [contents, setContents] = useState<{ image: string; text: string }[]>([
     { image: "", text: "" },
   ]);
+
   const [open, setOpen] = React.useState(false);
   const [exerciseLogId, setExerciseLogId] = useState(0);
 
   useEffect(() => {
-    axios
-      .get(`${api}/exercise-logs/ptLive/${liveId}`)
-      .then((response) => {
-        setTitle(response.data.title);
-        setContents(response.data.contents);
-        setExerciseLogId(response.data.id);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (open) {
+      axios
+        .get(`${api}/exercise-logs/ptLive/${liveId}`)
+        .then((response) => {
+          setTitle(response.data.title);
+          setContents(response.data.contents);
+          setExerciseLogId(response.data.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, [open, liveId]);
 
   const handleOpen = () => setOpen(true);
@@ -134,7 +137,6 @@ function WriteExerciseLog(props: { liveId: number }) {
     if (event.target.files) {
       const file = event.target.files[0];
       formData.append("images", file);
-      console.log(index);
     }
     try {
       const uploadResponse = await axios.post(
@@ -194,7 +196,10 @@ function WriteExerciseLog(props: { liveId: number }) {
 
   const save = () => {
     axios
-      .patch(`${api}/exercise-logs/done/${exerciseLogId}`)
+      .patch(`${api}/exercise-logs/done/${exerciseLogId}`, {
+        title: title,
+        contents: contents,
+      })
       .then((response) => {
         console.log(response.data);
       })

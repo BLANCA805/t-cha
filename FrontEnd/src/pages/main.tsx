@@ -31,6 +31,8 @@ const BannerWrapper = styled.div`
   /* background-color: white; */
   /* border-radius: 10px; */
   background-color: #125B51;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+
   @media (max-width: 767px) {
     height: 13.5rem;
     margin-top:0%;

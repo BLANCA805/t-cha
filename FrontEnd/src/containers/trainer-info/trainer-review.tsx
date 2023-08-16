@@ -120,7 +120,7 @@ const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
           ))
         ) : (
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <p>아직 작성된 리뷰가 없습니다</p>
+            <h6>아직 작성된 리뷰가 없습니다</h6>
           </div>
         )}
       </ContainerSet>

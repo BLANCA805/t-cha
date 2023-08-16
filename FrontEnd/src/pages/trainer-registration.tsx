@@ -8,11 +8,10 @@ import { type RootState } from "../redux/store";
 
 import { registTrainer } from "src/redux/slicers";
 
-import { TchaButton, GrayButton } from "@shared/button";
-import { SmallTitleWrapper } from "@shared/page-title";
+import {GreenTchaButton, TchaButtonText, TchaButtonTextH6 } from "@shared/button";
+import { TitleWrapper, PageTitleText } from "@shared/page-title";
 
 import TextField from "@mui/material/TextField";
-import { Button, Typography } from "@mui/material";
 import styled from "styled-components";
 import { error } from "console";
 import { useImageUpload } from "src/hooks/use-image";
@@ -20,18 +19,22 @@ import { useImageUpload } from "src/hooks/use-image";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100vh;
-  margin: 1%;
   justify-content: start;
-  align-content: center;
+  align-items: center;
+  width: 96%;
+  min-height:100vh;
+  margin: 1%;
 `;
+
+const StyledTitleWrapper = styled(TitleWrapper)`
+  margin:0% 0% 1% 0%;
+`
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width:60%; */
-  padding: 1%;
+  width:100%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
 `;
@@ -39,47 +42,69 @@ const Container = styled.div`
 const Form = styled.div`
   display: flex;
   flex-direction: column;
+  width: 95%;
   background-color: ${({ theme }) => theme.color.light};
-  width: 90%;
 `;
 
 const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: start;
+  width:100%;
   /* align-items: center; */
-  margin-bottom: 1rem;
+  margin-bottom: 0.5%;
+  @media (max-width: 767px) {
+   margin-bottom: 1.5%; 
+  }
 `;
 
 const SubmitButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5% 0%;
-  padding-bottom: 6.5rem;
+  margin: 2% 0%;
 `;
 
-const InputCustomButton = styled(TchaButton)`
-  margin: 0% !important;
+const InputCustomButton = styled(GreenTchaButton)`
+  margin: 0.5% 0% !important;
 `;
 
 const TagWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  width:100%;
+  @media (max-width: 767px) {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 `;
+
+const TagTextField = styled(TextField)`
+   width: 40%;
+   padding-right:0.5rem;
+   @media (max-width: 767px) {
+    padding-right:0;
+    margin:1% 0% !important;
+    width:65%;
+  } 
+`
 
 const ImageWrapper = styled.div`
   display: flex;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  min-height: 12rem;
+  min-height: 10rem;
   border: 0.1rem;
   border-style: solid;
   border-radius: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1%;
   align-items: center;
   border-color: #bdbcba;
+  @media (max-width: 767px) {
+    min-height: 7rem;
+  }
 `;
 
 const Image = styled.img`
@@ -91,6 +116,13 @@ const Image = styled.img`
     opacity: 50%;
   }
 `;
+
+const ButtonText = styled(TchaButtonTextH6)`
+  font-size: 1.25rem;
+  @media (max-width: 767px) {
+   font-size:1.1rem 
+  }
+`
 
 function TrainerRegistration() {
   const [introduction, setIntroduction] = useState("");
@@ -224,10 +256,14 @@ function TrainerRegistration() {
 
   return (
     <Wrapper>
-      <SmallTitleWrapper>트레이너 등록하기</SmallTitleWrapper>
+      <StyledTitleWrapper>
+        <PageTitleText>
+          트레이너 등록하기
+        </PageTitleText>
+      </StyledTitleWrapper>
       <Container>
         <Form>
-          <FormDetailWrapper style={{ marginTop: "3%" }}>
+          <FormDetailWrapper style={{ marginTop: "2%" }}>
             <TextField
               value={introduction}
               onChange={handleIntroduction}
@@ -238,16 +274,15 @@ function TrainerRegistration() {
           </FormDetailWrapper>
 
           <FormDetailWrapper>
-            <TextField
-              value={tag}
-              label="태그를 입력해주세요"
-              style={{ width: "30%", paddingRight: "0.5rem" }}
-              variant="outlined"
-              onChange={handleTag}
-              onKeyDown={(enter) => addTagToEnter(enter)}
-            />
             <TagWrapper>
-              <TchaButton
+              <TagTextField
+                value={tag}
+                label="태그를 입력해주세요"
+                variant="outlined"
+                onChange={handleTag}
+                onKeyDown={(enter) => addTagToEnter(enter)}
+              />
+              <GreenTchaButton
                 style={{
                   width: "7rem",
                   height: "3rem",
@@ -256,24 +291,21 @@ function TrainerRegistration() {
                 variant="contained"
                 onClick={addTag}
               >
-                추가
-              </TchaButton>
-              <TchaButton
+               <ButtonText>추가</ButtonText> 
+              </GreenTchaButton>
+              <GreenTchaButton
                 style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
                 variant="contained"
                 onClick={clearTag}
               >
-                비우기
-              </TchaButton>
-            </TagWrapper>
-          </FormDetailWrapper>
-
-          <FormDetailWrapper>
-            <TextField
+                <ButtonText>비우기</ButtonText> 
+              </GreenTchaButton>
+              <TagTextField
               disabled
               value={tagsForView.slice(0, -1)}
-              style={{ width: "100%" }}
-            />
+              style={{ marginLeft:"1%"}}
+              />
+            </TagWrapper>
           </FormDetailWrapper>
 
           <FormDetailWrapper>
@@ -301,12 +333,10 @@ function TrainerRegistration() {
               style={{
                 width: "7rem",
                 height: "3rem",
-                marginLeft: "0%",
-                fontSize: "1rem",
               }}
               variant="contained"
             >
-              사진 선택
+              <ButtonText>사진 선택</ButtonText> 
             </InputCustomButton>
           </FormDetailWrapper>
 
@@ -327,30 +357,29 @@ function TrainerRegistration() {
               onChange={handleContent}
               label="PT 내용을 상세히 입력해주세요"
               multiline
-              minRows={15}
+              minRows={6}
               style={{ width: "100%" }}
               variant="outlined"
             />
           </FormDetailWrapper>
 
           <SubmitButton>
-            <TchaButton
+            <GreenTchaButton
               type="submit"
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+              style={{ width: "7rem", height: "3rem", fontSize: "1rem", margin:"0% 2%" }}
               variant="contained"
               onClick={Register}
             >
-              등록하기
-            </TchaButton>
-            <TchaButton
-              //원래 있던페이지로 돌아가는 Linkto 코드 필요
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
+              <ButtonText>등록하기</ButtonText> 
+            </GreenTchaButton>
+            <GreenTchaButton
+              style={{ width: "7rem", height: "3rem", fontSize: "1rem", margin:"0% 2%" }}
               variant="contained"
               onClick={goToBack}
             >
-              작성취소
-            </TchaButton>
-            {/* <button type="submit"></button> */}
+              <ButtonText>작성취소</ButtonText> 
+            </GreenTchaButton>
+
           </SubmitButton>
         </Form>
       </Container>

@@ -9,19 +9,42 @@ import { api } from "@shared/common-data";
 import { BookmarkedTrainerData } from "src/interface";
 import BookmarkedTrainerListItem from "src/containers/bookmarked-trainer/bookmarked-trainer-list-item";
 
-import { TitleWrapper, PageTitleText } from "@shared/page-title";
+import { TitleWrapper, PageTitleText,SmallPageTitleText } from "@shared/page-title";
 
 import styled from "styled-components";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 98%;
   height: 100vh;
-  margin: 3%;
+  margin: 2% 3%;
+  @media (max-width: 767px) {
+    margin: 3%;
+  }
 `;
 
-const ContentsWrapper = styled.div``;
+const TextWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
+  justify-content: space-between;
+`
+
+const ContentsWrapper = styled.div`
+  width: 100%;
+  min-height:65%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-content: start;
+  @media (max-width: 767px) {
+   flex-direction:column; 
+   flex-wrap: nowrap;
+   min-height:70%;
+  }
+`;
 
 const PaginationWrapper = styled.div`
   display: flex;
@@ -55,7 +78,10 @@ function BookmarkedTrainerList() {
   return (
     <Wrapper>
       <TitleWrapper>
-        <PageTitleText>즐겨찾기한 트레이너</PageTitleText>
+        <TextWrapper>
+          <PageTitleText>즐겨찾기한 트레이너</PageTitleText>
+          <SmallPageTitleText style={{marginRight:"5%"}}>총 {items?.pageInfo.totalElements}명</SmallPageTitleText>
+        </TextWrapper>
       </TitleWrapper>
 
       <ContentsWrapper>

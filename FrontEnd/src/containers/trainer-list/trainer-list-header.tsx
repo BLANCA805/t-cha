@@ -43,8 +43,37 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1% 0%;
+  margin: 0%;
+  width:100%;
+  @media (max-width: 767px) {
+    margin: 1% 0%;
+    justify-content: start;
+    flex-wrap: wrap;
+  }
 `;
+
+const StyledTchaButton = styled(TchaButton)`
+  width:20%;
+  height:3.7rem;
+  background-color: #2e726c !important;
+  background: none;
+  &:hover {
+    background-color: #235551 !important;
+    background: none;
+  }
+  @media (max-width: 767px) {
+    width:31%;
+    height:2.7rem;
+  }
+`
+const StyledReverseTchaButton = styled(ReverseTchaButton)`
+  width:20%;
+  height:3.7rem;
+  @media (max-width: 767px) {
+    width:31%;
+    height:2.7rem;
+  }
+`
 
 const AccordionContainer = styled.div`
   display: flex;
@@ -95,8 +124,8 @@ function TrainerListHeader({
   const sortButtons = [
     { value: "", text: "최근 등록 순" },
     { value: "/sorted-by-star", text: "별점 높은 순" },
-    { value: "/sorted-by-pt", text: "PT 누적 횟수 순" },
-    { value: "/sorted-by-bookmark", text: "즐겨찾기 많은 순" },
+    { value: "/sorted-by-pt", text: "PT 누적 순" },
+    { value: "/sorted-by-bookmark", text: "즐겨찾기 순" },
     { value: "/sorted-by-review", text: "리뷰 많은 순" },
   ];
 
@@ -128,13 +157,13 @@ function TrainerListHeader({
       <ButtonContainer>
         {sortButtons.map((button) => {
           const ButtonComponent =
-            sortCondition === button.value ? TchaButton : ReverseTchaButton;
+            sortCondition === button.value ? StyledTchaButton : StyledReverseTchaButton;
 
           return (
             <ButtonComponent
               key={button.value}
               onClick={() => handleSortCondition(button.value)}
-              style={{ width: "20%", color: "white" }}
+              style={{ color: "white" }}
             >
               <StyledText>{button.text}</StyledText>
             </ButtonComponent>

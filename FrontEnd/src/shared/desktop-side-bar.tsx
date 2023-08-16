@@ -21,6 +21,7 @@ import Fab from "@mui/material/Fab";
 import Avatar from "@mui/material/Avatar";
 
 import styled from "styled-components";
+import Asset3 from "src/shared/icons/Asset3.png"
 
 const SideBarContainer = styled.div`
   display: flex;
@@ -47,15 +48,34 @@ const ListItemStyled = styled(ListItem)`
   &:last-child {
     border-bottom: none;
   }
+  &:hover {
+    color: #11a39c;
+    cursor: url(${Asset3}), pointer !important;
+  }
 `;
 
-const SideBarItemWrapper = styled.h6`
+const ListItembuttonStyled = styled(ListItemButton)`
+  &:hover {
+    cursor: url(${Asset3}), pointer !important;
+  }
+`
+
+const SideBarItemWrapper = styled.div`
   display: flex;
-  /* width:100%; */
+  width:100%;
   font-size: 1.4rem;
   margin: 1.8rem 1.4rem;
-  cursor: pointer;
+  &:hover {
+    color: #11a39c;
+    cursor: url(${Asset3}), pointer !important;
+  }
 `;
+
+const StyledText = styled.h6`
+  font-size: 1.4rem;
+  margin:0%;
+  
+`
 const LoginWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -139,9 +159,11 @@ function DesktopSideBar() {
               ["customer_center", "고객센터"],
             ].map((data, index) => (
               <ListItemStyled key={index} disablePadding>
-                <ListItemButton onClick={() => navigate(data[0])}>
-                  <SideBarItemWrapper>{data[1]}</SideBarItemWrapper>
-                </ListItemButton>
+                <ListItembuttonStyled onClick={() => navigate(data[0])}>
+                  <SideBarItemWrapper>
+                    <StyledText>{data[1]}</StyledText>
+                  </SideBarItemWrapper>
+                </ListItembuttonStyled>
                 {/* <ListItemButton> */}
                 {/* <Link to={data[0]}> */}
                 {/* </Link> */}
@@ -150,9 +172,8 @@ function DesktopSideBar() {
             ))}
           </div>
           <SideBarItemWrapper onClick={LogOut} style={{ color: "#E36E6E" }}>
-            로그아웃
+            <StyledText>로그아웃</StyledText>
           </SideBarItemWrapper>
-          {/* <button onClick={LogOut}>로그아웃</button> */}
         </StyledList>
       );
     } else {
@@ -170,7 +191,7 @@ function DesktopSideBar() {
                 style={{ marginRight: "0.8rem" }}
                 src="/broken-image.jpg"
               />
-              로그인
+              <StyledText>로그인</StyledText>
             </LoginWrapper>
           </SideBarItemWrapper>
           {[
@@ -179,9 +200,11 @@ function DesktopSideBar() {
             ["customer_center", "고객센터"],
           ].map((data, index) => (
             <ListItemStyled key={index} disablePadding>
-              <ListItemButton onClick={() => navigate(data[0])}>
-                <SideBarItemWrapper>{data[1]}</SideBarItemWrapper>
-              </ListItemButton>
+              <ListItembuttonStyled onClick={() => navigate(data[0])}>
+                <SideBarItemWrapper>
+                  <StyledText>{data[1]}</StyledText>
+                </SideBarItemWrapper>
+              </ListItembuttonStyled>
             </ListItemStyled>
           ))}
         </List>

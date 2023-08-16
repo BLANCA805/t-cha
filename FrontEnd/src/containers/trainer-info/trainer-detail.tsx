@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   height: 85vh;
   padding: 3% 4%;
   @media (max-width: 767px) {
-    height: 63vh;
+    height:56vh;
   }
 `;
 

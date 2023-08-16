@@ -11,44 +11,47 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { UserScheduleData } from "src/interface";
 
-const CalendarContainer = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  padding-top: 5%;
-`;
+import { TitleWrapper, PageTitleText } from "@shared/page-title";
+
 
 const Wrapper = styled.div`
   display: flex;
   width: 96%;
   flex-direction: column;
   height: 100vh;
-  margin: 1% 1%;
+  margin: 1% 1% 0% 1%;
 `;
 
-const PageTitle = styled.div`
+const CalendarContainer = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  width: 100%;
+  height:20rem;
   display: flex;
-  height: 10%;
   align-items: center;
-  padding-left: 2%;
-  font-size: 2rem;
-  margin: 1% 0%;
+  /* padding: 1% 0%; */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Calendar = styled.div`
-  margin-top: 3%;
+
 `;
 
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
-  margin-top: 5%;
+  margin-top: 1%;
   padding: 2%;
   /* height:10rem; */
   border-radius: 10px;
   background-color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
 `;
 
 function UserSchedule() {
@@ -74,13 +77,21 @@ function UserSchedule() {
 
   return (
     <Wrapper>
-      <PageTitle>내 캘린더</PageTitle>
+      <TitleWrapper>
+        <PageTitleText>내 캘린더</PageTitleText>
+      </TitleWrapper>
       <Calendar>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <CalendarContainer>
             <DateCalendar
               value={date}
               onChange={(selected: Dayjs | null) => setDate(selected)}
+              sx={{
+                "& .MuiDataGrid-root": {
+                  height: "400px",
+                  width: "400px",
+                },
+              }}
             />
           </CalendarContainer>
         </LocalizationProvider>

@@ -11,9 +11,10 @@ import Avatar from "@mui/material/Avatar";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import { TrainerListDataProps } from "src/interface";
-import { TchaButton } from "@shared/button";
+import { TchaButton, TchaStarFilled } from "@shared/button";
 import { Rating } from "@mui/material";
 import { useState } from "react";
+import Asset3 from "src/shared/icons/Asset3.png"
 
 const Wrapper = styled.div`
   display: flex;
@@ -23,10 +24,12 @@ const Wrapper = styled.div`
   background-color: white;
   margin: 1%;
   padding: 1%;
-  border-radius: 10px;
+  border-radius: 15px 15px 0px 15px;
   display: flex;
   align-items: center;
-  cursor: pointer;
+  cursor:pointer;
+  /* cursor: url(${Asset3}), pointer; */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
     height: 7.5rem;
   }
@@ -56,22 +59,23 @@ const DataWrapper = styled.div`
 `;
 const NameWrapper = styled.div`
   display: flex;
-  margin: 2% 5% 2% 5%;
+  margin: 2% 5% 1.5% 4.5%;
   align-items: end;
 `;
-const NameTextH5 = styled.h5`
+const NameTextH5 = styled.h4`
   margin: 0%;
   font-size: 3rem;
   @media (max-width: 767px) {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 `;
 const TRTextH5 = styled.h5`
   font-size: 2rem;
-  margin: 0% 0% 0% 2%;
+  margin: 0% 2% 0% 2%;
+  
   @media (max-width: 767px) {
-    margin: 0% 0% 0% 4%;
-    font-size: 0.9rem;
+    margin: 0% 3% 0% 3%;
+    font-size: 1.2rem;
   }
 `;
 const KeywordWrapper = styled.div`
@@ -93,7 +97,8 @@ const TagTextH6 = styled.h5`
   font-size: 1.4rem;
   margin: 1.2% 3%;
   @media (max-width: 767px) {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    margin: 0.2% 3%;
   }
 `;
 const DetailTextH6 = styled.h6`
@@ -105,7 +110,7 @@ const DetailTextH6 = styled.h6`
 `;
 const ButtonWrapper = styled.div`
   display: flex;
-  flex: 1;
+  width:15%;
   height: 100%;
   justify-content: center;
   align-items: center;
@@ -120,12 +125,36 @@ const ButtonTextH5 = styled.h5`
   color: white;
 `;
 
-const StyledStarOutlineRoundedIcon = styled(StarOutlineRoundedIcon)`
-  font-size: 12em !important;
+const StyledStarOutlined = styled(StarOutlineRoundedIcon)`
+  color: ${({ theme }) => theme.color.tcha};
+  font-size: 8rem !important;
+  &:hover {
+    color: #11a39c;
+  }
   @media (max-width: 767px) {
-    font-size: 5em !important;
+    font-size: 3rem !important;
   }
 `;
+
+const StyledStarFilled = styled(StarRoundedIcon)`
+  color: ${({ theme }) => theme.color.tcha};
+  font-size:8rem !important;
+  &:hover {
+    color: #11a39c;
+  }
+  @media (max-width: 767px) {
+    font-size:3rem !important;
+  }
+`
+const TchaStar = styled(StarRoundedIcon)`
+  color: #11a39c;
+  font-size:2.3rem !important;
+  @media (max-width: 767px) {
+    font-size:1.3rem !important;
+  }
+`
+
+
 
 function TrainerListItem(props: TrainerListDataProps) {
   const navigate = useNavigate();
@@ -168,7 +197,7 @@ function TrainerListItem(props: TrainerListDataProps) {
     <Wrapper>
       <AvatarWrapper>
         <Avatar
-          style={{ height: "80%", width: "80%", margin: "5%" }}
+          style={{ height: "80%", width: "80%", margin: "5%", borderRadius:"25%", boxShadow:"3px 3px 5px rgba(0, 0, 0, 0.1)"}}
           alt=""
           src={props.data.profileImg}
         />
@@ -177,12 +206,8 @@ function TrainerListItem(props: TrainerListDataProps) {
         <NameWrapper>
           <NameTextH5>{props.data.profileName}</NameTextH5>
           <TRTextH5>트레이너</TRTextH5>
-          <Rating
-            name="read-only"
-            value={props.data.stars}
-            readOnly
-            size="large"
-          />
+          <TchaStar/>
+          <TRTextH5 style={{marginLeft:"0%"}}>{props.data.stars}</TRTextH5>
         </NameWrapper>
         <KeywordWrapper>
           {tags.map((tag, index) => (
@@ -193,37 +218,25 @@ function TrainerListItem(props: TrainerListDataProps) {
         <DetailTextH6>등록 일자 : {props.data.createdAt}</DetailTextH6>
 
         <Container>
-          <DetailTextH6>예약 수 : {props.data.ptCount}</DetailTextH6>
-          <DetailTextH6>리뷰 수 : {props.data.reviewCount}</DetailTextH6>
+          <DetailTextH6>예약: {props.data.ptCount}</DetailTextH6>
+          <DetailTextH6>리뷰: {props.data.reviewCount}</DetailTextH6>
           <DetailTextH6>재등록율 : {props.data.revisitGrade} %</DetailTextH6>
-          <DetailTextH6>즐겨찾기 수 : {props.data.bookmarkCount}</DetailTextH6>
+          <DetailTextH6>즐겨찾기 : {props.data.bookmarkCount}</DetailTextH6>
         </Container>
       </DataWrapper>
       <ButtonWrapper>
         {isBookmarked ? (
-          <StarRoundedIcon
+          <StyledStarFilled
             onClick={cancleBookmark}
             style={{ fontSize: "5rem" }}
           />
         ) : (
-          <StyledStarOutlineRoundedIcon
+          <StyledStarOutlined
             onClick={bookmark}
             style={{ fontSize: "5rem" }}
           />
         )}
-        {/* <TchaButton onClick={bookmark} style={{width:"70%"}}>
-          <ButtonTextH5>즐겨찾기 등록</ButtonTextH5>
-        </TchaButton> */}
       </ButtonWrapper>
-
-      {/* 별 Toggle 북마크 로직 완성되면 아래 쓰면 됨  */}
-      {/* <BookmarkWrapper onClick={() => setBookmark(!bookmark)}>
-        {bookmark ? (
-          <StarRoundedIcon style={{ fontSize: "2.5em" }} />
-        ) : (
-          <StarOutlineRoundedIcon style={{ fontSize: "2.5em" }} />
-        )}
-      </BookmarkWrapper> */}
     </Wrapper>
   );
 }

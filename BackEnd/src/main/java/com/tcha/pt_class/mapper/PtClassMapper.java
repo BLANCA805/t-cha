@@ -5,10 +5,13 @@ import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
 import com.tcha.pt_live.entity.PtLive.PtliveStaus;
 import com.tcha.trainer.entity.Trainer;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+
+import com.tcha.user_profile.entity.UserProfile;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -24,7 +27,24 @@ public interface PtClassMapper {
                 .build();
     }
 
-    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status, long reviewId) {
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status, long reviewId, UserProfile userProfile) {
+        if (userProfile == null) {
+            return PtClassDto.Response.builder()
+                    .trainerId(ptClass.getTrainer().getId().toString())
+                    .classId(ptClass.getId())
+                    .liveId(ptClass.getPtLiveId())
+                    .startDate(ptClass.getStartDate())
+                    .startTime(ptClass.getStartTime())
+                    .status(status)
+                    .reviewId(reviewId)
+                    .trainerImage(ptClass.getTrainer().getUserProfile().getProfileImage())
+                    .trainerName(ptClass.getTrainer().getUserProfile().getName())
+                    .introduction(ptClass.getTrainer().getIntroduction())
+                    .userName(null)
+                    .userImage(null)
+                    .build();
+        }
+
         return PtClassDto.Response.builder()
                 .trainerId(ptClass.getTrainer().getId().toString())
                 .classId(ptClass.getId())
@@ -33,6 +53,11 @@ public interface PtClassMapper {
                 .startTime(ptClass.getStartTime())
                 .status(status)
                 .reviewId(reviewId)
+                .trainerImage(ptClass.getTrainer().getUserProfile().getProfileImage())
+                .trainerName(ptClass.getTrainer().getUserProfile().getName())
+                .introduction(ptClass.getTrainer().getIntroduction())
+                .userName(userProfile.getName())
+                .userImage(userProfile.getProfileImage())
                 .build();
     }
 }

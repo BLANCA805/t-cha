@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { api } from "@shared/common-data";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -12,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { TrainerScheduleData } from "src/interface";
 import { GrayButton, TchaButton } from "@shared/button";
 import WriteExerciseLog from "@user-trainer/write-exercise-log";
+
 
 const CalendarContainer = styled.div`
   background-color: white;
@@ -68,6 +69,9 @@ function TrainerSchedule() {
 
   const navigate = useNavigate();
 
+  // 오픈비두
+  const [ptLiveData, setPtLiveData] = useState<PtLiveData>();
+
   useEffect(() => {
     axios
       .get(`${api}/classes/${trainer}`)
@@ -80,25 +84,25 @@ function TrainerSchedule() {
       });
   }, [trainer]);
 
-  const goToPtRoom = (liveId: number | null) => {
+
+  const goToPtRoom = (ptLiveId: number) => {
     axios
-      .get(`${api}/lives/${liveId}`)
+      .get(`${api}/lives/${ptLiveId}`)
       .then((response) => {
-        const liveData = response.data;
+        const ptLiveData:PtLiveData = response.data;
 
         // 트레이너 입장 가능 여부 확인
-        if (liveData.trainerId === trainer) {
-          // if (liveData.status === "PROGRESS") {
-          //   navigate("/pt", { state: liveData });
+        if (ptLiveData.trainerId === trainer) {
+          // if (ptLiveData?.status === "PROGRESS") {
+          //   navigate("/pt", { state: ptLiveData });
           // } else {
           //   alert("입장 가능한 시간이 아닙니다");
           // }
-          navigate("/pt", { state: liveData });
+          navigate("/pt", { state: ptLiveData });
         } else {
           alert("입장 권한이 없습니다");
         }
       })
-
       .catch((error) => {
         console.log(error);
       });

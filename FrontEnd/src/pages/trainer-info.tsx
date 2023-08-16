@@ -10,7 +10,12 @@ import TrainerDetail from "@trainer-info/trainer-detail";
 import TrainerReview from "@trainer-info/trainer-review";
 
 import ToggleButtons from "@shared/toggle-button";
-import { TchaButton, TchaStarFilled, TchaStarOutlined,TchaButtonText } from "@shared/button";
+import {
+  TchaButton,
+  TchaStarFilled,
+  TchaStarOutlined,
+  TchaButtonText,
+} from "@shared/button";
 
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
@@ -53,7 +58,7 @@ const Profile = styled.div`
   border-radius: 10px;
   margin-bottom: 0.5%;
   width: 100%;
-  color:${({ theme }) => theme.color.dark};
+  color: ${({ theme }) => theme.color.dark};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
     min-height: 8rem;
@@ -68,7 +73,7 @@ const ProfilePhoto = styled.div`
   padding: 1%;
   width: 30%;
   aspect-ratio: 1/1;
-  
+
   @media (max-width: 767px) {
     width: 27.5%;
   }
@@ -97,7 +102,7 @@ const IdWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-`
+`;
 
 const UserId = styled.h4`
   display: flex;
@@ -164,7 +169,7 @@ const BottomTab = styled.div`
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
   @media (max-width: 767px) {
-    height:5rem;
+    height: 5rem;
   }
 `;
 
@@ -217,7 +222,7 @@ const RegisterButton = styled(TchaButton)`
   border-radius: 10px !important;
   @media (max-width: 767px) {
     height: 75%;
-    width:90%;
+    width: 90%;
     border-radius: 5px !important;
   }
 `;
@@ -343,18 +348,18 @@ function TrainerInfo() {
       {trainer !== user.trainerId && (
         <BottomTab>
           <BookmarkWrapper>
-              {isBookmarked ? (
-                <TchaStarFilled
-                  onClick={cancleBookmark}
-                  style={{ fontSize: "7em" }}
-                />
-              ) : (
-                <TchaStarOutlined
-                  onClick={bookmark}
-                  style={{ fontSize: "7em" }}
-                />
-              )}
-            </BookmarkWrapper>
+            {isBookmarked ? (
+              <TchaStarFilled
+                onClick={cancleBookmark}
+                style={{ fontSize: "7em" }}
+              />
+            ) : (
+              <TchaStarOutlined
+                onClick={bookmark}
+                style={{ fontSize: "7em" }}
+              />
+            )}
+          </BookmarkWrapper>
           <RegisterWrapper>
             <RegisterButton onClick={moveToReservation} variant="contained">
               <ButtonText>예약 및 결제하기</ButtonText>

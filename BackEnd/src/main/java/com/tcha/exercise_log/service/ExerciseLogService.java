@@ -82,8 +82,8 @@ public class ExerciseLogService {
         List<ExerciseLog> exercises = exerciseLogPage.getContent();
         List<ExerciseLogDto.Response> responses = new ArrayList<>();
 
-        for(ExerciseLog e : exercises) {
-            responses.add(exerciseLogMapper.exerciseLogToResponse(e,findTrainerNameByExerciseLog(e)));
+        for (ExerciseLog e : exercises) {
+            responses.add(exerciseLogMapper.exerciseLogToResponse(e, findTrainerNameByExerciseLog(e)));
         }
         return new MultiResponseDto<>(responses, exerciseLogPage);
 
@@ -114,7 +114,7 @@ public class ExerciseLogService {
      */
     @Transactional
     public ExerciseLogDto.Response updateExerciseLog(ExerciseLog existExerciseLog,
-            ExerciseLogDto.Patch patchRequest, Long id) {
+                                                     ExerciseLogDto.Patch patchRequest) {
 
 //        existExerciseLog.setContent(patchRequest.getContent());
         existExerciseLog.setTitle(patchRequest.getTitle());
@@ -123,7 +123,7 @@ public class ExerciseLogService {
         List<String> imgList = existExerciseLog.getImages();
 //        List<String> videoList = existExerciseLog.getVideos();
 
-        if(!imgList.isEmpty()) {
+        if (!imgList.isEmpty()) {
             for (String s : imgList) {
                 s3Uploader.delete(s);
             }
@@ -135,10 +135,10 @@ public class ExerciseLogService {
         List<String> content = new ArrayList<>();
         List<String> image = new ArrayList<>();
 
-        for(ExerciseLogDto.Content c : patchRequest.getContent()) {
+        for (ExerciseLogDto.Content c : patchRequest.getContents()) {
             //새로운 이미지, 비디오 저장
-           content.add(c.getText());
-           image.add(c.getImage());
+            content.add(c.getText());
+            image.add(c.getImage());
         }
         existExerciseLog.setContents(content);
         existExerciseLog.setImages(image);
@@ -170,7 +170,7 @@ public class ExerciseLogService {
     //작성 및 작성완료는 해당 일지를 확인할 수 있는 트레이너만 접근이 가능하도록 다른 도메인에서 정해져있을 것임
     //그리고 작성완료는 트레이너가 하므로, 트레이너 이름 정보 필요 없음
     @Transactional
-    public ExerciseLogDto.Response patchWriteDoneExerciseLog(ExerciseLog exerciseLog,ExerciseLogDto.Patch patchRequest) {
+    public ExerciseLogDto.Response patchWriteDoneExerciseLog(ExerciseLog exerciseLog, ExerciseLogDto.Patch patchRequest) {
 
         exerciseLog.setTitle(patchRequest.getTitle());
 
@@ -178,7 +178,7 @@ public class ExerciseLogService {
         List<String> imgList = exerciseLog.getImages();
 //        List<String> videoList = exerciseLog.getVideos();
 
-        if(!imgList.isEmpty()) {
+        if (!imgList.isEmpty()) {
             for (String s : imgList) {
                 s3Uploader.delete(s);
             }
@@ -190,7 +190,7 @@ public class ExerciseLogService {
         List<String> content = new ArrayList<>();
         List<String> image = new ArrayList<>();
 
-        for(ExerciseLogDto.Content c : patchRequest.getContent()) {
+        for (ExerciseLogDto.Content c : patchRequest.getContents()) {
             //새로운 이미지, 비디오 저장
             content.add(c.getText());
             image.add(c.getImage());

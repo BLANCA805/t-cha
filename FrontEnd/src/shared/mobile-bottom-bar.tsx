@@ -5,10 +5,22 @@ import axios from "axios";
 
 import { api } from "./common-data";
 import { AppDispatch, type RootState } from "src/redux/store";
-import { deleteProfile, logIn, logOut, postProfile } from "src/redux/slicers";
+import { deleteProfile, logOut } from "src/redux/slicers";
 
 import Auth from "@shared/auth";
-import Logo from "src/shared/icons/LOGO.png"
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Fab from "@mui/material/Fab";
+
+import Logo from "src/shared/icons/LOGO.png";
+import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
 import styled from "styled-components";
@@ -34,7 +46,7 @@ const ButtomBarContents = styled.div`
   align-items: center;
   height: 100%;
   width: 15%;
-  color:#acacac;
+  color: #acacac;
   /* background-color: pink; */
   margin: 0rem 0.2rem;
 `;
@@ -42,11 +54,11 @@ const ButtomBarContents = styled.div`
 const ButtomBarHome = styled.div`
   position: relative;
   bottom: 7%;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width:5.75rem;
-  height:5.75rem;
+  width: 5.75rem;
+  height: 5.75rem;
   aspect-ratio: 1/1;
   border-radius: 50%;
   /* background-color: pink; */
@@ -54,23 +66,23 @@ const ButtomBarHome = styled.div`
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2) !important;
   overflow-y: display;
   z-index: 2;
-`
+`;
 const ButtomBarIconImage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width:90%;
-  aspect-ratio: 1/1;  
-`
+  width: 90%;
+  aspect-ratio: 1/1;
+`;
 const ButtomBarHomeImage = styled(ButtomBarIconImage)`
   background-color: #fff;
   border-radius: 50%;
-`
+`;
 const ButtomBarHomeImg = styled.img`
-  width:65%;
-  margin-right:5%;
+  width: 65%;
+  margin-right: 5%;
   object-fit: contain;
-`
+`;
 
 function MobileBottomBar() {
   const navigate = useNavigate();

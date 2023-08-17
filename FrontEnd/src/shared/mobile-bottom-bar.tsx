@@ -110,9 +110,6 @@ function MobileBottomBar() {
 
   return (
     <BottomBarContainer>
-      {/* <React.Fragment> */}
-      {/* {list()} */}
-      {/* </React.Fragment> */}
       <ButtomBarContents
         onClick={() => navigate("profile/bookmarked_trainers")}
       >

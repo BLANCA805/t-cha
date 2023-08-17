@@ -20,7 +20,10 @@ const color = {
   secondary: "#D8E6E7",
   light: "#fffdfb",
   dark: "#24272b",
-  tcha: "#125B51",
+  tcha:"#125B51",
+  tchamid:"#0a8d85",
+  tchalight:"#1BA693",
+
 };
 
 const windowSize = {

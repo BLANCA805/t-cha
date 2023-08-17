@@ -11,7 +11,7 @@
     <td align="center"><b>최해미</b></td>
   </tr>
   <tr>
-    <td align="center"><b>BLANCA</b></td>
+    <td align="center" vertical-align="middle"><b>BLANCA</b></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/241ee0f5-a09d-4a68-a6e1-267f9e96a40d" width="100px;" alt=""/></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/cd3d4ad3-9568-46f0-b7d5-7bd27155b7a9" width="100px;" alt=""/></td>
     <td align="center"><img src="https://github.com/hso8706/Useful/assets/103169947/e52d2465-eb3e-4885-9ef1-1f2452c0e2a7" width="100px;" alt=""/><br /></td>
@@ -24,9 +24,9 @@
     <td align="center"><b>👑 Backend</b></td>
     <td align="center"><b>Backend</b></td>
     <td align="center"><b>Frontend</b></td>
+    <td align="center"><b>Frontend</b></td>
     <td align="center"><b>Backend</b></td>
-    <td align="center"><b>Frontend</b></td>
-    <td align="center"><b>Frontend</b></td>
+    <td align="center"><b>Backend</b></td>
   </tr>
 </table>
 
@@ -247,15 +247,106 @@
 - Redux
 
 # 3. PROJECT
-### 기술 스택
+### Design(피그마)
+<details>
+<summary>Design(피그마)</summary>
+<div markdown="1">
 
+![피그마](https://github.com/hso8706/Useful/assets/103169947/935a03c9-3cf4-445d-999f-0fca6c9d52b3)
+
+</div>
+</details>
+
+
+### 기술 스택
+<details>
+<summary>프론트엔드</summary>
+<div markdown="1">
+
+|스택명|버전|비고|
+|:---:|:---:|:---:|
+|React	|18.2.0	latest||
+|React-Router|	6.4	||
+|Node.js|	18.17.0	LTS||
+|TypeScript|	4.9.5	||
+|Redu|	4.2.1	||
+|Axios|	1.4.0	||
+|openvidu-browser|	2.28.0	||
+|React-Redux|	8.1.1	||
+|Redux-js-tookit|	1.9.5	||
+|mui|||
+
+</div>
+</details>
+
+<details>
+<summary>백엔드</summary>
+<div markdown="1">
+
+|스택명	|버전|	설명|
+|:---:|:---:|:---:|
+|Spring Boot|	3.0.8	|oAuth2, Security, Validation, Web, Websocket|
+|Java	|openjdk 17.0.7 2023-04-18 LTS	||
+|spring data jpa|	3.0.8	||
+|Mapstruct	|1.4.2.Final	|Mapper 사용을 위한 라이브러리|
+|dependency-management|	1.1.0	||
+|asciidoctor|	3.3.2	||
+|lombok|1.18.22	||
+|lombok-mapstruct-binding|	0.2.0|	Lombok - MapStruct Binding|
+|mariadb-java-client|	2.7.3	|MariaDB 드라이버|
+|spring-restdocs-mockmvc|	3.0.0	||
+|jjwt|	0.11.5	|JWT 사용 라이브러리|
+|spring-boot-starter-data-redis|	3.1.2	|Redis|
+|lettuce-core|	6.2.4.RELEASE	|Redis 사용을 위한 Client|
+|spring-cloud-starter-aws|	2.2.6.RELEASE	|AWS S3 사용|
+|jaxb-api|	2.3.1	|Java → XML|
+
+</div>
+</details>
+
+<details>
+<summary>인프라</summary>
+<div markdown="1">
+
+|스택명|	버전|
+|:---:|:---:|
+|AWS ec2	|Ubuntu 20.04 LTS|
+|AWS RDS (MariaDB)	|10.6.14|
+|Docker	|24.0.5|
+|Docker compose	|v2.20.2|
+|Nginx	|1.18.0|
+
+</div>
+</details>
 
 ### API 명세서
-- [노션 링크](https://www.notion.so/API-5e5c6f1b60fe40b99b7660ab2b037ed2)
+<details>
+<summary>API 명세서</summary>
+<div markdown="1">
 
+[api 명세서 노션 링크](https://www.notion.so/API-5e5c6f1b60fe40b99b7660ab2b037ed2)
+
+
+</div>
+</details>
 
 ### ERD
+<details>
+<summary>ERD</summary>
+<div markdown="1">
+
+![진짜 찐 마지막 최종 ERD](https://github.com/hso8706/Useful/assets/103169947/648baa7e-970e-46b5-98cf-2024e953aa48)
+
+</div>
+</details>
 
 
-### Design(피그마)
-![피그마](https://github.com/hso8706/open-pjt-db/assets/103169947/bd09a5ae-1911-4222-ab54-e938d830c832)
+### 서비스 아키텍쳐
+<details>
+<summary>서비스 아키텍쳐</summary>
+<div markdown="1">
+
+![Web App Reference Architecture](https://github.com/hso8706/Useful/assets/103169947/d0ca0c82-fb17-4165-a72f-f5cfc4162f40)
+
+</div>
+</details>

@@ -53,13 +53,15 @@ public class TrainerDto {
     */
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Get {
 
-        private String keyword;
         @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-DD", timezone = "Asia/Seoul")
         private LocalDate date;
         @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         private LocalTime fromTime;
+        private String keyword;
         @JsonFormat(shape = Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         private LocalTime toTime;
     }

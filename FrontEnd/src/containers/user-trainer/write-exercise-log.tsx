@@ -6,7 +6,7 @@ import axios from "axios";
 import { api } from "@shared/common-data";
 import { SmallTitleWrapper } from "@shared/page-title";
 import TextField from "@mui/material/TextField";
-import { TchaButton, GrayButton, DefaultButton } from "@shared/button";
+import { TchaButton, GrayButton, GreenTchaButton, TchaButtonTextH6 } from "@shared/button";
 import Modal from "@mui/material/Modal";
 
 import styled from "styled-components";
@@ -21,50 +21,135 @@ const Wrapper = styled.div`
   padding: 1%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
+  min-height:40vh;
+  position: absolute;    
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;         
+  @media (max-width: 767px) {
+    width:70%;
+  }
 `;
 
 const Container = styled.div`
   display: flex;
-  margin: 1%;
-  justify-content: center;
+  justify-content: space-between;
   align-content: center;
+  width:80%;
+  height:20%;
+  padding: 1%;
+  margin: 1.5% 0%;
+  @media (max-width: 767px) {
+    flex-wrap: wrap;  
+  }
+
+`;
+const InputWrapper = styled.div`
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width:20%;
+  min-height:100%;
+  @media (max-width: 767px) {
+    width:90%;
+    margin-left:2%;
+    margin-right:5%;
+    margin-bottom:2%;
+  }
+`
+const ImageWrapper = styled.div`
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width:30%;
+  height:100%;
+  overflow: hidden;
+  @media (max-width: 767px) {
+    width:40%;
+    margin-bottom:4%;
+
+  }
+`;
+const ContentTextWrapper = styled.div`
+  display:flex;
+  align-items: center;
+  width:50%;
+  min-height:100%;
+  @media (max-width: 767px) {
+    width:70%;
+    margin-bottom:7%;
+  }
+`;
+const ButtonWrapper = styled.div`
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:15%;
+  @media (max-width: 767px) {
+    width:30%;
+    margin-bottom:7%;
+
+  }
+`;
+
+const Image = styled.img`
+  width: 80%;
+  aspect-ratio: 1/1;
+  /* max-height:5rem; */
+  object-fit: contain;
+  /* overflow: hidden; */
+  margin: 1%;
+  &:hover {
+    opacity: 50%;
+  }
 `;
 
 const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  width:80%;
   /* align-items: center; */
   margin-bottom: 1rem;
 `;
 
 const SubmitButton = styled.div`
   display: flex;
-  justify-content: center;
+  width:60%;
+  justify-content: space-evenly;
   align-items: center;
-  margin: 5% 0%;
-`;
-
-const InputCustomButton = styled(TchaButton)`
-  margin: 0% 12% !important;
-`;
-
-const ImageWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  min-height: 20%;
-`;
-
-const Image = styled.img`
-  width: 17%;
-  height: 17%;
-  overflow: hidden;
-  margin: 1%;
-  &:hover {
-    opacity: 50%;
+  margin: 5% 0% 5% 0%;
+  @media (max-width: 767px) {
+    width:90%;
   }
 `;
+
+const StyledTchaButton = styled(TchaButton)`
+  width: 40%;
+  height: 3rem;
+  margin-top: 3% !important;
+  color:white !important;
+  @media (max-width: 767px) {
+    width:60%;
+  }
+`;
+
+
+const StyledButton = styled(GreenTchaButton)`
+  margin: 0% 1.5% !important;
+  height: 3rem;
+  width: 7rem;
+  @media (max-width: 767px) {
+    width:5rem;
+  }
+  color:white !important;
+`
+const StyledGrayButton = styled(StyledButton)`
+  background-color:gray !important;
+  color:white !important;
+`
 
 const style = {
   position: "absolute" as "absolute",
@@ -219,26 +304,28 @@ function WriteExerciseLog(props: { liveId: number }) {
         aria-describedby="keep-mounted-modal-description"
       >
         <Wrapper>
-          <SmallTitleWrapper>일지쓰기</SmallTitleWrapper>
+          <SmallTitleWrapper style={{margin: "5% 0%"}}>일지쓰기</SmallTitleWrapper>
 
           <FormDetailWrapper style={{ marginTop: "3%" }}>
             <TextField
               value={title}
               onChange={handleTitle}
               label="제목을 입력하세요"
-              style={{ width: "88%" }}
+              style={{ width: "100%" }}
               variant="outlined"
             />
           </FormDetailWrapper>
 
           {contents.map((content, index) => (
             <Container key={index}>
-              <input
-                type="file"
-                accept="image/jpg,impge/png,image/jpeg,image/gif"
-                name="log_image"
-                onChange={(event) => handleImage(event, index)}
-              ></input>
+              <InputWrapper>
+                <input
+                  type="file"
+                  accept="image/jpg,impge/png,image/jpeg,image/gif"
+                  name="log_image"
+                  onChange={(event) => handleImage(event, index)}
+                ></input>
+              </InputWrapper>
 
               <ImageWrapper>
                 <Image
@@ -248,52 +335,49 @@ function WriteExerciseLog(props: { liveId: number }) {
                   onClick={() => deleteImage(index)}
                 />
               </ImageWrapper>
+              <ContentTextWrapper>
+                <TextField
+                  value={content.text}
+                  onChange={(event) => handleContent(event, index)}
+                  label="내용을 입력하세요"
+                  style={{ width: "95%" }}
+                  variant="outlined"
+                />
+              </ContentTextWrapper>
+              <ButtonWrapper>
+                <StyledButton onClick={() => removeContent(index)}>삭제</StyledButton>
+              </ButtonWrapper>
 
-              <TextField
-                value={content.text}
-                onChange={(event) => handleContent(event, index)}
-                label="내용을 입력하세요"
-                style={{ width: "88%" }}
-                variant="outlined"
-              />
-
-              <button onClick={() => removeContent(index)}>삭제하기</button>
             </Container>
           ))}
 
-          <TchaButton
+          <StyledTchaButton
             type="submit"
-            style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
             variant="contained"
             onClick={addContent}
           >
             내용 추가하기
-          </TchaButton>
+          </StyledTchaButton>
 
           <SubmitButton>
-            <GrayButton
+            <StyledGrayButton
               type="submit"
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
-              variant="contained"
               onClick={temp}
+              style={{backgroundColor:"gray"}}
             >
               임시저장
-            </GrayButton>
-            <TchaButton
+            </StyledGrayButton>
+            <StyledButton
               type="submit"
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
-              variant="contained"
               onClick={save}
             >
               작성완료
-            </TchaButton>
-            <TchaButton
-              style={{ width: "7rem", height: "3rem", fontSize: "1rem" }}
-              variant="contained"
+            </StyledButton>
+            <StyledButton
               onClick={handleClose}
             >
               작성취소
-            </TchaButton>
+            </StyledButton>
           </SubmitButton>
         </Wrapper>
       </Modal>

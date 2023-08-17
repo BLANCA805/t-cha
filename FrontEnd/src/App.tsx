@@ -17,7 +17,9 @@ import Asset5 from "./shared/icons/Asset5.png";
 import MobileBottomBar from "@shared/mobile-bottom-bar";
 
 const GlobalStyle = createGlobalStyle`
-
+  .box {
+    box-sizing: border-box;
+  }
   @font-face {
     font-family: 'jamsil1'; 
     src: url(${MyFont1}) format('opentype'); 
@@ -109,7 +111,7 @@ const Wrapper = styled.div`
   display: flex;
   /* justify-content: center; */
   width: 100%;
-  min-width: 1660px;
+  /* min-width: 1660px; */
   height: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.color.secondary};
@@ -122,12 +124,18 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.color.primary};
   /* color: ${({ theme }) => theme.color.dark}; */
 `;
+const viewportWidth = document.documentElement.clientWidth;
+const contentWidth = viewportWidth - 264;
+
 
 const Container = styled.div`
   flex: 1;
   display: flex;
+  flex-shrink: 1;
   justify-content: center;
   z-index: 0;
+  /* width:${contentWidth}; */
+  width:70vw;
   @media (max-width: 767px) {
     padding-bottom: 6.5rem;
     overflow-y: auto;

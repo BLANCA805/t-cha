@@ -109,24 +109,25 @@ const GlobalStyle = createGlobalStyle`
 
 const Wrapper = styled.div`
   display: flex;
-  /* justify-content: center; */
   width: 100%;
   /* min-width: 1660px; */
   height: 100%;
   min-height: 100vh;
   background-color: ${({ theme }) => theme.color.secondary};
-  /* background-color: #e0e0e0; */
-  /* background-color: #5e5e5e; */
+  /* background-color: #eff5f4; //이거 괜찮음  */
   /* background: radial-gradient( #11a39c, #2a4d43); */
+
+  /* background-color: #ecf0ef; */
+  /* background-color: #eeeeee; */
+  /* background-color: #e0e0e0; */
+  /* background-color: #3f3f3f; */
+  /* background-color: #5e5e5e; */
   @media (max-width: 767px) {
     min-width: 0px;
   }
   color: ${({ theme }) => theme.color.primary};
   /* color: ${({ theme }) => theme.color.dark}; */
 `;
-const viewportWidth = document.documentElement.clientWidth;
-const contentWidth = viewportWidth - 264;
-
 
 const Container = styled.div`
   flex: 1;
@@ -134,7 +135,6 @@ const Container = styled.div`
   flex-shrink: 1;
   justify-content: center;
   z-index: 0;
-  /* width:${contentWidth}; */
   width:70vw;
   @media (max-width: 767px) {
     padding-bottom: 6.5rem;

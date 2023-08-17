@@ -114,7 +114,7 @@ function DesktopSideBar() {
               ["profile", "마이페이지"],
               ["", "home"],
               ["profile/schedule", "내 캘린더"],
-              ["profile/chat", "채팅 목록"],
+              // ["profile/chat", "채팅 목록"],
               ["trainer", "트레이너"],
               ["customer_center", "고객센터"],
             ].map((data, index) => (

@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   display: flex;
   width:96%;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   margin: 1% 0% ;
   
 `;
@@ -132,9 +132,7 @@ function UserSchedule() {
           {items[0] ? (
             items.map((item, index) => <UserScheduleItem data={item} key={index}/>)
           ) : (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <p>해당 날짜에 예약이 없습니다</p>
-            </div>
+              <h6>해당 날짜에 예약이 없습니다</h6>
           )}
         </ScheduleInfo>
       </ContentsWrapper>

@@ -1,36 +1,37 @@
-import React, { FC } from "react";
-// import { useOpenvidu } from "src/hooks/use-openvidu";
-import { PtRoomData } from "src/interface";
+import styled from "styled-components";
+import { useStream } from "../../hooks/use-stream";
 
-const LiveItem = () => {
-  return (<div></div>)
-}
-// const LiveItem: FC<PtRoomData> = ({ profileId, liveId }) => {
-//   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
-//     useOpenvidu(profileId, liveId);
+const Video = styled.video`
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+`;
 
-//   const test = () => {
-//     console.log(streamList);
-//   };
-//   return (
-//     <div>
-//       <button onClick={test}></button>
-//       {publisher && (
-//         <div>
-//           <video
-//             ref={(videoRef) => {
-//               if (videoRef && publisher && publisher.stream) {
-//                 videoRef.srcObject = publisher.stream.getMediaStream();
-//               }
-//             }}
-//             autoPlay
-//             muted
-//           />
-//           {/* publisher를 표시하거나 영상 통화 상태를 UI에 반영하는 등의 기능 추가 */}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+const LiveItem = ({
+  stream,
+  profileId,
+}: {
+  stream: any;
+  profileId: number;
+}) => {
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+  console.log(stream);
+
+  const { videoRef, speaking, micStatus, videoStatus } = useStream(stream);
+
+  return (
+    <div>
+      <Video ref={videoRef} style={{ width: "100%", height: "100%" }}></Video>
+    </div>
+  );
+};
 
 export default LiveItem;

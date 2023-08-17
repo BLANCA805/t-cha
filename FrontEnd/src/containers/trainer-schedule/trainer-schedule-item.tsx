@@ -15,11 +15,11 @@ const Wrapper = styled.div`
   width: 100%;
   width: 97%;
   background-color: lightpink;
-  margin-bottom: 1%;
+  margin-bottom: 2%;
   border-radius: 5px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
-    height: 6rem;
+    height: 5rem;
   }
 `;
 const DataWrapper = styled.div`
@@ -123,7 +123,7 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
     <Wrapper>
       <DataWrapper>
         <TimeWrapper>
-          <StyledTextH4>{item.startDate}</StyledTextH4>
+          {/* <StyledTextH4>{item.startDate}</StyledTextH4> */}
           <StyledTextH5>{item.startTime}</StyledTextH5>
         </TimeWrapper>
         <ButtonWrapper>

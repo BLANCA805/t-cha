@@ -16,7 +16,7 @@ const profileInitialState = {
 
 const ptLiveInitialState = {
   ov: null, // openvidu 객체
-  userOpenViduToken: null,
+  userOpenViduToken: "",
   sessionId: null,
 };
 
@@ -85,7 +85,7 @@ const ptLiveSlice = createSlice({
     clearItems: (state) => {
       state.ov = null;
       state.sessionId = null;
-      state.userOpenViduToken = null;
+      state.userOpenViduToken = "";
     },
   },
 });

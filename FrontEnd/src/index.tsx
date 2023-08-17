@@ -9,16 +9,18 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 
 import { ThemeProvider } from "styled-components";
-import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import Asset4 from "./shared/icons/Asset4.png"
+import {
+  createTheme,
+  ThemeProvider as MuiThemeProvider,
+} from "@mui/material/styles";
+import Asset4 from "./shared/icons/Asset4.png";
 
 const color = {
   primary: "#6E7783",
   secondary: "#D8E6E7",
   light: "#fffdfb",
   dark: "#24272b",
-  tcha:"#125B51",
-
+  tcha: "#125B51",
 };
 
 const windowSize = {
@@ -46,16 +48,15 @@ const muiTheme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        '*': {
-          '&:hover': {
-            'cursor': `url(${Asset4}), pointer`
-          }
-        }
-      }
-    }
-  }
+        "*": {
+          "&:hover": {
+            cursor: `url(${Asset4}), pointer`,
+          },
+        },
+      },
+    },
+  },
 });
-
 
 export let persistor = persistStore(store);
 
@@ -67,11 +68,11 @@ root.render(
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <React.StrictMode>
-            <RouterProvider router={Router} />
-          </React.StrictMode>
+          {/* <React.StrictMode> */}
+          <RouterProvider router={Router} />
+          {/* </React.StrictMode> */}
         </PersistGate>
       </Provider>
     </ThemeProvider>
-  </MuiThemeProvider> 
+  </MuiThemeProvider>
 );

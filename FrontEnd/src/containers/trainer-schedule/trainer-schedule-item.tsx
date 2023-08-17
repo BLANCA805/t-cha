@@ -43,26 +43,20 @@ const DataWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  color:${({ theme }) => theme.color.dark};
 `;
 
 const TimeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 35%;
+  min-width: 25%;
   @media (max-width: 767px) {
     margin: 0% 0.5%;
   }
 `;
 
-const PtInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-const TrainerName = styled.div`
+const NameWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: end;
@@ -74,8 +68,8 @@ const ButtonWrapper = styled.div`
   justify-content: center;
   width: 40%;
   @media (max-width: 767px) {
-    min-width: 30%;
-    max-width: 31%;
+    /* min-width: 30%;
+    max-width: 31%; */
   }
 `;
 
@@ -88,27 +82,26 @@ const StyledTextH6 = styled.h6`
 `;
 const StyledTextH5 = styled.h5`
   margin: 0%;
-  font-size: 1rem;
+  font-size: 2rem;
   @media (max-width: 767px) {
     font-size: 0.7rem;
   }
 `;
 const StyledTextH4 = styled.h4`
-  margin: 0% 0% 2% 0%;
+  margin: 0%;
   font-size: 1rem;
   @media (max-width: 767px) {
     font-size: 0.5rem;
   }
 `;
 
-const TrNameText = styled(StyledTextH4)`
-  font-size: 2rem;
-  margin-left: 2%;
+const NameText = styled(StyledTextH4)`
+  font-size: 2.4rem;
   @media (max-width: 767px) {
     font-size: 1.3rem;
   }
 `;
-const TrText = styled(StyledTextH5)`
+const UserText = styled(StyledTextH5)`
   font-size: 1.7rem;
   margin-left: 2%;
   @media (max-width: 767px) {
@@ -118,7 +111,7 @@ const TrText = styled(StyledTextH5)`
 const StyledButton = styled(GreenTchaButton)<{
   status: string;
   liveid?: number;
-}>`
+  }>`
   margin: 0%;
   height: 3rem;
   width: 7rem;
@@ -170,9 +163,15 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
       <DataWrapper>
         <TimeWrapper>
           {/* <StyledTextH4>{item.startDate}</StyledTextH4> */}
-          <StyledTextH5>{item.startTime}</StyledTextH5>
-          <StyledTextH5>{item.liveId}</StyledTextH5>
+          <StyledTextH5>{item.startTime.slice(0,5)}</StyledTextH5>
+          {/* <StyledTextH5>{item.liveId}</StyledTextH5> */}
         </TimeWrapper>
+        
+        <NameWrapper>
+          <NameText>{item.userName}</NameText>
+          <UserText>회원</UserText>
+        </NameWrapper>
+        
         <ButtonWrapper>
           <StyledButton
             status={item.ptLiveStatus}
@@ -190,11 +189,6 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
               </TchaButtonTextH6>
             )}
           </StyledButton>
-          <StyledButton
-            status={item.ptLiveStatus}
-            liveid={item.liveId}
-            disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
-          >
             {item.ptLiveStatus === "TERMINATION" &&
               item.exerciseLogStatus === "WRITE" && (
                 <WriteExerciseLog liveId={item.liveId} />
@@ -203,9 +197,9 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
               item.exerciseLogStatus === "READ" && (
                 <ReadExerciseLog liveId={item.liveId} />
               )}
-          </StyledButton>
         </ButtonWrapper>
       </DataWrapper>
+
     </Wrapper>
   );
 }

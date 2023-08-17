@@ -50,12 +50,14 @@ function UserReviewList() {
           <p>아직 작성한 리뷰가 없습니다</p>
         </div>
       )}
-      <Pagination
-        count={items?.pageInfo.totalPages}
-        page={page}
-        onChange={handleChangePage}
-        color="standard"
-      />
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Pagination
+          count={items?.pageInfo.totalPages}
+          page={page}
+          onChange={handleChangePage}
+          color="standard"
+        />
+      </div>
     </Wrapper>
   );
 }

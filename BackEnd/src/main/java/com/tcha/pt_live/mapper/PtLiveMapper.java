@@ -11,7 +11,7 @@ import org.mapstruct.Mapper;
 public interface PtLiveMapper {
 
     default PtLiveDto.Response ptLiveToResponseDto(PtLive ptLive, Trainer trainer,
-            UserProfile userProfile, ExerciseLog.exerciseLogStaus exerciseLogStatus) {
+            UserProfile userProfile, ExerciseLog.exerciseLogStatus exerciseLogStatus) {
         return PtLiveDto.Response.builder()
                 .ptLiveId(ptLive.getId())
                 .ptLiveStatus(ptLive.getStatus().toString())

@@ -55,7 +55,7 @@ public class ExerciseLogService {
                 .contents(new ArrayList<>())
                 .images(new ArrayList<>())
                 .videos(new ArrayList<>())
-                .status(ExerciseLog.exerciseLogStaus.WRITE)
+                .status(ExerciseLog.exerciseLogStatus.WRITE)
                 .ptLive(ptLive)
 
                 .build();
@@ -199,7 +199,7 @@ public class ExerciseLogService {
         exerciseLog.setImages(image);
 
         //운동일지 상태 읽기로 변경
-        exerciseLog.setStatus(ExerciseLog.exerciseLogStaus.READ);
+        exerciseLog.setStatus(ExerciseLog.exerciseLogStatus.READ);
 
         return exerciseLogMapper.exerciseLogToResponse(exerciseLogRepository.save(exerciseLog),
                 findTrainerNameByExerciseLog(exerciseLog));
@@ -235,7 +235,7 @@ public class ExerciseLogService {
 
             //운동 시간 확인, (운동 시작시각 + 1) + 24 보다 이전이라면, R/W변경
             if (start.isBefore(nowTime.minusHours(25))) {
-                e.setStatus(ExerciseLog.exerciseLogStaus.READ);
+                e.setStatus(ExerciseLog.exerciseLogStatus.READ);
             }
         }
 

@@ -59,16 +59,16 @@ public class ExerciseLog extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private exerciseLogStaus status;
+    private exerciseLogStatus status;
 //    = exerciseLogStaus.WRITE;
 
-    public enum exerciseLogStaus {
+    public enum exerciseLogStatus {
         READ("읽기"), WRITE("쓰기");
 
         @Getter
         private String status;
 
-        exerciseLogStaus(String staus) {
+        exerciseLogStatus(String staus) {
             this.status = staus;
         }
     }

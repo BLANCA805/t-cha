@@ -71,6 +71,6 @@ public class ExerciseLogDto {
         private String trainerName;
 
 
-        private ExerciseLog.exerciseLogStaus status;
+        private ExerciseLog.exerciseLogStatus status;
     }
 }

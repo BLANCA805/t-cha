@@ -25,7 +25,7 @@ public interface PtClassMapper {
                 .build();
     }
 
-    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStatus ptliveStatus, long reviewId, UserProfile userProfile , ExerciseLog.exerciseLogStaus exerciseLogStatus) {
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStatus ptliveStatus, long reviewId, UserProfile userProfile , ExerciseLog.exerciseLogStatus exerciseLogStatus) {
         if (userProfile == null) {
             return PtClassDto.Response.builder()
                     .trainerId(ptClass.getTrainer().getId().toString())
@@ -38,7 +38,7 @@ public interface PtClassMapper {
                     .trainerImage(ptClass.getTrainer().getUserProfile().getProfileImage())
                     .trainerName(ptClass.getTrainer().getUserProfile().getName())
                     .introduction(ptClass.getTrainer().getIntroduction())
-                    .exerciseLogStaus(exerciseLogStatus)
+                    .exerciseLogStatus(exerciseLogStatus)
                     .userName(null)
                     .userImage(null)
                     .build();
@@ -57,7 +57,7 @@ public interface PtClassMapper {
                 .introduction(ptClass.getTrainer().getIntroduction())
                 .userName(userProfile.getName())
                 .userImage(userProfile.getProfileImage())
-                .exerciseLogStaus(exerciseLogStatus)
+                .exerciseLogStatus(exerciseLogStatus)
                 .build();
     }
 }

@@ -1,7 +1,7 @@
 package com.tcha.pt_class.service;
 
 import com.tcha.exercise_log.entity.ExerciseLog;
-import com.tcha.exercise_log.entity.ExerciseLog.exerciseLogStaus;
+import com.tcha.exercise_log.entity.ExerciseLog.exerciseLogStatus;
 import com.tcha.exercise_log.service.ExerciseLogService;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.entity.PtClass;
@@ -100,17 +100,17 @@ public class PtClassService {
                 Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
                 PtLive.PtliveStatus status = ptLive.get().getStatus();
                 UserProfile userProfile = ptLive.get().getUserProfile();
-                ExerciseLog.exerciseLogStaus exerciseLogStaus = ptLive.get().getExerciseLogs()
+                ExerciseLog.exerciseLogStatus exerciseLogStatus = ptLive.get().getExerciseLogs()
                         .getStatus();
                 if (ptLive.get().getReview() != null) {
                     //리뷰 아이디 존재 -> 값 넣어주기
                     Long reviewId = ptLive.get().getReview().getId();
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStaus));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStatus));
 
                 }
                 //리뷰아이디 존재하지 않는 상태
                 else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStaus));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStatus));
                 }
             }
             //예약이 존재하지 않는 상태
@@ -158,18 +158,18 @@ public class PtClassService {
 
             //예약된 수업이 존재하는 경우
             if (ptLive.isPresent()) {
-                ExerciseLog.exerciseLogStaus exerciseLogStaus = ptLive.get().getExerciseLogs()
+                ExerciseLog.exerciseLogStatus exerciseLogStatus = ptLive.get().getExerciseLogs()
                         .getStatus();
                 //리뷰 작성 후
                 if (ptLive.get().getReview() != null) {
                     //리뷰 아이디 존재 -> 값 넣어주기
                     Long reviewId = ptLive.get().getReview().getId();
 
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStaus));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStatus));
                 }
                 //리뷰 작성전
                 else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStaus));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStatus));
                 }
             }
             //예약한 수업이 존재하지 않는 경우
@@ -237,7 +237,7 @@ public class PtClassService {
             createdPtLive.setExerciseLogs(exerciseLog);
             /** 여기에 운동일지 생성하는 코드 넣어주세요*/
 
-            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStatus.INACCESSIBLE, 0, user.getUserProfile(), exerciseLogStaus.WRITE);
+            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStatus.INACCESSIBLE, 0, user.getUserProfile(), exerciseLogStatus.WRITE);
         }
 
         // 2. 수업 예약 취소라면,

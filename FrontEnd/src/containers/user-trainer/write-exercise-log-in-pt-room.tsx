@@ -27,10 +27,10 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
   position: sticky;
-  top: 18px;
-  left: 1698px;
+  top: 1.6%;
+  left: 69.5%;
   min-height: 50vh;
-  width: 26%;
+  width: 26.8%;
   @media (max-width: 767px) {
     width: 70%;
   }
@@ -146,6 +146,7 @@ const StyledButton = styled(GreenTchaButton)`
   }
   color: white !important;
 `;
+
 const StyledGrayButton = styled(StyledButton)`
   background-color: gray !important;
   color: white !important;
@@ -372,7 +373,7 @@ function WriteExerciseLogInPtRoom(props: { ptLiveId: number }) {
             <StyledButton type="submit" onClick={save}>
               작성완료
             </StyledButton>
-            <StyledButton onClick={handleClose}>작성취소</StyledButton>
+            <StyledButton onClick={handleClose}>닫기</StyledButton>
           </SubmitButton>
         </Wrapper>
       </Modal>

@@ -57,6 +57,11 @@ export const GreenTchaButton = styled(Button)`
   &:hover {
     background-color: #235551 !important;
   }
+  &[disabled] {
+    cursor: not-allowed;
+    opacity:90% !important;
+    background-color: #7B7B7B !important;
+  }
 `;
 export const GrayTchaButton = styled(Button)`
   display: flex;

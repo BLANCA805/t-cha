@@ -103,7 +103,7 @@ function WriteReview(props: {
 
   return (
     <>
-      <StyledButton onClick={handleOpen}><TchaButtonTextH6>리뷰 작성</TchaButtonTextH6></StyledButton>
+      <StyledButton onClick={handleOpen}>ㄴㄹㄴㄹ<TchaButtonTextH6>리뷰 작성</TchaButtonTextH6></StyledButton>
       <Modal
         keepMounted
         open={open}

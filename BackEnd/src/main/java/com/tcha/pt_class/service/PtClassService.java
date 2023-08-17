@@ -1,5 +1,7 @@
 package com.tcha.pt_class.service;
 
+import com.tcha.exercise_log.entity.ExerciseLog;
+import com.tcha.exercise_log.entity.ExerciseLog.exerciseLogStatus;
 import com.tcha.exercise_log.service.ExerciseLogService;
 import com.tcha.pt_class.dto.PtClassDto;
 import com.tcha.pt_class.entity.PtClass;
@@ -75,7 +77,7 @@ public class PtClassService {
 
         List<PtClassDto.Response> response = new ArrayList<>();
         for (PtClass pt : classList) {
-            response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
+            response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null, null));
         }
 
         return response;
@@ -96,23 +98,24 @@ public class PtClassService {
             //예약이 되어 있는 상태
             if (pt.getPtLiveId() != null) {
                 Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
-                PtLive.PtliveStaus status = ptLive.get().getStatus();
+                PtLive.PtliveStatus status = ptLive.get().getStatus();
                 UserProfile userProfile = ptLive.get().getUserProfile();
-
+                ExerciseLog.exerciseLogStatus exerciseLogStatus = ptLive.get().getExerciseLogs()
+                        .getStatus();
                 if (ptLive.get().getReview() != null) {
                     //리뷰 아이디 존재 -> 값 넣어주기
                     Long reviewId = ptLive.get().getReview().getId();
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStatus));
 
                 }
                 //리뷰아이디 존재하지 않는 상태
                 else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStatus));
                 }
             }
             //예약이 존재하지 않는 상태
             else {
-                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
+                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null, null));
             }
         }
         return response;
@@ -151,25 +154,27 @@ public class PtClassService {
         List<PtClassDto.Response> response = new ArrayList<>();
         for (PtClass pt : userClassList) {
             Optional<PtLive> ptLive = ptLiveRepository.findById(pt.getPtLiveId());
-            PtLive.PtliveStaus status = ptLive.get().getStatus();
+            PtLive.PtliveStatus status = ptLive.get().getStatus();
 
             //예약된 수업이 존재하는 경우
             if (ptLive.isPresent()) {
+                ExerciseLog.exerciseLogStatus exerciseLogStatus = ptLive.get().getExerciseLogs()
+                        .getStatus();
                 //리뷰 작성 후
                 if (ptLive.get().getReview() != null) {
                     //리뷰 아이디 존재 -> 값 넣어주기
                     Long reviewId = ptLive.get().getReview().getId();
 
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, reviewId, userProfile, exerciseLogStatus));
                 }
                 //리뷰 작성전
                 else {
-                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile));
+                    response.add(ptClassMapper.classToClassResponseDto(pt, status, 0, userProfile, exerciseLogStatus));
                 }
             }
             //예약한 수업이 존재하지 않는 경우
             else {
-                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null));
+                response.add(ptClassMapper.classToClassResponseDto(pt, null, 0, null, null));
             }
         }
         /**위의 코드는 에러날 수도 아니면 코드, 아래 코드로 바꿔야 될수도 내일 생각해보기*/
@@ -212,22 +217,27 @@ public class PtClassService {
             valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) + 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) + 1.0);
 
+
+
+
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
                     PtLive.builder()
                             .ptClassId(ptClass.getId())
                             .userProfile(user.getUserProfile())
                             .trainerId(ptClass.getTrainer().getId())
-                            .status(PtLive.PtliveStaus.INACCESSIBLE)
+                            .status(PtLive.PtliveStatus.INACCESSIBLE)
+                            .exerciseLogs(null)
                             .build());
 
             // ptClass에 ptLive 아이디 추가해주기 (update)
             ptClass.setPtLiveId(createdPtLive.getId());
+            ExerciseLog exerciseLog = exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
 
+            createdPtLive.setExerciseLogs(exerciseLog);
             /** 여기에 운동일지 생성하는 코드 넣어주세요*/
-            exerciseLogService.createExerciseLog(ptClass.getPtLiveId());
 
-            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStaus.INACCESSIBLE, 0, user.getUserProfile());
+            return ptClassMapper.classToClassResponseDto(ptClass, PtLive.PtliveStatus.INACCESSIBLE, 0, user.getUserProfile(), exerciseLogStatus.WRITE);
         }
 
         // 2. 수업 예약 취소라면,
@@ -249,7 +259,7 @@ public class PtClassService {
             String s = valueOperations.get(ptCountKey);
             valueOperations.set(ptCountKey, String.valueOf(Double.parseDouble(s) - 1.0));
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) - 1.0);
-            return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null);
+            return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null, null);
         }
         throw new BusinessLogicException(ExceptionCode.PT_CLASS_RESERVATION_EXIST);
     }
@@ -291,7 +301,7 @@ public class PtClassService {
         // 수업 삭제(삭제 상태값 컬럼 변경)
         ptClass.setIsDel(1);
 
-        return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null);
+        return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null, null);
     }
 
     /************** 상태 변경 로직 작성 ***************/
@@ -331,7 +341,7 @@ public class PtClassService {
 
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusHours(1))) {
-                pt.setStatus(PtLive.PtliveStaus.TERMINABLE);
+                pt.setStatus(PtLive.PtliveStatus.TERMINABLE);
             }
 
         }
@@ -373,7 +383,7 @@ public class PtClassService {
 
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isBefore(nowTime.minusMinutes(70))) {
-                pt.setStatus(PtLive.PtliveStaus.TERMINATION);
+                pt.setStatus(PtLive.PtliveStatus.TERMINATION);
             }
 
         }
@@ -421,7 +431,7 @@ public class PtClassService {
 
 //            운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
             if (start.isAfter(nowTime.minusMinutes(5))) {
-                pt.setStatus(PtLive.PtliveStaus.ACCESSIBLE);
+                pt.setStatus(PtLive.PtliveStatus.ACCESSIBLE);
             }
 
         }

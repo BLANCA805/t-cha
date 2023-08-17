@@ -142,11 +142,13 @@ const StyledButton = styled(GreenTchaButton)`
   margin: 0% 1.5% !important;
   height: 3rem;
   width: 7rem;
+
   @media (max-width: 767px) {
-    width: 5rem;
+    height: 2.5rem;
+    width: 5.5rem;
   }
-  color: white !important;
-`;
+  /* color:white !important; */
+`
 const StyledGrayButton = styled(StyledButton)`
   background-color: gray !important;
   color: white !important;
@@ -326,7 +328,7 @@ function WriteExerciseLog(props: { liveId: number }) {
 
   return (
     <div>
-      <TchaButton onClick={handleOpen}>일지 작성하기</TchaButton>
+      <StyledButton onClick={handleOpen}> <TchaButtonTextH6>일지쓰기</TchaButtonTextH6></StyledButton>
       <Modal
         keepMounted
         open={open}

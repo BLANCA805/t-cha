@@ -26,12 +26,17 @@ function Painter({ capturedImage }: { capturedImage: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // const canvas = document.querySelector("[canvas]");
+    // if (canvas) {
+    //   canvas.setAttribute("width", (window.innerWidth * 0.25).toString());
+    //   canvas.setAttribute("height", (window.innerHeight * 0.34).toString());
+    // }
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.width = window.innerWidth * 0.25;
       canvas.height = window.innerHeight * 0.34;
     }
-  });
+  }, []);
 
   const nowTime = dayjs();
 

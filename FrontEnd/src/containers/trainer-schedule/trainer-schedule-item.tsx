@@ -72,6 +72,7 @@ const TrainerName = styled.div`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 40%;
   @media (max-width: 767px) {
     min-width: 30%;
@@ -190,20 +191,15 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
               </TchaButtonTextH6>
             )}
           </StyledButton>
-          <StyledButton
-            status={item.ptLiveStatus}
-            liveid={item.liveId}
-            disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
-          >
-            {item.ptLiveStatus === "TERMINATION" &&
-              item.exerciseLogStatus === "WRITE" && (
-                <WriteExerciseLog liveId={item.liveId} />
-              )}
-            {item.ptLiveStatus === "TERMINATION" &&
-              item.exerciseLogStatus === "READ" && (
-                <ReadExerciseLog liveId={item.liveId} />
-              )}
-          </StyledButton>
+          {(item.ptLiveStatus === "TERMINATION" ||
+            item.ptLiveStatus === "ACCESSIBLE") &&
+            item.exerciseLogStatus === "WRITE" && (
+              <WriteExerciseLog liveId={item.liveId} />
+            )}
+          {item.ptLiveStatus === "TERMINATION" &&
+            item.exerciseLogStatus === "READ" && (
+              <ReadExerciseLog liveId={item.liveId} />
+            )}
         </ButtonWrapper>
       </DataWrapper>
     </Wrapper>

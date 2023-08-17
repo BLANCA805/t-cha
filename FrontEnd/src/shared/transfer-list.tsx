@@ -12,14 +12,40 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   display:flex;
   flex-direction: row;
-  width:90%;
-  background-color: #c6deec;
+  /* justify-content: space-between; */
+  width:100%;
+  margin-top: 10%;
+  /* background-color: #c6deec; */
+  /* box-shadow: 3px 3px 5psx rgba(0, 0, 0, 0.1); */
+  @media (max-width: 767px) {
+    /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); */
+    margin-top: 5%;
+  }
 `
+const StyledCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width:767px){
+    width:30vw !important;
+    height:20rem !important;
+  }
+`;
 
 const StyledList = styled(List)`
-  
+  display: flex;
+  flex-direction: column;
+  @media (max-width:767px){
+    width:30vw !important;
+    height:20rem !important;
+  }
   
 `
+const StyledButton = styled(Button)`
+  /* display: flex ; */
+`
+
+
 
 function not(a: readonly string[], b: readonly string[]) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -193,14 +219,16 @@ export default function TransferList({
   };
 
   const customList = (title: React.ReactNode, items: readonly string[]) => (
-    <Card>
+    <StyledCard>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         title={title}
-        subheader={`${numberOfChecked(items)}/${items.length} selected`}
+        subheader={`Total ${numberOfChecked(items)}/${items.length}`}
+        // style={{backgroundColor:"lightgray"}}
+        style={{backgroundColor:"#70b4b1"}}
       />
       <Divider />
-      <List
+      <StyledList
         sx={{
           width: 200,
           height: 230,
@@ -208,13 +236,13 @@ export default function TransferList({
           overflow: "auto",
         }}
         dense
-        component="div"
+        // component="div"
         role="list"
       >
         {items.map((value: string, index: number) => {
           return (
             <ListItem key={index} role="listitem">
-              <Button
+              <StyledButton
                 variant={checked.includes(value) ? "contained" : "outlined"}
                 color={"success"}
                 // color={checked.includes(value) ? "secondary" : "primary"}
@@ -222,12 +250,12 @@ export default function TransferList({
                 disabled={disabledValueList.includes(value)}
               >
                 {value}
-              </Button>
+              </StyledButton>
             </ListItem>
           );
         })}
-      </List>
-    </Card>
+      </StyledList>
+    </StyledCard>
   );
 
   return (

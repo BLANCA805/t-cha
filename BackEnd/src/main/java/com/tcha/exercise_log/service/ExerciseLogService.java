@@ -69,9 +69,9 @@ public class ExerciseLogService {
         Trainer trainer = findVerifiedTrainerById(trainerId);
 
         //DB에 새로운 운동일지 생성
-        ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
+        exerciseLogRepository.save(exerciseLog);
 
-        return creatExerciseLog;
+        return exerciseLog;
     }
 
 

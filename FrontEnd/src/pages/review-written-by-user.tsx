@@ -4,19 +4,15 @@ import { TitleWrapper, PageTitleText } from "@shared/page-title";
 import styled from "styled-components";
 import UserReviewList from "src/containers/user-review/user-review-list";
 
-const Wrapper=styled.div`
-  display:flex;
+const Wrapper = styled.div`
+  display: flex;
   flex-direction: column;
-  width:100%;
-  height:100vh;
+  width: 100%;
+  height: 100vh;
   margin: 3%;
 `;
 
- 
-
-const ContentsWrapper=styled.div`
-  
-`;
+const ContentsWrapper = styled.div``;
 
 function ReviewWrittenByUser() {
   return (
@@ -24,14 +20,11 @@ function ReviewWrittenByUser() {
       <TitleWrapper>
         <PageTitleText>내 리뷰관리</PageTitleText>
       </TitleWrapper>
-
       <ContentsWrapper>
         <UserReviewList />
       </ContentsWrapper>
     </Wrapper>
   );
 }
-
-
 
 export default ReviewWrittenByUser;

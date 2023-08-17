@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { DefaultButton } from "@shared/button";
 import { ReviewDataProps } from "src/interface";
+import Rating from "@mui/material/Rating";
 
 const Container = styled.div`
   min-height: 10rem;
@@ -11,23 +12,15 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;
   height: 100%;
   padding: 3%;
 `;
 
-const ProfileWrapper = styled.div`
+const TrainerProfileWrapper = styled.div`
   display: flex;
-  flex: 3;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  padding-bottom: 1%;
-`;
-
-const ContentsWrapper = styled.div`
-  display: flex;
-  font-size: 1rem;
-  padding: 2% 1%;
+  justify-content: center;
 `;
 
 const ButtonWrapper = styled.div`
@@ -35,47 +28,43 @@ const ButtonWrapper = styled.div`
   justify-content: end;
 `;
 
-const UserProfileTextData = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 1.5%;
-`;
-
-const UserProfileimg = styled.img`
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50%;
+const ProfileImage = styled.img`
+  height: 6rem;
+  width: 6rem;
+  margin-bottom: 1rem;
+  object-fit: cover;
+  border-radius: 40%;
   background-color: lightgray;
 `;
 
-const NameWrapper = styled.div``;
-const DateRateWrapper = styled.div``;
+const ReviewContentWrapper = styled.div`
+  align-items: center;
+`;
 
 function UserReviewListItem(props: ReviewDataProps) {
   return (
     <Container>
       <Wrapper>
-        <ProfileWrapper>
-          <UserProfileimg />
-          <UserProfileTextData>
-            <NameWrapper>
-              <b style={{ fontSize: "1.5rem" }}> {props.data.id}</b>
-              <b style={{ fontSize: "1rem", marginLeft: "0.5rem" }}>트레이너</b>
-            </NameWrapper>
+        <TrainerProfileWrapper>
+          <ProfileImage src={props.data.trainerProfileImg} />
+          <div>
+            <b style={{ fontSize: "0.8rem" }}>트레이너</b>
+            <b style={{ fontSize: "1.2rem" }}>
+              {" "}
+              {props.data.trainerProfileName}{" "}
+            </b>
+          </div>
+        </TrainerProfileWrapper>
 
-            <DateRateWrapper>
-              <b style={{ fontSize: "1rem", marginRight: "1rem" }}>
-                {props.data.star}
-              </b>
-              <b style={{ fontSize: "0.7rem" }}>{props.data.created_at}</b>
-            </DateRateWrapper>
-          </UserProfileTextData>
-        </ProfileWrapper>
-
-        <ContentsWrapper>{props.data.content}</ContentsWrapper>
+        <ReviewContentWrapper>
+          <div>PT 수업일 : {props.data.startDate}</div>
+          <Rating value={props.data.star} precision={0.5} readOnly />
+          <div style={{ fontSize: "1rem", marginTop: "1rem" }}>
+            {props.data.content}
+          </div>
+        </ReviewContentWrapper>
 
         <ButtonWrapper>
-          {/* 북마크 해제 버튼 클릭시 list에서 delete되는 로직 구현필요  */}
           <DefaultButton>리뷰삭제</DefaultButton>
         </ButtonWrapper>
       </Wrapper>

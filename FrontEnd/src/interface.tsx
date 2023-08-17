@@ -173,7 +173,12 @@ export interface ReviewData {
     id: number;
     content: string;
     star: number;
-    created_at: string;
+    ptClassId: number;
+    startDate: string;
+    profileImg: string;
+    profileName: string;
+    trainerProfileImg: string;
+    trainerProfileName: string;
   }[];
   pageInfo: {
     page: number;
@@ -188,7 +193,12 @@ export interface ReviewDataProps {
     id: number;
     content: string;
     star: number;
-    created_at: string;
+    ptClassId: number;
+    startDate: string;
+    profileImg: string;
+    profileName: string;
+    trainerProfileImg: string;
+    trainerProfileName: string;
   };
 }
 

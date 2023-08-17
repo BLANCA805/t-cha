@@ -102,7 +102,7 @@ const StyledCard = styled(Card)`
     transform: scale(1.03);
   }
   @media (max-width: 767px) {
-    width: 5rem;
+    width: 20vw;
     margin: 0.4rem 0.4rem 0.8rem 0.4rem;
     max-height: 15rem;
     border-radius: 7px !important;

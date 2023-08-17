@@ -23,11 +23,6 @@ const TrainerProfileWrapper = styled.div`
   justify-content: center;
 `;
 
-const ButtonWrapper = styled.div`
-  display: flex;
-  justify-content: end;
-`;
-
 const ProfileImage = styled.img`
   height: 6rem;
   width: 6rem;
@@ -38,6 +33,7 @@ const ProfileImage = styled.img`
 `;
 
 const ReviewContentWrapper = styled.div`
+  padding: 2rem;
   align-items: center;
 `;
 
@@ -55,18 +51,13 @@ function UserReviewListItem(props: ReviewDataProps) {
             </b>
           </div>
         </TrainerProfileWrapper>
-
         <ReviewContentWrapper>
           <div>PT 수업일 : {props.data.startDate}</div>
           <Rating value={props.data.star} precision={0.5} readOnly />
-          <div style={{ fontSize: "1rem", marginTop: "1rem" }}>
+          <div style={{ fontSize: "2rem", marginTop: "1rem" }}>
             {props.data.content}
           </div>
         </ReviewContentWrapper>
-
-        <ButtonWrapper>
-          <DefaultButton>리뷰삭제</DefaultButton>
-        </ButtonWrapper>
       </Wrapper>
     </Container>
   );

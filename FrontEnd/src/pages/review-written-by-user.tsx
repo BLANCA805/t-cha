@@ -18,7 +18,7 @@ function ReviewWrittenByUser() {
   return (
     <Wrapper>
       <TitleWrapper>
-        <PageTitleText>내 리뷰관리</PageTitleText>
+        <PageTitleText>내가 작성한 리뷰</PageTitleText>
       </TitleWrapper>
       <ContentsWrapper>
         <UserReviewList />

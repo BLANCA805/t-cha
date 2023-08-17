@@ -1,27 +1,23 @@
-import { useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { type RootState } from "../redux/store";
-import { Session, OpenVidu, StreamManager, Publisher } from "openvidu-browser";
+import { OpenVidu } from "openvidu-browser";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import axios from "axios";
-import { PtLiveData } from "@user-trainer/trainer-schedule";
 
 const OPENVIDU_SERVER_URL = "https://www.tcha.site:8443/";
 const OPENVIDU_SERVER_SECRET = "blanca05";
 
-
-// 생성된 오픈비두 라이브에 대한 토큰 발급(트레이너, 유저 각각 따로)
-export function getToken(ptLiveId: number): Promise<any> {
-  return createSession(ptLiveId).then((liveId) => CreateToken(liveId));
+export function getToken(liveId: string): Promise<any> {
+  return createSession(liveId).then((liveId) => createToken(liveId));
 }
 
-function createSession(ptLiveId: number): Promise<any> {
+export function createSession(sessionId: string): Promise<any> {
+  const data = JSON.stringify({ customSessionId: sessionId });
   return new Promise((resolve, reject) => {
-    var data = JSON.stringify({ customSessionId: ptLiveId });
     axios
       .post(OPENVIDU_SERVER_URL + "openvidu/api/sessions", data, {
         headers: {
-          Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+          Authorization:
+            "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
           "Content-Type": "application/json",
         },
       })
@@ -32,27 +28,30 @@ function createSession(ptLiveId: number): Promise<any> {
       .catch((response) => {
         var error = Object.assign({}, response);
         if (error?.response?.status === 409) {
-          resolve(ptLiveId);
+          resolve(sessionId);
         } else {
           console.log(error);
           console.warn(
             "No connection to OpenVidu Server. This may be a certificate error at " +
-            OPENVIDU_SERVER_URL,
+              OPENVIDU_SERVER_URL
           );
-          // window.location.assign(OPENVIDU_SERVER_URL + "accept-certificate");
+          window.location.assign(OPENVIDU_SERVER_URL + "accept-certificate");
         }
       });
   });
 }
 
-function CreateToken(liveId: string): Promise<any> {
+export function createToken(liveId: string): Promise<any> {
   return new Promise((resolve, reject) => {
-    var data = {};
+    const data = {};
     axios
       .post(
-        OPENVIDU_SERVER_URL + "openvidu/api/sessions/" + liveId + "/connection", data, {
+        OPENVIDU_SERVER_URL + "openvidu/api/sessions/" + liveId + "/connection",
+        data,
+        {
           headers: {
-            Authorization: "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
+            Authorization:
+              "Basic " + btoa("OPENVIDUAPP:" + OPENVIDU_SERVER_SECRET),
             "Content-Type": "application/json",
           },
         }
@@ -65,130 +64,127 @@ function CreateToken(liveId: string): Promise<any> {
   });
 }
 
-export function EnterPtLive(userId: string, ptLiveId: number) {
-  const [publisher, setPublisher] = useState<Publisher[]>([]);
-  const [streamManager, setStreamManager] = useState<StreamManager>();
-  // const [session, setSession] = useState<any>();
+export const useOpenvidu = (profileId: number, liveId: number) => {
+  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [publisher, setPublisher] = useState<any>();
+  const [session, setSession] = useState<any>();
 
-  // const leaveSession = useCallback(() => {
-  //   if (session) {
-  //     session.disconnect();
-  //   }
-  //   setSession(null);
-  //   setPublisher(null);
-  // }, [session]);
-  
-  const OV = new OpenVidu();
-  const session = OV.initSession();
+  const leaveSession = useCallback(() => {
+    if (session) {
+      session.disconnect();
+    }
+    setSession(null);
+    setPublisher(null);
+    setSubscribers([]);
+  }, [session]);
 
-  getToken(ptLiveId).then((token) => {
-    session!
-      .connect(token)
-      .then(async () => {
-        await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
-        });
-        const devices = await OV.getDevices();
-        // const videoDevices = devices.filter(
-        //   (device) => device.kind === "videoinput"
-        // );
+  useEffect(() => {
+    const openVidu = new OpenVidu();
+    const session = openVidu.initSession();
 
-        const newPublisher = await OV.initPublisherAsync("", {
-          audioSource: undefined,
-          // videoSource: videoDevices[0].deviceId,
-          videoSource: undefined,
-          publishAudio: true,
-          publishVideo: true,
-          resolution: "640x480",
-          frameRate: 30,
-          insertMode: "APPEND",
-          mirror: true,
-        });
-        
-        session.publish(newPublisher);
-        publisher.push(newPublisher);
-        setPublisher([...publisher]);
-      })
-      .catch((error) => {
-        console.log(
-          "There was an error connecting to the session:",
-          error.code,
-          error.message
-        );
+    session.on("streamCreated", (event) => {
+      const subscriber = session.subscribe(event.stream, "");
+      const data = JSON.parse(event.stream.connection.data);
+      setSubscribers((prev) => {
+        return [
+          ...prev.filter((it) => it.profileId !== +data.profileId),
+          {
+            streamManager: subscriber,
+            profileId: +data.profileId,
+          },
+        ];
       });
-  });
+    });
 
-  session.on("streamCreated", (event: any) => {
-    // const data = JSON.parse(event.stream.connection.data);
-    console.log("streamCreated");
-  });
+    session.on("streamDestroyed", (event) => {
+      event.preventDefault();
 
-  session.on("streamDestroyed", (event: any) => {
-    // event.preventDefault();
-    // const data = JSON.parse(event.stream.connection.data);
-    console.log("streamDestroyed");
-  });
+      const data = JSON.parse(event.stream.connection.data);
+      setSubscribers((prev) =>
+        prev.filter((it) => it.profileId !== +data.profileId)
+      );
+    });
 
-  session.on("exception", (exception) => {
-    console.warn(exception);
-  });
+    session.on("exception", (exception) => {
+      console.warn(exception);
+    });
 
-  setStreamManager(publisher[0]);
+    getToken(String(liveId)).then((token) => {
+      session!
+        .connect(token, JSON.stringify({ profileId }))
+        .then(async () => {
+          await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+          });
+          const devices = await openVidu.getDevices();
+          const videoDevices = devices.filter(
+            (device) => device.kind === "videoinput"
+          );
 
+          const publisher = openVidu.initPublisher("", {
+            audioSource: undefined,
+            videoSource: videoDevices[0].deviceId,
+            publishAudio: true,
+            publishVideo: true,
+            resolution: "1280x720",
+            frameRate: 60,
+            insertMode: "APPEND",
+            mirror: false,
+          });
 
+          setPublisher(publisher);
+          session.publish(publisher);
+        })
+        .catch((error) => {
+          console.log(
+            "There was an error connecting to the session:",
+            error.code,
+            error.message
+          );
+        });
+    });
 
-  // setSession(session);
-  // return () => {
-  //   if (session) {
-  //     session.disconnect();
-  //   }
-  //   setSession(null);
-  //   setPublisher(null);
-  // };
+    setSession(session);
+    return () => {
+      if (session) {
+        session.disconnect();
+      }
+      setSession(null);
+      setPublisher(null);
+    };
+  }, [liveId, profileId]);
 
-  return { session, publisher, streamManager };
-};
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => leaveSession());
+    return () => {
+      window.removeEventListener("beforeunload", () => leaveSession());
+    };
+  }, [leaveSession]);
 
-export function useOpenVidu(userId: string, ptLiveId: number) {
+  const onChangeCameraStatus = useCallback(
+    (status: boolean) => {
+      publisher?.publishVideo(status);
+    },
+    [publisher]
+  );
 
-  // useEffect(() => {
-  //   const connectSession = async () => {
-  //     await EnterPtLive(userId, ptLiveId);
-  //   };
-  //   connectSession();
-  // }, []);
-  
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", () => leaveSession());
-  //   return () => {
-  //     window.removeEventListener("beforeunload", () => leaveSession());
-  //   };
-  // }, [leaveSession]);
+  const onChangeMicStatus = useCallback(
+    (status: boolean) => {
+      publisher?.publishAudio(status);
+    },
+    [publisher]
+  );
 
-  // const onChangeCameraStatus = useCallback(
-  //   (status: boolean) => {
-  //     publisher?.publishVideo(status);
-  //   },
-  //   [publisher]
-  // );
+  const streamList = useMemo(
+    () => [{ streamManager: publisher, profileId }, ...subscribers],
+    [publisher, subscribers, profileId]
+  );
 
-  // const onChangeMicStatus = useCallback(
-  //   (status: boolean) => {
-  //     publisher?.publishAudio(status);
-  //   },
-  //   [publisher]
-  // );
-
-  // const streamList = useMemo(
-  //   () => [{ streamManager: publisher }],
-  //   [publisher]
-  // );
-
-  // return {
-  //   publisher,
-  //   streamList,
-  //   onChangeCameraStatus,
-  //   onChangeMicStatus,
-  // };
+  return {
+    publisher,
+    streamList,
+    onChangeCameraStatus,
+    onChangeMicStatus,
+  };
 };

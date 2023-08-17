@@ -46,14 +46,18 @@ public class PtLive extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private PtliveStaus status;
+    private PtliveStatus status;
 
-    public enum PtliveStaus {
+    @OneToOne
+    @JoinColumn(name = "LIVE_ID")
+    private ExerciseLog exerciseLogs;
+
+    public enum PtliveStatus {
         INACCESSIBLE("접근 불가"), ACCESSIBLE("진행중"), TERMINABLE("종료가능"), TERMINATION("종료");
         @Getter
         private String status;
 
-        PtliveStaus(String staus) {
+        PtliveStatus(String staus) {
             this.status = staus;
         }
     }

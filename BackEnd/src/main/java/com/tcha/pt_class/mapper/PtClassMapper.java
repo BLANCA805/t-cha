@@ -1,13 +1,11 @@
 package com.tcha.pt_class.mapper;
 
+import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.pt_class.dto.PtClassDto;
-import com.tcha.pt_class.dto.PtClassDto.Response;
 import com.tcha.pt_class.entity.PtClass;
-import com.tcha.pt_live.entity.PtLive.PtliveStaus;
+import com.tcha.pt_live.entity.PtLive.PtliveStatus;
 import com.tcha.trainer.entity.Trainer;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public interface PtClassMapper {
                 .build();
     }
 
-    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStaus status, long reviewId, UserProfile userProfile) {
+    default PtClassDto.Response classToClassResponseDto(PtClass ptClass, PtliveStatus ptliveStatus, long reviewId, UserProfile userProfile , ExerciseLog.exerciseLogStaus exerciseLogStatus) {
         if (userProfile == null) {
             return PtClassDto.Response.builder()
                     .trainerId(ptClass.getTrainer().getId().toString())
@@ -35,11 +33,12 @@ public interface PtClassMapper {
                     .liveId(ptClass.getPtLiveId())
                     .startDate(ptClass.getStartDate())
                     .startTime(ptClass.getStartTime())
-                    .status(status)
+                    .ptLiveStatus(ptliveStatus)
                     .reviewId(reviewId)
                     .trainerImage(ptClass.getTrainer().getUserProfile().getProfileImage())
                     .trainerName(ptClass.getTrainer().getUserProfile().getName())
                     .introduction(ptClass.getTrainer().getIntroduction())
+                    .exerciseLogStaus(exerciseLogStatus)
                     .userName(null)
                     .userImage(null)
                     .build();
@@ -51,13 +50,14 @@ public interface PtClassMapper {
                 .liveId(ptClass.getPtLiveId())
                 .startDate(ptClass.getStartDate())
                 .startTime(ptClass.getStartTime())
-                .status(status)
+                .ptLiveStatus(ptliveStatus)
                 .reviewId(reviewId)
                 .trainerImage(ptClass.getTrainer().getUserProfile().getProfileImage())
                 .trainerName(ptClass.getTrainer().getUserProfile().getName())
                 .introduction(ptClass.getTrainer().getIntroduction())
                 .userName(userProfile.getName())
                 .userImage(userProfile.getProfileImage())
+                .exerciseLogStaus(exerciseLogStatus)
                 .build();
     }
 }

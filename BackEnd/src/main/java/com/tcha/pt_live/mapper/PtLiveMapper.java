@@ -1,5 +1,6 @@
 package com.tcha.pt_live.mapper;
 
+import com.tcha.exercise_log.entity.ExerciseLog;
 import com.tcha.pt_live.dto.PtLiveDto;
 import com.tcha.pt_live.entity.PtLive;
 import com.tcha.trainer.entity.Trainer;
@@ -10,10 +11,10 @@ import org.mapstruct.Mapper;
 public interface PtLiveMapper {
 
     default PtLiveDto.Response ptLiveToResponseDto(PtLive ptLive, Trainer trainer,
-            UserProfile userProfile) {
+            UserProfile userProfile, ExerciseLog.exerciseLogStaus exerciseLogStatus) {
         return PtLiveDto.Response.builder()
                 .ptLiveId(ptLive.getId())
-                .status(ptLive.getStatus().toString())
+                .ptLiveStatus(ptLive.getStatus().toString())
                 .ptClassId(ptLive.getPtClassId())
                 .trainerId(trainer.getId())
                 .trainerName(trainer.getUserProfile().getName())
@@ -21,6 +22,7 @@ public interface PtLiveMapper {
                 .userId(userProfile.getUser().getId())
                 .userName(userProfile.getName())
                 .userProfileImage(userProfile.getProfileImage())
+                .exerciseLogStatus(exerciseLogStatus.toString())
                 .build();
     }
 

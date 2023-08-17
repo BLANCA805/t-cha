@@ -45,7 +45,7 @@ public class ExerciseLogService {
 
     //운동일지 저장
     @Transactional
-    public void createExerciseLog(long ptLiveId) {
+    public ExerciseLog createExerciseLog(long ptLiveId) {
 
         //ptlive 찾기 (유효성 검증 완)
         PtLive ptLive = findVerifiedByPtLiveId(ptLiveId);
@@ -71,7 +71,7 @@ public class ExerciseLogService {
         //DB에 새로운 운동일지 생성
         ExerciseLog creatExerciseLog = exerciseLogRepository.save(exerciseLog);
 
-//        return;
+        return creatExerciseLog;
     }
 
 

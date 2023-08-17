@@ -47,10 +47,8 @@ function TrainerList() {
   }, [page]);
 
   const searchTrainer = (body: any) => {
-    console.log(page);
-    console.log(body);
     axios
-      .get(`${api}/trainers/search?page=1&size=5`)
+      .post(`${api}/trainers/search?page=1&size=5`, body)
       .then((response) => {
         console.log(response.data);
         setItems(response.data);

@@ -114,7 +114,7 @@ export const useOpenvidu = (profileId: number, liveId: number) => {
         .connect(token, JSON.stringify({ profileId }))
         .then(async () => {
           await navigator.mediaDevices.getUserMedia({
-            audio: true,
+            audio: false,
             video: true,
           });
           const devices = await openVidu.getDevices();
@@ -125,7 +125,7 @@ export const useOpenvidu = (profileId: number, liveId: number) => {
           const publisher = openVidu.initPublisher("", {
             audioSource: undefined,
             videoSource: videoDevices[0].deviceId,
-            publishAudio: true,
+            publishAudio: false,
             publishVideo: true,
             resolution: "1280x720",
             frameRate: 60,

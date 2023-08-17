@@ -6,6 +6,7 @@ import { useState } from "react";
 import { RootState } from "src/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ReadExerciseLog from "@user-trainer/read-exercise-log";
 
 const Wrapper = styled.div<{ status: string }>`
   /* display:flex; */
@@ -172,21 +173,26 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
         <ButtonWrapper>
           <StyledButton status = {item.status} liveid={item.liveId} disabled={item.status === 'INACCESSIBLE' || !item.liveId}> 
             {!item.liveId && <TchaButtonTextH6>예약없음</TchaButtonTextH6>}
-            {item.status === "INACCESSIBLE" && item.liveId && (
+            {item.ptLiveStatus === "INACCESSIBLE" && item.liveId && (
               <TchaButtonTextH6>입장 불가</TchaButtonTextH6>
             )}
-            {(item.status === "ACCESSIBLE" || item.status === "TERMINABLE") && (
+            {(item.ptLiveStatus === "ACCESSIBLE" ||
+              item.ptLiveStatus === "TERMINABLE") && (
               <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>
                 PT 입장
               </TchaButtonTextH6>
             )}
           </StyledButton>
-            {/* {item.status === "TERMINATION" && !item.liveId && (
-              <WriteExerciseLog liveId={item.liveId} />
-            )} */}
-            {item.status === "TERMINATION" && item.liveId && (
-              <WriteExerciseLog liveId={item.liveId} />
-            )}
+          <StyledButton>
+            {item.ptLiveStatus === "TERMINATION" &&
+              item.exerciseLogStatus === "WRITE" && (
+                <WriteExerciseLog liveId={item.liveId} />
+              )}
+            {item.ptLiveStatus === "TERMINATION" &&
+              item.exerciseLogStatus === "READ" && (
+                <ReadExerciseLog liveId={item.liveId} />
+              )}
+          </StyledButton>
         </ButtonWrapper>
       </DataWrapper>
     </Wrapper>

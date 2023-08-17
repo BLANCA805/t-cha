@@ -6,7 +6,12 @@ import axios from "axios";
 import { api } from "@shared/common-data";
 import { SmallTitleWrapper } from "@shared/page-title";
 import TextField from "@mui/material/TextField";
-import { TchaButton, GrayButton, GreenTchaButton, TchaButtonTextH6 } from "@shared/button";
+import {
+  TchaButton,
+  GrayButton,
+  GreenTchaButton,
+  TchaButtonTextH6,
+} from "@shared/button";
 import Modal from "@mui/material/Modal";
 
 import styled from "styled-components";
@@ -21,14 +26,14 @@ const Wrapper = styled.div`
   padding: 1%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
-  min-height:40vh;
-  position: absolute;    
+  min-height: 40vh;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;         
+  width: 50%;
   @media (max-width: 767px) {
-    width:70%;
+    width: 70%;
   }
 `;
 
@@ -36,61 +41,58 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-content: center;
-  width:80%;
-  height:20%;
+  width: 80%;
+  height: 20%;
   padding: 1%;
   margin: 1.5% 0%;
   @media (max-width: 767px) {
-    flex-wrap: wrap;  
+    flex-wrap: wrap;
   }
-
 `;
 const InputWrapper = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width:20%;
-  min-height:100%;
+  width: 20%;
+  min-height: 100%;
   @media (max-width: 767px) {
-    width:90%;
-    margin-left:2%;
-    margin-right:5%;
-    margin-bottom:2%;
+    width: 90%;
+    margin-left: 2%;
+    margin-right: 5%;
+    margin-bottom: 2%;
   }
-`
+`;
 const ImageWrapper = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width:30%;
-  height:100%;
+  width: 30%;
+  height: 100%;
   overflow: hidden;
   @media (max-width: 767px) {
-    width:40%;
-    margin-bottom:4%;
-
+    width: 40%;
+    margin-bottom: 4%;
   }
 `;
 const ContentTextWrapper = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
-  width:50%;
-  min-height:100%;
+  width: 50%;
+  min-height: 100%;
   @media (max-width: 767px) {
-    width:70%;
-    margin-bottom:7%;
+    width: 70%;
+    margin-bottom: 7%;
   }
 `;
 const ButtonWrapper = styled.div`
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width:15%;
+  width: 15%;
   @media (max-width: 767px) {
-    width:30%;
-    margin-bottom:7%;
-
+    width: 30%;
+    margin-bottom: 7%;
   }
 `;
 
@@ -110,19 +112,19 @@ const FormDetailWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  width:80%;
+  width: 80%;
   /* align-items: center; */
   margin-bottom: 1rem;
 `;
 
 const SubmitButton = styled.div`
   display: flex;
-  width:60%;
+  width: 60%;
   justify-content: space-evenly;
   align-items: center;
   margin: 5% 0% 5% 0%;
   @media (max-width: 767px) {
-    width:90%;
+    width: 90%;
   }
 `;
 
@@ -130,12 +132,11 @@ const StyledTchaButton = styled(TchaButton)`
   width: 40%;
   height: 3rem;
   margin-top: 3% !important;
-  color:white !important;
+  color: white !important;
   @media (max-width: 767px) {
-    width:60%;
+    width: 60%;
   }
 `;
-
 
 const StyledButton = styled(GreenTchaButton)`
   margin: 0% 1.5% !important;
@@ -149,9 +150,9 @@ const StyledButton = styled(GreenTchaButton)`
   /* color:white !important; */
 `
 const StyledGrayButton = styled(StyledButton)`
-  background-color:gray !important;
-  color:white !important;
-`
+  background-color: gray !important;
+  color: white !important;
+`;
 
 const style = {
   position: "absolute" as "absolute",
@@ -172,16 +173,31 @@ function WriteExerciseLog(props: { liveId: number }) {
     { image: "", text: "" },
   ]);
 
+  const [imageForView, setImageForView] = useState<string[]>([]);
+
   const [open, setOpen] = React.useState(false);
   const [exerciseLogId, setExerciseLogId] = useState(0);
 
+  console.log("확인" + exerciseLogId);
+
+  //초기에 해당 운동일지에 대한 내용 가져옴 (image 제외)
   useEffect(() => {
     if (open) {
       axios
         .get(`${api}/exercise-logs/ptLive/${liveId}`)
         .then((response) => {
           setTitle(response.data.title);
-          setContents(response.data.contents);
+          const combinedContents = response.data.contents.map(
+            (item: string, index: number) => ({
+              image: response.data.images[index]
+                ? response.data.images[index]
+                : "", // images 배열의 요소가 없으면 빈 문자열로 초기화
+              text: item,
+            })
+          );
+          console.log("들어오는 값 확인: " + combinedContents);
+          setContents(combinedContents);
+          setImageForView(response.data.images);
           setExerciseLogId(response.data.id);
         })
         .catch((error) => {
@@ -235,10 +251,16 @@ function WriteExerciseLog(props: { liveId: number }) {
           },
         }
       );
+      console.log("거 나옵니다");
+      console.log(uploadResponse);
+
       const imageUrl = uploadResponse.data[0];
       const updatedContents = [...contents];
       updatedContents[index].image = imageUrl;
       setContents(updatedContents);
+      const updatedImageForView = imageForView;
+      updatedImageForView.splice(index, 0, imageUrl);
+      setImageForView(updatedImageForView);
     } catch (error) {
       console.log(error);
     }
@@ -261,20 +283,29 @@ function WriteExerciseLog(props: { liveId: number }) {
       });
     updatedContents[index].image = "";
     setContents(updatedContents);
+    const updatedImageForView = imageForView;
+    updatedImageForView.splice(index, 1);
+    setImageForView(updatedImageForView);
   };
 
   const temp = () => {
-    console.log({
-      title: title,
-      contents: contents,
-    });
+    console.log("?????? ", title, contents);
     axios
-      .patch(`${api}/exercise-logs/${exerciseLogId}`, {
-        title: title,
-        contents: contents,
-      })
+      .patch(
+        `${api}/exercise-logs/${exerciseLogId}`,
+        {
+          title: title,
+          contents: contents,
+        },
+        {
+          headers: {
+            "Contest-Type": "application/json",
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data);
+        handleClose();
       })
       .catch((error) => {
         console.log(error);
@@ -288,7 +319,7 @@ function WriteExerciseLog(props: { liveId: number }) {
         contents: contents,
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("::::: " + response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -306,7 +337,9 @@ function WriteExerciseLog(props: { liveId: number }) {
         aria-describedby="keep-mounted-modal-description"
       >
         <Wrapper>
-          <SmallTitleWrapper style={{margin: "5% 0%"}}>일지쓰기</SmallTitleWrapper>
+          <SmallTitleWrapper style={{ margin: "5% 0%" }}>
+            일지쓰기
+          </SmallTitleWrapper>
 
           <FormDetailWrapper style={{ marginTop: "3%" }}>
             <TextField
@@ -323,7 +356,7 @@ function WriteExerciseLog(props: { liveId: number }) {
               <InputWrapper>
                 <input
                   type="file"
-                  accept="image/jpg,impge/png,image/jpeg,image/gif"
+                  accept="image/jpg,impge/png,image/jpeg,image/gif,image/jfif"
                   name="log_image"
                   onChange={(event) => handleImage(event, index)}
                 ></input>
@@ -332,7 +365,7 @@ function WriteExerciseLog(props: { liveId: number }) {
               <ImageWrapper>
                 <Image
                   key={index}
-                  src={content.image ? content.image : undefined}
+                  src={imageForView[index]}
                   alt=""
                   onClick={() => deleteImage(index)}
                 />
@@ -341,15 +374,16 @@ function WriteExerciseLog(props: { liveId: number }) {
                 <TextField
                   value={content.text}
                   onChange={(event) => handleContent(event, index)}
-                  label="내용을 입력하세요"
+                  label={content.text ? "" : "내용을 입력하세요"}
                   style={{ width: "95%" }}
                   variant="outlined"
                 />
               </ContentTextWrapper>
               <ButtonWrapper>
-                <StyledButton onClick={() => removeContent(index)}>삭제</StyledButton>
+                <StyledButton onClick={() => removeContent(index)}>
+                  삭제
+                </StyledButton>
               </ButtonWrapper>
-
             </Container>
           ))}
 
@@ -365,21 +399,14 @@ function WriteExerciseLog(props: { liveId: number }) {
             <StyledGrayButton
               type="submit"
               onClick={temp}
-              style={{backgroundColor:"gray"}}
+              style={{ backgroundColor: "gray" }}
             >
               임시저장
             </StyledGrayButton>
-            <StyledButton
-              type="submit"
-              onClick={save}
-            >
+            <StyledButton type="submit" onClick={save}>
               작성완료
             </StyledButton>
-            <StyledButton
-              onClick={handleClose}
-            >
-              작성취소
-            </StyledButton>
+            <StyledButton onClick={handleClose}>작성취소</StyledButton>
           </SubmitButton>
         </Wrapper>
       </Modal>

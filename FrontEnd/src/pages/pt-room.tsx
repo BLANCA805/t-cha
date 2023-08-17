@@ -25,11 +25,20 @@ const OtherVideo = styled.div`
   flex: 7;
   height: 97vh;
   margin: 1rem;
-  background-color: ${({ theme }) => theme.color.light};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
+  @media (max-width: 767px) {
+    flex: none;
+    width: 1300px;
+    height: 100%;
+    z-index: 0;
+    margin-top: 0;
+  }
+  @media (min-width: 767px) {
+    background-color: ${({ theme }) => theme.color.light};
+  }
 `;
 
 const LiveToolBox = styled.div`
@@ -40,23 +49,39 @@ const LiveToolBox = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  @media (max-width: 767px) {
+    z-index: 3;
+    flex: none;
+    width: 50%;
+    position: absolute;
+    top: -1%;
+    left: 45%;
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const MyVideo = styled.div`
-  background-color: ${({ theme }) => theme.color.light};
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 1rem;
   padding: 1rem;
+  @media (min-width: 767px) {
+    background-color: ${({ theme }) => theme.color.light};
+    width: 30%;
+  }
 `;
 
 const PainterContainer = styled.div`
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.color.light};
   width: 96%;
-  height: 55%;
+  height: 90%;
   margin-bottom: 1rem;
+  @media (max-width: 767px) {
+    display: none;
+  }
 `;
 
 const PtRoom = () => {
@@ -74,15 +99,10 @@ const PtRoom = () => {
     setCapturedImage(image);
   };
 
-  function test() {
-    console.log(streamList);
-  }
-
   return (
     <>
       {publisher && (
         <Wrapper>
-          <button onClick={test}>Test</button>
           <OtherVideo>
             {streamList &&
               streamList.map(

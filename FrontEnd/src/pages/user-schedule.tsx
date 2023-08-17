@@ -127,7 +127,9 @@ function UserSchedule() {
               <UserScheduleItem data={item} key={index} />
             ))
           ) : (
-            <h6>해당 날짜에 예약이 없습니다</h6>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <p>해당 날짜에 예약이 없습니다</p>
+            </div>
           )}
         </ScheduleInfo>
       </ContentsWrapper>

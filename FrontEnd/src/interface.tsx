@@ -204,23 +204,34 @@ export interface ReviewDataProps {
 
 export interface TrainerScheduleData {
   trainerId: string;
+  classId: number;
+  liveId: number;
   startTime: string;
   startDate: string;
-  liveId: number;
-  classId: number;
-  status: string;
+  ptLiveStatus: string;
+  exerciseLogStatus: string;
   reviewId: number;
+  trainerName: string;
+  trainerImage: string;
+  userName: string;
+  userImage: string;
+  introduction: string;
 }
 
 export interface UserScheduleData {
   trainerId: string;
-  trainerName: string;
   classId: number;
   liveId: number;
-  startDate: string;
   startTime: string;
+  startDate: string;
+  ptLiveStatus: string;
+  exerciseLogStatus: string;
   reviewId: number;
-  status: string;
+  trainerName: string;
+  trainerImage: string;
+  userName: string;
+  userImage: string;
+  introduction: string;
 }
 
 export interface SearchFormData {

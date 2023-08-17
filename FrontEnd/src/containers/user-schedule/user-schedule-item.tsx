@@ -3,6 +3,8 @@ import { UserScheduleData } from "src/interface";
 import WriteReview from "../user-review/write-review";
 import { TchaButton, GreenTchaButton, TchaButtonTextH6 } from "@shared/button";
 import { useState } from "react";
+import WriteExerciseLog from "@user-trainer/write-exercise-log";
+import ReadExerciseLog from "@user-trainer/read-exercise-log";
 import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
@@ -20,6 +22,7 @@ const Wrapper = styled.div`
     height: 6rem;
   }
 `;
+
 const DataWrapper = styled.div`
   height: 100%;
   width: 100%;
@@ -70,7 +73,6 @@ const StyledTextH6 = styled.h6`
     font-size: 0.7rem;
   }
 `;
-
 const StyledTextH5 = styled.h5`
   margin: 0%;
   font-size: 1rem;
@@ -78,7 +80,6 @@ const StyledTextH5 = styled.h5`
     font-size: 0.7rem;
   }
 `;
-
 const StyledTextH4 = styled.h4`
   margin: 0% 0% 2% 0%;
   font-size: 1rem;
@@ -113,9 +114,6 @@ const StyledButton = styled(GreenTchaButton)`
 function UserScheduleItem(props: { data: UserScheduleData }) {
   const [item, setItem] = useState<UserScheduleData>(props.data);
   const navigate = useNavigate();
-  const goToPtRoom = (ptLiveId: number) => {
-    navigate("/pt", { state: ptLiveId });
-  };
   return (
     <Wrapper>
       <DataWrapper>
@@ -130,17 +128,20 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
           </TrainerName>
         </PtInfoWrapper>
         <ButtonWrapper>
-          {item.status === "INACCESSIBLE" && (
+          {item.ptLiveStatus === "INACCESSIBLE" && (
             <StyledButton disabled>
               <TchaButtonTextH6>입장 불가</TchaButtonTextH6>
             </StyledButton>
           )}
-          {(item.status === "ACCESSIBLE" || item.status === "TERMINABLE") && (
-            <StyledButton disabled>
+          {(item.ptLiveStatus === "ACCESSIBLE" ||
+            item.ptLiveStatus === "TERMINABLE") && (
+            <StyledButton
+              onClick={() => navigate("/pt", { state: item.liveId })}
+            >
               <TchaButtonTextH6>PT 방 입장</TchaButtonTextH6>
             </StyledButton>
           )}
-          {item.status === "TERMINATION" && !item.reviewId && (
+          {item.ptLiveStatus === "TERMINATION" && !item.reviewId && (
             <WriteReview
               trainerName={item.trainerName}
               trainer={item.trainerId}
@@ -148,9 +149,11 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
               setItem={setItem}
             />
           )}
-          <StyledButton>
-            <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>PT 방 입장</TchaButtonTextH6>
-          </StyledButton>
+          {item.exerciseLogStatus ? (
+            <StyledButton disabled>일지 확인</StyledButton>
+          ) : (
+            <ReadExerciseLog liveId={item.liveId} />
+          )}
         </ButtonWrapper>
       </DataWrapper>
     </Wrapper>

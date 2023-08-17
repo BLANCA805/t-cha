@@ -46,6 +46,9 @@ export const SmallTitleWrapper = styled.div`
     font-size:3rem;
     font-weight:bolder;
     color:${({ theme }) => theme.color.dark};
+    @media (max-width: 767px) {
+      font-size:2rem;
+    }
 `;
 
 

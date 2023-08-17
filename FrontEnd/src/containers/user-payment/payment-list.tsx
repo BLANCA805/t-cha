@@ -8,6 +8,8 @@ import styled from "styled-components";
 const Wrapper=styled.div`
   display:flex;
   flex-direction: column;
+  width:99%;
+  align-items: center;
   /* margin: 3%; */
   height:100vh;
 `;

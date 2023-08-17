@@ -77,7 +77,7 @@ const CardWrapper = styled.div`
   /* background-color: grey; */
   @media (max-width: 1730px) {
     flex-wrap: nowrap;
-    justify-content: start;
+    /* justify-content: start; */
     overflow-x: auto;
     overflow-y: visible;
   }
@@ -91,7 +91,8 @@ const CardWrapper = styled.div`
 
 const StyledCard = styled(Card)`
   //카드 전체
-  width: 18rem;
+  /* width: 18rem; */
+  width:15vw;
   margin: 1rem 0.4rem 1.6rem 0.4rem;
   border-radius: 10px !important;
   /* background-color: rgba(0, 0, 0, 0.8) !important; */
@@ -101,7 +102,7 @@ const StyledCard = styled(Card)`
     transform: scale(1.03);
   }
   @media (max-width: 767px) {
-    width: 5rem;
+    width: 20vw;
     margin: 0.4rem 0.4rem 0.8rem 0.4rem;
     max-height: 15rem;
     border-radius: 7px !important;

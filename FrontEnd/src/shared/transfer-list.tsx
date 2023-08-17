@@ -6,6 +6,20 @@ import CardHeader from "@mui/material/CardHeader";
 import ListItem from "@mui/material/ListItem";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
+import styled from "styled-components";
+
+
+const Wrapper = styled.div`
+  display:flex;
+  flex-direction: row;
+  width:90%;
+  background-color: #c6deec;
+`
+
+const StyledList = styled(List)`
+  
+  
+`
 
 function not(a: readonly string[], b: readonly string[]) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -202,6 +216,7 @@ export default function TransferList({
             <ListItem key={index} role="listitem">
               <Button
                 variant={checked.includes(value) ? "contained" : "outlined"}
+                color={"success"}
                 // color={checked.includes(value) ? "secondary" : "primary"}
                 onClick={() => handleToggle(value, index)}
                 disabled={disabledValueList.includes(value)}
@@ -216,40 +231,42 @@ export default function TransferList({
   );
 
   return (
-    <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item>{customList("Choices", left)}</Grid>
-      <Grid item>
-        <Grid container direction="column" alignItems="center">
-          <Button
-            sx={{ my: 0.5 }}
-            variant={leftChecked.length ? "contained" : "outlined"}
-            style={{
-              backgroundColor: leftChecked.length ? "#6E7783" : "#ebebeb",
-            }}
-            // color={leftChecked.length ? "secondary" : "primary"}
-            size="small"
-            onClick={handleCheckedRight}
-            disabled={leftChecked.length === 0}
-            aria-label="move selected right"
-          >
-            &gt;
-          </Button>
-          <Button
-            sx={{ my: 0.5 }}
-            style={{
-              backgroundColor: rightChecked.length ? "#6E7783" : "#ebebeb",
-            }}
-            variant={rightChecked.length ? "contained" : "outlined"}
-            size="small"
-            onClick={handleCheckedLeft}
-            disabled={rightChecked.length === 0}
-            aria-label="move selected left"
-          >
-            &lt;
-          </Button>
+    <Wrapper>
+      <Grid container spacing={2} justifyContent="center" alignItems="center">
+        <Grid item>{customList("Choices", left)}</Grid>
+        <Grid item>
+          <Grid container direction="column" alignItems="center">
+            <Button
+              sx={{ my: 0.5 }}
+              variant={leftChecked.length ? "contained" : "outlined"}
+              style={{
+                backgroundColor: leftChecked.length ? "#6E7783" : "#ebebeb",
+              }}
+              // color={leftChecked.length ? "secondary" : "primary"}
+              size="small"
+              onClick={handleCheckedRight}
+              disabled={leftChecked.length === 0}
+              aria-label="move selected right"
+            >
+              &gt;
+            </Button>
+            <Button
+              sx={{ my: 0.5 }}
+              style={{
+                backgroundColor: rightChecked.length ? "#6E7783" : "#ebebeb",
+              }}
+              variant={rightChecked.length ? "contained" : "outlined"}
+              size="small"
+              onClick={handleCheckedLeft}
+              disabled={rightChecked.length === 0}
+              aria-label="move selected left"
+            >
+              &lt;
+            </Button>
+          </Grid>
         </Grid>
+        <Grid item>{customList("Chosen", right)}</Grid>
       </Grid>
-      <Grid item>{customList("Chosen", right)}</Grid>
-    </Grid>
+    </Wrapper>
   );
 }

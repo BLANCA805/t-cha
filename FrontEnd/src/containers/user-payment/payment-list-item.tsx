@@ -3,10 +3,15 @@
 import styled from "styled-components"
 
 const Wrapper = styled.div`
+  width:100%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
   margin-bottom: 0.5%;
   height:12rem;
+  @media (max-width: 767px) {
+   height:6rem; 
+   border-radius: 5px;
+  }
 `;
 
 const ContentsWrapper = styled.div`
@@ -44,7 +49,7 @@ const LeftContainer = styled.div`
   display:flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 `;
 
 const RightContainer = styled.div`
@@ -57,14 +62,43 @@ const RightContainer = styled.div`
 `;
 
 const PTInfo = styled.div`
+  display:flex;
+  align-items:center;
   padding-left:2rem;
   padding-bottom:0.6rem;
+  width:100%;
 `;
 
 const TrainerInfo = styled.div`
+  display: flex;
+  align-items: center;
+  width:100%;
   padding-left:2rem;
-  padding-bottom:1rem;
+  /* padding-bottom:1rem; */
 `;
+
+
+const StyledTextH6 = styled.h6`
+  margin:0%;
+  font-size:1rem;
+  @media (max-width: 767px) {
+    font-size:0.7rem;
+  }
+`
+const StyledTextH5 = styled.h5`
+  margin:0%;
+  font-size:1.2rem;
+  @media (max-width: 767px) {
+    font-size:0.8rem;
+  }
+`
+const StyledTextH4 = styled.h4`
+  margin:0% 0% 1% 0%;
+  font-size:1.5rem;
+  @media (max-width: 767px) {
+    font-size:1rem;
+  }
+`
 
 interface PaymentListItemProps{
   data:{
@@ -78,6 +112,7 @@ interface PaymentListItemProps{
   };
 }
 
+
 function PaymentListItem(props: PaymentListItemProps){
 
   return (
@@ -85,24 +120,24 @@ function PaymentListItem(props: PaymentListItemProps){
       <ContentsWrapper>
 
         <TopContainer>
-          <p style={{marginLeft:"3%"}}>결제일: {props.data.paydate}</p>
-          <p style={{marginRight:"3%"}}>{props.data.price}원</p>
+          <StyledTextH6 style={{marginLeft:"3%"}}>결제일: {props.data.paydate}</StyledTextH6>
+          <StyledTextH6 style={{marginRight:"3%"}}>{props.data.price}원</StyledTextH6>
         </TopContainer>
         
         <BottomContainer>
           <LeftContainer>
-            <b style={{fontSize:"1.25rem"}}>{props.data.ptdate}</b>
-            <b style={{fontSize:"1rem", paddingBottom:"1rem"}}>{props.data.pttime}</b>
+            <StyledTextH6 style={{marginLeft:"20%"}}>{props.data.ptdate}</StyledTextH6>
+            <StyledTextH6 style={{marginTop:"3%", marginLeft:"20%"}}>{props.data.pttime}</StyledTextH6>
           </LeftContainer>
           <RightContainer>
             <PTInfo>
-              <b style={{fontSize:"2rem"}}>
+              <StyledTextH4>
                 {props.data.ptname}
-              </b>
+              </StyledTextH4>
             </PTInfo>
             <TrainerInfo>
-              <b style={{fontSize:"1rem"}}>트레이너</b>
-              <b style={{fontSize:"1.35rem", paddingLeft:"0.75rem"}}>{props.data.trname}</b>
+              <StyledTextH6>트레이너</StyledTextH6>
+              <StyledTextH5 style={{paddingLeft:"0.75rem"}}>{props.data.trname}</StyledTextH5>
             </TrainerInfo>
           </RightContainer>
         </BottomContainer>

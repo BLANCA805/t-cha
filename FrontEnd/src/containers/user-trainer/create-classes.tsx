@@ -16,42 +16,92 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import TransferList from "@shared/transfer-list";
 import { useNavigate } from "react-router-dom";
+import { TitleWrapper, PageTitleText, SmallTitleWrapper } from "@shared/page-title";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width:97%;
+  height:100%;
 `;
 
-const PageTitle = styled.div`
-  display: flex;
-  height: 10%;
-  align-items: center;
-  padding-left: 2%;
-  font-size: 2rem;
-  margin: 1% 0%;
-`;
 const Calendar = styled.div`
+  display:flex;
   margin: 3% 0%;
+  width:20rem;
+  height:21rem;
+  background-color: white;
+  border-radius: 10px;
 `;
+
+const CalendarWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  margin-right:2%;
+  width: 40%;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.color.light};
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    width:100%;
+    max-width:100%;
+    margin-right:0%;
+    justify-content: center;
+  }
+`
 
 const ContentsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 70%;
+  min-height: 40rem;
+  padding: 1% 0%;
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.color.light};
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  @media (max-width: 767px) {
+    width: 100%;
+    padding:2% 0%;
+    min-height: 40%;
+    margin-top: 3%;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  }
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin-top: 3%;
+  margin-top: 3%; */
 `;
+
+
 
 const ReservationWrapper = styled.div`
   width: 60%;
   margin-bottom: 3%;
+  background-color: pink;
+  @media (max-width: 767px) {
+    width:96%;
+    /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); */
+  }
+`;
+const ReservCreateWrapper = styled.div`
+  width: 60%;
+  margin-bottom: 3%;
+  background-color: #bd3d52;
+  @media (max-width: 767px) {
+    width:96%;
+    /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); */
+  }
 `;
 
 const RegisterWrapper = styled.div`
   width: 100%;
   margin: 10% 0%;
+  background-color: magenta;
 `;
 const RegisterButton = styled(Button)`
   display: flex;
@@ -181,15 +231,17 @@ function CreateClasses() {
   return (
     <Wrapper>
       <button onClick={test}>Test</button>
-      <PageTitle>PT 일정 설정하기</PageTitle>
-      <Calendar>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateCalendar
-            value={selectedDate}
-            onChange={(selected) => setSelectedDate(selected)}
-          />
-        </LocalizationProvider>
-      </Calendar>
+      <TitleWrapper><PageTitleText>PT 일정 설정하기</PageTitleText></TitleWrapper>
+      <CalendarWrapper>
+        <Calendar>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateCalendar
+              value={selectedDate}
+              onChange={(selected) => setSelectedDate(selected)}
+            />
+          </LocalizationProvider>
+        </Calendar>
+      </CalendarWrapper>
       <ContentsWrapper>
         <ReservationWrapper>
           <Accordion>
@@ -200,20 +252,19 @@ function CreateClasses() {
           </Accordion>
         </ReservationWrapper>
         {selectedDate?.isAfter(dayjs().subtract(1, "day")) && (
-          <ReservationWrapper>
+          <ReservCreateWrapper>
             <TransferList
               times={
                 dayjs().format("YYYY-MM-DD") === date ? filteredTimes : times
               }
               handleChangeList={handleChangeList}
             />
-
             <RegisterWrapper>
               <RegisterButton variant="contained" onClick={createClass}>
                 <Typography variant="h6">PT 일정 설정하기</Typography>
               </RegisterButton>
             </RegisterWrapper>
-          </ReservationWrapper>
+          </ReservCreateWrapper>
         )}
         {!selectedDate?.isAfter(dayjs().subtract(1, "day")) && (
           <p>지난 날짜는 선택할 수 없습니다</p>

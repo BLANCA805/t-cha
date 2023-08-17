@@ -204,6 +204,7 @@ export interface TrainerScheduleData {
 
 export interface UserScheduleData {
   trainerId: string;
+  trainerName: string;
   classId: number;
   liveId: number;
   startDate: string;

@@ -2,7 +2,6 @@ import { Outlet, useNavigation } from "react-router-dom";
 import styled from "styled-components";
 
 import DesktopSideBar from "@shared/desktop-side-bar";
-import Test from "./test";
 import { useMediaQuery } from "react-responsive";
 import { createGlobalStyle } from "styled-components";
 import MyFont1 from "./assets/fonts/jamsilOtfThin1.otf";
@@ -15,6 +14,7 @@ import Asset3 from "./shared/icons/Asset3.png";
 import Asset4 from "./shared/icons/Asset4.png";
 import Asset5 from "./shared/icons/Asset5.png";
 import MobileBottomBar from "@shared/mobile-bottom-bar";
+import { fontFamily } from "@mui/system";
 
 const GlobalStyle = createGlobalStyle`
   .box {
@@ -44,7 +44,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'jamsil6'; 
     src: url(${MyFont6}) format('opentype'); 
   }
- 
+
   
   body {
     
@@ -135,7 +135,7 @@ const Container = styled.div`
   flex-shrink: 1;
   justify-content: center;
   z-index: 0;
-  width:70vw;
+  width: 70vw;
   @media (max-width: 767px) {
     padding-bottom: 6.5rem;
     overflow-y: auto;
@@ -168,6 +168,16 @@ function App() {
   // useEffect(() => {
   //   setScreenSize();
   // });
+
+  // 모바일 웹에서 올바른 영역을 잡기 위한 작업
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
+
+  // 화면 크기 변경 감지
+  window.addEventListener("resize", () => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  });
   const navigation = useNavigation();
   return (
     <>

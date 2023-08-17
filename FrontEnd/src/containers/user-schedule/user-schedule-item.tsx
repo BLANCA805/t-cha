@@ -149,9 +149,7 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
             />
           )}
           <StyledButton>
-            <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>
-              PT 방 입장
-            </TchaButtonTextH6>
+            <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>PT 방 입장</TchaButtonTextH6>
           </StyledButton>
         </ButtonWrapper>
       </DataWrapper>

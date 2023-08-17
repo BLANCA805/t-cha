@@ -48,8 +48,7 @@ public class PtLive extends Auditable {
     @NotNull
     private PtliveStatus status;
 
-    @OneToOne
-    @JoinColumn(name = "LIVE_ID")
+    @OneToOne(mappedBy = "ptLive")
     private ExerciseLog exerciseLogs;
 
     public enum PtliveStatus {

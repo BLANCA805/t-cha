@@ -15,8 +15,6 @@ import TrainerScheduleItem from "../trainer-schedule/trainer-schedule-item";
 import CreateClasses from "./create-classes";
 import { TitleWrapper, PageTitleText } from "@shared/page-title";
 import { useNavigate } from "react-router-dom";
-import { alignProperty } from "@mui/material/styles/cssUtils";
-import { display, margin } from "@mui/system";
 
 const Wrapper = styled.div`
   display: flex;
@@ -37,8 +35,8 @@ const ContentsWrapper = styled.div`
 const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  /* align-items: center; */
+  justify-content: start;
+  align-items: center;
   margin-right: 2%;
   width: 40%;
   border-radius: 10px;
@@ -92,6 +90,18 @@ const ScheduleInfo = styled.div`
   }
 `;
 
+const PtCreateButton = styled(TchaButton)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3.3rem;
+  width: 70%;
+  background-color: #276e68 !important;
+  border-radius: 5px !important;
+  color: white !important;
+  margin-top: 2rem !important;
+`;
+
 function TrainerSchedule() {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
@@ -127,12 +137,9 @@ function TrainerSchedule() {
               />
             </CalendarContainer>
           </LocalizationProvider>
-          <TchaButton
-            onClick={() => navigate("create_classes")}
-            style={{ color: "white", height: "3rem" }}
-          >
+          <PtCreateButton onClick={() => navigate("create_classes")}>
             수업 일정 생성하기
-          </TchaButton>
+          </PtCreateButton>
         </CalendarWrapper>
         <ScheduleInfo>
           {items.length > 0 ? (

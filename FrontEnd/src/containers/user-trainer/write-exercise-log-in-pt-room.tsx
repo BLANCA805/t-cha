@@ -151,8 +151,8 @@ const StyledGrayButton = styled(StyledButton)`
   color: white !important;
 `;
 
-function WriteExerciseLogInPtRoom(props: { liveId: number }) {
-  const liveId = props.liveId;
+function WriteExerciseLogInPtRoom(props: { ptLiveId: number }) {
+  const liveId = props.ptLiveId;
   const [title, setTitle] = useState<string>("");
   const [contents, setContents] = useState<{ image: string; text: string }[]>([
     { image: "", text: "" },
@@ -291,7 +291,9 @@ function WriteExerciseLogInPtRoom(props: { liveId: number }) {
 
   return (
     <div>
-      <TchaButton onClick={handleOpen}>일지 작성하기</TchaButton>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <StyledTchaButton onClick={handleOpen}>일지 작성하기</StyledTchaButton>
+      </div>
       <Modal
         keepMounted
         open={open}

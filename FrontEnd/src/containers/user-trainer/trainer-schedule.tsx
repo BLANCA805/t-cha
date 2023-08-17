@@ -26,12 +26,12 @@ const Wrapper = styled.div`
 
 const ContentsWrapper = styled.div`
   display: flex;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   justify-content: center;
   width: 100%;
   @media (max-width: 767px) {
     flex-direction: column;
-    align-items:center;
+    align-items: center;
   }
 `;
 
@@ -40,24 +40,24 @@ const CalendarWrapper = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  margin-right:2%;
+  margin-right: 2%;
   width: 35%;
-  min-width:23.5rem;
-  height:40rem;
+  min-width: 23.5rem;
+  height: 40rem;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 1470px) {
-    height:27rem;
-    margin-right:0%;
-    margin-bottom:2.5%;
-    width:100%;
-    max-width:100%;
-    min-width:0;
-    justify-content: center; 
+    height: 27rem;
+    margin-right: 0%;
+    margin-bottom: 2.5%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    justify-content: center;
   }
-  `
+`;
 
 const CalendarContainer = styled.div`
   display: flex;
@@ -81,20 +81,20 @@ const CalendarContainer = styled.div`
 `;
 
 const CreatePtButton = styled(TchaButton)`
-  height:4rem;
-  width:20rem;
-  margin-top:6% !important;  
-  @media (max-width:767px){
-    width:94%;
-    margin:3% 0% !important;
+  height: 4rem;
+  width: 20rem;
+  margin-top: 6% !important;
+  @media (max-width: 767px) {
+    width: 94%;
+    margin: 3% 0% !important;
   }
-`
+`;
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 63%;
-  min-width:560px;
+  min-width: 560px;
   min-height: 40rem;
   border-radius: 10px;
   overflow: hidden;
@@ -103,33 +103,31 @@ const ScheduleInfo = styled.div`
 
   @media (max-width: 767px) {
     width: 100%;
-    min-width:0;
-    min-height:0%;
+    min-width: 0;
+    min-height: 0%;
     margin-top: 1%;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
 const ItemsInfoWrapper = styled.div`
-  display:flex;
+  display: flex;
   /* justify-content: space-evenly; */
   justify-content: center;
   align-items: center;
-  width:100%;
-  height:3rem;
+  width: 100%;
+  height: 3rem;
   margin-bottom: 1.5%;
-  background-color:${({ theme }) => theme.color.primary};
-  opacity:80%;
-`
+  background-color: ${({ theme }) => theme.color.primary};
+  opacity: 80%;
+`;
 const StyledTextH6 = styled.h6`
-  font-size:1.3rem;
-  margin:0%;
+  font-size: 1.3rem;
+  margin: 0%;
   @media (max-width: 767px) {
     /* font-size:0.7rem; */
   }
-`
-
-
+`;
 
 function TrainerSchedule() {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
@@ -152,9 +150,15 @@ function TrainerSchedule() {
   }, [trainer]);
 
   function countPtNum(selectedDate: string) {
-    const count = items.filter(item => item.startDate === selectedDate).length;
+    const count = items.filter(
+      (item) => item.startDate === selectedDate
+    ).length;
     setptNum(count);
-    console.log(selectedDate,count);
+    console.log(selectedDate, count);
+  }
+
+  function test() {
+    console.log(selectedDate);
   }
 
   return (
@@ -178,27 +182,30 @@ function TrainerSchedule() {
             </CalendarContainer>
           </LocalizationProvider>
           <CreatePtButton onClick={() => navigate("create_classes")}>
-            <TchaButtonTextH6 style={{fontSize:"1.3rem"}}>수업 일정 생성하기</TchaButtonTextH6>
+            <TchaButtonTextH6 style={{ fontSize: "1.3rem" }}>
+              수업 일정 생성하기
+            </TchaButtonTextH6>
           </CreatePtButton>
+          <button onClick={test}>Test</button>
         </CalendarWrapper>
         <ScheduleInfo>
           <ItemsInfoWrapper>
-            <StyledTextH6 style={{color: "white", margin: "0% 2%"}}> 
-              {selectedDate} 
+            <StyledTextH6 style={{ color: "white", margin: "0% 2%" }}>
+              {selectedDate}
             </StyledTextH6>
-            <StyledTextH6 style={{color: "white", margin: "0% 2%"}}> 
-              예약 {ptNum}건 
+            <StyledTextH6 style={{ color: "white", margin: "0% 2%" }}>
+              예약 {ptNum}건
             </StyledTextH6>
           </ItemsInfoWrapper>
           {ptNum > 0 ? (
             items.map((item, index) => {
               if (item.startDate === selectedDate) {
-                return <TrainerScheduleItem data={item} key={index}/>;
+                return <TrainerScheduleItem data={item} key={index} />;
               }
               return null;
             })
           ) : (
-              <h6>해당 날짜에 예약이 없습니다</h6>
+            <h6>해당 날짜에 예약이 없습니다</h6>
           )}
         </ScheduleInfo>
       </ContentsWrapper>

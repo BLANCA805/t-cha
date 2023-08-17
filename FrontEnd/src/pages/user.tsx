@@ -226,7 +226,7 @@ function User() {
           />
         </ProfilePhoto>
         <Profileinfo>
-          <UserId>{userData?.name}</UserId>
+          <UserId>{userData?.name.slice(0, 3)}</UserId>
           {/* <UserId>변정원</UserId> */}
           <StyledTextMid
             style={{ fontSize: "3rem", marginLeft: "4%", marginTop: "6%" }}

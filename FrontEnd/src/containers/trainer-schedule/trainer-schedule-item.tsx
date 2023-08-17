@@ -14,21 +14,21 @@ const Wrapper = styled.div<{ status: string }>`
   /* align-items: center; */
   height: 10rem;
   width: 95%;
-  background-color:  ${({ status }) => {
+  background-color: ${({ status }) => {
     switch (status) {
-      case 'INACCESSIBLE':
-        return '#FFBFBF'; 
-      case 'ACCESSIBLE':
-        return '#A1D2C7'; 
-      case 'TERMINABLE':
-        return '#A1D2C7'; 
-      case 'TERMINATION':
-        return '#A1D2C7' 
+      case "INACCESSIBLE":
+        return "#FFBFBF";
+      case "ACCESSIBLE":
+        return "#A1D2C7";
+      case "TERMINABLE":
+        return "#A1D2C7";
+      case "TERMINATION":
+        return "#A1D2C7";
       default:
-        return '#A0A0A0'; 
+        return "#A0A0A0";
     }
   }};
-  margin-top:1%;
+  margin-top: 1%;
   margin-bottom: 2%;
   border-radius: 5px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
@@ -115,30 +115,33 @@ const TrText = styled(StyledTextH5)`
     font-size: 1rem;
   }
 `;
-const StyledButton = styled(GreenTchaButton)<{ status: string, liveid?: number }>`
+const StyledButton = styled(GreenTchaButton)<{
+  status: string;
+  liveid?: number;
+}>`
   margin: 0%;
   height: 3rem;
   width: 7rem;
   background-color: ${({ status }) => {
     switch (status) {
-      case 'INACCESSIBLE':
-        return '#7B7B7B'; 
-      case 'ACCESSIBLE':
-        return '#24272b'; 
-      case 'TERMINABLE':
-        return '#A1D2C7'; 
-      case 'TERMINATION':
-        return '#2e726c' 
+      case "INACCESSIBLE":
+        return "#7B7B7B";
+      case "ACCESSIBLE":
+        return "#24272b";
+      case "TERMINABLE":
+        return "#A1D2C7";
+      case "TERMINATION":
+        return "#2e726c";
       // default:
-      //   return `${({ theme }) => theme.color.tcha}`; 
+      //   return `${({ theme }) => theme.color.tcha}`;
     }
   }} !important;
   display: ${({ status, liveid }) => {
     switch (status) {
-      case 'TERMINATION':
+      case "TERMINATION":
         if (liveid) {
-        return 'none';
-      } 
+          return "none";
+        }
     }
   }} !important;
   @media (max-width: 767px) {
@@ -149,9 +152,9 @@ const StyledButton = styled(GreenTchaButton)<{ status: string, liveid?: number }
 
 const StyledButtonText = styled(TchaButtonTextH6)`
   @media (max-width: 767px) {
-    font-size:1rem;
+    font-size: 1rem;
   }
-`
+`;
 
 function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
   const [item, setItem] = useState<TrainerScheduleData>(props.data);
@@ -163,7 +166,7 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
   };
 
   return (
-    <Wrapper status = {item.status}>
+    <Wrapper status={item.ptLiveStatus}>
       <DataWrapper>
         <TimeWrapper>
           {/* <StyledTextH4>{item.startDate}</StyledTextH4> */}
@@ -171,7 +174,11 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
           <StyledTextH5>{item.liveId}</StyledTextH5>
         </TimeWrapper>
         <ButtonWrapper>
-          <StyledButton status = {item.status} liveid={item.liveId} disabled={item.status === 'INACCESSIBLE' || !item.liveId}> 
+          <StyledButton
+            status={item.ptLiveStatus}
+            liveid={item.liveId}
+            disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
+          >
             {!item.liveId && <TchaButtonTextH6>예약없음</TchaButtonTextH6>}
             {item.ptLiveStatus === "INACCESSIBLE" && item.liveId && (
               <TchaButtonTextH6>입장 불가</TchaButtonTextH6>
@@ -183,7 +190,11 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
               </TchaButtonTextH6>
             )}
           </StyledButton>
-          <StyledButton>
+          <StyledButton
+            status={item.ptLiveStatus}
+            liveid={item.liveId}
+            disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
+          >
             {item.ptLiveStatus === "TERMINATION" &&
               item.exerciseLogStatus === "WRITE" && (
                 <WriteExerciseLog liveId={item.liveId} />

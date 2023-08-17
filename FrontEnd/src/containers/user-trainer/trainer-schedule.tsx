@@ -134,7 +134,7 @@ function TrainerSchedule() {
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
   const selectedDate = date?.format("YYYY-MM-DD");
   const [items, setItems] = useState<TrainerScheduleData[]>([]);
-  const [ptNum, setptNum] = useState<number>(0);
+  const [ptNum, setptNum] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -149,17 +149,14 @@ function TrainerSchedule() {
       });
   }, [trainer]);
 
-  function countPtNum(selectedDate: string) {
+  useEffect(() => {
     const count = items.filter(
       (item) => item.startDate === selectedDate
     ).length;
     setptNum(count);
-    console.log(selectedDate, count);
-  }
+  }, [selectedDate, items]);
 
-  function test() {
-    console.log(selectedDate);
-  }
+  console.log(ptNum);
 
   return (
     <Wrapper>
@@ -174,9 +171,6 @@ function TrainerSchedule() {
                 value={date}
                 onChange={(selected: Dayjs | null) => {
                   setDate(selected);
-                  if (selected) {
-                    countPtNum(selected.format("YYYY-MM-DD"));
-                  }
                 }}
               />
             </CalendarContainer>
@@ -186,7 +180,6 @@ function TrainerSchedule() {
               수업 일정 생성하기
             </TchaButtonTextH6>
           </CreatePtButton>
-          <button onClick={test}>Test</button>
         </CalendarWrapper>
         <ScheduleInfo>
           <ItemsInfoWrapper>

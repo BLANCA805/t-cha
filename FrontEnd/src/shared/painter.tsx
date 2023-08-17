@@ -25,6 +25,14 @@ const ButtonContainer = styled.div`
 function Painter({ capturedImage }: { capturedImage: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = window.innerWidth * 0.25;
+      canvas.height = window.innerHeight * 0.34;
+    }
+  });
+
   const nowTime = dayjs();
 
   const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(
@@ -233,12 +241,7 @@ function Painter({ capturedImage }: { capturedImage: string }) {
           이미지 저장
         </Button>
       </ButtonContainer>
-      <canvas
-        ref={canvasRef}
-        width="620"
-        height="500"
-        style={{ marginTop: "2rem" }}
-      ></canvas>
+      <canvas ref={canvasRef} style={{ marginTop: "2rem" }}></canvas>
     </Wrapper>
   );
 }

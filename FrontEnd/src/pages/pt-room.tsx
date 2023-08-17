@@ -9,6 +9,7 @@ import { useState } from "react";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import { Button, IconButton } from "@mui/material";
 import WriteExerciseLogInPtRoom from "@user-trainer/write-exercise-log-in-pt-room";
+import { TchaButton } from "@shared/button";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -67,17 +68,19 @@ const MyVideo = styled.div`
   align-items: center;
   border-radius: 1rem;
   padding: 1rem;
+  @media (max-width: 767px) {
+    width: 30%;
+  }
   @media (min-width: 767px) {
     background-color: ${({ theme }) => theme.color.light};
-    width: 30%;
   }
 `;
 
 const PainterContainer = styled.div`
   border-radius: 1rem;
   background-color: ${({ theme }) => theme.color.light};
-  width: 96%;
-  height: 90%;
+  width: 100%;
+  height: 55%;
   margin-bottom: 1rem;
   @media (max-width: 767px) {
     display: none;
@@ -138,13 +141,14 @@ const PtRoom = () => {
                 justifyContent: "end",
               }}
             >
-              <Button
+              <TchaButton
                 variant="contained"
                 endIcon={<ExitToAppIcon />}
                 onClick={() => navigate(-1)}
+                style={{ width: "30%" }}
               >
                 퇴장하기
-              </Button>
+              </TchaButton>
             </div>
           </LiveToolBox>
         </Wrapper>

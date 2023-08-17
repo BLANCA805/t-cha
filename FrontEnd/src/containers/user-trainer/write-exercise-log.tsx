@@ -147,24 +147,12 @@ const StyledButton = styled(GreenTchaButton)`
     height: 2.5rem;
     width: 5.5rem;
   }
-  /* color:white !important; */
-`
+  color: white !important;
+`;
 const StyledGrayButton = styled(StyledButton)`
   background-color: gray !important;
   color: white !important;
 `;
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 function WriteExerciseLog(props: { liveId: number }) {
   const liveId = props.liveId;
@@ -328,7 +316,10 @@ function WriteExerciseLog(props: { liveId: number }) {
 
   return (
     <div>
-      <StyledButton onClick={handleOpen}> <TchaButtonTextH6>일지쓰기</TchaButtonTextH6></StyledButton>
+      <StyledButton onClick={handleOpen}>
+        {" "}
+        <TchaButtonTextH6>일지쓰기</TchaButtonTextH6>
+      </StyledButton>
       <Modal
         keepMounted
         open={open}
@@ -406,7 +397,7 @@ function WriteExerciseLog(props: { liveId: number }) {
             <StyledButton type="submit" onClick={save}>
               작성완료
             </StyledButton>
-            <StyledButton onClick={handleClose}>작성취소</StyledButton>
+            <StyledButton onClick={handleClose}>닫기</StyledButton>
           </SubmitButton>
         </Wrapper>
       </Modal>

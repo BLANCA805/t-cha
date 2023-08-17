@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 import { TrainerScheduleData } from "src/interface";
-import { GrayButton, TchaButton } from "@shared/button";
+import { GrayButton, TchaButton, TchaButtonTextH6 } from "@shared/button";
 import WriteExerciseLog from "@user-trainer/write-exercise-log";
 import TrainerScheduleItem from "../trainer-schedule/trainer-schedule-item";
 import CreateClasses from "./create-classes";
@@ -26,9 +26,12 @@ const Wrapper = styled.div`
 
 const ContentsWrapper = styled.div`
   display: flex;
+  flex-wrap:wrap;
+  justify-content: center;
   width: 100%;
   @media (max-width: 767px) {
     flex-direction: column;
+    align-items:center;
   }
 `;
 
@@ -37,33 +40,39 @@ const CalendarWrapper = styled.div`
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  margin-right: 2%;
-  width: 40%;
+  margin-right:2%;
+  width: 35%;
+  min-width:23.5rem;
+  height:40rem;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  @media (max-width: 767px) {
-    width: 100%;
-    max-width: 100%;
-    margin-right: 0%;
-    justify-content: center;
+
+  @media (max-width: 1470px) {
+    height:27rem;
+    margin-right:0%;
+    margin-bottom:2.5%;
+    width:100%;
+    max-width:100%;
+    min-width:0;
+    justify-content: center; 
   }
-`;
+  `
 
 const CalendarContainer = styled.div`
   display: flex;
   align-items: center;
-  background-color: #ebebeb;
-  border-radius: 10px;
   width: 20rem;
   height: 21rem;
-  margin-top: 5%;
-  /* padding: 1% 0%; */
+  margin: 6% 0% 0% 0%;
+  background-color: #ebebeb;
+  border-radius: 10px;
+
   /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); */
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 3px 5px rgba(199, 177, 177, 0.1);
   @media (max-width: 767px) {
     margin-top: 3%;
-    background-color: ${({ theme }) => theme.color.light};
+    /* background-color: ${({ theme }) => theme.color.light}; */
     align-items: center;
     justify-content: center;
     width: 90%;
@@ -71,43 +80,63 @@ const CalendarContainer = styled.div`
   }
 `;
 
+const CreatePtButton = styled(TchaButton)`
+  height:4rem;
+  width:20rem;
+  margin-top:6% !important;  
+  @media (max-width:767px){
+    width:94%;
+    margin:3% 0% !important;
+  }
+`
 const ScheduleInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  width: 63%;
+  min-width:560px;
   min-height: 40rem;
-  padding: 1% 0%;
   border-radius: 10px;
+  overflow: hidden;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+
   @media (max-width: 767px) {
     width: 100%;
-    padding: 2% 0%;
-    min-height: 40%;
-    margin-top: 3%;
+    min-width:0;
+    min-height:0%;
+    margin-top: 1%;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 `;
 
-const PtCreateButton = styled(TchaButton)`
-  display: flex;
+const ItemsInfoWrapper = styled.div`
+  display:flex;
+  /* justify-content: space-evenly; */
   justify-content: center;
   align-items: center;
-  height: 3.3rem;
-  width: 70%;
-  background-color: #276e68 !important;
-  border-radius: 5px !important;
-  color: white !important;
-  margin-top: 2rem !important;
-`;
+  width:100%;
+  height:3rem;
+  margin-bottom: 1.5%;
+  background-color:${({ theme }) => theme.color.primary};
+  opacity:80%;
+`
+const StyledTextH6 = styled.h6`
+  font-size:1.3rem;
+  margin:0%;
+  @media (max-width: 767px) {
+    /* font-size:0.7rem; */
+  }
+`
+
+
 
 function TrainerSchedule() {
   const [date, setDate] = useState<Dayjs | null>(dayjs());
   const trainer = useSelector((state: RootState) => state.profile.trainerId);
   const selectedDate = date?.format("YYYY-MM-DD");
   const [items, setItems] = useState<TrainerScheduleData[]>([]);
-
+  const [ptNum, setptNum] = useState<number>(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -122,6 +151,12 @@ function TrainerSchedule() {
       });
   }, [trainer]);
 
+  function countPtNum(selectedDate: string) {
+    const count = items.filter(item => item.startDate === selectedDate).length;
+    setptNum(count);
+    console.log(selectedDate,count);
+  }
+
   return (
     <Wrapper>
       <TitleWrapper>
@@ -133,26 +168,37 @@ function TrainerSchedule() {
             <CalendarContainer>
               <DateCalendar
                 value={date}
-                onChange={(selected: Dayjs | null) => setDate(selected)}
+                onChange={(selected: Dayjs | null) => {
+                  setDate(selected);
+                  if (selected) {
+                    countPtNum(selected.format("YYYY-MM-DD"));
+                  }
+                }}
               />
             </CalendarContainer>
           </LocalizationProvider>
-          <PtCreateButton onClick={() => navigate("create_classes")}>
-            수업 일정 생성하기
-          </PtCreateButton>
+          <CreatePtButton onClick={() => navigate("create_classes")}>
+            <TchaButtonTextH6 style={{fontSize:"1.3rem"}}>수업 일정 생성하기</TchaButtonTextH6>
+          </CreatePtButton>
         </CalendarWrapper>
         <ScheduleInfo>
-          {items.length > 0 ? (
-            items.map((item) => {
+          <ItemsInfoWrapper>
+            <StyledTextH6 style={{color: "white", margin: "0% 2%"}}> 
+              {selectedDate} 
+            </StyledTextH6>
+            <StyledTextH6 style={{color: "white", margin: "0% 2%"}}> 
+              예약 {ptNum}건 
+            </StyledTextH6>
+          </ItemsInfoWrapper>
+          {ptNum > 0 ? (
+            items.map((item, index) => {
               if (item.startDate === selectedDate) {
-                return <TrainerScheduleItem data={item} />;
+                return <TrainerScheduleItem data={item} key={index}/>;
               }
               return null;
             })
           ) : (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <p>해당 날짜에 예약이 없습니다</p>
-            </div>
+              <h6>해당 날짜에 예약이 없습니다</h6>
           )}
         </ScheduleInfo>
       </ContentsWrapper>

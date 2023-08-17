@@ -19,21 +19,23 @@ import TransferList from "@shared/transfer-list";
 import { useNavigate } from "react-router-dom";
 import { TitleWrapper, PageTitleText, SmallTitleWrapper } from "@shared/page-title";
 import { TchaButton, TchaButtonTextH6, ColoredButtonText } from "@shared/button";
+
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width:97%;
+  width:96%;
   /* width:97%; */
+  margin: 1% 0%;
   height:100%;
 `;
 
 const ReservationWrapper = styled.div`
   display: flex;
   flex-wrap:wrap;
-  width:100%;
   justify-content: center;
-  /* width:70%; */
+  width:100%;
   @media (max-width: 767px){
     flex-direction: column;
   }
@@ -53,6 +55,7 @@ const CalendarWrapper = styled.div`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+  
   @media (max-width:1450px){
    height:23.5rem;
    margin-bottom:2.5%;
@@ -61,8 +64,7 @@ const CalendarWrapper = styled.div`
   @media (max-width: 767px) {
     width:100%;
     max-width:100%;
-    min-width:none;
-    box-shadow: none;
+    min-width:0;
     margin-right:0%;
     justify-content: center;
   }
@@ -70,16 +72,15 @@ const CalendarWrapper = styled.div`
 
 const Calendar = styled.div`
   display:flex;
-  margin: 6% 0%;
+  align-items: center;
   width:20rem;
   height:21rem;
+  margin: 6% 0%;
   background-color: #ebebeb;
   border-radius: 10px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   @media (max-width: 767px) {
-    /* box-shadow:none; */
     margin: 3% 0%;
-    background-color: ${({ theme }) => theme.color.light};
     align-items: center;
     justify-content: center;
     width:90%;
@@ -154,7 +155,6 @@ const RegisterButton = styled(TchaButton)`
 `;
 
 const StyledTextH6 = styled.h6`
-  /* margin:15% 0% 0% 0%; */
   font-size:2.5rem;
   /* color:${({ theme }) => theme.color.tcha}; */
   /* color:gray; */

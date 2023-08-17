@@ -68,17 +68,21 @@ const PtRoom = () => {
   const [capturedImage, setCapturedImage] = useState<string>("");
 
   const { publisher, streamList, onChangeCameraStatus, onChangeMicStatus } =
-    useOpenvidu(user, liveData.ptLiveId);
+    useOpenvidu(user, liveData);
 
   const onCapture = (image: string) => {
     setCapturedImage(image);
-    console.log(liveData.ptLiveId);
   };
+
+  function test() {
+    console.log(streamList);
+  }
 
   return (
     <>
       {publisher && (
         <Wrapper>
+          <button onClick={test}>Test</button>
           <OtherVideo>
             {streamList &&
               streamList.map(
@@ -95,7 +99,7 @@ const PtRoom = () => {
           <LiveToolBox>
             <PainterContainer>
               <Painter capturedImage={capturedImage} />
-              <WriteExerciseLogInPtRoom liveId={liveData.ptLiveId} />
+              <WriteExerciseLogInPtRoom ptLiveId={liveData} />
             </PainterContainer>
             <MyVideo>
               {streamList && (

@@ -130,14 +130,6 @@ const StyledButton = styled(GreenTchaButton)<{
       //   return `${({ theme }) => theme.color.tcha}`;
     }
   }} !important;
-  display: ${({ status, liveid }) => {
-    switch (status) {
-      case "TERMINATION":
-        if (liveid) {
-          return "none";
-        }
-    }
-  }} !important;
   @media (max-width: 767px) {
     height: 2.5rem;
     width: 5.5rem;
@@ -167,19 +159,19 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
           <StyledTextH5>{item.startTime.slice(0, 5)}</StyledTextH5>
           {/* <StyledTextH5>{item.liveId}</StyledTextH5> */}
         </TimeWrapper>
-        
-        {item.userName !== null && 
+
+        {item.userName !== null && (
           <NameWrapper>
             <NameText>{item.userName}</NameText>
             <UserText>회원</UserText>
           </NameWrapper>
-        }
-        {item.userName === null && 
+        )}
+        {item.userName === null && (
           <NameWrapper>
             <UserText>예약된 회원이 없습니다.</UserText>
           </NameWrapper>
-        }
-        
+        )}
+
         <ButtonWrapper>
           <StyledButton
             status={item.ptLiveStatus}

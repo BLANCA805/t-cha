@@ -123,6 +123,7 @@ const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
         page={page}
         onChange={handleChangePage}
         color="standard"
+        style={{ marginBottom: "3%" }}
       />
     </TotalWrapper>
   );

@@ -66,7 +66,7 @@ const NameTextH5 = styled.h4`
   margin: 0%;
   font-size: 3rem;
   @media (max-width: 767px) {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 `;
 const TRTextH5 = styled.h5`
@@ -75,7 +75,7 @@ const TRTextH5 = styled.h5`
 
   @media (max-width: 767px) {
     margin: 0% 3% 0% 3%;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 `;
 const KeywordWrapper = styled.div`

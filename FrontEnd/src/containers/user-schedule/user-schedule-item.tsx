@@ -105,7 +105,7 @@ const TrText = styled(StyledTextH5)`
   }
 `;
 const StyledButton = styled(GreenTchaButton)`
-  margin: 0%;
+  margin-right: 0.5rem;
   height: 3rem;
   width: 7rem;
   @media (max-width: 767px) {

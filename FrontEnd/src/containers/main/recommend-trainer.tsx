@@ -10,7 +10,18 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import trimgdummy1 from "src/shared/img/trimgdummy1.png";
-
+import trimgdummy2 from "src/shared/img/trimgdummy2.png";
+import trainer1 from "src/shared/img/trainer1.png";
+import trainer2 from "src/shared/img/trainer2.png";
+import trainer3 from "src/shared/img/trainer3.png";
+import trainer4 from "src/shared/img/trainer4.png";
+import trainer5 from "src/shared/img/trainer5.png";
+import trainer6 from "src/shared/img/trainer6.png";
+import trainer7 from "src/shared/img/trainer7.png";
+import trainer8 from "src/shared/img/trainer8.png";
+import trainer9 from "src/shared/img/trainer9.png";
+import trainer10 from "src/shared/img/trainer10.png";
+import trainerHA from "src/shared/img/trainerHa.jpg";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -92,7 +103,7 @@ const CardWrapper = styled.div`
 const StyledCard = styled(Card)`
   //카드 전체
   /* width: 18rem; */
-  width:15vw;
+  width: 15vw;
   margin: 1rem 0.4rem 1.6rem 0.4rem;
   border-radius: 10px !important;
   /* background-color: rgba(0, 0, 0, 0.8) !important; */
@@ -105,7 +116,7 @@ const StyledCard = styled(Card)`
     width: 20vw;
     margin: 0.4rem 0.4rem 0.8rem 0.4rem;
     max-height: 15rem;
-    border-radius: 7px !important;
+    border-radius: 3px !important;
   }
 `;
 
@@ -131,8 +142,8 @@ const CardTitleText = styled.h5`
   margin: 1.1rem 1rem;
   color: ${({ theme }) => theme.color.primary};
   @media (max-width: 767px) {
-    margin: 0.3rem 0.5rem;
-    font-size: 0.8rem;
+    margin: 0.3rem 0.3rem;
+    font-size: 0.3rem;
   }
 `;
 const CardContentText = styled.h6`
@@ -146,15 +157,16 @@ const CardContentText = styled.h6`
 
 interface TrainerInfoInterface {
   name: string;
+  image: string;
 }
 
 function TrainerCard(prop: TrainerInfoInterface) {
   return (
     <StyledCard>
-      <StyledCardMedia image={trimgdummy1} title="green iguana" />
+      <StyledCardMedia image={prop.image} title="green iguana" />
       <StyledCardContent>
         <CardTitleText>{prop.name}</CardTitleText>
-        <CardContentText>★ 4.5</CardContentText>
+        {/* <CardContentText>★ 4.5</CardContentText> */}
       </StyledCardContent>
     </StyledCard>
   );
@@ -163,16 +175,20 @@ function TrainerCard(prop: TrainerInfoInterface) {
 function RecommendTrainer() {
   const TrainerInfo = [
     {
-      name: "임병국1",
+      name: "하정호 트레이너",
+      image: trainerHA,
     },
     {
-      name: "임병국2",
+      name: "김성국 트레이너",
+      image: trainer2,
     },
     {
-      name: "임병국3",
+      name: "이상호 트레이너",
+      image: trainer10,
     },
     {
-      name: "임병국4",
+      name: "유채연 트레이너",
+      image: trainer3,
     },
   ];
 
@@ -183,7 +199,11 @@ function RecommendTrainer() {
         <CardWrapper>
           {TrainerInfo.map((info, index) => (
             <div key={index}>
-              <TrainerCard name={info.name}></TrainerCard>
+              <TrainerCard
+                name={info.name}
+                image={info.image}
+                key={index}
+              ></TrainerCard>
             </div>
           ))}
         </CardWrapper>

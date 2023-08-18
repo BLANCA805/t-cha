@@ -12,7 +12,9 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
 import styled from "styled-components";
+import Logo from "src/shared/icons/LOGO.png"
 import { useNavigate } from "react-router-dom";
+import { TchaButton, GreenTchaButton,ReverseTchaButton } from "./button";
 
 interface AuthProps {
   open: boolean;
@@ -58,8 +60,10 @@ const ImageWrapper = styled.div`
 `;
 
 const Image = styled.img`
-  /* max-width: 100%;
-  max-height: 100%; */
+  object-fit: cover;
+  width: 45%;
+  margin: 3% 3% 0% 0%;
+  /* max-height: 80%; */
 `;
 
 const Text = styled.div`
@@ -80,12 +84,12 @@ const Auth = ({ open, onClose }: AuthProps) => {
     >
       <Container>
         <ImageWrapper>
-          <Image src="/logo192.png" />
+          <Image src= {Logo} />
         </ImageWrapper>
         <ContentsWrapper>
           <Text>SNS 계정으로 간편 로그인/회원가입</Text>
-          <Button onClick={Sign}>Google로 로그인하기</Button>
-          <Button onClick={onClose}>Close modal</Button>
+          <GreenTchaButton onClick={Sign} style={{height: "2.5rem"}}>Google로 로그인하기</GreenTchaButton>
+          <GreenTchaButton onClick={onClose} style={{height: "2.5rem"}}>Close modal</GreenTchaButton>
         </ContentsWrapper>
       </Container>
     </ModalWrapper>

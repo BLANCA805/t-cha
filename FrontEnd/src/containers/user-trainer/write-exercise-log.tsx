@@ -239,7 +239,6 @@ function WriteExerciseLog(props: { liveId: number }) {
           },
         }
       );
-      console.log("거 나옵니다");
       console.log(uploadResponse);
 
       const imageUrl = uploadResponse.data[0];
@@ -293,7 +292,7 @@ function WriteExerciseLog(props: { liveId: number }) {
       )
       .then((response) => {
         console.log(response.data);
-        handleClose();
+        alert("임시 저장 완료");
       })
       .catch((error) => {
         console.log(error);
@@ -307,7 +306,8 @@ function WriteExerciseLog(props: { liveId: number }) {
         contents: contents,
       })
       .then((response) => {
-        console.log("::::: " + response.data);
+        console.log(response.data);
+        handleClose();
       })
       .catch((error) => {
         console.log(error);

@@ -17,64 +17,68 @@ import { useSelector } from "react-redux";
 import { RootState } from "src/redux/store";
 import TransferList from "@shared/transfer-list";
 import { useNavigate } from "react-router-dom";
-import { TitleWrapper, PageTitleText, SmallTitleWrapper } from "@shared/page-title";
-import { TchaButton, TchaButtonTextH6, ColoredButtonText } from "@shared/button";
-
+import {
+  TitleWrapper,
+  PageTitleText,
+  SmallTitleWrapper,
+} from "@shared/page-title";
+import {
+  TchaButton,
+  TchaButtonTextH6,
+  ColoredButtonText,
+} from "@shared/button";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width:96%;
+  width: 96%;
   /* width:97%; */
   margin: 1% 0%;
-  height:100%;
+  height: 100%;
 `;
 
 const ReservationWrapper = styled.div`
   display: flex;
-  flex-wrap:wrap;
+  flex-wrap: wrap;
   justify-content: center;
-  width:100%;
-  @media (max-width: 767px){
+  width: 100%;
+  @media (max-width: 767px) {
     flex-direction: column;
   }
-
-`
-
+`;
 
 const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  margin-right:2%;
+  margin-right: 2%;
   width: 35%;
-  min-width:23.5rem;
-  height:40rem;
+  min-width: 23.5rem;
+  height: 40rem;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  
-  @media (max-width:1450px){
-   height:23.5rem;
-   margin-bottom:2.5%;
-   
+
+  @media (max-width: 1450px) {
+    height: 23.5rem;
+    margin-bottom: 2.5%;
   }
   @media (max-width: 767px) {
-    width:100%;
-    max-width:100%;
-    min-width:0;
-    margin-right:0%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-right: 0%;
     justify-content: center;
   }
-  `
+`;
 
 const Calendar = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
-  width:20rem;
-  height:21rem;
+  width: 20rem;
+  height: 21rem;
   margin: 6% 0%;
   background-color: #ebebeb;
   border-radius: 10px;
@@ -83,8 +87,8 @@ const Calendar = styled.div`
     margin: 3% 0%;
     align-items: center;
     justify-content: center;
-    width:90%;
-    height:90%;
+    width: 90%;
+    height: 90%;
   }
 `;
 const ContentsWrapper = styled.div`
@@ -92,23 +96,23 @@ const ContentsWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 63%;
-  min-width:560px;
+  min-width: 560px;
   height: 40rem;
   /* padding: 0% 2%; */
   border-radius: 10px;
-  overflow:hidden;
+  overflow: hidden;
   background-color: ${({ theme }) => theme.color.light};
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  
-  @media (max-width:1450px){
-   height:35rem;
-   margin-bottom:2.5%;
+
+  @media (max-width: 1450px) {
+    height: 35rem;
+    margin-bottom: 2.5%;
   }
   @media (max-width: 767px) {
     width: 100%;
-    min-width:0;
-    min-height:0%;
-    height:33rem;
+    min-width: 0;
+    min-height: 0%;
+    height: 33rem;
     /* padding:4% 0% 0% 0%; */
     /* justify-content: center; */
     margin-top: 1%;
@@ -116,27 +120,26 @@ const ContentsWrapper = styled.div`
   }
 `;
 
-
 const DateWrapper = styled.div`
   /* border-top-right-radius: 5px; */
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  min-height:8%;
+  min-height: 8%;
   width: 100%;
-  min-width:520px;
+  min-width: 520px;
   /* margin: 3% 0% 0% 0%; */
   /* background-color: #6e8582; */
-  background-color:${({ theme }) => theme.color.primary};
-  opacity:80%;
+  background-color: ${({ theme }) => theme.color.primary};
+  opacity: 80%;
 `;
 const ReservCreateWrapper = styled.div`
   width: 60%;
-  min-width:520px;
+  min-width: 520px;
   margin-bottom: 3%;
   @media (max-width: 767px) {
-    width:96%;
-    min-width:0;
+    width: 96%;
+    min-width: 0;
   }
 `;
 
@@ -155,18 +158,15 @@ const RegisterButton = styled(TchaButton)`
 `;
 
 const StyledTextH6 = styled.h6`
-  font-size:2.5rem;
+  font-size: 2.5rem;
   /* color:${({ theme }) => theme.color.tcha}; */
   /* color:gray; */
   /* color:#4982d8; */
-  color:#2d9178;
+  color: #2d9178;
   @media (max-width: 767px) {
     /* font-size:0.7rem; */
   }
-`
-
-
-
+`;
 
 interface CreatedData {
   date: string;
@@ -179,9 +179,9 @@ function CreateClasses() {
   const initialDate = dayjs();
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(initialDate);
   const [created, setCreated] = useState<CreatedData[]>([]);
-  
+
   const [startTimeList, setStartTimeList] = useState<string[]>([]);
-  
+
   const date = selectedDate?.format("YYYY-MM-DD");
 
   useEffect(() => {
@@ -249,47 +249,48 @@ function CreateClasses() {
     "23:00",
     "23:30",
   ];
-  
+
   const filteredTimes = times.filter((time) => {
     const [hours, minutes] = time.split(":");
     const timeToCheck = dayjs()
-    .set("hour", parseInt(hours))
-    .set("minute", parseInt(minutes));
+      .set("hour", parseInt(hours))
+      .set("minute", parseInt(minutes));
     return timeToCheck.isAfter(dayjs());
   });
-  
+
   const body = {
     trainerId: trainerId,
     date: date,
     startTimeList: startTimeList,
   };
-  
+
   const createClass = () => {
     axios
-    .post(`${api}/classes`, body)
-    .then((response) => {
+      .post(`${api}/classes`, body)
+      .then((response) => {
         console.log(response.data);
         navigate("/profile/trainer_schedule");
       })
       .catch((error) => {
         console.log(error);
       });
-    };
-    const handleChangeList = (items: string[]) => {
-      setStartTimeList(items);
   };
-  
+  const handleChangeList = (items: string[]) => {
+    setStartTimeList(items);
+  };
+
   const test = () => {
     console.log(created);
   };
 
   const DisplayWide = useMediaQuery({ minWidth: 1451 });
   const DisplaySmall = useMediaQuery({ minWidth: 1450 });
-  
+
   return (
     <Wrapper>
-      <button onClick={test}>Test</button>
-      <TitleWrapper><PageTitleText>PT 일정 설정하기</PageTitleText></TitleWrapper>
+      <TitleWrapper>
+        <PageTitleText>PT 일정 설정하기</PageTitleText>
+      </TitleWrapper>
       <ReservationWrapper>
         <CalendarWrapper>
           <Calendar>
@@ -300,18 +301,20 @@ function CreateClasses() {
               />
             </LocalizationProvider>
           </Calendar>
-          {DisplayWide && 
-            <StyledTextH6 style={{marginTop:"50px"}}>{date}</StyledTextH6>
-          }
+          {DisplayWide && (
+            <StyledTextH6 style={{ marginTop: "50px" }}>{date}</StyledTextH6>
+          )}
         </CalendarWrapper>
         <ContentsWrapper>
-            {!DisplayWide && 
-              <DateWrapper>
-                <StyledTextH6 style={{margin:"0%", fontSize:"1.1rem", color:"white"}}>
-                  {date}
-                </StyledTextH6>
-              </DateWrapper>
-            }
+          {!DisplayWide && (
+            <DateWrapper>
+              <StyledTextH6
+                style={{ margin: "0%", fontSize: "1.1rem", color: "white" }}
+              >
+                {date}
+              </StyledTextH6>
+            </DateWrapper>
+          )}
           {selectedDate?.isAfter(dayjs().subtract(1, "day")) && (
             <ReservCreateWrapper>
               <TransferList
@@ -322,7 +325,9 @@ function CreateClasses() {
               />
               <RegisterWrapper>
                 <RegisterButton variant="contained" onClick={createClass}>
-                  <TchaButtonTextH6 style={{fontSize:"1.2rem"}}>PT 일정 설정하기</TchaButtonTextH6>
+                  <TchaButtonTextH6 style={{ fontSize: "1.2rem" }}>
+                    PT 일정 설정하기
+                  </TchaButtonTextH6>
                 </RegisterButton>
               </RegisterWrapper>
             </ReservCreateWrapper>

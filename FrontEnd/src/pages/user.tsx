@@ -19,6 +19,8 @@ import ChattingIcon from "src/shared/icons/ChattingIcon.png";
 import MyPaymentIcon from "src/shared/icons/MyPaymentIcon.png";
 import MyReviewIcon from "src/shared/icons/MyReviewIcon.png";
 import NoticeIcon from "src/shared/icons/NoticeIcon.png";
+import Logo from "src/shared/icons/LOGO.png";
+import defaultImage from "src/shared/icons/default_profile.png";
 import { useMediaQuery } from "react-responsive";
 
 const Wrapper = styled.div`
@@ -43,6 +45,7 @@ const Profile = styled.div`
   margin-bottom: 0.5%;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
+  color:${({ theme }) => theme.color.dark};
   @media (max-width: 767px) {
     height: 8rem;
     border-radius: 5px;
@@ -83,6 +86,7 @@ const ProfilePhotoimg = styled.img`
   object-fit: cover;
   border-radius: 1rem;
   background-color: gray;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
 `;
 
 const Profileinfo = styled.div`
@@ -220,7 +224,7 @@ function User() {
         <ProfilePhoto>
           <ProfilePhotoimg
             src={
-              userData?.profileImage ? userData.profileImage : "/logo192.png"
+              userData?.profileImage ? userData.profileImage : defaultImage
             }
             alt={userData?.profileImage}
           />

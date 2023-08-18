@@ -142,6 +142,7 @@ const StyledButton = styled(GreenTchaButton)`
   margin: 0% 1.5% !important;
   height: 3rem;
   width: 7rem;
+  background-color: #1e3531 !important;
   @media (max-width: 767px) {
     width: 5rem;
   }
@@ -201,7 +202,7 @@ function ReadExerciseLog(props: { liveId: number }) {
 
   return (
     <div>
-      <TchaButton onClick={handleOpen}>일지 읽기</TchaButton>
+      <StyledButton onClick={handleOpen}><TchaButtonTextH6>일지보기</TchaButtonTextH6></StyledButton>
       <Modal
         keepMounted
         open={open}

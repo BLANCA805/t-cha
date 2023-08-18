@@ -168,10 +168,17 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
           {/* <StyledTextH5>{item.liveId}</StyledTextH5> */}
         </TimeWrapper>
         
-        <NameWrapper>
-          <NameText>{item.userName}</NameText>
-          <UserText>회원</UserText>
-        </NameWrapper>
+        {item.userName !== null && 
+          <NameWrapper>
+            <NameText>{item.userName}</NameText>
+            <UserText>회원</UserText>
+          </NameWrapper>
+        }
+        {item.userName === null && 
+          <NameWrapper>
+            <UserText>예약된 회원이 없습니다.</UserText>
+          </NameWrapper>
+        }
         
         <ButtonWrapper>
           <StyledButton

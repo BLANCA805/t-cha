@@ -31,8 +31,10 @@ const ReviewContainer = styled.div`
   /* border-radius: 10px; */
   background-color: ${({ theme }) => theme.color.light};
   border-bottom: 1px solid lightgray;
-  margin-bottom: 1%;
-`;
+  @media (max-width:767px){
+    margin: 1% 0%;    
+  }
+  `;
 
 const ProfileWrapper = styled.div`
   display: flex;
@@ -52,6 +54,9 @@ const UserProfileTextData = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 1.5%;
+  @media (max-width:767px){
+    margin-left: 1.5%;
+  }
 `;
 
 const UserProfileimg = styled.img`
@@ -59,12 +64,17 @@ const UserProfileimg = styled.img`
   width: 4rem;
   border-radius: 50%;
   background-color: lightgray;
+  /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); */
 `;
 
-const NameWrapper = styled.div``;
+const NameWrapper = styled.div`
+ 
+`;
+
 const DateRateWrapper = styled.div`
   display: flex;
   align-items: center;
+  margin-top: 0.3rem;
 `;
 
 const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
@@ -93,17 +103,17 @@ const TrainerReview: React.FC<TrainerProps> = ({ trainer }) => {
           reviewData.data.map((item, index) => (
             <ReviewContainer key={index}>
               <ProfileWrapper>
-                <UserProfileimg />
+                <UserProfileimg src={item.profileImg}/>
                 <UserProfileTextData>
                   <NameWrapper>
-                    <b style={{ fontSize: "1.5rem" }}> {item.id}</b>
+                    <b style={{ fontSize: "1.5rem"}}> {item.profileName}</b>
                     <b style={{ fontSize: "1rem", marginLeft: "0.5rem" }}>회원님</b>
                   </NameWrapper>
 
                   <DateRateWrapper>
                     <Rating value={item.star} precision={0.5} readOnly />
-                    <b style={{ fontSize: "1rem", marginRight: "1rem" }}>{item.star}</b>
-                    <b style={{ fontSize: "0.7rem" }}>작성자 : {item.profileName}</b>
+                    <b style={{ fontSize: "1rem", marginLeft: "0.5rem"}}>{item.star}</b>
+                    {/* <b style={{ fontSize: "0.7rem" }}>작성자 : {item.profileName}</b> */}
                   </DateRateWrapper>
                 </UserProfileTextData>
               </ProfileWrapper>

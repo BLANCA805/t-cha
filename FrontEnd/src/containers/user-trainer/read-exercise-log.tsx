@@ -168,15 +168,11 @@ function ReadExerciseLog(props: { liveId: number }) {
   const handleClose = () => setOpen(false);
 
   return (
-<<<<<<< FrontEnd/src/containers/user-trainer/read-exercise-log.tsx
-    <div>
-      <StyledButton onClick={handleOpen}><TchaButtonTextH6>일지보기</TchaButtonTextH6></StyledButton>
-=======
     <>
       <StyledButton onClick={handleOpen}>
         <TchaButtonTextH6>일지 읽기</TchaButtonTextH6>
       </StyledButton>
->>>>>>> FrontEnd/src/containers/user-trainer/read-exercise-log.tsx
+
       <Modal
         keepMounted
         open={open}

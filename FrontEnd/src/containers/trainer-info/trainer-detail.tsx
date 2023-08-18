@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 const ContainerSet = styled.div`
   /* display: flex; */
   width: 100%;
-  background-color: #f0f0f0;
+  /* background-color: #f0f0f0; */
 `;
 
 const StyledTextBig = styled.h5`
@@ -50,8 +50,8 @@ const TrainerDetail: React.FC<TrainerDetailDataProps> = ({ data }) => {
     <Wrapper>
       <ContainerSet>
         <StyledTextBig>{data.title}</StyledTextBig>
-        {data.images.map((image) => (
-          <Image src={image} alt="" />
+        {data.images.map((image, index) => (
+          <Image src={image} key={index} alt="" style={{margin:"2%"}}/>
         ))}
         <StyledTextSmall>{data.content}</StyledTextSmall>
       </ContainerSet>

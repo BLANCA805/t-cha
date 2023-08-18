@@ -34,7 +34,7 @@ const SideBarContainer = styled.div`
   width: 264px;
   flex-grow: 0;
   flex-shrink: 0;
-  z-index:1;
+  z-index: 1;
   height: 100vh;
 `;
 const StyledList = styled(List)`
@@ -112,7 +112,7 @@ function DesktopSideBar() {
             </SideBarItemWrapper>
             {[
               ["profile", "마이페이지"],
-              ["", "home"],
+              ["", "HOME"],
               ["profile/schedule", "내 캘린더"],
               // ["profile/chat", "채팅 목록"],
               ["trainer", "트레이너"],

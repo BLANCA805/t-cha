@@ -44,7 +44,7 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0%;
-  width:100%;
+  width: 100%;
   @media (max-width: 767px) {
     margin: 1% 0%;
     justify-content: start;
@@ -53,8 +53,8 @@ const ButtonContainer = styled.div`
 `;
 
 const StyledTchaButton = styled(TchaButton)`
-  width:20%;
-  height:3.7rem;
+  width: 20%;
+  height: 3.7rem;
   background-color: #2e726c !important;
   background: none;
   &:hover {
@@ -62,18 +62,18 @@ const StyledTchaButton = styled(TchaButton)`
     background: none;
   }
   @media (max-width: 767px) {
-    width:31%;
-    height:2.7rem;
+    width: 31%;
+    height: 2.7rem;
   }
-`
+`;
 const StyledReverseTchaButton = styled(ReverseTchaButton)`
-  width:20%;
-  height:3.7rem;
+  width: 20%;
+  height: 3.7rem;
   @media (max-width: 767px) {
-    width:31%;
-    height:2.7rem;
+    width: 31%;
+    height: 2.7rem;
   }
-`
+`;
 
 const AccordionContainer = styled.div`
   display: flex;
@@ -129,6 +129,12 @@ function TrainerListHeader({
     { value: "/sorted-by-review", text: "리뷰 많은 순" },
   ];
 
+  const searchToEnter = (event: any) => {
+    if (event.key === "Enter") {
+      searchTrainer(searchForm);
+    }
+  };
+
   return (
     <Wrapper>
       <SearchContainer>
@@ -140,6 +146,7 @@ function TrainerListHeader({
             style={{ width: "100%" }}
             value={searchKeyword}
             onChange={handleSearchKeyword}
+            onKeyDown={(enter) => searchToEnter(enter)}
           />
         </TextFieldWrapper>
         <TchaButton
@@ -157,7 +164,9 @@ function TrainerListHeader({
       <ButtonContainer>
         {sortButtons.map((button) => {
           const ButtonComponent =
-            sortCondition === button.value ? StyledTchaButton : StyledReverseTchaButton;
+            sortCondition === button.value
+              ? StyledTchaButton
+              : StyledReverseTchaButton;
 
           return (
             <ButtonComponent
@@ -170,21 +179,6 @@ function TrainerListHeader({
           );
         })}
       </ButtonContainer>
-      <AccordionContainer>
-        <StyledAccordion>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-          >
-            <StyledText>날짜 및 시간 선택</StyledText>
-          </AccordionSummary>
-          <AccordionDetails>
-            {isDesktop && <DateTimePicker />}
-            {isMobile && <SmDateTimePicker />}
-          </AccordionDetails>
-        </StyledAccordion>
-      </AccordionContainer>
     </Wrapper>
   );
 }

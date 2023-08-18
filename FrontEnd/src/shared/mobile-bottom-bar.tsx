@@ -22,7 +22,10 @@ import Fab from "@mui/material/Fab";
 import Logo from "src/shared/icons/LOGO.png";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
-
+import EventNoteRoundedIcon from '@mui/icons-material/EventNoteRounded';
+import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
+import BallotIcon from '@mui/icons-material/Ballot';
+import FitnessCenterOutlinedIcon from '@mui/icons-material/FitnessCenterOutlined';
 import styled from "styled-components";
 
 const BottomBarContainer = styled.div`
@@ -113,11 +116,11 @@ function MobileBottomBar() {
       <ButtomBarContents
         onClick={() => navigate("profile/bookmarked_trainers")}
       >
-        <StarRoundedIcon style={{ fontSize: "4rem" }} />
+        <StarRoundedIcon style={{ fontSize: "3.3rem" }} />
         즐겨찾기
       </ButtomBarContents>
       <ButtomBarContents onClick={() => navigate("trainer")}>
-        <StarRoundedIcon style={{ fontSize: "4rem" }} />
+        <FitnessCenterOutlinedIcon style={{ fontSize: "3.3rem" }} />
         트레이너목록
       </ButtomBarContents>
       <ButtomBarHome onClick={() => navigate("")}>
@@ -128,11 +131,11 @@ function MobileBottomBar() {
         {/* 홈으로 */}
       </ButtomBarHome>
       <ButtomBarContents onClick={() => navigate("profile/schedule")}>
-        <StarRoundedIcon style={{ fontSize: "4rem" }} />
+        <EventNoteRoundedIcon style={{ fontSize: "3.3rem" }} />
         스케줄
       </ButtomBarContents>
       <ButtomBarContents onClick={() => navigate("profile")}>
-        <StarRoundedIcon style={{ fontSize: "4rem" }} />
+        <PersonRoundedIcon style={{ fontSize: "3.3rem" }} />
         마이페이지
       </ButtomBarContents>
       <Auth open={authOpen} onClose={handleAuthClose} />

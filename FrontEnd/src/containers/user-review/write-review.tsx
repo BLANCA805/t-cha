@@ -53,7 +53,8 @@ const StyledButton = styled(GreenTchaButton)`
   height: 3rem;
   width: 7rem;
   @media (max-width: 767px) {
-    width: 5rem;
+    width: 6rem;
+    height:1.6rem;
   }
 `;
 function WriteReview(props: {
@@ -113,7 +114,9 @@ function WriteReview(props: {
         aria-describedby="keep-mounted-modal-description"
       >
         <Wrapper>
-          {trainerName}
+          <StyledTextH6 style={{marginTop:"5%", fontSize:"1.3rem", color:"black"}}>
+            {trainerName} 트레이너
+          </StyledTextH6>
           <StyledTextH6>별점 입력하기</StyledTextH6>
           <Rating
             name="simple-controlled"

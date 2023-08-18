@@ -53,10 +53,10 @@ const LiveToolBox = styled.div`
   @media (max-width: 767px) {
     z-index: 3;
     flex: none;
-    width: 50%;
+    width: 100%;
     position: absolute;
     top: -1%;
-    left: 45%;
+    left: 30%;
     display: flex;
     justify-content: space-between;
   }

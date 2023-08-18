@@ -218,8 +218,6 @@ public class PtClassService {
             ZSetOperations.add("PT", trainerId, Double.parseDouble(s) + 1.0);
 
 
-
-
             // 결제 성공 시, 새로운 ptLive 객체 생성해서 DB insert
             PtLive createdPtLive = ptLiveRepository.save(
                     PtLive.builder()
@@ -304,19 +302,20 @@ public class PtClassService {
         return ptClassMapper.classToClassResponseDto(ptClass, null, 0, null, null);
     }
 
+
     /************** 상태 변경 로직 작성 ***************/
     /**************** 30분마다 돌면서 "진행" -> "종료 가능" 상태로 변경 ****************/
     @Transactional
-    @Scheduled(cron = "0 0 * * * *") //정각에 실행
+    @Scheduled(cron = "0 */3 * * * *") //정각에 실행
     public void executePtLiveStatusHourTerminable() {
         executePtLiveStatusChangeTerminable();
     }
 
-    @Transactional
-    @Scheduled(cron = "0 30 * * * *")// 30분에 실행
-    public void executePtLiveStatusHalfHourTerminable() {
-        executePtLiveStatusChangeTerminable();
-    }
+//    @Transactional
+//    @Scheduled(cron = "0 3-59/6 * * * *")// 30분에 실행
+//    public void executePtLiveStatusHalfHourTerminable() {
+//        executePtLiveStatusChangeTerminable();
+//    }
 
 
     //진행 -> 종료가능 변경
@@ -340,25 +339,25 @@ public class PtClassService {
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
-            if (start.isBefore(nowTime.minusHours(1))) {
-                pt.setStatus(PtLive.PtliveStatus.TERMINABLE);
-            }
+//            if (start.isBefore(nowTime.minusHours(1))) {
+            pt.setStatus(PtLive.PtliveStatus.TERMINABLE);
+//            }
 
         }
 
     }
 
     @Transactional
-    @Scheduled(cron = "0 10 * * * *") // 매번 n:10분에 실행
+    @Scheduled(cron = "0 1-59/3 * * * *") // 매번 n:10분에 실행
     public void executePtLiveStatusHourTermination() {
         executePtLiveStatusChangeTermination();
     }
 
-    @Transactional
-    @Scheduled(cron = "0 40 * * * *") // 매번 n:40분에 실행
-    public void executePtLiveStatusHalfHourTermination() {
-        executePtLiveStatusChangeTermination();
-    }
+//    @Transactional
+//    @Scheduled(cron = "0  4-59/6 * * *") // 매번 n:40분에 실행
+//    public void executePtLiveStatusHalfHourTermination() {
+//        executePtLiveStatusChangeTermination();
+//    }
 
 
     //종료가능 -> 종료
@@ -382,24 +381,24 @@ public class PtClassService {
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
             //운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
-            if (start.isBefore(nowTime.minusMinutes(70))) {
-                pt.setStatus(PtLive.PtliveStatus.TERMINATION);
-            }
+//            if (start.isBefore(nowTime.minusMinutes(70))) {
+            pt.setStatus(PtLive.PtliveStatus.TERMINATION);
+//            }
 
         }
     }
 
     @Transactional
-    @Scheduled(cron = "0 55 * * * *") //55분에 실행
+    @Scheduled(cron = "0 2-59/3 * * * *") //55분에 실행
     public void executePtLiveStatus55() {
         executePtLiveStatusChangeAccessible();
     }
 
-    @Transactional
-    @Scheduled(cron = "0 25 * * * *")// 25분에 실행
-    public void executePtLiveStatus25() {
-        executePtLiveStatusChangeAccessible();
-    }
+//    @Transactional
+//    @Scheduled(cron = "0 5-59/6 * * * *")// 25분에 실행
+//    public void executePtLiveStatus25() {
+//        executePtLiveStatusChangeAccessible();
+//    }
 
 
     //접근불가 -> 진행 변경
@@ -430,13 +429,12 @@ public class PtClassService {
             LocalDateTime start = LocalDateTime.of(startDate, startTime);
 
 //            운동 시간 확인, 운동 시작시각 + 1이면 종료가능 상태로 변경
-            if (start.isAfter(nowTime.minusMinutes(5))) {
-                pt.setStatus(PtLive.PtliveStatus.ACCESSIBLE);
-            }
+//            if (start.isAfter(nowTime.minusMinutes(5))) {
+            pt.setStatus(PtLive.PtliveStatus.ACCESSIBLE);
+//            }
 
         }
 
     }
-
 
 }

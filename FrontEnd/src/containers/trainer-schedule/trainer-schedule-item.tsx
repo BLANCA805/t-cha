@@ -69,6 +69,8 @@ const ButtonWrapper = styled.div`
   align-items: center;
   width: 40%;
   @media (max-width: 767px) {
+    flex-direction: column;
+    margin-right:2%;
     /* min-width: 30%;
     max-width: 31%; */
   }
@@ -131,8 +133,8 @@ const StyledButton = styled(GreenTchaButton)<{
     }
   }} !important;
   @media (max-width: 767px) {
-    height: 2.5rem;
-    width: 5.5rem;
+    height: 2rem;
+    width: 5rem;
   }
 `;
 

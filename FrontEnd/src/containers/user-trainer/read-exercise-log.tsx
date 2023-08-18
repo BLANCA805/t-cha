@@ -127,6 +127,7 @@ const StyledButton = styled(GreenTchaButton)`
   width: 7rem;
   background-color: #1e3531 !important;
   @media (max-width: 767px) {
+    height: 2rem;
     width: 5rem;
   }
   color: white !important;

@@ -211,7 +211,9 @@ function TrainerListItem(props: TrainerListDataProps) {
           <NameTextH5>{props.data.profileName}</NameTextH5>
           <TRTextH5>트레이너</TRTextH5>
           <TchaStar />
-          <TRTextH5 style={{ marginLeft: "0%" }}>{props.data.stars}</TRTextH5>
+          <TRTextH5 style={{ marginLeft: "0%" }}>
+            {Math.round(props.data.stars * 10) / 10}
+          </TRTextH5>
         </NameWrapper>
         <KeywordWrapper>
           {tags.map((tag, index) => (

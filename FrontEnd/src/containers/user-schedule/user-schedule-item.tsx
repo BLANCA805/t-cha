@@ -8,7 +8,7 @@ import ReadExerciseLog from "@user-trainer/read-exercise-log";
 import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
-  /* display:flex; */
+  /* display: flex; */
   /* justify-content:center; */
   /* align-items: center; */
   height: 10rem;
@@ -52,14 +52,16 @@ const PtInfoWrapper = styled.div`
 const TrainerName = styled.div`
   display: flex;
   justify-content: center;
-  align-items: end;
+  align-items: center;
   width: 100%;
 `;
 
 const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: start;
+  align-items: center;
   width: 40%;
+  margin-right: 1%;
   @media (max-width: 767px) {
     min-width: 30%;
     max-width: 31%;
@@ -123,8 +125,8 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
         </TimeWrapper>
         <PtInfoWrapper>
           <TrainerName>
-            <TrText>트레이너</TrText>
             <TrNameText> {item.trainerName}</TrNameText>
+            <TrText>트레이너</TrText>
           </TrainerName>
         </PtInfoWrapper>
         <ButtonWrapper>
@@ -133,24 +135,24 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
               <TchaButtonTextH6>입장 불가</TchaButtonTextH6>
             </StyledButton>
           )}
-          {(item.ptLiveStatus === "ACCESSIBLE" ||
-            item.ptLiveStatus === "TERMINABLE") && (
-            <StyledButton
-              onClick={() => navigate("/pt", { state: item.liveId })}
-            >
-              <TchaButtonTextH6>PT 입장</TchaButtonTextH6>
+          {/* {(item.ptLiveStatus === "ACCESSIBLE" ||
+            item.ptLiveStatus === "TERMINABLE") && ( */}
+          <StyledButton onClick={() => navigate("/pt", { state: item.liveId })}>
+            <TchaButtonTextH6>PT 방 입장</TchaButtonTextH6>
+          </StyledButton>
+          {/* )} */}
+          {/* {item.ptLiveStatus === "TERMINATION" && !item.reviewId && ( */}
+          <WriteReview
+            trainerName={item.trainerName}
+            trainer={item.trainerId}
+            liveId={item.liveId}
+            setItem={setItem}
+          />
+          {/* )} */}
+          {item.exerciseLogStatus === "WRITE" ? (
+            <StyledButton disabled>
+              <TchaButtonTextH6>일지 확인</TchaButtonTextH6>
             </StyledButton>
-          )}
-          {item.ptLiveStatus === "TERMINATION" && !item.reviewId && (
-            <WriteReview
-              trainerName={item.trainerName}
-              trainer={item.trainerId}
-              liveId={item.liveId}
-              setItem={setItem}
-            />
-          )}
-          {item.exerciseLogStatus ? (
-            <StyledButton disabled>일지 확인</StyledButton>
           ) : (
             <ReadExerciseLog liveId={item.liveId} />
           )}

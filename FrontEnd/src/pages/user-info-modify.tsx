@@ -10,7 +10,7 @@ import { modifyProfile } from "src/redux/slicers";
 import { RootState } from "src/redux/store";
 import { Avatar } from "@mui/material";
 import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
-import DefaultImg from "src/shared/icons/LogoSmall.png";
+import DefaultImg from "src/shared/icons/default_profile.png";
 import Asset3 from "src/shared/icons/Asset3.png"
 
 import styled from "styled-components";
@@ -55,6 +55,7 @@ const ImageChangeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `
 const ImageWrapper = styled.div`
   display: flex;
@@ -64,9 +65,10 @@ const ImageWrapper = styled.div`
   height: 20rem;
   width: 20rem;
   border-radius: 25%;
-  background-color: #f1f1f1;
+  /* background-color: #f1f1f1; */
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
   margin: 5% 0%;
+  /* overflow: hidden; */
   @media (max-width: 767px) {
     height: 10rem;
     width: 10rem;
@@ -76,11 +78,11 @@ const ImageWrapper = styled.div`
 const Image = styled.img`
   width:100%; 
   height:100%;
-  /* width: 150% !important; */
-  /* height: 150% !important; */
+  border-radius: 25%;
   object-fit: cover;
+  overflow: hidden;
   aspect-ratio : 1/1 ;
-  margin-right:5%;
+  background-color: #f1f1f1;
   
   &:hover {
     cursor: url(${Asset3}), pointer;
@@ -162,7 +164,8 @@ function UserInfoModify() {
   useEffect(() => {
     axios.get(`${api}/userProfiles/${profileId}`).then((response) => {
       setName(response.data.name);
-      setImageForView(response.data.profileImage);
+      // setImageForView(response.data.profileImage);
+      setImageForView(response.data.profileImage || DefaultImg); 
       console.log(response.data);
     });
   }, [profileId]);

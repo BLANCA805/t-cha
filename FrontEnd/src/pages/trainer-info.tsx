@@ -162,14 +162,14 @@ const BottomTab = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: sticky;
-  bottom: 0;
+  position: fixed;
+  bottom: 5.5rem;
   height: 9rem;
   width: 100%;
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
   @media (max-width: 767px) {
-    height: 5rem;
+    height: 4.7rem;
   }
 `;
 

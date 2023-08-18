@@ -43,7 +43,7 @@ const DataWrapper = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  color:${({ theme }) => theme.color.dark};
+  color: ${({ theme }) => theme.color.dark};
 `;
 
 const TimeWrapper = styled.div`
@@ -112,7 +112,7 @@ const UserText = styled(StyledTextH5)`
 const StyledButton = styled(GreenTchaButton)<{
   status: string;
   liveid?: number;
-  }>`
+}>`
   margin: 0%;
   height: 3rem;
   width: 7rem;
@@ -164,7 +164,7 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
       <DataWrapper>
         <TimeWrapper>
           {/* <StyledTextH4>{item.startDate}</StyledTextH4> */}
-          <StyledTextH5>{item.startTime.slice(0,5)}</StyledTextH5>
+          <StyledTextH5>{item.startTime.slice(0, 5)}</StyledTextH5>
           {/* <StyledTextH5>{item.liveId}</StyledTextH5> */}
         </TimeWrapper>
         
@@ -184,31 +184,30 @@ function TrainerScheduleItem(props: { data: TrainerScheduleData }) {
           <StyledButton
             status={item.ptLiveStatus}
             liveid={item.liveId}
-            disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
+            // disabled={item.ptLiveStatus === "INACCESSIBLE" || !item.liveId}
           >
-            {!item.liveId && <TchaButtonTextH6>예약없음</TchaButtonTextH6>}
-            {item.ptLiveStatus === "INACCESSIBLE" && item.liveId && (
-              <TchaButtonTextH6>입장 불가</TchaButtonTextH6>
-            )}
-            {(item.ptLiveStatus === "ACCESSIBLE" ||
-              item.ptLiveStatus === "TERMINABLE") && (
-              <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>
-                PT 입장
-              </TchaButtonTextH6>
-            )}
+            {/* {!item.liveId && <TchaButtonTextH6>예약없음</TchaButtonTextH6>}
+            {item.ptLiveStatus === "INACCESSIBLE" && item.liveId && ( */}
+            {/* <TchaButtonTextH6>입장 불가</TchaButtonTextH6> */}
+            {/* // )} */}
+            {/* // {(item.ptLiveStatus === "ACCESSIBLE" || */}
+            {/* //   item.ptLiveStatus === "TERMINABLE") && ( */}
+            <TchaButtonTextH6 onClick={() => goToPtRoom(item.liveId)}>
+              PT 입장
+            </TchaButtonTextH6>
+            {/* )} */}
           </StyledButton>
-          {(item.ptLiveStatus === "TERMINATION" ||
-            item.ptLiveStatus === "ACCESSIBLE") &&
-            item.exerciseLogStatus === "WRITE" && (
-              <WriteExerciseLog liveId={item.liveId} />
-            )}
-          {item.ptLiveStatus === "TERMINATION" &&
-            item.exerciseLogStatus === "READ" && (
-              <ReadExerciseLog liveId={item.liveId} />
-            )}
+          {/* {(item.ptLiveStatus === "TERMINATION" ||
+            item.ptLiveStatus === "ACCESSIBLE") && */}
+          {item.exerciseLogStatus === "WRITE" && (
+            <WriteExerciseLog liveId={item.liveId} />
+          )}
+          {/* {item.ptLiveStatus === "TERMINATION" && */}
+          {item.exerciseLogStatus === "READ" && (
+            <ReadExerciseLog liveId={item.liveId} />
+          )}
         </ButtonWrapper>
       </DataWrapper>
-
     </Wrapper>
   );
 }

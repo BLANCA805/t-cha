@@ -8,12 +8,11 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import styled from "styled-components";
 
-
 const Wrapper = styled.div`
-  display:flex;
+  display: flex;
   flex-direction: row;
   /* justify-content: space-between; */
-  width:100%;
+  width: 100%;
   margin-top: 10%;
   /* background-color: #c6deec; */
   /* box-shadow: 3px 3px 5psx rgba(0, 0, 0, 0.1); */
@@ -21,31 +20,28 @@ const Wrapper = styled.div`
     /* box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1); */
     margin-top: 5%;
   }
-`
+`;
 const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
 
-  @media (max-width:767px){
-    width:30vw !important;
-    height:20rem !important;
+  @media (max-width: 767px) {
+    width: 30vw !important;
+    height: 20rem !important;
   }
 `;
 
 const StyledList = styled(List)`
   display: flex;
   flex-direction: column;
-  @media (max-width:767px){
-    width:30vw !important;
-    height:20rem !important;
+  @media (max-width: 767px) {
+    width: 30vw !important;
+    height: 20rem !important;
   }
-  
-`
+`;
 const StyledButton = styled(Button)`
   /* display: flex ; */
-`
-
-
+`;
 
 function not(a: readonly string[], b: readonly string[]) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -225,7 +221,7 @@ export default function TransferList({
         title={title}
         subheader={`Total ${numberOfChecked(items)}/${items.length}`}
         // style={{backgroundColor:"lightgray"}}
-        style={{backgroundColor:"#70b4b1"}}
+        style={{ backgroundColor: "#70b4b1" }}
       />
       <Divider />
       <StyledList

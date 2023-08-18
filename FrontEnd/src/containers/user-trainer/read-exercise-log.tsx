@@ -49,6 +49,7 @@ const Container = styled.div`
     flex-wrap: wrap;
   }
 `;
+
 const InputWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -62,6 +63,7 @@ const InputWrapper = styled.div`
     margin-bottom: 2%;
   }
 `;
+
 const ImageWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -75,6 +77,7 @@ const ImageWrapper = styled.div`
     margin-bottom: 4%;
   }
 `;
+
 const ContentTextWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -85,6 +88,7 @@ const ContentTextWrapper = styled.div`
     margin-bottom: 7%;
   }
 `;
+
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -117,29 +121,8 @@ const FormDetailWrapper = styled.div`
   margin-bottom: 1rem;
 `;
 
-const SubmitButton = styled.div`
-  display: flex;
-  width: 60%;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: 5% 0% 5% 0%;
-  @media (max-width: 767px) {
-    width: 90%;
-  }
-`;
-
-const StyledTchaButton = styled(TchaButton)`
-  width: 40%;
-  height: 3rem;
-  margin-top: 3% !important;
-  color: white !important;
-  @media (max-width: 767px) {
-    width: 60%;
-  }
-`;
-
 const StyledButton = styled(GreenTchaButton)`
-  margin: 0% 1.5% !important;
+  margin: 0% !important;
   height: 3rem;
   width: 7rem;
   background-color: #1e3531 !important;
@@ -148,22 +131,6 @@ const StyledButton = styled(GreenTchaButton)`
   }
   color: white !important;
 `;
-const StyledGrayButton = styled(StyledButton)`
-  background-color: gray !important;
-  color: white !important;
-`;
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 function ReadExerciseLog(props: { liveId: number }) {
   const liveId = props.liveId;
@@ -201,8 +168,15 @@ function ReadExerciseLog(props: { liveId: number }) {
   const handleClose = () => setOpen(false);
 
   return (
+<<<<<<< FrontEnd/src/containers/user-trainer/read-exercise-log.tsx
     <div>
       <StyledButton onClick={handleOpen}><TchaButtonTextH6>일지보기</TchaButtonTextH6></StyledButton>
+=======
+    <>
+      <StyledButton onClick={handleOpen}>
+        <TchaButtonTextH6>일지 읽기</TchaButtonTextH6>
+      </StyledButton>
+>>>>>>> FrontEnd/src/containers/user-trainer/read-exercise-log.tsx
       <Modal
         keepMounted
         open={open}
@@ -260,7 +234,7 @@ function ReadExerciseLog(props: { liveId: number }) {
           ))}
         </Wrapper>
       </Modal>
-    </div>
+    </>
   );
 }
 

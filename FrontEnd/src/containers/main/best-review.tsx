@@ -13,7 +13,7 @@ const Container = styled.div`
   /* margin-top: 3%; */
   margin-bottom: 3%;
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-  @media (max-width: 767px){
+  @media (max-width: 767px) {
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
   }
 `;
@@ -21,6 +21,7 @@ const Container = styled.div`
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const ContainerTitle = styled.h4`
@@ -67,7 +68,7 @@ function BestReview() {
 
   return (
     <Container>
-      <ContainerTitle>서비스 후기</ContainerTitle>
+      <ContainerTitle>읏차 회원들의 실시간 후기</ContainerTitle>
       <ContentsWrapper>
         {bestReviewItems?.data.map((item, index) => (
           <Wrapper key={index}>

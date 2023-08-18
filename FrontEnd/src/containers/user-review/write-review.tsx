@@ -21,26 +21,25 @@ const Wrapper = styled.div`
   padding: 1%;
   background-color: ${({ theme }) => theme.color.light};
   border-radius: 10px;
-  min-height:40vh;
-  position: absolute;    
+  min-height: 40vh;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;         
+  width: 50%;
   @media (max-width: 767px) {
-    width:70%;
-    
+    width: 70%;
   }
 `;
 
 const StyledTextH6 = styled.h6`
-  margin:3% 6%;
-  font-size:1rem;
-  color:grey;
+  margin: 3% 6%;
+  font-size: 1rem;
+  color: grey;
   @media (max-width: 767px) {
-    font-size:0.85rem;
+    font-size: 0.85rem;
   }
-`
+`;
 
 const SubmitButton = styled.div`
   display: flex;
@@ -54,11 +53,11 @@ const StyledButton = styled(GreenTchaButton)`
   height: 3rem;
   width: 7rem;
   @media (max-width: 767px) {
-    width:5rem;
+    width: 5rem;
   }
-`
+`;
 function WriteReview(props: {
-  trainerName:string;
+  trainerName: string;
   trainer: string;
   liveId: number;
   setItem: React.Dispatch<React.SetStateAction<UserScheduleData>>;
@@ -72,8 +71,9 @@ function WriteReview(props: {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
-    setOpen(true)
-    console.log("props:", props)};
+    setOpen(true);
+    console.log("props:", props);
+  };
   const handleClose = () => setOpen(false);
 
   const handleContent = (event: ChangeEvent<HTMLInputElement>) => {
@@ -87,7 +87,6 @@ function WriteReview(props: {
       ptLiveId: liveId,
       content: content,
       star: rating,
-      
     };
     axios
       .post(`${api}/reviews`, form)
@@ -103,7 +102,9 @@ function WriteReview(props: {
 
   return (
     <>
-      <StyledButton onClick={handleOpen}><TchaButtonTextH6>리뷰 작성</TchaButtonTextH6></StyledButton>
+      <StyledButton onClick={handleOpen}>
+        <TchaButtonTextH6>리뷰 작성</TchaButtonTextH6>
+      </StyledButton>
       <Modal
         keepMounted
         open={open}
@@ -121,14 +122,14 @@ function WriteReview(props: {
             onChange={(event, value) => {
               setRating(value);
             }}
-            style={{marginBottom:"4%"}}
+            style={{ marginBottom: "4%" }}
           />
-          
+
           <TextField
             value={content}
             onChange={handleContent}
             label="내용을 입력하세요"
-            style={{ width: "88%", marginBottom:"4%" }}
+            style={{ width: "88%", marginBottom: "4%" }}
             multiline
             minRows={5}
             variant="outlined"

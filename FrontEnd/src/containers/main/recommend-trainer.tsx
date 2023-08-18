@@ -11,16 +11,17 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import trimgdummy1 from "src/shared/img/trimgdummy1.png";
 import trimgdummy2 from "src/shared/img/trimgdummy2.png";
-import trainer1 from "src/shared/img/trainer1.png"
-import trainer2 from "src/shared/img/trainer2.png"
-import trainer3 from "src/shared/img/trainer3.png"
-import trainer4 from "src/shared/img/trainer4.png"
-import trainer5 from "src/shared/img/trainer5.png"
-import trainer6 from "src/shared/img/trainer6.png"
-import trainer7 from "src/shared/img/trainer7.png"
-import trainer8 from "src/shared/img/trainer8.png"
-import trainer9 from "src/shared/img/trainer9.png"
-import trainer10 from "src/shared/img/trainer10.png"
+import trainer1 from "src/shared/img/trainer1.png";
+import trainer2 from "src/shared/img/trainer2.png";
+import trainer3 from "src/shared/img/trainer3.png";
+import trainer4 from "src/shared/img/trainer4.png";
+import trainer5 from "src/shared/img/trainer5.png";
+import trainer6 from "src/shared/img/trainer6.png";
+import trainer7 from "src/shared/img/trainer7.png";
+import trainer8 from "src/shared/img/trainer8.png";
+import trainer9 from "src/shared/img/trainer9.png";
+import trainer10 from "src/shared/img/trainer10.png";
+import trainerHA from "src/shared/img/trainerHa.jpg";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -102,7 +103,7 @@ const CardWrapper = styled.div`
 const StyledCard = styled(Card)`
   //카드 전체
   /* width: 18rem; */
-  width:15vw;
+  width: 15vw;
   margin: 1rem 0.4rem 1.6rem 0.4rem;
   border-radius: 10px !important;
   /* background-color: rgba(0, 0, 0, 0.8) !important; */
@@ -174,6 +175,10 @@ function TrainerCard(prop: TrainerInfoInterface) {
 function RecommendTrainer() {
   const TrainerInfo = [
     {
+      name: "하정호 트레이너",
+      image: trainerHA,
+    },
+    {
       name: "김성국 트레이너",
       image: trainer2,
     },
@@ -185,10 +190,6 @@ function RecommendTrainer() {
       name: "유채연 트레이너",
       image: trainer3,
     },
-    {
-      name: "이소라 트레이너",
-      image: trimgdummy2,
-    },
   ];
 
   return (
@@ -198,7 +199,11 @@ function RecommendTrainer() {
         <CardWrapper>
           {TrainerInfo.map((info, index) => (
             <div key={index}>
-              <TrainerCard name={info.name} image={info.image} key={index}></TrainerCard>
+              <TrainerCard
+                name={info.name}
+                image={info.image}
+                key={index}
+              ></TrainerCard>
             </div>
           ))}
         </CardWrapper>

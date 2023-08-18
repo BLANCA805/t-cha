@@ -103,7 +103,7 @@ const TrText = styled(StyledTextH5)`
   }
 `;
 const StyledButton = styled(GreenTchaButton)`
-  margin: 0%;
+  margin-right: 0.5rem;
   height: 3rem;
   width: 7rem;
   @media (max-width: 767px) {
@@ -138,7 +138,7 @@ function UserScheduleItem(props: { data: UserScheduleData }) {
             <StyledButton
               onClick={() => navigate("/pt", { state: item.liveId })}
             >
-              <TchaButtonTextH6>PT 방 입장</TchaButtonTextH6>
+              <TchaButtonTextH6>PT 입장</TchaButtonTextH6>
             </StyledButton>
           )}
           {item.ptLiveStatus === "TERMINATION" && !item.reviewId && (

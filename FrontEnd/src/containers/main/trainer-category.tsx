@@ -82,10 +82,9 @@ const TextTitleWrapper = styled.div`
     margin-top: 5%;
   }
 `;
-const StyledTextTitle = styled.h5`
+const StyledTextTitle = styled.h4`
   font-size: 2.4rem;
   margin: 1% 0% 4% 0%;
-  color: black;
   @media (max-width: 767px) {
     margin: 5% 0% 3% 0%;
     font-size: 0.95rem;

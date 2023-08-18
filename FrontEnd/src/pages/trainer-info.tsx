@@ -41,6 +41,11 @@ const Container = styled.div`
   /* background-color: lightpink; */
 `;
 
+const Wrapper = styled.div`
+  display:flex;
+  width:100%;
+`
+
 const TabWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -162,14 +167,17 @@ const BottomTab = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  position: fixed;
-  bottom: 5.5rem;
+  position: sticky;
+  bottom: 0;
   height: 9rem;
   width: 100%;
   background-color: ${({ theme }) => theme.color.light};
   border-top: 0.3rem solid ${({ theme }) => theme.color.secondary};
   @media (max-width: 767px) {
+    position: fixed;
     height: 4.7rem;
+    width: 100%;
+    bottom: 5.5rem;
   }
 `;
 
